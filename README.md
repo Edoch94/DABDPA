@@ -1,2 +1,4 @@
 # DABDPA
-Notes from the course "Distributed architectures for big data processing and analytics"
+Notes from "Distributed architectures for big data processing and analytics". 
+
+Master Degree course in Politecnico di Torino.
