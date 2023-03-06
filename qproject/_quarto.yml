@@ -1,0 +1,11 @@
+project:
+  title: "qproject"
+  output-dir: output
+  # pre-render: prepare.py
+
+format:
+  html:
+    toc: true
+    number-sections: true
+    code-overflow: wrap
+    code-tools: true
