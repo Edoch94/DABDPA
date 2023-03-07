@@ -9,3 +9,4 @@ format:
     number-sections: true
     code-overflow: wrap
     code-tools: true
+    embed-resources: true

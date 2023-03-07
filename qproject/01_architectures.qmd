@@ -1,0 +1,65 @@
+---
+title: "Big data architectures"
+---
+
+# Definition of Big data architecture
+::: {.callout-tip}
+### From [Data Architecture Guide](https://learn.microsoft.com/en-us/azure/architecture/data-guide/big-data/) in Microsoft Learn
+A big data architecture is designed to handle the ingestion, processing, and analysis of data that is too large or complex for traditional database systems...
+
+Big data solutions typically involve one or more of the following types of workload:
+
+- Batch processing of big data sources at rest
+- Real-time processing of big data in motion
+- Interactive exploration of big data
+- Predictive analytics and machine learning
+
+Consider big data architectures when you need to:
+
+- Store and process data in volumes too large for a traditional database
+- Transform unstructured data for analysis and reporting
+- Capture, process, and analyze unbounded streams of data in real time, or with low latency
+:::
+
+# Lambda architecture
+The most frequently used big data architecture is the Lambda Architecture. The lambda architecture was proposed by Nathan Marz in 2011.
+
+## Definitions
+::: {.callout-tip}
+### From Nathan Marz
+The past decade has seen a huge amount of innovation in scalable data systems. These include large-scale computation systems like Hadoop and databases such as Cassandra and Riak. These systems can handle very large amounts of data, but with serious trade-offs.Hadoop, for example, can parallelize large-scale batch computations on very large amounts of data, but the computations have high latency. You don't use Hadoop for anything where you need low-latency results. 
+
+NoSQL databases like Cassandra achieve their scalability by offering you a much more limited data model than you're used to with something like SQL. Squeezing your application into these limited data models can be very complex. And because the databases are mutable, they're not human-fault tolerant.
+
+These tools on their own are not a panacea. But when intelligently used in conjunction with one another, you can produce scalable systems for arbitrary data problems with human-fault tolerance and a minimum of complexity. This is the Lambda Architecture you'll learn throughout the book. 
+:::
+
+::: {.callout-tip}
+### From [What is Lambda Architecture?](https://www.databricks.com/glossary/lambda-architecture) article in Databricks website
+Lambda architecture is a way of processing massive quantities of data (i.e. “Big Data”) 
+that provides access to batch-processing and stream-processing methods with a hybrid 
+approach.
+
+Lambda architecture is used to solve the problem of computing arbitrary functions.
+:::
+
+::: {.callout-tip}
+### From [Lambda architecture](https://en.wikipedia.org/wiki/Lambda_architecture) article in Wikipedia 
+Lambda architecture is a data-processing architecture designed to handle massive quantities of data by taking advantage of both batch and stream-processing methods.
+
+This approach to architecture attempts to balance latency, throughput, and fault tolerance by using batch processing to provide comprehensive and accurate views of batch data, while simultaneously using real-time stream processing to provide views of online 
+data. The two view outputs may be joined before presentation.
+
+Lambda architecture depends on a data model with an append-only, immutable data source that serves as a system of record. It is intended for ingesting and processing timestamped events that are appended to existing events rather than overwriting them. State is determined from the natural time-based ordering of the data.
+:::
+
+## Requirements
+Fault-tolerant against both hardware failures and human errors
+Support variety of use cases that include low latency querying as well as updates
+Linear scale-out capabilities
+Extensible, so that the system is manageable and can accommodate newer features easily
+
+## Queries
+$$
+\textbf{query} = \textbf{function}(\textbf{all data})
+$$
