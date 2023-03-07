@@ -8,5 +8,8 @@ format:
     toc: true
     number-sections: true
     code-overflow: wrap
-    code-tools: true
+    code-tools: false
     embed-resources: true
+    # theme: flatly
+    # theme: litera
+    theme: simplex

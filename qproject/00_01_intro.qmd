@@ -9,7 +9,7 @@ title: "Introduction to Big data"
 - Internet of Things (IoT): sensor networks, RFIDs, smart meters
 
 ## Example of Big Data at work
-![Bigdata example](images\00_intro\bigdata_example.png){width=80%}
+![Bigdata example](images\00_01_intro\bigdata_example.png){width=80%}
 
 # The five Vs of Big Data
 - Volume: scale of data
@@ -28,4 +28,4 @@ title: "Introduction to Big data"
 - Transfer the processing power to the data
 - Multiple distributed disks: each one holding a portion of a large dataset
 - Process in parallel different file portions from different disks
-![Bigdata solution](images\00_intro\bigdata_solution.png){width=80%}
+![Bigdata solution](images\00_01_intro\bigdata_solution.png){width=80%}

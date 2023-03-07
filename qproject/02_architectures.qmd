@@ -81,7 +81,7 @@ It is based on two data paths:
     - This path is designed for low latency, at the expense of accuracy
 
 ## Basic structure
-![General Lambda architecture](images\01_architecture\hadoop-architecture.png){width=80%}
+![General Lambda architecture](images\02_architectures\hadoop_architecture.png){width=80%}
 
 1. All data entering the system is dispatched to both the batch layer and the speed layer for processing
 2. The batch layer has two functions: 
@@ -92,7 +92,7 @@ It is based on two data paths:
 5. Any incoming query can be answered by merging results from batch views and real-time views
 
 ## Detailed view
-![More detailed of Lambda architecture](images\01_architecture\detailed_view.png){width=80%}
+![More detailed of Lambda architecture](images\02_architectures\detailed_view.png){width=80%}
 
 ### Possible instances
-![More detailed of Lambda architecture](images\01_architecture\possible_instances.png){width=80%}
+![More detailed of Lambda architecture](images\02_architectures\possible_instances.png){width=80%}

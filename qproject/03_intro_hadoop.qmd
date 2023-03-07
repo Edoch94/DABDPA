@@ -2,5 +2,264 @@
 title: "Introduction to Hadoop and MapReduce"
 ---
 
+# Motivations of Hadoop and Big data frameworks
+## Data volumes
+- The amount of data increases every day
+- Some numbers (∼ 2012):
+    - Data processed by Google every day: 100+ PB
+    - Data processed by Facebook every day: 10+ PB
+- To analyze them, systems that scale with respect to the data volume are needed
 
+::: {.callout-note collapse="true"}
+### Example: Google
+- Analyze 10 billion web pages
+- Average size of a webpage: 20KB
+- Size of the collection: 10 billion x 20KBs = 200TB
+- HDD hard disk read bandwidth: 150MB/sec. Time needed to read all web pages (without analyzing them): 2 million seconds = more than 15 days
+- SSD hard disk read bandwidth: 550MB/sec. Time needed to read all web pages (without analyzing them): 2 million seconds = more than 4 days
+- A single node architecture is not adequate
+:::
 
+## Failures
+Failures are part of everyday life, especially in a data center. A single server stays up for 3 years (~1000 days)
+
+- 10 servers: 1 failure every 100 days (~3 months)
+- 100 servers: 1 failure every 10 days 
+- 1000 servers: 1 failure/day
+
+The main sources of failures
+
+- Hardware/Software
+- Electrical, Cooling, ...
+- Unavailability of a resource due to overload
+
+::: {.callout-note collapse="true"}
+### Examples
+LALN data [DSN 2006]
+
+- Data for 5000 machines, for 9 years
+- Hardware failures: 60%, Software: 20%, Network 5%
+
+DRAM error analysis [Sigmetrics 2009]
+
+- Data for 2.5 years
+- 8% of DIMMs affected by errors
+
+Disk drive failure analysis [FAST 2007]
+
+- Utilization and temperature major causes of failures
+:::
+
+Failure types
+- Permanent (e.g., broken motherboard)
+- Transient (e.g., unavailability of a resource due to overload)
+
+## Network bandwidth
+Network becomes the bottleneck if big amounts of data need to be exchanged between nodes/servers
+
+- Network bandwidth (in a data center): 10Gbps
+- Moving 10 TB from one server to another takes more than 2 hours. Data should be moved across nodes only when it is indispensable.
+- Usually, codes/programs are small (few MBs): move code (programs) and computation to data. (**Data Locality**)
+
+# Architectures
+## Single node architecture
+![Single node architecture](images\03_intro_hadoop\single_node.png){width=200}
+
+:::: {.columns}
+:::{.column width="45%"}
+![Single node architecture: Machine Learning and Statistics](images\03_intro_hadoop\single_node_ML.png){width=200}
+
+Small data: data can be completely loaded in main memory.
+:::
+:::{.column width="10%"}
+:::
+:::{.column width="45%"}
+![Single node architecture: "Classical" data mining"](images\03_intro_hadoop\single_node_classicalML.png){width=200}
+
+Large data: data can not be completely loaded in main memory.
+
+- Load in main memory one chunk of data at a time, process it and store some statistics
+- Combine statistics to compute the final result
+:::
+::::
+
+## Cluster architecture
+Cluster of servers (data center)
+
+- Computation is distributed across servers
+- Data are stored/distributed across servers
+
+Standard architecture in the Big data context (∼2012)
+
+- Cluster of commodity Linux nodes/servers (32 GB of main memory per node)
+- Gigabit Ethernet interconnection
+
+## Commodity cluster architecture
+![Commodity cluster architecture](images\03_intro_hadoop\commodity_cluster_architecture.png){width=80%}
+
+## Scalability
+Current systems must scale to address
+
+- The increasing amount of data to analyze
+- The increasing number of users to serve
+- The increasing complexity of the problems
+
+Two approaches are usually used to address scalability issues
+
+- Vertical scalability (scale up)
+- Horizontal scalability (scale out)
+
+### Scale up vs. Scale out
+- Vertical scalability (*scale up*): add more power/resources (main memory, CPUs) to a single node (high-performing server). The cost of super-computers is not linear with respect to their resources.
+- Horizontal scalability (*scale out*): add more nodes (commodity servers) to a system. The cost scales approximately linearly with respect to the number of added nodes. But data center efficiency is a difficult problem to solve.
+
+For data-intensive workloads, a large number of commodity servers is preferred over a small number of high-performing servers, since, at the same cost, it is possible to deploy a system that processes data more efficiently and is more fault-tolerant.
+
+Horizontal scalability (scale out) is preferred for big data applications, but distributed computing is hard: new systems hiding the complexity of the distributed part of the problem to developers are needed.
+
+## Cluster computing challenges
+1. Distributed programming is hard
+
+- Problem decomposition and parallelization
+- Task synchronization
+
+2. Task scheduling of distributed applications is critical: assign tasks to nodes by trying to 
+
+- Speed up the execution of the application 
+- Exploit (almost) all the available resources
+- Reduce the impact of node failures
+
+3. Distributed data storage
+
+How do we store data persistently on disk and keep it available if nodes can fail? Redundancy is the solution, but it increases the complexity of the system
+
+4. Network bottleneck
+Reduce the amount of data send through the network by moving computation and code to data
+
+Distributed computing is not a new topic
+
+- HPC (High-performance computing) ~1960
+- Grid computing ~1990
+- Distributed databases ~1990
+
+Hence, many solutions to the mentioned challenges are already available, but we are now facing big data driven-problems: the former solutions are not adequate to address big data volumes.
+
+## Typical Big data problem
+Typical Big Data Problem
+
+- Iterate over a large number of records/objects 
+- Extract something of interest from each record/object
+- Aggregate intermediate results
+- Generate final output
+
+The challenges: 
+
+- Parallelization
+- Distributed storage of large data sets (Terabytes, Petabytes) 
+- Node Failure management
+- Network bottleneck
+- Diverse input format (data diversity & heterogeneity)
+
+# Apache Hadoop
+It is scalable fault-tolerant distributed system for Big Data
+
+- Distributed Data Storage 
+- Distributed Data Processing 
+- Borrowed concepts/ideas from the systems designed at Google (Google File System for Google's MapReduce) 
+- Open source project under the Apache license, but there are also many commercial implementations (e.g., Cloudera, Hortonworks, MapR)
+
+::: {.callout-note collapse="true"}
+### Hadoop history
+| Date | Event |
+| --- | --- |
+| Dec 2004 | Google published a paper about GFS |
+| July 2005 | Nutch uses MapReduce |
+| Feb 2006 | Hadoop becomes a Lucene subproject |
+| Apr 2007 | Yahoo! runs it on a 1000-node cluster |
+| Jan 2008 | Hadoop becomes an Apache Top Level Project |
+| Jul 2008 | Hadoop is tested on a 4000 node cluster |
+| Feb 2009 | The Yahoo! Search Webmap is a Hadoop application that runs on more than 10,000 core Linux cluster |
+| Jun 2009 | Yahoo! made available the source code of its production version of Hadoop |
+| 2010 | Facebook claimed that they have the largest Hadoop cluster in the world with 21 PB of storage |
+| Jul 27, 2011 | Facebook announced the data has grown to 30 PB |
+: Timeline {tbl-colwidths="[15,85]"}
+
+Who uses/used Hadoop
+
+- Amazon 
+- Facebook 
+- Google 
+- IBM 
+- Joost 
+- Last.fm 
+- New York Times 
+- PowerSet 
+- Veoh 
+- Yahoo!
+:::
+
+## Hadoop vs. HPC
+Hadoop
+
+- Designed for Data intensive workloads
+- Usually, no CPU demanding/intensive tasks
+
+HPC (High-performance computing)
+
+- A supercomputer with a high-level computational capacity (performance of a supercomputer is measured in floating-point operations per second (FLOPS))
+- Designed for CPU intensive tasks
+- Usually it is used to process “small” data sets
+
+## Main components
+Core components of Hadoop:
+
+1. Distributed Big Data Processing Infrastructure based on the MapReduce programming paradigm
+    - Provides a high-level abstraction view: programmers do not need to care about task scheduling and synchronization
+    - Fault-tolerant: node and task failures are automatically managed by the Hadoop system
+2. HDFS (Hadoop Distributed File System)
+    - High availability distributed storage
+    - Fault-tolerant
+
+![Hadoop main components](images\03_intro_hadoop\hadoop_main_components.png){width=80%}
+
+## Distributed Big data processing infrastructure
+It separates the *what* from the *how*
+
+- Hadoop programs are based on the MapReduce programming paradigm
+- MapReduce abstracts away the “distributed” part of the problem (scheduling, synchronization, etc): programmers focus on the *what*
+- The distributed part (scheduling, synchronization, etc) of the problem is handled by the framework: the Hadoop infrastructure focuses on the *how*
+
+But an in-depth knowledge of the Hadoop framework is important to develop efficient applications: the design of the application must exploit data locality and limit network usage/data sharing.
+
+## HDFS
+HDFS is the standard Apache Hadoop distributed file system. It provides global file namespace, and stores data redundantly on multiple nodes to provide persistence and availability (fault-tolerant file system).
+
+The typical usage pattern:
+
+- Huge files (GB to TB)
+- Data is rarely updated
+- Reads and appends are common, and random read/write operations are not performed
+
+Each file is split in "chunks/blocks" that are spread across the servers
+
+- Each chunck is replicated on different servers (usually there are 3 replicas per chunk), ensuring persistence and availability. To further increase persistence and availability, replicas are stored in different racks, if it possible.
+- Each chunk/block contains a part of the content of one single file. It is not possible to have the content of two files in the same chunk/block
+- Typically each chunk is 64-128 MB
+
+The Master node, (a.k.a., *Name Nodes* in HDFS) is a special node/server that 
+
+- Stores HDFS metadata (e.g., the mapping between the name of a file and the location of its chunks)
+- Might be replicated
+
+Client applications can access the file through HDFS APIs: they talk to the master node to find data/chuck servers associated with the file of interest, and then connect to the selected chunk servers to access data.
+
+::: {.callout-tip}
+### Hadoop ecosystem
+Each project/system addresses one specific class of problems.
+
+- Sqoop: a tool for efficiently moving data from traditional relational databases and external flat file sources to HDFS
+- ZooKeeper: a distributed coordination service. It provides primitives such as distributed locks
+- ... 
+:::
+
+# MapReduce: introduction
