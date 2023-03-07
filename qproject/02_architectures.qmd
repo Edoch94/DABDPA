@@ -63,3 +63,36 @@ Extensible, so that the system is manageable and can accommodate newer features 
 $$
 \textbf{query} = \textbf{function}(\textbf{all data})
 $$
+
+Some query properties
+
+- Latency: the time it takes to run a query
+- Timeliness: how up to date the query results are (freshness and consistency)
+- Accuracy: tradeoff between performance and scalability (approximations)
+
+It is based on two data paths:
+
+- Cold path (batch layer)
+    - It stores all of the incoming data in its raw form and performs batch processing on the data
+    - The result of this processing is stored as batch views
+
+- Hot path (speed layer)
+    - It analyzes data in real time
+    - This path is designed for low latency, at the expense of accuracy
+
+## Basic structure
+![General Lambda architecture](images\01_architecture\hadoop-architecture.png){width=80%}
+
+1. All data entering the system is dispatched to both the batch layer and the speed layer for processing
+2. The batch layer has two functions: 
+    i) managing the master dataset(an immutable, append-only set of raw data), and 
+    ii) to pre-compute the batch views
+3. The serving layer indexes the batch views so that they can be queried in low-latency, ad-hoc way
+4. The speed layer compensates for the high latency of updates to the serving layer and deals with recent data only
+5. Any incoming query can be answered by merging results from batch views and real-time views
+
+## Detailed view
+![More detailed of Lambda architecture](images\01_architecture\detailed_view.png){width=80%}
+
+### Possible instances
+![More detailed of Lambda architecture](images\01_architecture\possible_instances.png){width=80%}
