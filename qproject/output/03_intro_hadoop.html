@@ -2569,7 +2569,10 @@ vertical-align: -.125em;
   <li><a href="#distributed-big-data-processing-infrastructure" id="toc-distributed-big-data-processing-infrastructure" class="nav-link" data-scroll-target="#distributed-big-data-processing-infrastructure"><span class="toc-section-number">3.3</span>  Distributed Big data processing infrastructure</a></li>
   <li><a href="#hdfs" id="toc-hdfs" class="nav-link" data-scroll-target="#hdfs"><span class="toc-section-number">3.4</span>  HDFS</a></li>
   </ul></li>
-  <li><a href="#mapreduce-introduction" id="toc-mapreduce-introduction" class="nav-link" data-scroll-target="#mapreduce-introduction"><span class="toc-section-number">4</span>  MapReduce: introduction</a></li>
+  <li><a href="#mapreduce-introduction" id="toc-mapreduce-introduction" class="nav-link" data-scroll-target="#mapreduce-introduction"><span class="toc-section-number">4</span>  MapReduce: introduction</a>
+  <ul class="collapse">
+  <li><a href="#word-count" id="toc-word-count" class="nav-link" data-scroll-target="#word-count"><span class="toc-section-number">4.1</span>  Word count</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -2598,7 +2601,7 @@ vertical-align: -.125em;
 <h2 data-number="1.1" class="anchored" data-anchor-id="data-volumes"><span class="header-section-number">1.1</span> Data volumes</h2>
 <ul>
 <li>The amount of data increases every day</li>
-<li>Some numbers (∼ 2012):
+<li>Some numbers (∼2012):
 <ul>
 <li>Data processed by Google every day: 100+ PB</li>
 <li>Data processed by Facebook every day: 10+ PB</li>
@@ -2617,12 +2620,11 @@ Example: Google
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<p>Consider this situation: you have to analyze 10 billion web pages, and the average size of a webpage is 20KB. So</p>
 <ul>
-<li>Analyze 10 billion web pages</li>
-<li>Average size of a webpage: 20KB</li>
-<li>Size of the collection: 10 billion x 20KBs = 200TB</li>
-<li>HDD hard disk read bandwidth: 150MB/sec. Time needed to read all web pages (without analyzing them): 2 million seconds = more than 15 days</li>
-<li>SSD hard disk read bandwidth: 550MB/sec. Time needed to read all web pages (without analyzing them): 2 million seconds = more than 4 days</li>
+<li>The total size of the collection: 10 billion x 20KBs = 200TB</li>
+<li>Assuming the usage of HDD hard disk (read bandwidth: 150MB/sec), the time needed to read all web pages (without analyzing them) is equal to 2 million seconds (i.e., more than 15 days).</li>
+<li>Assuming the usage of SSD hard disk (read bandwidth: 550MB/sec), the time needed to read all web pages (without analyzing them) is equal to 2 million seconds (i.e., more than 4 days).</li>
 <li>A single node architecture is not adequate</li>
 </ul>
 </div>
@@ -2997,6 +2999,30 @@ Hadoop ecosystem
 </section>
 <section id="mapreduce-introduction" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> MapReduce: introduction</h1>
+<section id="word-count" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="word-count"><span class="header-section-number">4.1</span> Word count</h2>
+<table class="table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Input</th>
+<th>Problem</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>a large textual file of words</td>
+<td>count the number of times each distinct word appears in the file</td>
+<td>a list of pairs word, number, counting the number of occurrences of each specific word in the input file</td>
+</tr>
+</tbody>
+</table>
+</section>
 </section>
 
 </main>

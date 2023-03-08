@@ -5,18 +5,18 @@ title: "Introduction to Hadoop and MapReduce"
 # Motivations of Hadoop and Big data frameworks
 ## Data volumes
 - The amount of data increases every day
-- Some numbers (∼ 2012):
+- Some numbers (∼2012):
     - Data processed by Google every day: 100+ PB
     - Data processed by Facebook every day: 10+ PB
 - To analyze them, systems that scale with respect to the data volume are needed
 
 ::: {.callout-note collapse="true"}
 ### Example: Google
-- Analyze 10 billion web pages
-- Average size of a webpage: 20KB
-- Size of the collection: 10 billion x 20KBs = 200TB
-- HDD hard disk read bandwidth: 150MB/sec. Time needed to read all web pages (without analyzing them): 2 million seconds = more than 15 days
-- SSD hard disk read bandwidth: 550MB/sec. Time needed to read all web pages (without analyzing them): 2 million seconds = more than 4 days
+Consider this situation: you have to analyze 10 billion web pages, and the average size of a webpage is 20KB. So
+
+- The total size of the collection: 10 billion x 20KBs = 200TB
+- Assuming the usage of HDD hard disk (read bandwidth: 150MB/sec), the time needed to read all web pages (without analyzing them) is equal to 2 million seconds (i.e., more than 15 days).
+- Assuming the usage of SSD hard disk (read bandwidth: 550MB/sec), the time needed to read all web pages (without analyzing them) is equal to 2 million seconds (i.e., more than 4 days).
 - A single node architecture is not adequate
 :::
 
@@ -263,3 +263,20 @@ Each project/system addresses one specific class of problems.
 :::
 
 # MapReduce: introduction
+## Word count
+| Input | Problem | Output |
+| --- | --- | --- |
+| a large textual file of words | count the number of times each distinct word appears in the file | a list of pairs word, number, counting the number of occurrences of each specific word in the input file |
+
+### Case 1: Entire file fits in main memory
+A traditional single node approach is probably the most efficient solution in this case
+The complexity and overheads of a distributed system affects the performance when files are "small" ("small" depends on the available resources)
+
+### Case 2: File too large to fit in main memory
+How can we split this problem in a set of (almost) independent sub-tasks, and execute them in parallel on a cluster of servers?
+
+Assume that
+- The cluster has 3 servers
+- The content of the input file is: "Toy example file for Hadoop. Hadoop running example"
+- The input file is split into 2 chunks
+- The number of replicas is 1

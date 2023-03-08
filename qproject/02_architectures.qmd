@@ -89,10 +89,38 @@ It is based on two data paths:
     ii) to pre-compute the batch views
 3. The serving layer indexes the batch views so that they can be queried in low-latency, ad-hoc way
 4. The speed layer compensates for the high latency of updates to the serving layer and deals with recent data only
-5. Any incoming query can be answered by merging results from batch views and real-time views
+5. Any incoming query can be answered by merging results from batch views and real-time views (e.g., the query looks at the serving layer for days until today, and looks at the speed layer for today's data).
 
 ## Detailed view
 ![More detailed of Lambda architecture](images\02_architectures\detailed_view.png){width=80%}
 
+Structure similar to the one described before
+
+0. Data stream
+1. Batch layer
+    - immutable data
+    - precompute views
+2. Real-time layer
+    - process stream
+    - increment views
+3. Serving layer
+
 ### Possible instances
 ![More detailed of Lambda architecture](images\02_architectures\possible_instances.png){width=80%}
+
+In general, the technologies used are
+
+0. Data stream: Kafka
+1. Batch layer: 
+    - immutable data: Hadoop HDFS
+    - precompute views: Hadoop, Spark
+    - views: Hive (it is a distributed relational database; SQL-like query language can be used)
+2. Real-time layer: 
+    - process stream and increment views:
+        - Spark (it has a module available for managing stream data)
+        - Apache Storm (pros: true real-time; cons: sometimes it approximates)
+        - Flink (used stream data analysis)
+    - views: HBase, Cassandra, MongoDB
+3. Serving layer
+
+In general: choose the most suitable technology, but also be able to adapt on what's available

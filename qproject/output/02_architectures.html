@@ -2713,7 +2713,7 @@ From <a href="https://en.wikipedia.org/wiki/Lambda_architecture">Lambda architec
 </ol></li>
 <li>The serving layer indexes the batch views so that they can be queried in low-latency, ad-hoc way</li>
 <li>The speed layer compensates for the high latency of updates to the serving layer and deals with recent data only</li>
-<li>Any incoming query can be answered by merging results from batch views and real-time views</li>
+<li>Any incoming query can be answered by merging results from batch views and real-time views (e.g., the query looks at the serving layer for days until today, and looks at the speed layer for today’s data).</li>
 </ol>
 </section>
 <section id="detailed-view" class="level2" data-number="2.5">
@@ -2724,6 +2724,21 @@ From <a href="https://en.wikipedia.org/wiki/Lambda_architecture">Lambda architec
 <p></p><figcaption class="figure-caption">More detailed of Lambda architecture</figcaption><p></p>
 </figure>
 </div>
+<p>Structure similar to the one described before</p>
+<ol start="0" type="1">
+<li>Data stream</li>
+<li>Batch layer
+<ul>
+<li>immutable data</li>
+<li>precompute views</li>
+</ul></li>
+<li>Real-time layer
+<ul>
+<li>process stream</li>
+<li>increment views</li>
+</ul></li>
+<li>Serving layer</li>
+</ol>
 <section id="possible-instances" class="level3" data-number="2.5.1">
 <h3 data-number="2.5.1" class="anchored" data-anchor-id="possible-instances"><span class="header-section-number">2.5.1</span> Possible instances</h3>
 <div class="quarto-figure quarto-figure-center">
@@ -2732,6 +2747,28 @@ From <a href="https://en.wikipedia.org/wiki/Lambda_architecture">Lambda architec
 <p></p><figcaption class="figure-caption">More detailed of Lambda architecture</figcaption><p></p>
 </figure>
 </div>
+<p>In general, the technologies used are</p>
+<ol start="0" type="1">
+<li>Data stream: Kafka</li>
+<li>Batch layer:
+<ul>
+<li>immutable data: Hadoop HDFS</li>
+<li>precompute views: Hadoop, Spark</li>
+<li>views: Hive (it is a distributed relational database; SQL-like query language can be used)</li>
+</ul></li>
+<li>Real-time layer:
+<ul>
+<li>process stream and increment views:
+<ul>
+<li>Spark (it has a module available for managing stream data)</li>
+<li>Apache Storm (pros: true real-time; cons: sometimes it approximates)</li>
+<li>Flink (used stream data analysis)</li>
+</ul></li>
+<li>views: HBase, Cassandra, MongoDB</li>
+</ul></li>
+<li>Serving layer</li>
+</ol>
+<p>In general: choose the most suitable technology, but also be able to adapt on what’s available</p>
 </section>
 </section>
 </section>
