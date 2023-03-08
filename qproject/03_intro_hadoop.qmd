@@ -276,7 +276,70 @@ The complexity and overheads of a distributed system affects the performance whe
 How can we split this problem in a set of (almost) independent sub-tasks, and execute them in parallel on a cluster of servers?
 
 Assume that
+
 - The cluster has 3 servers
 - The content of the input file is: "Toy example file for Hadoop. Hadoop running example"
 - The input file is split into 2 chunks
 - The number of replicas is 1
+
+![Word count solution](images\03_intro_hadoop\word_count.png){width=80%}
+
+The problem can be easily parallelized:
+
+1. Each server processes its chunk of data and counts the number of times each word appears in its own chunk
+    - Each server can execute its sub-task independently from the other servers of the cluster: asynchronization is not needed in this phase
+    - The output generated from each chunk by each server represents a partial result
+2. Each server sends its local (partial) list of pairs <word, number of occurrences in its chunk> to a server that is in charge of aggregating all local results and computing the global result. The server in charge of computing the global result needs to receive all the local (partial) results to compute and emit the final list: a synchronization operation is needed in this phase.
+
+Assume a more realistic situation
+
+- The file size is 100 GB and the number of distinct words occurring in it is at most 1000
+- The cluster has 101 servers
+- The file is spread acr0ss 100 servers and each of these servers contains one (different) chunk of the input file (i.e., the file is optimally spread across 100 servers, and so each server contains 1/100 of the file in its local hard drives)
+
+#### Complexity
+- Each server reads 1 GB of data from its local hard drive (it reads one chunk from HDFS): few seconds
+- Each local list consists of at most 1,000 pairs (because the number of distinct words is 1,000): few MBs
+- The maximum amount of data sent on the network is 100 x size of local list (number of servers x local list size): some MBs
+
+#### Scalability
+Scalability can be defined along two dimensions
+
+- In terms of data: given twice the amount of data, the word count algorithm takes approximately no more than twice as long to run. Each server has to process twice the data, and so execution time to compute local list is doubled.
+- In terms of resources: given twice the number of servers, the word count algorithm takes approximately no more than half as long to run. Each server processes half of the data, and execution time to compute local list is halved.
+
+We are assuming that the time needed to send local results to the node in charge of computing the final result and the computation of the final result are considered negligible in this running example. However, notice that frequently this assumption is not true, indeed it depends on the complexity of the problem and on the ability of the developer to limit the amount of data sent on the network.
+
+## MapReduce approach key ideas
+
+- Scale "out", not "up": increase the number of servers, avoiding to upgrade the resources (CPU, memory) of the current ones
+- Move processing to data: the network has a limited bandwidth
+- Process data sequentially, avoid random access: seek operations are expensive. Big data applications usually read and analyze all input records/objects: random access is useless
+
+### Data locality
+Traditional distributed systems (e.g., HPC) move data to computing nodes (servers). This approach cannot be used to process TBs of data, since the network bandwidth is limited
+So, Hadoop moves code to data: code (few KB) is copied and executed on the servers where the chunks of data are stored. This approach is based on "data locality".
+
+## Hadoop and MapReduce usage scope
+
+Hadoop/MapReduce is designed for
+
+- Batch processing involving (mostly) full scans of the input data
+- Data-intensive applications
+    - Read and process the whole Web (e.g., PageRank computation) 
+    - Read and process the whole Social Graph (e.g., LinkPrediction, a.k.a. "friend suggestion")
+    - Log analysis (e.g., Network traces, Smart-meter data)
+
+::: {.callout-warning}
+Notice that Hadoop/MapReduce is not the panacea for all Big Data problems. In particular, does not feet well
+
+- Iterative problems
+- Recursive problems
+- Stream data processing
+- Real-time processing
+:::
+
+# The MapReduce programming paradigm
+
+![Word count running example](images\03_intro_hadoop\mapreduce_paradigm.png){width=80%}
+
