@@ -178,7 +178,7 @@ It is scalable fault-tolerant distributed system for Big Data
 | Apr 2007 | Yahoo! runs it on a 1000-node cluster |
 | Jan 2008 | Hadoop becomes an Apache Top Level Project |
 | Jul 2008 | Hadoop is tested on a 4000 node cluster |
-| Feb 2009 | The Yahoo! Search Webmap is a Hadoop application that runs on more than 10,000 core Linux cluster |
+| Feb 2009 | The Yahoo! Search WebMap is a Hadoop application that runs on more than 10,000 core Linux cluster |
 | Jun 2009 | Yahoo! made available the source code of its production version of Hadoop |
 | 2010 | Facebook claimed that they have the largest Hadoop cluster in the world with 21 PB of storage |
 | Jul 27, 2011 | Facebook announced the data has grown to 30 PB |
@@ -377,9 +377,97 @@ $$
 
 
 A key-value pair $(w, 1)$ is emitted for each word $w$ in $L$
-In other words, the map function $m$ is 
+In other words, the Map function $m$ is 
 $$
 m(w) = (w, 1)
 $$
 
 A new list of (key, value) pairs $L_m$ is generated
+
+The key-value pairs in $L_m$ are aggregated by key (i.e., by word $w$ in the example)
+
+1. **Map**
+- One group $G_w$ is generated for each word $w$
+- Each group $G_w$ is a key-list pair 
+$$
+(w, [\textbf{list of values}])
+$$
+where $[\textbf{list of values}]$ contains all the values of the pairs associated with the word $w$
+- $\textbf{[list of values]}$ is a list of $[1, 1, 1, ...]$ in the example 
+- given a group $G_w$, the number of ones $[1, 1, 1, ...]$ is equal to the occurrences of word w in the input file
+
+2. **Reduce**
+For each group $G_w$ a key-value pair is emitted as follows 
+$$
+(w,\sum_{G_w}{[\textbf{list of values}]})
+$$ 
+This is the result of the reduce function: $r(G_w) = (w,\sum_{Gw}{[\textbf{list of values}]})$. 
+
+The resulting list of emitted pairs is the solution of the word count problem: in the list there is one pair (word $w$, number of occurrences) for each word in our running example.
+
+## Phases
+### Map 
+The Map phase can be viewed as a transformation over each element of a data set. This transformation is a function $m$ defined by developers, and it is invoked one time for each input element. Each invocation of $m$ happens in isolation, allowing the parallelization of the application of $m$ to each element of a data set in a straightforward manner.
+
+The *formal definition* of Map is
+
+$$
+(k_1, v_1) \rightarrow [(k_2, v_2)]
+$$
+
+Notice that 
+
+- Since the input data set is a list of key-value pairs, the argument of the Map function is a key-value pair
+- The Map function emits a list of key-value pairs for each input record, and the list can also be empty
+
+### Reduce
+The Reduce phase can be viewed as an aggregate operation. The aggregate function is a function $r$ defined by developers, and it is invoked one time for each distinct key, aggregating all the values associated with it. Also the reduce phase can be performed in parallel and in isolation, since each group of key-value pairs with the same key can be processed in isolation.
+
+The *formal definition* of Reduce is
+
+$$
+(k_2, [v_2]) \rightarrow [(k_3, v_3)]
+$$
+
+Notice that 
+
+- The Reduce function receives a list of values $[v2]$ associated with a specific key $k2$
+- The Reduce function emits a list of key-value pairs
+
+### Shuffle and sort
+The shuffle and sort phase is always the same: it works by grouping the output of the Map phase by key. It does not need to be defined by developers, and it is already provided by the Hadoop system.
+
+## Data structures
+Key-value pair is the basic data structure in MapReduce. Keys and values can be integers, float, strings, ..., in general they can also be (almost) arbitrary data structures defined by the designer. Notice that both input and output of a MapReduce program are lists of key-value pairs.
+
+All in all, the design of MapReduce involves imposing the key-value structure on the input and output data sets. For example, in a collection of Web pages, input keys may be URLs and values may be their HTML content.
+
+## MapReduce Algorithms
+In many applications, the key part of the input data set is ignored. In other words, the map function usually does not consider the key of its key-value pair argument (e.g., word count problem). Some specific applications exploit also the keys of the input data (e.g., keys can be used to uniquely identify records/objects).
+
+## Pseudocode of word count solution using MapReduce
+**Map**
+```{python code-fold="false"}
+#| eval: false
+def map(key, value):
+    '''
+    :key: offset of the word in the file
+    :value: a word of the input document
+    '''
+    return (value, 1)
+```
+
+
+**Reduce**
+```{python code-fold="false"}
+#| eval: false
+def reduce(key, values):
+    '''
+    :key: a word 
+    :values: a list of integers
+    '''
+    occurrences = 0
+    for c in values:
+        occurrences = occurrences + c
+    return (key, occurrences)
+```
