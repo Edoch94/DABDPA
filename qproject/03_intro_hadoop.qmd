@@ -340,6 +340,46 @@ Notice that Hadoop/MapReduce is not the panacea for all Big Data problems. In pa
 :::
 
 # The MapReduce programming paradigm
+The MapReduce programming paradigm is based on the basic concepts of Functional programming. Actually, MapReduce "implements" a subset of functional programming, and, because of this, the programming model appears quite limited and strict: everything is based on two "functions" with predefined signatures, that are Map and Reduce.
+
+## What can MapReduce do
+Solving complex problems is difficult, however there are several important problems that can be adapted to MapReduce
+
+- Log analysis
+- PageRank computation 
+- Social graph analysis
+- Sensor data analysis
+- Smart-city data analysis
+- Network capture analysis
+
+## Building blocks: Map and Reduce
+MapReduce is based on two main "building blocks", which are the Map and Reduce functions.
+
+- Map function: it is applied over each element of an input data set and emits a set of (key, value) pairs
+- Reduce function: it is applied over each set of (key, value) pairs (emitted by the Map function) with the same key and emits a set of (key, value) pairs. This is the final result.
+
+## Solving the word count problem
+| Input | Problem | Output |
+| --- | --- | --- |
+| a large textual file of words | count the number of times each distinct word appears in the file | a list of pairs word, number, counting the number of occurrences of each specific word in the input file |
+
+The input textual file is considered as a list $L$ of words
+
+$$
+L = [\text{toy}, \text{example}, \text{toy}, \text{example}, \text{hadoop}]
+$$
 
 ![Word count running example](images\03_intro_hadoop\mapreduce_paradigm.png){width=80%}
 
+- Map phase: apply a function on each element
+- Shuffle and sort phase: group by key
+- Reduce phase: apply a function on each group
+
+
+A key-value pair $(w, 1)$ is emitted for each word $w$ in $L$
+In other words, the map function $m$ is 
+$$
+m(w) = (w, 1)
+$$
+
+A new list of (key, value) pairs $L_m$ is generated
