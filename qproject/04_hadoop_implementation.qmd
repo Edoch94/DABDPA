@@ -1,0 +1,564 @@
+---
+title: "How to write MapReduce programs in Hadoop"
+---
+Designers and developers focus on the definition of the Map and Reduce functions (i.e., $m$ and $r$), and they don't need to manage the distributed execution of the map, shuffle and sort, and reduce phases. Indeed, the Hadoop framework coordinates the execution of the MapReduce program, managing:
+
+- the parallel execution of the map and reduce phases
+- the execution of the shuffle and sort phase
+- the scheduling of the subtasks
+- the synchronization
+
+# The components: summary
+The programming language to use to give instructions to Hadoop is Java. A Hadoop MapReduce program consists of three main parts:
+
+- Driver
+- Mapper
+- Reducer
+
+Each part is "implemented" by means of a specific class.
+
+:::{.callout-tip}
+## Terminology
+| Term | Definition |
+| --- | --- |
+| Driver class | The class containing the method/code that coordinates the configuration of the job and the “workflow” of the application |
+| Mapper class | A class "implementing" the map function |
+| Reducer class | A class "implementing" the reduce function |
+| Driver | Instance of the Driver class (i.e., an object) |
+| Mapper | Instance of the Mapper class (i.e., an object) |
+| Reducer | Instance of the Reducer class (i.e., an object) |
+| (Hadoop) Job | Execution/run of a MapReduce code over a data set |
+| Task | Execution/run of a Mapper (Map task) or a Reducer (Reduce task) on a slice of data. Notice that there may be many tasks for each job |
+| Input split | Fixed-size piece of the input data. Usually each split has approximately the same size of a HDFS block/chunk |
+: {tbl-colwidths="[20,80]"}
+:::
+
+## Driver
+The Driver is characterized by the `main()` method, which accepts arguments from the command line (i.e., it is the entry point of the application).
+
+- It configures the job
+- It submits the job to the Hadoop Cluster
+- It "coordinates" the work flow of the application 
+- It runs on the client machine (i.e., it does not run on the cluster)
+
+## Mapper
+The Mapper is an instance of the Mapper class.
+
+- It "implements" the map phase;
+- It is characterized by the `map()` method, which processes the `(key, value)` pairs of the input file and emits `(key, value)` pairs and is invoked one time for each input `(key, value)` pair;
+- It runs on the cluster.
+
+## Reducer
+The Reducer is an instance of the Reduce class.
+
+- It "implements" the reduce phase;
+- It is characterized by the `reduce()` method, which processes `(key, [list of values])` pairs and emits `(key, value)` pairs and is invoked one time for each distinct key;
+- It runs on the cluster.
+
+# Hadoop implementation of the MapReduce phases
+The main characteristics Hadoop implementation of the MapReduce are the following
+
+- The input `key-value` pairs are read from the HDFS file system.
+- The map method of the Mapper is invoked over each input `key-value` pair, and emits a set of intermediate `key-value` pairs that are stored in the local file system of the computing server (they are not stored in HDFS).
+- The intermediate results are aggregated by means of a shuffle and sort procedure, and a set of `(key, [list of values])` pairs is generated. Notice that one `(key, [list of values])` for each distinct key.
+- The reduce method of the Reducer is applied over each `(key, [list of values])` pair, and emits a set of `key-value` pairs that are stored in HDFS (the final result of the MapReduce application).
+- Intermediate `key-value` pairs are transient, which means that they are not stored on the distributed files system, while they are stored locally to the node producing or processing them.
+- In order to parallelize the work/the job, Hadoop executes a set of tasks in parallel
+    - It instantiates one Mapper (Task) for each input split
+    - It instantiates a user-specified number of Reducers: each reducer is associated with a set of keys, and it receives and processes all the key-value pairs associated with its set of keys
+- Mappers and Reducers are executed on the nodes/servers of the clusters
+
+![MapReduce data flow with a single reducer](images\04_hadoop_implementation\data_flow_single_reducer.png){width=80%}
+
+![MapReduce data flow with multiple reducers](images\04_hadoop_implementation\data_flow_multiple_reducers.png){width=80%}
+
+## Driver
+The Driver class extends the `org.apache.hadoop.conf.Configured` class and implements the `org.apache.hadoop.util.Tool` interface. 
+
+It is possible to write a Driver class that does not extend Configured and does not implement Tool, however some low level details related to some command line parameters must be managed in that case.
+
+The designer/developer implements the `main()` and `run()` methods.
+
+The `run()` method configures the job, defining
+
+- The name of the Job
+- The job Input format
+- The job Output format
+- The mapper class
+    - Name of the class
+    - Type of its input `(key, value)` pairs 
+    - Type of its output `(key, value)` pairs
+- The Reducer class
+    - Name of the class
+    - Type of its input `(key, value)` pairs 
+    - Type of its output `(key, value)` pairs
+- The Number of reducers
+
+## Mapper
+The Mapper class extends the 
+```java
+org.apache.hadoop.mapreduce.Mapper
+``` 
+class which is a generic type/generic class with four type parameters: 
+
+- input key type
+- input value type
+- output key type
+- output value type
+
+The designer/developer implements the `map()` method, that is automatically called by the framework for each `(key, value)` pair of the input file. 
+
+The `map()` method
+
+- Processes its input `(key, value)` pairs by using standard Java code
+- Emits `(key, value)` pairs by using the `context.write(key, value)` method
+
+## Reducer
+The Reducer class extends the 
+```java
+org.apache.hadoop.mapreduce.Reducer
+``` 
+class, which is a generic type/generic class with four type parameters: 
+
+- input key type
+- input value type
+- output key type
+- output value type
+
+The designer/developer implements the `reduce()` method, that is automatically called by the framework for each `(key, [list of values])` pair obtained by aggregating the output of the mapper(s).
+
+The `reduce()` method
+
+- Processes its input `(key, [list of values])` pairs by using standard Java code
+- Emits `(key, value)` pairs by using the `context.write(key, value)` method
+
+## Data Types
+Hadoop has its own basic data types optimized for network serialization
+
+- `org.apache.hadoop.io.Text`: like Java String
+- `org.apache.hadoop.io.IntWritable`: like Java Integer
+- `org.apache.hadoop.io.LongWritable`: like Java Long
+- `org.apache.hadoop.io.FloatWritable`: like Java Float
+- ...
+
+The basic Hadoop data types implement the `org.apache.hadoop.io.Writable` and `org.apache.hadoop.io.WritableComparable` interfaces
+
+- All classes (data types) used to represent **keys** are instances of `WritableComparable`: keys must be "comparable" for supporting the sort and shuffle phase
+- All classes (data types) used to represent **values** are instances of `Writable`: usually, they are also instances of `WritableComparable` even if it is not indispensable
+
+Developers can define new data types by implementing the `org.apache.hadoop.io.Writable` and/or `org.apache.hadoop.io.WritableComparable` interfaces, allowing to manage complex data types.
+
+## `InputFormat`
+The input of the MapReduce program is an HDFS file (or an HDFS folder), but the input of the Mapper is a set of `(key, value)` pairs.
+
+The classes extending the `org.apache.hadoop.mapreduce.InputFormat` abstract class are used to read the input data and "logically transform" the input HDFS file in a set of `(key, value)` pairs.
+
+`InputFormat` describes the input-format specification for a MapReduce application and processes the input file(s). The `InputFormat` class is used to 
+
+- Read input data and validate the compliance of the input file with the expected input-format
+- Split the input file(s) into logical Input Splits, each of which is then assigned to an individual Mapper
+- Provide the `RecordReader` implementation to be used to divide the logical input split in a set of `(key,value)` pairs (also called records) for the mapper
+
+![Getting data to the Mapper](images\04_hadoop_implementation\from_hdfs_to_mapper.png){width=80%}
+
+`InputFormat` identifies partitions of the data that form an input split
+
+- Each input split is a (reference to a) part of the input file processed by a single mapper
+- Each split is divided into records, and the mapper processes one record (i.e., a `(key,value)` pair) at a time
+
+A set of predefined classes extending the `InputFormat` abstract class are available for standard input file formats
+
+- `TextInputFormat`: `InputFormat` for plain text files
+- `KeyValueTextInputFormat`: another `InputFormat` for plain text files
+- `SequenceFileInputFormat`: an `InputFormat` for sequential/binary files
+- ...
+
+### `TextInputFormat`
+`TextInputFormat` is an `InputFormat` for plain text files. Files are broken into lines, where either linefeed or carriage-return are used to signal end of line. One pair `(key, value)` is emitted for each line of the file:
+
+- Key is the position (offset) of the line in the file
+- Value is the content of the line
+
+:::{.callout-note collapse="true"}
+## `TextInputFormat` example
+![Getting data to the Mapper](images\04_hadoop_implementation\textinputformat_example.png){width=80%}
+:::
+
+### `KeyValueTextInputFormat`
+`KeyValueTextInputFormat` is an `InputFormat` for plain text files, where each line must have the format 
+```
+key<separator>value
+```
+and the default separator is tab (`\t`).
+
+Files are broken into lines, and either linefeed or carriage-return are used to signal end of line, and each line is split into key and value parts by considering the separator symbol/character.
+
+One pair `(key, value)` is emitted for each line of the file
+- Key is the text preceding the separator
+- Value is the text following the separator
+
+:::{.callout-note collapse="true"}
+## `KeyValueTextInputFormat` example
+![Getting data to the Mapper](images\04_hadoop_implementation\keyvaluetextinputformat_example.png){width=80%}
+:::
+
+## `OutputFormat`
+The classes extending the `org.apache.hadoop.mapreduce.OutputFormat` abstract class are used to write the output of the MapReduce program in HDFS.
+
+A set of predefined classes extending the `OutputFormat` abstract class are available for standard output file formats
+- `TextOutputFormat`: an `OutputFormatfor` plain text files
+- `SequenceFileOutputFormat`: an `OutputFormatfor` sequential/binary files
+- ...
+
+### `TextOutputFormat`
+`TextOutputFormat` is an `OutputFormat` for plain text files: for each output `(key, value)` pair, `TextOutputFormat` writes one line in the output file. In particular, the format of each output line is 
+```java
+"key\tvalue\n"
+```
+
+# Structure of a MapReduce program in Hadoop
+## Driver
+```java
+/* Set package */
+package it.polito.bigdata.hadoop.mypackage;
+
+/* Import libraries */
+import java.io.IOException;
+
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+
+/* Driver class */
+public class MapReduceAppDriver extends Configured implements Tool {
+    @Override
+    public int run(String[] args) throws Exception {
+        /* variables */
+        int exitCode; 
+        //...
+
+        // Parse parameters
+        numberOfReducers = Integer.parseInt(args[0]);
+        inputPath = new Path(args[1]);
+        outputDir = new Path(args[2]);
+
+        // Define and configure a new job
+        Configuration conf = this.getConf();
+        Job job = Job.getInstance(conf); 
+
+        // Assign a name to the job
+        job.setJobName("My First MapReduce program");
+
+        // Set path of the input file/folder (if it is a folder, the job reads all the files in the specified folder) for this job
+        FileInputFormat.addInputPath(job, inputPath);
+
+        // Set path of the output folder for this job
+        FileOutputFormat.setOutputPath(job, outputDir);
+
+        // Set input format
+        // TextInputFormat = textual files
+        job.setInputFormatClass(TextInputFormat.class);
+
+        // Set job output format
+        job.setOutputFormatClass(TextOutputFormat.class);
+
+        // Specify the class of the Driver for this job
+        job.setJarByClass(MapReduceAppDriver .class);
+
+        // Set mapper class
+        job.setMapperClass(MyMapperClass.class);
+        
+        // Set map output key and value classes
+        job.setMapOutputKeyClass(output key type.class);
+        job.setMapOutputValueClass(output value type.class);
+
+        // Set reduce class
+        job.setReducerClass(MyReducerClass.class);
+
+        // Set reduce output key and value classes
+        job.setOutputKeyClass(output key type.class);
+        job.setOutputValueClass(output value type.class);
+
+        // Set number of reducers
+        job.setNumReduceTasks(numberOfReducers);
+
+        // Execute the job and wait for completion
+        if (job.waitForCompletion(true)==true)
+            exitCode=0;
+        else
+            exitCode=1;
+        return exitCode;
+    } // End of the run method
+
+    /* main method of the driver class */
+    public static void main(String args[]) throws Exception {
+    /* Exploit the ToolRunner class to "configure" and run the Hadoop application */
+    int res = ToolRunner.run(new Configuration(), 
+    new MapReduceAppDriver(), args);
+    System.exit(res);
+    } // End of the main method
+} // End of public class MapReduceAppDriver
+```
+## Mapper
+```java
+/* Set package */
+package it.polito.bigdata.hadoop.mypackage;
+
+/* Import libraries */
+import java.io.IOException;
+
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.io.*;
+
+/* Mapper Class */
+class myMapperClass extends Mapper<
+    MapperInputKeyType, // Input key type (must be consistent with the InputFormat class specified in the Driver)
+    MapperInputValueType, // Input value type (must be consistent with the InputFormat class specified in the Driver)
+    MapperOutputKeyType, // Output key type
+    MapperOutputValueType // Output value type
+>{
+/* Implementation of the map method */
+    protected void map(
+        MapperInputKeyType key, // Input key
+        MapperInputValueType value, // Input value
+        Context context
+    ) throws IOException, InterruptedException {
+
+        /* Process the input (key, value) pair and emit a set of (key,value pairs.context.write(..) is used to emit (key, value) pairs context.write(new outputkey, new outputvalue); */
+
+    } // End of the map method
+} // End of class myMapperClass
+```
+## Reducer
+```java
+/* Set package */
+package it.polito.bigdata.hadoop.mypackage;
+
+/* Import libraries */
+import java.io.IOException;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.io.*;
+
+/* Reducer Class */
+class myReducerClass extends Reducer<
+    ReducerInputKeyType, // Input key type (must be consistent with the OutputKeyType of the Mapper)
+    ReducerInputValueType, // Input value type (must be consistent with the OutputValueType of the Mapper)
+    ReducerOutputKeyType, // Output key type (must be consistent with the OutputFormat class specified in the Driver)
+    ReducerOutputValueType // Output value type (must be consistent with the OutputFormat class specified in the Driver)
+>{
+    /* Implementation of the reduce method */
+    protected void reduce(
+        ReducerInputKeyType key, // Input key
+        Iterable<ReducerInputValueType> values, // Input values (list of values)
+        Context context
+    ) throws IOException, InterruptedException {
+
+        /* Process the input (key, [list of values]) pair and emit a set of (key,value) pairs. context.write(..) is used to emit (key, value) pairs context.write(new outputkey, new outputvalue); */
+
+    } // End of the reduce method
+} // End of class myReducerClass
+```
+# Example of a MapReduce program in Hadoop: Word Count
+The Word count problem consists of
+
+- Input: (unstructured) textual file, where each line of the input file can contains a set of words
+- Output: number of occurrences of each word appearing in the input file 
+- Parameters/arguments of the application:
+    - `args[0]`: number of instances of the reducer
+    - `args[1]`: path of the input file
+    - `args[2]`: path of the output folder
+
+:::{.callout-note collapse="true"}
+## Word Count input and output examples
+**Input file**
+```
+Toy example file for Hadoop. Hadoop running example.
+```
+
+**Output file**
+```
+(toy,1)
+(example,2)
+(file,1)
+(for,1)
+(hadoop,2)
+(running,1)
+```
+:::
+## Driver
+```java
+/* Set package */
+package it.polito.bigdata.hadoop.wordcount;
+
+/* Import libraries */
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
+
+/* Driver class */
+public class WordCount extends Configured implements Tool {
+    @Override
+    public intrun(String[] args) throws Exception {
+        Path inputPath;
+        Path outputDir;
+        int numberOfReducers;
+        int exitCode; 
+        
+        // Parse input parameters
+        numberOfReducers = Integer.parseInt(args[0]);
+        inputPath = new Path(args[1]);
+        outputDir = new Path(args[2]);
+
+        // Define and configure a new job
+        Configuration conf = this.getConf();
+        Job job = Job.getInstance(conf); 
+        
+        // Assign a name to the job
+        job.setJobName("WordCounter");
+
+        // Set path of the input file/folder (if it is a folder, the job reads all the files in the specified folder) for this job
+        FileInputFormat.addInputPath(job, inputPath);
+
+        // Set path of the output folder for this job
+        FileOutputFormat.setOutputPath(job, outputDir);
+
+        // Set input format
+        // TextInputFormat = textual files 
+        job.setInputFormatClass(TextInputFormat.class);
+
+        // Set job output format
+        job.setOutputFormatClass(TextOutputFormat.class);
+
+        // Specify the class of the Driver for this job
+        job.setJarByClass(WordCount.class);
+
+        // Set mapper class
+        job.setMapperClass(WordCountMapper.class);
+        
+        // Set map output key and value classes
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        // Set reduce class
+        job.setReducerClass(WordCountReducer.class);
+        
+        // Set reduce output key and value classes
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+
+        // Set number of reducers
+        job.setNumReduceTasks(numberOfReducers);
+
+        // Execute the job and wait for completion
+        if (job.waitForCompletion(true)==true)
+            exitCode=0;
+        else
+            exitCode=1;
+        return exitCode;
+    } // End of the run method
+
+    /* main method of the driver class */
+    public static void main(String args[]) throws Exception {
+
+        /* Exploit the ToolRunner class to "configure" and run the 
+        Hadoop application */
+    
+        intres = ToolRunner.run(
+            new Configuration(), 
+            new WordCount(), 
+            args
+        );
+        System.exit(res);
+    } // End of the main method
+} // End of public class WordCount
+```
+## Mapper
+```java
+/* Set package */
+package it.polito.bigdata.hadoop.wordcount;
+
+/* Import libraries */
+import java.io.IOException;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
+
+/* MapperClass */
+class WordCountMapper extends Mapper<
+    LongWritable, // Input key type
+    Text, // Input value type
+    Text, // Output key type
+    IntWritable // Output value type
+>{
+    /* Implementation of the map method */
+    protected void map(
+        LongWritable key, // Input key type
+        Text value, // Input value type
+        Context context
+    ) throws IOException, InterruptedException {
+    // Split each sentence in words. Use whitespace(s) as delimiter
+    // The split method returns an array of strings
+    String[] words = value.toString().split("\\s+");
+
+    // Iterate over the set of words
+    for(String word : words) {
+        // Transform word case
+        String cleanedWord = word.toLowerCase();
+
+        // emit one pair (word, 1) for each input word
+        context.write(new Text(cleanedWord), new IntWritable(1));
+        }
+    } // End map method
+} // End of class WordCountMapper
+```
+## Reducer
+```java
+/* Set package */
+package it.polito.bigdata.hadoop.wordcount;
+
+/* Import libraries */
+import java.io.IOException;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Reducer;
+
+/* Reducer Class */
+class WordCountReducer extends Reducer<
+Text, // Input key type
+IntWritable, // Input value type
+Text, // Output key type
+IntWritable // Output value type
+>{
+    /* Implementation of the reduce method */
+    protected void reduce(
+        Text key, // Input key type
+        Iterable<IntWritable> values, // Input value type
+        Context context
+    ) throws IOException, InterruptedException{
+        int occurrances= 0;
+        
+        // Iterate over the set of values and sum them 
+        for (IntWritable value : values) {
+            occurrances = occurrances+ value.get();
+        }
+
+        // Emit the total number of occurrences of the current word
+        context.write(key, new IntWritable(occurrances));
+    } // End reduce method
+} // End of class WordCountReducer
+```

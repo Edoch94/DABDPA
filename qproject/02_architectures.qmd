@@ -123,4 +123,4 @@ In general, the technologies used are
     - views: HBase, Cassandra, MongoDB
 3. Serving layer
 
-In general: choose the most suitable technology, but also be able to adapt on what's available
+In general: choose the most suitable technology, but also be able to adapt on what's available.

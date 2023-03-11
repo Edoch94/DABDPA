@@ -21,11 +21,11 @@ Consider this situation: you have to analyze 10 billion web pages, and the avera
 :::
 
 ## Failures
-Failures are part of everyday life, especially in a data center. A single server stays up for 3 years (~1000 days)
+Failures are part of everyday life, especially in a data center. A single server stays up for 3 years (~1000 days). Statistically
 
-- 10 servers: 1 failure every 100 days (~3 months)
-- 100 servers: 1 failure every 10 days 
-- 1000 servers: 1 failure/day
+- With 10 servers: 1 failure every 100 days (~3 months)
+- With 100 servers: 1 failure every 10 days 
+- With 1000 servers: 1 failure/day
 
 The main sources of failures
 
@@ -51,15 +51,14 @@ Disk drive failure analysis [FAST 2007]
 :::
 
 Failure types
+
 - Permanent (e.g., broken motherboard)
 - Transient (e.g., unavailability of a resource due to overload)
 
 ## Network bandwidth
-Network becomes the bottleneck if big amounts of data need to be exchanged between nodes/servers
+Network becomes the bottleneck if big amounts of data need to be exchanged between nodes/servers. Assuming a network bandwidth (in a data centre) equal to 10 Gbps, it means that moving 10 TB from one server to another would take more than 2 hours. So, data should be moved across nodes only when it is indispensable. 
 
-- Network bandwidth (in a data center): 10Gbps
-- Moving 10 TB from one server to another takes more than 2 hours. Data should be moved across nodes only when it is indispensable.
-- Usually, codes/programs are small (few MBs): move code (programs) and computation to data. (**Data Locality**)
+Instead of moving data to the data centre, the code (i.e., programs) should be moved between the nodes: this approach is called **Data Locality**, and in this way very few MBs of code are exchanged between the severs, instead of huge amount of data.
 
 # Architectures
 ## Single node architecture
@@ -84,18 +83,25 @@ Large data: data can not be completely loaded in main memory.
 ::::
 
 ## Cluster architecture
-Cluster of servers (data center)
+To overcome the previously explained issues, a new architecture based on clusters of servers (i.e., data centres) has been devised. In this way:
 
 - Computation is distributed across servers
 - Data are stored/distributed across servers
 
-Standard architecture in the Big data context (∼2012)
+The standard architecture in the Big data context (∼2012) is based on
 
 - Cluster of commodity Linux nodes/servers (32 GB of main memory per node)
 - Gigabit Ethernet interconnection
 
-## Commodity cluster architecture
+### Commodity cluster architecture
 ![Commodity cluster architecture](images\03_intro_hadoop\commodity_cluster_architecture.png){width=80%}
+
+The servers in each rack are very similar to each other, so that the servers would take the same time to process the data and none of them will become a bottleneck for the overall processing.
+
+Notice that 
+
+- In each rack, the servers are directly connected with each other in pairs
+- Racks are directly connected with each other in pairs
 
 ## Scalability
 Current systems must scale to address
@@ -110,8 +116,8 @@ Two approaches are usually used to address scalability issues
 - Horizontal scalability (scale out)
 
 ### Scale up vs. Scale out
-- Vertical scalability (*scale up*): add more power/resources (main memory, CPUs) to a single node (high-performing server). The cost of super-computers is not linear with respect to their resources.
-- Horizontal scalability (*scale out*): add more nodes (commodity servers) to a system. The cost scales approximately linearly with respect to the number of added nodes. But data center efficiency is a difficult problem to solve.
+- Vertical scalability (*scale up*): **add more power/resources** (i.e., main memory, CPUs) to a **single node** (high-performing server). The cost of super-computers is not linear with respect to their resources: the marginal cost increases as the power/resources increase.
+- Horizontal scalability (*scale out*): **add more nodes** (commodity servers) to a system. The cost scales approximately linearly with respect to the number of added nodes. But data center efficiency is a difficult problem to solve.
 
 For data-intensive workloads, a large number of commodity servers is preferred over a small number of high-performing servers, since, at the same cost, it is possible to deploy a system that processes data more efficiently and is more fault-tolerant.
 
@@ -119,38 +125,42 @@ Horizontal scalability (scale out) is preferred for big data applications, but d
 
 ## Cluster computing challenges
 1. Distributed programming is hard
-
-- Problem decomposition and parallelization
-- Task synchronization
+    - Problem decomposition and parallelization
+    - Task synchronization
 
 2. Task scheduling of distributed applications is critical: assign tasks to nodes by trying to 
-
-- Speed up the execution of the application 
-- Exploit (almost) all the available resources
-- Reduce the impact of node failures
+    - Speed up the execution of the application 
+    - Exploit (almost) all the available resources
+    - Reduce the impact of node failures
 
 3. Distributed data storage
 
-How do we store data persistently on disk and keep it available if nodes can fail? Redundancy is the solution, but it increases the complexity of the system
+How to store data persistently on disk and keep it available if nodes can fail? **Redundancy** is the solution, but it increases the complexity of the system.
 
 4. Network bottleneck
-Reduce the amount of data send through the network by moving computation and code to data
 
+Reduce the amount of data send through the network by moving computation and code to data.
+
+:::{.callout-note collapse="true"}
+## Distributed computing history
 Distributed computing is not a new topic
 
 - HPC (High-performance computing) ~1960
 - Grid computing ~1990
 - Distributed databases ~1990
 
-Hence, many solutions to the mentioned challenges are already available, but we are now facing big data driven-problems: the former solutions are not adequate to address big data volumes.
+Hence, many solutions to the mentioned challenges are already available, but we are now facing big data-driven problems: the former solutions are not adequate to address big data volumes.
+:::
 
 ## Typical Big data problem
-Typical Big Data Problem
+The typical way to address a Big Data problem (given a collection of historical data)
 
 - Iterate over a large number of records/objects 
 - Extract something of interest from each record/object
 - Aggregate intermediate results
 - Generate final output
+
+Notice that, if in the second step it is needed to have some kind of knowledge of what's in the other records, this Big data framework is not the best solution: the computations on isolated records is not possible anymore, and so this whole architecture is not suitable.
 
 The challenges: 
 
@@ -165,8 +175,8 @@ It is scalable fault-tolerant distributed system for Big Data
 
 - Distributed Data Storage 
 - Distributed Data Processing 
-- Borrowed concepts/ideas from the systems designed at Google (Google File System for Google's MapReduce) 
-- Open source project under the Apache license, but there are also many commercial implementations (e.g., Cloudera, Hortonworks, MapR)
+
+It borrowed concepts/ideas from the systems designed at Google (Google File System for Google's MapReduce). It is open source project under the Apache license, but there are also many commercial implementations (e.g., Cloudera, Hortonworks, MapR).
 
 ::: {.callout-note collapse="true"}
 ### Hadoop history
@@ -220,46 +230,73 @@ Core components of Hadoop:
     - High availability distributed storage
     - Fault-tolerant
 
+Hadoop virtualizes the file system, so that the interaction resembles a local file system, even if this case it spans on multiple disks on multiple servers.
+
+So Hadoop is in charge of:
+
+- splitting the input files
+- store the data in different servers 
+- managing the reputation of the blocks
+
 ![Hadoop main components](images\03_intro_hadoop\hadoop_main_components.png){width=80%}
 
-## Distributed Big data processing infrastructure
-It separates the *what* from the *how*
+Notice that, in this example, the number of replicas (i.e., the number of copies) of each block (e.g., $C_0$, $C_1$, $C_6$, etc.) is equal to two. Multiple copies are needed to correctly manage server failures: two copies are never stored in the same server.
 
-- Hadoop programs are based on the MapReduce programming paradigm
-- MapReduce abstracts away the “distributed” part of the problem (scheduling, synchronization, etc): programmers focus on the *what*
-- The distributed part (scheduling, synchronization, etc) of the problem is handled by the framework: the Hadoop infrastructure focuses on the *how*
+Notice that, with 2 copies of the same file, the user is always sure that 1 failure can be managed with no interruptions in the data processing and without the risk of losing data. In general, the number of failures that and HDFS can sustain with no repercussions is equal to $(\textbf{number of copies})-1$.
+
+When a failure occures, Hadoop immediately starts to create new copies of the data, to reach again the set number of replicas.
+
+## Distributed Big data processing infrastructure
+Hadoop allows to separate the *what* from the *how* because Hadoop programs are based on the MapReduce programming paradigm:
+
+- MapReduce abstracts away the "distributed" part of the problem (scheduling, synchronization, etc), so that programmers can focus on the *what*;
+- the distributed part (scheduling, synchronization, etc) of the problem is handled by the framework: the Hadoop infrastructure focuses on the *how*.
 
 But an in-depth knowledge of the Hadoop framework is important to develop efficient applications: the design of the application must exploit data locality and limit network usage/data sharing.
 
 ## HDFS
 HDFS is the standard Apache Hadoop distributed file system. It provides global file namespace, and stores data redundantly on multiple nodes to provide persistence and availability (fault-tolerant file system).
 
-The typical usage pattern:
+The typical usage pattern for Hadoop:
 
-- Huge files (GB to TB)
-- Data is rarely updated
-- Reads and appends are common, and random read/write operations are not performed
+- huge files (GB to TB);
+- data is rarely updated (create new files or append to existing ones);
+- reads and appends are common, and random read/write operations are not performed.
 
-Each file is split in "chunks/blocks" that are spread across the servers
+Each file is split in **chunks** (also called **blocks**) that are spread across the servers. 
 
 - Each chunck is replicated on different servers (usually there are 3 replicas per chunk), ensuring persistence and availability. To further increase persistence and availability, replicas are stored in different racks, if it possible.
-- Each chunk/block contains a part of the content of one single file. It is not possible to have the content of two files in the same chunk/block
-- Typically each chunk is 64-128 MB
+- Each chunk contains a part of the content of *one single file*. It is not possible to have the content of two files in the same chunk/block
+- Typically each chunk is 64-128 MB, and the chunk size is defined when configuring Hadoop. 
+
+:::{.callout-note collapse="true"}
+## Example
+![2 files in 4 chunks](images\03_intro_hadoop\hdfs_chunks_example.png){width=80%}
+
+Each square represents a chunk in the HDFS. Each chunk contains 64 MB of data, so file 1 (65 MB) sticks out by 1 MB from a single chunk, while file 2 (127 MB) does not completely fill two chunks. The empty chunk portions are not filled by any other file.
+
+So, even if the total space occupied from the files would be 192 MB (3 chunks), the actual space they occupy is 256 (4 chunks): Hadoop does not allow two files to occupy the same chunk, so that two different processes would not try to access a block at the same time. 
+:::
 
 The Master node, (a.k.a., *Name Nodes* in HDFS) is a special node/server that 
 
 - Stores HDFS metadata (e.g., the mapping between the name of a file and the location of its chunks)
-- Might be replicated
+- Might be replicated (to prevent stoppings due to the failure of the Master node)
 
 Client applications can access the file through HDFS APIs: they talk to the master node to find data/chuck servers associated with the file of interest, and then connect to the selected chunk servers to access data.
 
 ::: {.callout-tip}
 ### Hadoop ecosystem
-Each project/system addresses one specific class of problems.
+The HDFS and the YARN scheduler are the two main components of Hadoop, however there are modules, and each project/system addresses one specific class of problems.
 
-- Sqoop: a tool for efficiently moving data from traditional relational databases and external flat file sources to HDFS
-- ZooKeeper: a distributed coordination service. It provides primitives such as distributed locks
-- ... 
+- Hive: a distributed relational database, based on MapReduce, for querying data stored in HDFS by means of a query language based on SQL;
+- HBase: a distributed column-oriented database that uses HDFS for storing data;
+- Pig: a data flow language and execution environment, based on MapReduce, for exploring very large datasets;
+- Sqoop: a tool for efficiently moving data from traditional relational databases and external flat file sources to HDFS;
+- ZooKeeper: a distributed coordination service, that provides primitives such as distributed locks.
+- ...
+
+The integration of these components with Hadoop is not as good as the integration of the Spark components with Spark.
 :::
 
 # MapReduce: introduction
@@ -269,13 +306,12 @@ Each project/system addresses one specific class of problems.
 | a large textual file of words | count the number of times each distinct word appears in the file | a list of pairs word, number, counting the number of occurrences of each specific word in the input file |
 
 ### Case 1: Entire file fits in main memory
-A traditional single node approach is probably the most efficient solution in this case
-The complexity and overheads of a distributed system affects the performance when files are "small" ("small" depends on the available resources)
+A traditional single node approach is probably the most efficient solution in this case. The complexity and overheads of a distributed system affects the performance when files are "small" ("small" depends on the available resources).
 
 ### Case 2: File too large to fit in main memory
-How can we split this problem in a set of (almost) independent sub-tasks, and execute them in parallel on a cluster of servers?
+How to split this problem in a set of (almost) independent sub-tasks, and execute them in parallel on a cluster of servers?
 
-Assume that
+Assuming that
 
 - The cluster has 3 servers
 - The content of the input file is: "Toy example file for Hadoop. Hadoop running example"
@@ -289,29 +325,32 @@ The problem can be easily parallelized:
 1. Each server processes its chunk of data and counts the number of times each word appears in its own chunk
     - Each server can execute its sub-task independently from the other servers of the cluster: asynchronization is not needed in this phase
     - The output generated from each chunk by each server represents a partial result
-2. Each server sends its local (partial) list of pairs <word, number of occurrences in its chunk> to a server that is in charge of aggregating all local results and computing the global result. The server in charge of computing the global result needs to receive all the local (partial) results to compute and emit the final list: a synchronization operation is needed in this phase.
+2. Each server sends its local (partial) list of pairs $<\textbf{word}, \textbf{number of occurrences in its chunk}>$ to a server that is in charge of aggregating all local results and computing the global result. The server in charge of computing the global result needs to receive all the local (partial) results to compute and emit the final list: a synchronization operation is needed in this phase.
 
 Assume a more realistic situation
 
 - The file size is 100 GB and the number of distinct words occurring in it is at most 1000
 - The cluster has 101 servers
-- The file is spread acr0ss 100 servers and each of these servers contains one (different) chunk of the input file (i.e., the file is optimally spread across 100 servers, and so each server contains 1/100 of the file in its local hard drives)
+- The file is spread across 100 servers (1 server is the Master node) and each of these servers contains one (different) chunk of the input file (i.e., the file is optimally spread across 100 servers, and so each server contains 1/100 of the file in its local hard drives)
 
 #### Complexity
-- Each server reads 1 GB of data from its local hard drive (it reads one chunk from HDFS): few seconds
-- Each local list consists of at most 1,000 pairs (because the number of distinct words is 1,000): few MBs
-- The maximum amount of data sent on the network is 100 x size of local list (number of servers x local list size): some MBs
+- Each server reads 1 GB of data from its local hard drive (it reads one chunk from HDFS): the time needed to process the data is equal to a few seconds;
+- Each local list consists of at most 1,000 pairs (because the number of distinct words is 1,000): each list consists of a few MBs;
+- The maximum amount of data sent on the network is 100 times the size of a local list (number of servers x local list size): the MBs that are moved through the network consists of some MBs.
+
+So, the critical step is the first one: the result of this phase should be as small as possible, to reduce the data moving between nodes during the following phase. 
+
+Is also the aggregating step parallelizable? Yes, in the sense that the key-value pairs associated with the same key are sent to the same server in order to apply the aggregating function. So, different servers work in parallel, computing the aggregations on different keys. 
 
 #### Scalability
 Scalability can be defined along two dimensions
 
-- In terms of data: given twice the amount of data, the word count algorithm takes approximately no more than twice as long to run. Each server has to process twice the data, and so execution time to compute local list is doubled.
-- In terms of resources: given twice the number of servers, the word count algorithm takes approximately no more than half as long to run. Each server processes half of the data, and execution time to compute local list is halved.
+- In terms of **data**: given twice the amount of data, the word count algorithm takes approximately no more than twice as long to run. Each server has to process twice the data, and so execution time to compute local list is doubled.
+- In terms of **resources**: given twice the number of servers, the word count algorithm takes approximately no more than half as long to run. Each server processes half of the data, and execution time to compute local list is halved.
 
 We are assuming that the time needed to send local results to the node in charge of computing the final result and the computation of the final result are considered negligible in this running example. However, notice that frequently this assumption is not true, indeed it depends on the complexity of the problem and on the ability of the developer to limit the amount of data sent on the network.
 
 ## MapReduce approach key ideas
-
 - Scale "out", not "up": increase the number of servers, avoiding to upgrade the resources (CPU, memory) of the current ones
 - Move processing to data: the network has a limited bandwidth
 - Process data sequentially, avoid random access: seek operations are expensive. Big data applications usually read and analyze all input records/objects: random access is useless
@@ -321,7 +360,6 @@ Traditional distributed systems (e.g., HPC) move data to computing nodes (server
 So, Hadoop moves code to data: code (few KB) is copied and executed on the servers where the chunks of data are stored. This approach is based on "data locality".
 
 ## Hadoop and MapReduce usage scope
-
 Hadoop/MapReduce is designed for
 
 - Batch processing involving (mostly) full scans of the input data
@@ -329,6 +367,8 @@ Hadoop/MapReduce is designed for
     - Read and process the whole Web (e.g., PageRank computation) 
     - Read and process the whole Social Graph (e.g., LinkPrediction, a.k.a. "friend suggestion")
     - Log analysis (e.g., Network traces, Smart-meter data)
+
+In general, MapReduce can be used when the same function is applied on multiple records **one at a time**, and its result then has to be aggregated. 
 
 ::: {.callout-warning}
 Notice that Hadoop/MapReduce is not the panacea for all Big Data problems. In particular, does not feet well
@@ -371,68 +411,66 @@ $$
 
 ![Word count running example](images\03_intro_hadoop\mapreduce_paradigm.png){width=80%}
 
-- Map phase: apply a function on each element
-- Shuffle and sort phase: group by key
-- Reduce phase: apply a function on each group
+- Map phase: apply a function on each element of a list of key-value pairs (notice that the example above is not 100% correct: the elements of the list should also be key-value pairs);
+- Shuffle and sort phase: group by key; in this phase the key-value pairs having the same key are collected together in the same node, but no computation is performed;
+- Reduce phase: apply an aggregating function on each group; this step can be parallelized: one node may consider some keys, while another one considers others.
 
+A key-value pair $(w, 1)$ is emitted for each word $w$ in $L$.
 
-A key-value pair $(w, 1)$ is emitted for each word $w$ in $L$
 In other words, the Map function $m$ is 
 $$
 m(w) = (w, 1)
 $$
 
-A new list of (key, value) pairs $L_m$ is generated
+A new list of (key, value) pairs $L_m$ is generated. Notice that, in this case the key-value pairs generated for each word is just one, but in other cases more than one key-value pair is generated from each element of the starting list.
 
-The key-value pairs in $L_m$ are aggregated by key (i.e., by word $w$ in the example)
+Then, the key-value pairs in $L_m$ are aggregated by key (i.e., by word $w$ in the example).
 
-1. **Map**
-- One group $G_w$ is generated for each word $w$
-- Each group $G_w$ is a key-list pair 
+### Map
+In the Map step, one group $G_w$ is generated for each word $w$. Each group $G_w$ is a key-list pair 
 $$
 (w, [\textbf{list of values}])
 $$
-where $[\textbf{list of values}]$ contains all the values of the pairs associated with the word $w$
-- $\textbf{[list of values]}$ is a list of $[1, 1, 1, ...]$ in the example 
-- given a group $G_w$, the number of ones $[1, 1, 1, ...]$ is equal to the occurrences of word w in the input file
+where $[\textbf{list of values}]$ contains all the values of the pairs associated with the word $w$. 
 
-2. **Reduce**
+Considering the example, $\textbf{[list of values]}$ is a list of $[1, 1, 1, ...]$, and, given a group $G_w$, the number of ones in $[1, 1, 1, ...]$ is equal to the occurrences of word $w$ in the input file.
+
+Notice that also the input of Map should be a list of key-value pairs. If a simple list of elements is passed to Map, Hadoop transforms the elements in key-value pairs, such that the value is equal to the element (e.g., the word) and the key is equal to the offset of the element in the input file. 
+
+### Reduce
 For each group $G_w$ a key-value pair is emitted as follows 
 $$
 (w,\sum_{G_w}{[\textbf{list of values}]})
 $$ 
-This is the result of the reduce function: $r(G_w) = (w,\sum_{Gw}{[\textbf{list of values}]})$. 
+So, the result of the Reduce function is $r(G_w) = (w,\sum_{Gw}{[\textbf{list of values}]})$. 
 
 The resulting list of emitted pairs is the solution of the word count problem: in the list there is one pair (word $w$, number of occurrences) for each word in our running example.
 
-## Phases
+## MapReduce Phases
 ### Map 
 The Map phase can be viewed as a transformation over each element of a data set. This transformation is a function $m$ defined by developers, and it is invoked one time for each input element. Each invocation of $m$ happens in isolation, allowing the parallelization of the application of $m$ to each element of a data set in a straightforward manner.
 
 The *formal definition* of Map is
-
 $$
 (k_1, v_1) \rightarrow [(k_2, v_2)]
 $$
-
 Notice that 
 
-- Since the input data set is a list of key-value pairs, the argument of the Map function is a key-value pair
-- The Map function emits a list of key-value pairs for each input record, and the list can also be empty
+- Since the input data set is a list of key-value pairs, the argument of the Map function is a key-value pair; so, the Map function $N$ times, where $N$ is the number of input key-value pairs;
+- The Map function emits a list of key-value pairs for each input record, and the list can also be empty;
+- No data is moved between nodes during this phase.
 
 ### Reduce
 The Reduce phase can be viewed as an aggregate operation. The aggregate function is a function $r$ defined by developers, and it is invoked one time for each distinct key, aggregating all the values associated with it. Also the reduce phase can be performed in parallel and in isolation, since each group of key-value pairs with the same key can be processed in isolation.
 
 The *formal definition* of Reduce is
-
 $$
 (k_2, [v_2]) \rightarrow [(k_3, v_3)]
 $$
-
 Notice that 
 
-- The Reduce function receives a list of values $[v2]$ associated with a specific key $k2$
-- The Reduce function emits a list of key-value pairs
+- The Reduce function receives a list of values $[v_2]$ associated with a specific key $k_2$; so the Reduce function is invoked $M$ times, where $M$ is the number of different keys in the input list;
+- The Reduce function emits a list of key-value pairs.
 
 ### Shuffle and sort
 The shuffle and sort phase is always the same: it works by grouping the output of the Map phase by key. It does not need to be defined by developers, and it is already provided by the Hadoop system.
@@ -442,8 +480,7 @@ Key-value pair is the basic data structure in MapReduce. Keys and values can be 
 
 All in all, the design of MapReduce involves imposing the key-value structure on the input and output data sets. For example, in a collection of Web pages, input keys may be URLs and values may be their HTML content.
 
-## MapReduce Algorithms
-In many applications, the key part of the input data set is ignored. In other words, the map function usually does not consider the key of its key-value pair argument (e.g., word count problem). Some specific applications exploit also the keys of the input data (e.g., keys can be used to uniquely identify records/objects).
+In many applications, the key part of the input data set is ignored. In other words, the Map function usually does not consider the key of its key-value pair argument (e.g., word count problem). Some specific applications exploit also the keys of the input data (e.g., keys can be used to uniquely identify records/objects).
 
 ## Pseudocode of word count solution using MapReduce
 **Map**
@@ -456,7 +493,6 @@ def map(key, value):
     '''
     return (value, 1)
 ```
-
 
 **Reduce**
 ```{python code-fold="false"}

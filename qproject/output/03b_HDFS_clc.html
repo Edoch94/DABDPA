@@ -2808,19 +2808,17 @@ Example
 <section id="example-5" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="example-5"><span class="header-section-number">2.1</span> Example</h2>
 <p>The following command executes/submits a MapReduce application</p>
-<div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>hadoop jar MyApplication.jar </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>it.polito.bigdata.hadoop.DriverMyApplication </span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> inputdatafolder<span class="op">/</span> outputdatafolder<span class="op">/</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">hadoop</span> jar MyApplication.jar <span class="dt">\</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>it.polito.bigdata.hadoop.DriverMyApplication <span class="dt">\</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>1 inputdatafolder/ outputdatafolder/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
 <li>It executes/submits the application contained in <code>MyApplication.jar</code></li>
 <li>The Driver Class is <code>it.polito.bigdata.hadoop.DriverMyApplication</code></li>
 <li>The application has three arguments
 <ul>
-<li>Number of reducers (args[0])</li>
-<li>Input data folder (args[1])</li>
-<li>Output data folder (args[2])</li>
+<li>Number of reducers (<code>1</code>)</li>
+<li>Input data folder (<code>inputdatafolder/</code>)</li>
+<li>Output data folder (<code>outputdatafolder/</code>)</li>
 </ul></li>
 </ul>
 </section>

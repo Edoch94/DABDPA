@@ -87,16 +87,15 @@ The Hadoop programs are executed (submitted to the cluster) by using the hadoop 
 
 ## Example
 The following command executes/submits a MapReduce application 
-```{python}
-#| eval: false
-hadoop jar MyApplication.jar 
-it.polito.bigdata.hadoop.DriverMyApplication 
+```bash
+hadoop jar MyApplication.jar \
+it.polito.bigdata.hadoop.DriverMyApplication \
 1 inputdatafolder/ outputdatafolder/
 ```
 
 - It executes/submits the application contained in `MyApplication.jar`
 - The Driver Class is `it.polito.bigdata.hadoop.DriverMyApplication` 
 - The application has three arguments
-    - Number of reducers (args[0])
-    - Input data folder (args[1])
-    - Output data folder (args[2])
+    - Number of reducers (`1`)
+    - Input data folder (`inputdatafolder/`)
+    - Output data folder (`outputdatafolder/`)
