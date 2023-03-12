@@ -33,7 +33,7 @@ Each part is "implemented" by means of a specific class.
 : {tbl-colwidths="[20,80]"}
 :::
 
-## Driver
+## Driver (instance)
 The Driver is characterized by the `main()` method, which accepts arguments from the command line (i.e., it is the entry point of the application).
 
 - It configures the job
@@ -41,14 +41,14 @@ The Driver is characterized by the `main()` method, which accepts arguments from
 - It "coordinates" the work flow of the application 
 - It runs on the client machine (i.e., it does not run on the cluster)
 
-## Mapper
+## Mapper (instance)
 The Mapper is an instance of the Mapper class.
 
 - It "implements" the map phase;
 - It is characterized by the `map()` method, which processes the `(key, value)` pairs of the input file and emits `(key, value)` pairs and is invoked one time for each input `(key, value)` pair;
 - It runs on the cluster.
 
-## Reducer
+## Reducer (instance)
 The Reducer is an instance of the Reduce class.
 
 - It "implements" the reduce phase;
@@ -72,7 +72,7 @@ The main characteristics Hadoop implementation of the MapReduce are the followin
 
 ![MapReduce data flow with multiple reducers](images\04_hadoop_implementation\data_flow_multiple_reducers.png){width=80%}
 
-## Driver
+## Driver class
 The Driver class extends the `org.apache.hadoop.conf.Configured` class and implements the `org.apache.hadoop.util.Tool` interface. 
 
 It is possible to write a Driver class that does not extend Configured and does not implement Tool, however some low level details related to some command line parameters must be managed in that case.
@@ -94,7 +94,7 @@ The `run()` method configures the job, defining
     - Type of its output `(key, value)` pairs
 - The Number of reducers
 
-## Mapper
+## Mapper class
 The Mapper class extends the 
 ```java
 org.apache.hadoop.mapreduce.Mapper
@@ -113,7 +113,7 @@ The `map()` method
 - Processes its input `(key, value)` pairs by using standard Java code
 - Emits `(key, value)` pairs by using the `context.write(key, value)` method
 
-## Reducer
+## Reducer class
 The Reducer class extends the 
 ```java
 org.apache.hadoop.mapreduce.Reducer
@@ -148,7 +148,7 @@ The basic Hadoop data types implement the `org.apache.hadoop.io.Writable` and `o
 
 Developers can define new data types by implementing the `org.apache.hadoop.io.Writable` and/or `org.apache.hadoop.io.WritableComparable` interfaces, allowing to manage complex data types.
 
-## `InputFormat`
+## Input: `InputFormat`
 The input of the MapReduce program is an HDFS file (or an HDFS folder), but the input of the Mapper is a set of `(key, value)` pairs.
 
 The classes extending the `org.apache.hadoop.mapreduce.InputFormat` abstract class are used to read the input data and "logically transform" the input HDFS file in a set of `(key, value)` pairs.
@@ -202,7 +202,7 @@ One pair `(key, value)` is emitted for each line of the file
 ![Getting data to the Mapper](images\04_hadoop_implementation\keyvaluetextinputformat_example.png){width=80%}
 :::
 
-## `OutputFormat`
+## Output: `OutputFormat`
 The classes extending the `org.apache.hadoop.mapreduce.OutputFormat` abstract class are used to write the output of the MapReduce program in HDFS.
 
 A set of predefined classes extending the `OutputFormat` abstract class are available for standard output file formats
@@ -363,7 +363,7 @@ class myReducerClass extends Reducer<
     } // End of the reduce method
 } // End of class myReducerClass
 ```
-# Example of a MapReduce program in Hadoop: Word Count
+## Example of a MapReduce program in Hadoop: Word Count {#sec-wordcountexample}
 The Word count problem consists of
 
 - Input: (unstructured) textual file, where each line of the input file can contains a set of words
@@ -390,7 +390,7 @@ Toy example file for Hadoop. Hadoop running example.
 (running,1)
 ```
 :::
-## Driver
+### Driver
 ```java
 /* Set package */
 package it.polito.bigdata.hadoop.wordcount;
@@ -486,7 +486,7 @@ public class WordCount extends Configured implements Tool {
     } // End of the main method
 } // End of public class WordCount
 ```
-## Mapper
+### Mapper
 ```java
 /* Set package */
 package it.polito.bigdata.hadoop.wordcount;
@@ -526,7 +526,7 @@ class WordCountMapper extends Mapper<
     } // End map method
 } // End of class WordCountMapper
 ```
-## Reducer
+### Reducer
 ```java
 /* Set package */
 package it.polito.bigdata.hadoop.wordcount;
@@ -562,3 +562,166 @@ IntWritable // Output value type
     } // End reduce method
 } // End of class WordCountReducer
 ```
+
+# Combiner
+In standard MapReduce applications, the `(key,value)` pairs emitted by the Mappers are sent to the Reducers through the network. However, some pre-aggregations could be performed to limit the amount of network data by using Combiners (also called "minireducers").
+
+Consider the standard word count problem, and suppose that the input file is split in two input splits, hence, two Mappers are instantiated (one for each split).
+
+![Word count without Combiner](images\04_hadoop_implementation\word_count_no_combiner_example.png){width=80%}
+
+A combiner can be locally called on the output `(key, value)` pairs of each mapper (it works on data stored in the main-memory or on the local hard disks) to pre-aggregate data, reducing the data moving through the network.
+
+![Word count with Combiner](images\04_hadoop_implementation\word_count_combiner_example.png){width=80%}
+
+So, in MapReduce applications that include Combiners after the Mappers, the `(key,value)` pairs emitted by the Mappers are analyzed in main-memory (or on the local disk) and aggregated by the Combiners. Each Combiner pre-aggregates the values associated with the pairs emitted by the Mappers of a cluster node, limiting the amount of network data generated by each cluster node.
+
+:::{.callout-warning}
+## Combiner scope of application
+- Combiners work only if the reduce function is **commutative** and **associative**. 
+- The execution of combiners is not guaranteed: Hadoop decides at runtime if executing a combiner, and so the user cannot be sure of the combiner execution just by checking the code. Because of this, the developer/designer should write MapReduce jobs whose successful executions **do not depend** on whether the Combiner is executed.
+:::
+
+## Combiner (instance)
+The Combiner is an instance of the `org.apache.hadoop.mapreduce.Reducer` class. Notice that there is not a specific combiner-template class.
+
+- It "implements" a pre-reduce phase that aggregates the pairs emitted in each node by Mappers
+- It is characterized by the `reduce()` method
+- It processes `(key, [list of values])` pairs and emits `(key, value)` pairs
+- It runs on the cluster
+
+## Combiner class
+The Combiner class extends the `org.apache.hadoop.mapreduce.Reducer` class, that is a generic type/generic class with four type parameters: 
+- input key type
+- input value type
+- output key type
+- output value type
+
+Combiners and Reducers extend the **same class**, and the designer/developer implements the `reduce()` method also for the Combiner instances. The Combiner is automatically called by Hadoop for each `(key, [list of values])` pair obtained by aggregating the local output of a Mapper.
+
+The Combiner class is specified by using the `job.setCombinerClass()` method in the run method of the Driver (i.e., in the job configuration part of the code).
+
+## Example: adding the Combiner to the Word Count problem
+Consider the word count problem (see @sec-wordcountexample for details), to add the combiner to solution seen before: 
+- Specify the combiner class in the Driver
+- Define the Combiner class. The reduce method of the combiner aggregates local pairs emitted by the mappers of a single cluster node, and emits partial results (local number of occurrences for each word) from each cluster node that is used to run our application.
+
+### Specify combiner class in the Driver
+Add the call to the combiner class in the Driver, before the return around line 68
+
+```java
+        // Set combiner class
+        job.setCombinerClass(WordCountCombiner.class);
+```
+
+### Define the Combiner class
+```java
+/* Set package */
+package it.polito.bigdata.hadoop.wordcount;
+
+/* Import libraries */
+import java.io.IOException;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Reducer;
+
+/* Combiner Class */
+class WordCountCombiner extends Reducer<
+    Text, // Input key type
+    IntWritable, // Input value type
+    Text, // Output key type
+    IntWritable // Output value type
+>{
+/* Implementation of the reduce method */
+    protected void reduce(
+        Text key, // Input key type
+        Iterable<IntWritable> values, // Input value type
+        Context context
+    ) throws IOException, InterruptedException{
+        int occurrances= 0;
+        // Iterate over the set of values and sum them 
+        for (IntWritable value : values) {
+            occurrances = occurrances+ value.get();
+        }
+        // Emit the total number of occurrences of the current word
+        context.write(key, new IntWritable(occurrances));
+    } // End reduce method
+} // End of class WordCountCombiner
+```
+## Final thoughts
+The reducer and the combiner classes perform the same computation (the reduce method of the two classes is the same). Indeed, the developer/designer does not really need two different classes: he can simply specify that WordCountReducer is also the combiner class, for example by adding in the driver `job.setCombinerClass(WordCountReducer.class)`. In 99% of the Hadoop applications the same class can be used to implement both combiner and reducer.
+
+# Personalized Data Types
+Personalized Data Types are useful when the **value** of a key-value pair is a **complex data type**. Personalized Data Types are defined by implementing the `org.apache.hadoop.io.Writable` interface. The following methods must be implemented
+
+- `public void readFields(DataInput in)`
+- `public void write(DataOutput out)`
+
+To properly format the output of the job usually also the following method is "redefined"
+
+- `public String toString()`
+
+Suppose to be interested in complex values composed of two parts, such as a counter (int) and a sum (float). In this case, an ad-hoc Data Type can be used to implement this complex data type in Hadoop.
+
+## Example
+```java
+/* Set package */
+
+package it.polito.bigdata.hadoop.combinerexample;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+public class SumAndCountWritable implements 
+org.apache.hadoop.io.Writable {
+    /* Private variables */
+    private float sum = 0;
+    private int count = 0;
+
+    /* Methods to get and set private variables of the class */
+    public float getSum() {
+        return sum;
+    }
+
+    public void setSum(float sumValue) {
+        sum=sumValue;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int countValue) {
+        count=countValue;
+    }
+
+    /* Methods to serialize and deserialize the contents of the 
+    instances of this class */
+    @Override /* Serialize the fields of this object to out */
+    public void write(DataOutput out) throws IOException {
+        out.writeFloat(sum);
+        out.writeInt(count);
+    }
+
+    @Override /* Deserialize the fields of this object from in */
+    public void readFields(DataInput in) throws IOException {
+        sum=in.readFloat();
+        count=in.readInt();
+    }
+
+    /* Specify how to convert the contents of the instances of this 
+    class to a String
+    * Useful to specify how to store/write the content of this class
+    * in a textual file */
+    public String toString()
+    {
+        String formattedString=
+        new String("sum="+sum+",count="+count);
+        return formattedString;
+    }
+}
+```
+## Complex keys
+Personalized Data Types can be used also to manage complex **keys**. In that case the Personalized Data Type must implement the `org.apache.hadoop.io.WritableComparable` interface, since keys must be 
+- compared/sorted: it is possible by implementing the `compareTo()` method
+- split in groups: it is possible by implementing the `hashCode()` method
+

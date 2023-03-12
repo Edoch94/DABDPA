@@ -3403,24 +3403,24 @@ m(w) = (w, 1)
 <h2 data-number="5.6" class="anchored" data-anchor-id="pseudocode-of-word-count-solution-using-mapreduce"><span class="header-section-number">5.6</span> Pseudocode of word count solution using MapReduce</h2>
 <p><strong>Map</strong></p>
 <div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="bu">map</span>(key, value):</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&#39;&#39;&#39;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">    :key: offset of the word in the file</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">    :value: a word of the input document</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">    &#39;&#39;&#39;</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (value, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">def</span> <span class="bu">map</span>(key, value):</span>
+<span id="cb1-2"><a href="#cb1-2"></a>    <span class="co">&#39;&#39;&#39;</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co">    :key: offset of the word in the file</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co">    :value: a word of the input document</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co">    &#39;&#39;&#39;</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>    <span class="cf">return</span> (value, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Reduce</strong></p>
 <div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="bu">reduce</span>(key, values):</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&#39;&#39;&#39;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    :key: a word </span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">    :values: a list of integers</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">    &#39;&#39;&#39;</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    occurrences <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> c <span class="kw">in</span> values:</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        occurrences <span class="op">=</span> occurrences <span class="op">+</span> c</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (key, occurrences)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">def</span> <span class="bu">reduce</span>(key, values):</span>
+<span id="cb2-2"><a href="#cb2-2"></a>    <span class="co">&#39;&#39;&#39;</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co">    :key: a word </span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">    :values: a list of integers</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co">    &#39;&#39;&#39;</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>    occurrences <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>    <span class="cf">for</span> c <span class="kw">in</span> values:</span>
+<span id="cb2-8"><a href="#cb2-8"></a>        occurrences <span class="op">=</span> occurrences <span class="op">+</span> c</span>
+<span id="cb2-9"><a href="#cb2-9"></a>    <span class="cf">return</span> (key, occurrences)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>

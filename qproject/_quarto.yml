@@ -13,3 +13,4 @@ format:
     # theme: flatly
     # theme: litera
     theme: simplex
+    code-line-numbers: true
