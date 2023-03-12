@@ -725,3 +725,120 @@ Personalized Data Types can be used also to manage complex **keys**. In that cas
 - compared/sorted: it is possible by implementing the `compareTo()` method
 - split in groups: it is possible by implementing the `hashCode()` method
 
+# Sharing parameters among Driver, Mappers, and Reducers
+The configuration object is used to share the (basic) configuration of the Hadoop environment across the driver, the mappers and the reducers of the application/job. It stores a list of `(property-name, property-value)` pairs. 
+
+Also, personalized `(property-name, property-value)` pairs can be specified in the driver, and they can be used to share some parameters of the application with mappers and reducers. The personalized `(property-name, property-value)` pairs are useful to define shared small (constant) properties that are available only during the execution of the program. The driver sets these parameters, and Mappers and Reducers can access them, however they cannot modify them.
+
+## How to use these parameters
+In the driver
+
+1. Retrieve the configuration object
+```java
+Configuration conf = this.getConf();
+```
+
+2. Set personalized properties 
+```java
+conf.set("property-name", "value");
+```
+
+In the Mapper and/or Reducer
+```java
+context.getConfiguration().get("property-name")
+```
+
+This method returns a String containing the value of the specified property.
+
+# Counters
+Hadoop provides a set of basic, built-in, counters to store some statistics about jobs, mappers, reducers, for example 
+
+- number of input and output records (i.e., pairs)
+- number of transmitted bytes
+
+Also other ad-hoc, user-defined, counters can be defined to compute global "statistics" associated with the goal of the application.
+
+## User-defined counters
+User-defined counters are defined by means of Java enum, and each application can define an arbitrary number of enums. The name of the enum is the group name,and each enum has a number of "fields", which are the counter names. 
+
+Counters are incremented in the Mappers and Reducers by using the `increment()` method
+```java
+context.getCounter(countername).increment(value);
+```
+
+The global/final value of each counter, which is available at the end of the job, is then stored/printed by the Driver (at the end of the execution of the job). Driver can retrieve the final values of the counters using the `getCounters()` and `findCounter()` methods.
+
+User-defined counters can be also defined on the fly by using the method `incrCounter("group name", "counter name", value)`. Dynamic counters are useful when the set of counters is unknown at design time.
+
+## Example: use the counters 
+In the driver, add
+```java
+public static enum COUNTERS {
+    ERROR_COUNT,
+    MISSING_FIELDS_RECORD_COUNT
+}
+```
+This enum defines two counters
+
+- `COUNTERS.ERROR_COUNT`
+- `COUNTERS.MISSING_FIELDS_RECORD_COUNT`
+
+To increment the `COUNTERS.ERROR_COUNT` counter in the mapper or the reducer, use 
+```java
+context.getCounter(COUNTERS.ERROR_COUNT).increment(1);
+```
+
+To retrieve the final value of the `COUNTERS.ERROR_COUNT` counter in the driver, use 
+```java
+Counter errorCounter = job.getCounters().findCounter(COUNTERS.ERROR_COUNT);
+```
+# Map-only job
+In some applications, all the work can be performed by the mapper(s) (e.g., record filtering applications): Hadoop allows executing Map-only jobs, avoiding the reduce phase, and also the shuffle and sort phase. 
+
+The output of the map job is directly stored in HDFS, since the set of pairs emitted by the map phase is already the final output.
+
+## Implementation of a Map-only job
+To implement a Map-only job
+
+- Implement the map method
+- Set the number of reducers to 0 during the configuration of the job (in the driver), writing
+```java
+job.setNumReduceTasks(0);
+```
+# In-Mapper combiner
+Mapper classes are also characterized by a setup and a cleanup method, which are empty if they are not overridden.
+
+## Setup method
+The setup method is called once for each mapper prior to the many calls of the map method. It can be used to set the values of in-mapper variables, which are used to maintain in-mapper statistics and preserve the state (locally for each mapper) within and across calls to the map method.
+
+## Cleanup method
+The map method, invoked many times, updates the value of the in-mapper variables. Each mapper (each instance of the mapper class) has its own copy of the in-mapper variables.
+
+The cleanup method is called once for each mapper after the many calls to the map method, and it can be used to emit `(key,value)` pairs based on the values of the in-mapper variables/statistics.
+
+Also the reducer classes are characterized by a setup and a cleanup method. 
+
+- The setup method is called once for each reducer prior to the many calls of the reduce method. 
+- The cleanup method is called once for each reducer after the many calls of the reduce method.
+
+In-MapperCombiners are a possible improvement over "standard" Combiners
+
+- Initialize a set of in-mapper variables during the instance of the Mapper, in the setup method of the mapper;
+- Update the in-mapper variables/statistics in the map method. Usually, no (key,value) pairs are emitted in the map method of an in-mapper combiner.
+
+After all the input records (input `(key, value)` pairs) of a mapper have been analyzed by the map method, emit the output `(key, value)` pairs of the mapper: `(key, value)` pairs are emitted in the cleanup method of the mapper based on the values of the in-mapper variables
+
+The in-mapper variables are used to perform the work of the combiner in the mapper, allowing to improve the overall performance of the application. However, pay attention to the amount of used main memory: each mapper may use a limited amount of main-memory, hence in-mapper variables should be "small" (at least smaller than the maximum amount of memory assigned to each mapper).
+
+## In-Mapper combiner: Word count pseudocode
+```java
+class MAPPER
+    method setup
+        A = new AssociativeArray
+    method map(offset key, line l)
+        for all word w ∈ line l do
+            A{w} = A{w} + 1
+    method cleanup
+        for all word w in A do
+            EMIT(term w , count A{w})
+```

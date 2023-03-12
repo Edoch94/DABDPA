@@ -2667,6 +2667,25 @@ vertical-align: -.125em;
   <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example"><span class="toc-section-number">5.1</span>  Example</a></li>
   <li><a href="#complex-keys" id="toc-complex-keys" class="nav-link" data-scroll-target="#complex-keys"><span class="toc-section-number">5.2</span>  Complex keys</a></li>
   </ul></li>
+  <li><a href="#sharing-parameters-among-driver-mappers-and-reducers" id="toc-sharing-parameters-among-driver-mappers-and-reducers" class="nav-link" data-scroll-target="#sharing-parameters-among-driver-mappers-and-reducers"><span class="toc-section-number">6</span>  Sharing parameters among Driver, Mappers, and Reducers</a>
+  <ul class="collapse">
+  <li><a href="#how-to-use-these-parameters" id="toc-how-to-use-these-parameters" class="nav-link" data-scroll-target="#how-to-use-these-parameters"><span class="toc-section-number">6.1</span>  How to use these parameters</a></li>
+  </ul></li>
+  <li><a href="#counters" id="toc-counters" class="nav-link" data-scroll-target="#counters"><span class="toc-section-number">7</span>  Counters</a>
+  <ul class="collapse">
+  <li><a href="#user-defined-counters" id="toc-user-defined-counters" class="nav-link" data-scroll-target="#user-defined-counters"><span class="toc-section-number">7.1</span>  User-defined counters</a></li>
+  <li><a href="#example-use-the-counters" id="toc-example-use-the-counters" class="nav-link" data-scroll-target="#example-use-the-counters"><span class="toc-section-number">7.2</span>  Example: use the counters</a></li>
+  </ul></li>
+  <li><a href="#map-only-job" id="toc-map-only-job" class="nav-link" data-scroll-target="#map-only-job"><span class="toc-section-number">8</span>  Map-only job</a>
+  <ul class="collapse">
+  <li><a href="#implementation-of-a-map-only-job" id="toc-implementation-of-a-map-only-job" class="nav-link" data-scroll-target="#implementation-of-a-map-only-job"><span class="toc-section-number">8.1</span>  Implementation of a Map-only job</a></li>
+  </ul></li>
+  <li><a href="#in-mapper-combiner" id="toc-in-mapper-combiner" class="nav-link" data-scroll-target="#in-mapper-combiner"><span class="toc-section-number">9</span>  In-Mapper combiner</a>
+  <ul class="collapse">
+  <li><a href="#setup-method" id="toc-setup-method" class="nav-link" data-scroll-target="#setup-method"><span class="toc-section-number">9.1</span>  Setup method</a></li>
+  <li><a href="#cleanup-method" id="toc-cleanup-method" class="nav-link" data-scroll-target="#cleanup-method"><span class="toc-section-number">9.2</span>  Cleanup method</a></li>
+  <li><a href="#in-mapper-combiner-word-count-pseudocode" id="toc-in-mapper-combiner-word-count-pseudocode" class="nav-link" data-scroll-target="#in-mapper-combiner-word-count-pseudocode"><span class="toc-section-number">9.3</span>  In-Mapper combiner: Word count pseudocode</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -3530,6 +3549,111 @@ Combiner scope of application
 <section id="complex-keys" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="complex-keys"><span class="header-section-number">5.2</span> Complex keys</h2>
 <p>Personalized Data Types can be used also to manage complex <strong>keys</strong>. In that case the Personalized Data Type must implement the <code>org.apache.hadoop.io.WritableComparable</code> interface, since keys must be - compared/sorted: it is possible by implementing the <code>compareTo()</code> method - split in groups: it is possible by implementing the <code>hashCode()</code> method</p>
+</section>
+</section>
+<section id="sharing-parameters-among-driver-mappers-and-reducers" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Sharing parameters among Driver, Mappers, and Reducers</h1>
+<p>The configuration object is used to share the (basic) configuration of the Hadoop environment across the driver, the mappers and the reducers of the application/job. It stores a list of <code>(property-name, property-value)</code> pairs.</p>
+<p>Also, personalized <code>(property-name, property-value)</code> pairs can be specified in the driver, and they can be used to share some parameters of the application with mappers and reducers. The personalized <code>(property-name, property-value)</code> pairs are useful to define shared small (constant) properties that are available only during the execution of the program. The driver sets these parameters, and Mappers and Reducers can access them, however they cannot modify them.</p>
+<section id="how-to-use-these-parameters" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="how-to-use-these-parameters"><span class="header-section-number">6.1</span> How to use these parameters</h2>
+<p>In the driver</p>
+<ol type="1">
+<li>Retrieve the configuration object</li>
+</ol>
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb16-1"><a href="#cb16-1"></a><span class="bu">Configuration</span> conf <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="fu">getConf</span><span class="op">();</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="2" type="1">
+<li>Set personalized properties</li>
+</ol>
+<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb17-1"><a href="#cb17-1"></a>conf<span class="op">.</span><span class="fu">set</span><span class="op">(</span><span class="st">&quot;property-name&quot;</span><span class="op">,</span> <span class="st">&quot;value&quot;</span><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In the Mapper and/or Reducer</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb18-1"><a href="#cb18-1"></a>context<span class="op">.</span><span class="fu">getConfiguration</span><span class="op">().</span><span class="fu">get</span><span class="op">(</span><span class="st">&quot;property-name&quot;</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This method returns a String containing the value of the specified property.</p>
+</section>
+</section>
+<section id="counters" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Counters</h1>
+<p>Hadoop provides a set of basic, built-in, counters to store some statistics about jobs, mappers, reducers, for example</p>
+<ul>
+<li>number of input and output records (i.e., pairs)</li>
+<li>number of transmitted bytes</li>
+</ul>
+<p>Also other ad-hoc, user-defined, counters can be defined to compute global “statistics” associated with the goal of the application.</p>
+<section id="user-defined-counters" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="user-defined-counters"><span class="header-section-number">7.1</span> User-defined counters</h2>
+<p>User-defined counters are defined by means of Java enum, and each application can define an arbitrary number of enums. The name of the enum is the group name,and each enum has a number of “fields”, which are the counter names.</p>
+<p>Counters are incremented in the Mappers and Reducers by using the <code>increment()</code> method</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb19-1"><a href="#cb19-1"></a>context<span class="op">.</span><span class="fu">getCounter</span><span class="op">(</span>countername<span class="op">).</span><span class="fu">increment</span><span class="op">(</span>value<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The global/final value of each counter, which is available at the end of the job, is then stored/printed by the Driver (at the end of the execution of the job). Driver can retrieve the final values of the counters using the <code>getCounters()</code> and <code>findCounter()</code> methods.</p>
+<p>User-defined counters can be also defined on the fly by using the method <code>incrCounter(&quot;group name&quot;, &quot;counter name&quot;, value)</code>. Dynamic counters are useful when the set of counters is unknown at design time.</p>
+</section>
+<section id="example-use-the-counters" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="example-use-the-counters"><span class="header-section-number">7.2</span> Example: use the counters</h2>
+<p>In the driver, add</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">public</span> <span class="dt">static</span> <span class="kw">enum</span> COUNTERS <span class="op">{</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a>    ERROR_COUNT<span class="op">,</span></span>
+<span id="cb20-3"><a href="#cb20-3"></a>    MISSING_FIELDS_RECORD_COUNT</span>
+<span id="cb20-4"><a href="#cb20-4"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This enum defines two counters</p>
+<ul>
+<li><code>COUNTERS.ERROR_COUNT</code></li>
+<li><code>COUNTERS.MISSING_FIELDS_RECORD_COUNT</code></li>
+</ul>
+<p>To increment the <code>COUNTERS.ERROR_COUNT</code> counter in the mapper or the reducer, use</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb21-1"><a href="#cb21-1"></a>context<span class="op">.</span><span class="fu">getCounter</span><span class="op">(</span>COUNTERS<span class="op">.</span><span class="fu">ERROR_COUNT</span><span class="op">).</span><span class="fu">increment</span><span class="op">(</span><span class="dv">1</span><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>To retrieve the final value of the <code>COUNTERS.ERROR_COUNT</code> counter in the driver, use</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb22-1"><a href="#cb22-1"></a>Counter errorCounter <span class="op">=</span> job<span class="op">.</span><span class="fu">getCounters</span><span class="op">().</span><span class="fu">findCounter</span><span class="op">(</span>COUNTERS<span class="op">.</span><span class="fu">ERROR_COUNT</span><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="map-only-job" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Map-only job</h1>
+<p>In some applications, all the work can be performed by the mapper(s) (e.g., record filtering applications): Hadoop allows executing Map-only jobs, avoiding the reduce phase, and also the shuffle and sort phase.</p>
+<p>The output of the map job is directly stored in HDFS, since the set of pairs emitted by the map phase is already the final output.</p>
+<section id="implementation-of-a-map-only-job" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="implementation-of-a-map-only-job"><span class="header-section-number">8.1</span> Implementation of a Map-only job</h2>
+<p>To implement a Map-only job</p>
+<ul>
+<li>Implement the map method</li>
+<li>Set the number of reducers to 0 during the configuration of the job (in the driver), writing</li>
+</ul>
+<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb23-1"><a href="#cb23-1"></a>job<span class="op">.</span><span class="fu">setNumReduceTasks</span><span class="op">(</span><span class="dv">0</span><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="in-mapper-combiner" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> In-Mapper combiner</h1>
+<p>Mapper classes are also characterized by a setup and a cleanup method, which are empty if they are not overridden.</p>
+<section id="setup-method" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="setup-method"><span class="header-section-number">9.1</span> Setup method</h2>
+<p>The setup method is called once for each mapper prior to the many calls of the map method. It can be used to set the values of in-mapper variables, which are used to maintain in-mapper statistics and preserve the state (locally for each mapper) within and across calls to the map method.</p>
+</section>
+<section id="cleanup-method" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="cleanup-method"><span class="header-section-number">9.2</span> Cleanup method</h2>
+<p>The map method, invoked many times, updates the value of the in-mapper variables. Each mapper (each instance of the mapper class) has its own copy of the in-mapper variables.</p>
+<p>The cleanup method is called once for each mapper after the many calls to the map method, and it can be used to emit <code>(key,value)</code> pairs based on the values of the in-mapper variables/statistics.</p>
+<p>Also the reducer classes are characterized by a setup and a cleanup method.</p>
+<ul>
+<li>The setup method is called once for each reducer prior to the many calls of the reduce method.</li>
+<li>The cleanup method is called once for each reducer after the many calls of the reduce method.</li>
+</ul>
+<p>In-MapperCombiners are a possible improvement over “standard” Combiners</p>
+<ul>
+<li>Initialize a set of in-mapper variables during the instance of the Mapper, in the setup method of the mapper;</li>
+<li>Update the in-mapper variables/statistics in the map method. Usually, no (key,value) pairs are emitted in the map method of an in-mapper combiner.</li>
+</ul>
+<p>After all the input records (input <code>(key, value)</code> pairs) of a mapper have been analyzed by the map method, emit the output <code>(key, value)</code> pairs of the mapper: <code>(key, value)</code> pairs are emitted in the cleanup method of the mapper based on the values of the in-mapper variables</p>
+<p>The in-mapper variables are used to perform the work of the combiner in the mapper, allowing to improve the overall performance of the application. However, pay attention to the amount of used main memory: each mapper may use a limited amount of main-memory, hence in-mapper variables should be “small” (at least smaller than the maximum amount of memory assigned to each mapper).</p>
+</section>
+<section id="in-mapper-combiner-word-count-pseudocode" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="in-mapper-combiner-word-count-pseudocode"><span class="header-section-number">9.3</span> In-Mapper combiner: Word count pseudocode</h2>
+<div class="sourceCode" id="cb24"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb24-1"><a href="#cb24-1"></a><span class="kw">class</span> MAPPER</span>
+<span id="cb24-2"><a href="#cb24-2"></a>    method setup</span>
+<span id="cb24-3"><a href="#cb24-3"></a>        A <span class="op">=</span> <span class="kw">new</span> AssociativeArray</span>
+<span id="cb24-4"><a href="#cb24-4"></a>    method <span class="fu">map</span><span class="op">(</span>offset key<span class="op">,</span> line l<span class="op">)</span></span>
+<span id="cb24-5"><a href="#cb24-5"></a>        <span class="cf">for</span> all word w ∈ line l <span class="cf">do</span></span>
+<span id="cb24-6"><a href="#cb24-6"></a>            A<span class="op">{</span>w<span class="op">}</span> <span class="op">=</span> A<span class="op">{</span>w<span class="op">}</span> <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb24-7"><a href="#cb24-7"></a>    method cleanup</span>
+<span id="cb24-8"><a href="#cb24-8"></a>        <span class="cf">for</span> all word w in A <span class="cf">do</span></span>
+<span id="cb24-9"><a href="#cb24-9"></a>            <span class="fu">EMIT</span><span class="op">(</span>term w <span class="op">,</span> count A<span class="op">{</span>w<span class="op">})</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 
