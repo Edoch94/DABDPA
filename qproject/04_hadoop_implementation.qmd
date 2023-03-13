@@ -34,7 +34,7 @@ Each part is "implemented" by means of a specific class.
 :::
 
 ## Driver (instance)
-The Driver is characterized by the `main()` method, which accepts arguments from the command line (i.e., it is the entry point of the application).
+The Driver is characterized by the `main()` method, which accepts arguments from the command line (i.e., it is the entry point of the application). Also, it has a run() method
 
 - It configures the job
 - It submits the job to the Hadoop Cluster
@@ -47,6 +47,10 @@ The Mapper is an instance of the Mapper class.
 - It "implements" the map phase;
 - It is characterized by the `map()` method, which processes the `(key, value)` pairs of the input file and emits `(key, value)` pairs and is invoked one time for each input `(key, value)` pair;
 - It runs on the cluster.
+
+:::{.callout-tip}
+The Driver will try to create one Mapper instance for each input block, pushing to the maximum parallelization possible.
+:::
 
 ## Reducer (instance)
 The Reducer is an instance of the Reduce class.
@@ -73,7 +77,7 @@ The main characteristics Hadoop implementation of the MapReduce are the followin
 ![MapReduce data flow with multiple reducers](images\04_hadoop_implementation\data_flow_multiple_reducers.png){width=80%}
 
 ## Driver class
-The Driver class extends the `org.apache.hadoop.conf.Configured` class and implements the `org.apache.hadoop.util.Tool` interface. 
+The Driver class extends the `org.apache.hadoop.conf.Configured` class and implements the `org.apache.hadoop.util.Tool` interface ^[An **interface** is like a template of a class, defining which methods must be implemented to be compliant with the interface]. 
 
 It is possible to write a Driver class that does not extend Configured and does not implement Tool, however some low level details related to some command line parameters must be managed in that case.
 
@@ -84,7 +88,7 @@ The `run()` method configures the job, defining
 - The name of the Job
 - The job Input format
 - The job Output format
-- The mapper class
+- The Mapper class
     - Name of the class
     - Type of its input `(key, value)` pairs 
     - Type of its output `(key, value)` pairs
@@ -92,7 +96,7 @@ The `run()` method configures the job, defining
     - Name of the class
     - Type of its input `(key, value)` pairs 
     - Type of its output `(key, value)` pairs
-- The Number of reducers
+- The Number of Reducers^[Setting the number of Reducers is a balancing problem: having more Reducers decreases the time to aggregate the data, however it also increases the overhead needed to instantiate the Reducers]
 
 ## Mapper class
 The Mapper class extends the 
@@ -180,13 +184,13 @@ A set of predefined classes extending the `InputFormat` abstract class are avail
 - Value is the content of the line
 
 :::{.callout-note collapse="true"}
-## `TextInputFormat` example
+## Example
 ![Getting data to the Mapper](images\04_hadoop_implementation\textinputformat_example.png){width=80%}
 :::
 
 ### `KeyValueTextInputFormat`
 `KeyValueTextInputFormat` is an `InputFormat` for plain text files, where each line must have the format 
-```
+```java
 key<separator>value
 ```
 and the default separator is tab (`\t`).
@@ -194,11 +198,12 @@ and the default separator is tab (`\t`).
 Files are broken into lines, and either linefeed or carriage-return are used to signal end of line, and each line is split into key and value parts by considering the separator symbol/character.
 
 One pair `(key, value)` is emitted for each line of the file
+
 - Key is the text preceding the separator
 - Value is the text following the separator
 
 :::{.callout-note collapse="true"}
-## `KeyValueTextInputFormat` example
+## Example
 ![Getting data to the Mapper](images\04_hadoop_implementation\keyvaluetextinputformat_example.png){width=80%}
 :::
 
@@ -206,6 +211,7 @@ One pair `(key, value)` is emitted for each line of the file
 The classes extending the `org.apache.hadoop.mapreduce.OutputFormat` abstract class are used to write the output of the MapReduce program in HDFS.
 
 A set of predefined classes extending the `OutputFormat` abstract class are available for standard output file formats
+
 - `TextOutputFormat`: an `OutputFormatfor` plain text files
 - `SequenceFileOutputFormat`: an `OutputFormatfor` sequential/binary files
 - ...
@@ -297,10 +303,13 @@ public class MapReduceAppDriver extends Configured implements Tool {
 
     /* main method of the driver class */
     public static void main(String args[]) throws Exception {
-    /* Exploit the ToolRunner class to "configure" and run the Hadoop application */
-    int res = ToolRunner.run(new Configuration(), 
-    new MapReduceAppDriver(), args);
-    System.exit(res);
+        /* Exploit the ToolRunner class to "configure" and run the Hadoop application */
+        int res = ToolRunner.run(
+            new Configuration(), 
+            new MapReduceAppDriver(), 
+            args
+        );
+        System.exit(res);
     } // End of the main method
 } // End of public class MapReduceAppDriver
 ```
@@ -511,17 +520,17 @@ class WordCountMapper extends Mapper<
         Text value, // Input value type
         Context context
     ) throws IOException, InterruptedException {
-    // Split each sentence in words. Use whitespace(s) as delimiter
-    // The split method returns an array of strings
-    String[] words = value.toString().split("\\s+");
+        // Split each sentence in words. Use whitespace(s) as delimiter
+        // The split method returns an array of strings
+        String[] words = value.toString().split("\\s+");
 
-    // Iterate over the set of words
-    for(String word : words) {
-        // Transform word case
-        String cleanedWord = word.toLowerCase();
+        // Iterate over the set of words
+        for(String word : words) {
+            // Transform word case
+            String cleanedWord = word.toLowerCase();
 
-        // emit one pair (word, 1) for each input word
-        context.write(new Text(cleanedWord), new IntWritable(1));
+            // emit one pair (word, 1) for each input word
+            context.write(new Text(cleanedWord), new IntWritable(1));
         }
     } // End map method
 } // End of class WordCountMapper
@@ -592,6 +601,7 @@ The Combiner is an instance of the `org.apache.hadoop.mapreduce.Reducer` class. 
 
 ## Combiner class
 The Combiner class extends the `org.apache.hadoop.mapreduce.Reducer` class, that is a generic type/generic class with four type parameters: 
+
 - input key type
 - input value type
 - output key type
@@ -603,6 +613,7 @@ The Combiner class is specified by using the `job.setCombinerClass()` method in 
 
 ## Example: adding the Combiner to the Word Count problem
 Consider the word count problem (see @sec-wordcountexample for details), to add the combiner to solution seen before: 
+
 - Specify the combiner class in the Driver
 - Define the Combiner class. The reduce method of the combiner aggregates local pairs emitted by the mappers of a single cluster node, and emits partial results (local number of occurrences for each word) from each cluster node that is used to run our application.
 
@@ -722,6 +733,7 @@ org.apache.hadoop.io.Writable {
 ```
 ## Complex keys
 Personalized Data Types can be used also to manage complex **keys**. In that case the Personalized Data Type must implement the `org.apache.hadoop.io.WritableComparable` interface, since keys must be 
+
 - compared/sorted: it is possible by implementing the `compareTo()` method
 - split in groups: it is possible by implementing the `hashCode()` method
 

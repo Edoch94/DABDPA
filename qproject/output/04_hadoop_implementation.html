@@ -2664,7 +2664,7 @@ vertical-align: -.125em;
   </ul></li>
   <li><a href="#personalized-data-types" id="toc-personalized-data-types" class="nav-link" data-scroll-target="#personalized-data-types"><span class="toc-section-number">5</span>  Personalized Data Types</a>
   <ul class="collapse">
-  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example"><span class="toc-section-number">5.1</span>  Example</a></li>
+  <li><a href="#example-2" id="toc-example-2" class="nav-link" data-scroll-target="#example-2"><span class="toc-section-number">5.1</span>  Example</a></li>
   <li><a href="#complex-keys" id="toc-complex-keys" class="nav-link" data-scroll-target="#complex-keys"><span class="toc-section-number">5.2</span>  Complex keys</a></li>
   </ul></li>
   <li><a href="#sharing-parameters-among-driver-mappers-and-reducers" id="toc-sharing-parameters-among-driver-mappers-and-reducers" class="nav-link" data-scroll-target="#sharing-parameters-among-driver-mappers-and-reducers"><span class="toc-section-number">6</span>  Sharing parameters among Driver, Mappers, and Reducers</a>
@@ -2788,7 +2788,7 @@ Terminology
 </div>
 <section id="driver-instance" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="driver-instance"><span class="header-section-number">1.1</span> Driver (instance)</h2>
-<p>The Driver is characterized by the <code>main()</code> method, which accepts arguments from the command line (i.e., it is the entry point of the application).</p>
+<p>The Driver is characterized by the <code>main()</code> method, which accepts arguments from the command line (i.e., it is the entry point of the application). Also, it has a run() method</p>
 <ul>
 <li>It configures the job</li>
 <li>It submits the job to the Hadoop Cluster</li>
@@ -2804,6 +2804,19 @@ Terminology
 <li>It is characterized by the <code>map()</code> method, which processes the <code>(key, value)</code> pairs of the input file and emits <code>(key, value)</code> pairs and is invoked one time for each input <code>(key, value)</code> pair;</li>
 <li>It runs on the cluster.</li>
 </ul>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The Driver will try to create one Mapper instance for each input block, pushing to the maximum parallelization possible.</p>
+</div>
+</div>
 </section>
 <section id="reducer-instance" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="reducer-instance"><span class="header-section-number">1.3</span> Reducer (instance)</h2>
@@ -2845,7 +2858,7 @@ Terminology
 </div>
 <section id="driver-class" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="driver-class"><span class="header-section-number">2.1</span> Driver class</h2>
-<p>The Driver class extends the <code>org.apache.hadoop.conf.Configured</code> class and implements the <code>org.apache.hadoop.util.Tool</code> interface.</p>
+<p>The Driver class extends the <code>org.apache.hadoop.conf.Configured</code> class and implements the <code>org.apache.hadoop.util.Tool</code> interface <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
 <p>It is possible to write a Driver class that does not extend Configured and does not implement Tool, however some low level details related to some command line parameters must be managed in that case.</p>
 <p>The designer/developer implements the <code>main()</code> and <code>run()</code> methods.</p>
 <p>The <code>run()</code> method configures the job, defining</p>
@@ -2853,7 +2866,7 @@ Terminology
 <li>The name of the Job</li>
 <li>The job Input format</li>
 <li>The job Output format</li>
-<li>The mapper class
+<li>The Mapper class
 <ul>
 <li>Name of the class</li>
 <li>Type of its input <code>(key, value)</code> pairs</li>
@@ -2865,7 +2878,7 @@ Terminology
 <li>Type of its input <code>(key, value)</code> pairs</li>
 <li>Type of its output <code>(key, value)</code> pairs</li>
 </ul></li>
-<li>The Number of reducers</li>
+<li>The Number of Reducers<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></li>
 </ul>
 </section>
 <section id="mapper-class" class="level2" data-number="2.2">
@@ -2957,16 +2970,16 @@ Terminology
 <li>Value is the content of the line</li>
 </ul>
 <div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-caption-container flex-fill">
-<code>TextInputFormat</code> example
+Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -2981,21 +2994,25 @@ Terminology
 <section id="keyvaluetextinputformat" class="level3" data-number="2.5.2">
 <h3 data-number="2.5.2" class="anchored" data-anchor-id="keyvaluetextinputformat"><span class="header-section-number">2.5.2</span> <code>KeyValueTextInputFormat</code></h3>
 <p><code>KeyValueTextInputFormat</code> is an <code>InputFormat</code> for plain text files, where each line must have the format</p>
-<pre><code>key&lt;separator&gt;value</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb3-1"><a href="#cb3-1"></a>key<span class="op">&lt;</span>separator<span class="op">&gt;</span>value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>and the default separator is tab (<code>\t</code>).</p>
 <p>Files are broken into lines, and either linefeed or carriage-return are used to signal end of line, and each line is split into key and value parts by considering the separator symbol/character.</p>
-<p>One pair <code>(key, value)</code> is emitted for each line of the file - Key is the text preceding the separator - Value is the text following the separator</p>
+<p>One pair <code>(key, value)</code> is emitted for each line of the file</p>
+<ul>
+<li>Key is the text preceding the separator</li>
+<li>Value is the text following the separator</li>
+</ul>
 <div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-caption-container flex-fill">
-<code>KeyValueTextInputFormat</code> example
+Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -3011,7 +3028,12 @@ Terminology
 <section id="output-outputformat" class="level2" data-number="2.6">
 <h2 data-number="2.6" class="anchored" data-anchor-id="output-outputformat"><span class="header-section-number">2.6</span> Output: <code>OutputFormat</code></h2>
 <p>The classes extending the <code>org.apache.hadoop.mapreduce.OutputFormat</code> abstract class are used to write the output of the MapReduce program in HDFS.</p>
-<p>A set of predefined classes extending the <code>OutputFormat</code> abstract class are available for standard output file formats - <code>TextOutputFormat</code>: an <code>OutputFormatfor</code> plain text files - <code>SequenceFileOutputFormat</code>: an <code>OutputFormatfor</code> sequential/binary files - …</p>
+<p>A set of predefined classes extending the <code>OutputFormat</code> abstract class are available for standard output file formats</p>
+<ul>
+<li><code>TextOutputFormat</code>: an <code>OutputFormatfor</code> plain text files</li>
+<li><code>SequenceFileOutputFormat</code>: an <code>OutputFormatfor</code> sequential/binary files</li>
+<li>…</li>
+</ul>
 <section id="textoutputformat" class="level3" data-number="2.6.1">
 <h3 data-number="2.6.1" class="anchored" data-anchor-id="textoutputformat"><span class="header-section-number">2.6.1</span> <code>TextOutputFormat</code></h3>
 <p><code>TextOutputFormat</code> is an <code>OutputFormat</code> for plain text files: for each output <code>(key, value)</code> pair, <code>TextOutputFormat</code> writes one line in the output file. In particular, the format of each output line is</p>
@@ -3101,12 +3123,15 @@ Terminology
 <span id="cb5-76"><a href="#cb5-76"></a></span>
 <span id="cb5-77"><a href="#cb5-77"></a>    <span class="co">/* main method of the driver class */</span></span>
 <span id="cb5-78"><a href="#cb5-78"></a>    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span><span class="op">(</span><span class="bu">String</span> args<span class="op">[])</span> <span class="kw">throws</span> <span class="bu">Exception</span> <span class="op">{</span></span>
-<span id="cb5-79"><a href="#cb5-79"></a>    <span class="co">/* Exploit the ToolRunner class to &quot;configure&quot; and run the Hadoop application */</span></span>
-<span id="cb5-80"><a href="#cb5-80"></a>    <span class="dt">int</span> res <span class="op">=</span> ToolRunner<span class="op">.</span><span class="fu">run</span><span class="op">(</span><span class="kw">new</span> <span class="bu">Configuration</span><span class="op">(),</span> </span>
-<span id="cb5-81"><a href="#cb5-81"></a>    <span class="kw">new</span> <span class="fu">MapReduceAppDriver</span><span class="op">(),</span> args<span class="op">);</span></span>
-<span id="cb5-82"><a href="#cb5-82"></a>    <span class="bu">System</span><span class="op">.</span><span class="fu">exit</span><span class="op">(</span>res<span class="op">);</span></span>
-<span id="cb5-83"><a href="#cb5-83"></a>    <span class="op">}</span> <span class="co">// End of the main method</span></span>
-<span id="cb5-84"><a href="#cb5-84"></a><span class="op">}</span> <span class="co">// End of public class MapReduceAppDriver</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-79"><a href="#cb5-79"></a>        <span class="co">/* Exploit the ToolRunner class to &quot;configure&quot; and run the Hadoop application */</span></span>
+<span id="cb5-80"><a href="#cb5-80"></a>        <span class="dt">int</span> res <span class="op">=</span> ToolRunner<span class="op">.</span><span class="fu">run</span><span class="op">(</span></span>
+<span id="cb5-81"><a href="#cb5-81"></a>            <span class="kw">new</span> <span class="bu">Configuration</span><span class="op">(),</span> </span>
+<span id="cb5-82"><a href="#cb5-82"></a>            <span class="kw">new</span> <span class="fu">MapReduceAppDriver</span><span class="op">(),</span> </span>
+<span id="cb5-83"><a href="#cb5-83"></a>            args</span>
+<span id="cb5-84"><a href="#cb5-84"></a>        <span class="op">);</span></span>
+<span id="cb5-85"><a href="#cb5-85"></a>        <span class="bu">System</span><span class="op">.</span><span class="fu">exit</span><span class="op">(</span>res<span class="op">);</span></span>
+<span id="cb5-86"><a href="#cb5-86"></a>    <span class="op">}</span> <span class="co">// End of the main method</span></span>
+<span id="cb5-87"><a href="#cb5-87"></a><span class="op">}</span> <span class="co">// End of public class MapReduceAppDriver</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="mapper" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="mapper"><span class="header-section-number">3.2</span> Mapper</h2>
@@ -3181,7 +3206,7 @@ Terminology
 </ul></li>
 </ul>
 <div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -3190,7 +3215,7 @@ Word Count input and output examples
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Input file</strong></p>
 <pre><code>Toy example file for Hadoop. Hadoop running example.</code></pre>
@@ -3325,17 +3350,17 @@ Word Count input and output examples
 <span id="cb11-21"><a href="#cb11-21"></a>        <span class="bu">Text</span> value<span class="op">,</span> <span class="co">// Input value type</span></span>
 <span id="cb11-22"><a href="#cb11-22"></a>        <span class="bu">Context</span> context</span>
 <span id="cb11-23"><a href="#cb11-23"></a>    <span class="op">)</span> <span class="kw">throws</span> <span class="bu">IOException</span><span class="op">,</span> <span class="bu">InterruptedException</span> <span class="op">{</span></span>
-<span id="cb11-24"><a href="#cb11-24"></a>    <span class="co">// Split each sentence in words. Use whitespace(s) as delimiter</span></span>
-<span id="cb11-25"><a href="#cb11-25"></a>    <span class="co">// The split method returns an array of strings</span></span>
-<span id="cb11-26"><a href="#cb11-26"></a>    <span class="bu">String</span><span class="op">[]</span> words <span class="op">=</span> value<span class="op">.</span><span class="fu">toString</span><span class="op">().</span><span class="fu">split</span><span class="op">(</span><span class="st">&quot;</span><span class="sc">\\</span><span class="st">s+&quot;</span><span class="op">);</span></span>
+<span id="cb11-24"><a href="#cb11-24"></a>        <span class="co">// Split each sentence in words. Use whitespace(s) as delimiter</span></span>
+<span id="cb11-25"><a href="#cb11-25"></a>        <span class="co">// The split method returns an array of strings</span></span>
+<span id="cb11-26"><a href="#cb11-26"></a>        <span class="bu">String</span><span class="op">[]</span> words <span class="op">=</span> value<span class="op">.</span><span class="fu">toString</span><span class="op">().</span><span class="fu">split</span><span class="op">(</span><span class="st">&quot;</span><span class="sc">\\</span><span class="st">s+&quot;</span><span class="op">);</span></span>
 <span id="cb11-27"><a href="#cb11-27"></a></span>
-<span id="cb11-28"><a href="#cb11-28"></a>    <span class="co">// Iterate over the set of words</span></span>
-<span id="cb11-29"><a href="#cb11-29"></a>    <span class="cf">for</span><span class="op">(</span><span class="bu">String</span> word <span class="op">:</span> words<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb11-30"><a href="#cb11-30"></a>        <span class="co">// Transform word case</span></span>
-<span id="cb11-31"><a href="#cb11-31"></a>        <span class="bu">String</span> cleanedWord <span class="op">=</span> word<span class="op">.</span><span class="fu">toLowerCase</span><span class="op">();</span></span>
+<span id="cb11-28"><a href="#cb11-28"></a>        <span class="co">// Iterate over the set of words</span></span>
+<span id="cb11-29"><a href="#cb11-29"></a>        <span class="cf">for</span><span class="op">(</span><span class="bu">String</span> word <span class="op">:</span> words<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-30"><a href="#cb11-30"></a>            <span class="co">// Transform word case</span></span>
+<span id="cb11-31"><a href="#cb11-31"></a>            <span class="bu">String</span> cleanedWord <span class="op">=</span> word<span class="op">.</span><span class="fu">toLowerCase</span><span class="op">();</span></span>
 <span id="cb11-32"><a href="#cb11-32"></a></span>
-<span id="cb11-33"><a href="#cb11-33"></a>        <span class="co">// emit one pair (word, 1) for each input word</span></span>
-<span id="cb11-34"><a href="#cb11-34"></a>        context<span class="op">.</span><span class="fu">write</span><span class="op">(</span><span class="kw">new</span> <span class="bu">Text</span><span class="op">(</span>cleanedWord<span class="op">),</span> <span class="kw">new</span> <span class="fu">IntWritable</span><span class="op">(</span><span class="dv">1</span><span class="op">));</span></span>
+<span id="cb11-33"><a href="#cb11-33"></a>            <span class="co">// emit one pair (word, 1) for each input word</span></span>
+<span id="cb11-34"><a href="#cb11-34"></a>            context<span class="op">.</span><span class="fu">write</span><span class="op">(</span><span class="kw">new</span> <span class="bu">Text</span><span class="op">(</span>cleanedWord<span class="op">),</span> <span class="kw">new</span> <span class="fu">IntWritable</span><span class="op">(</span><span class="dv">1</span><span class="op">));</span></span>
 <span id="cb11-35"><a href="#cb11-35"></a>        <span class="op">}</span></span>
 <span id="cb11-36"><a href="#cb11-36"></a>    <span class="op">}</span> <span class="co">// End map method</span></span>
 <span id="cb11-37"><a href="#cb11-37"></a><span class="op">}</span> <span class="co">// End of class WordCountMapper</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -3424,13 +3449,23 @@ Combiner scope of application
 </section>
 <section id="combiner-class" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="combiner-class"><span class="header-section-number">4.2</span> Combiner class</h2>
-<p>The Combiner class extends the <code>org.apache.hadoop.mapreduce.Reducer</code> class, that is a generic type/generic class with four type parameters: - input key type - input value type - output key type - output value type</p>
+<p>The Combiner class extends the <code>org.apache.hadoop.mapreduce.Reducer</code> class, that is a generic type/generic class with four type parameters:</p>
+<ul>
+<li>input key type</li>
+<li>input value type</li>
+<li>output key type</li>
+<li>output value type</li>
+</ul>
 <p>Combiners and Reducers extend the <strong>same class</strong>, and the designer/developer implements the <code>reduce()</code> method also for the Combiner instances. The Combiner is automatically called by Hadoop for each <code>(key, [list of values])</code> pair obtained by aggregating the local output of a Mapper.</p>
 <p>The Combiner class is specified by using the <code>job.setCombinerClass()</code> method in the run method of the Driver (i.e., in the job configuration part of the code).</p>
 </section>
 <section id="example-adding-the-combiner-to-the-word-count-problem" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="example-adding-the-combiner-to-the-word-count-problem"><span class="header-section-number">4.3</span> Example: adding the Combiner to the Word Count problem</h2>
-<p>Consider the word count problem (see <a href="#sec-wordcountexample">Section 3.4</a> for details), to add the combiner to solution seen before: - Specify the combiner class in the Driver - Define the Combiner class. The reduce method of the combiner aggregates local pairs emitted by the mappers of a single cluster node, and emits partial results (local number of occurrences for each word) from each cluster node that is used to run our application.</p>
+<p>Consider the word count problem (see <a href="#sec-wordcountexample">Section 3.4</a> for details), to add the combiner to solution seen before:</p>
+<ul>
+<li>Specify the combiner class in the Driver</li>
+<li>Define the Combiner class. The reduce method of the combiner aggregates local pairs emitted by the mappers of a single cluster node, and emits partial results (local number of occurrences for each word) from each cluster node that is used to run our application.</li>
+</ul>
 <section id="specify-combiner-class-in-the-driver" class="level3" data-number="4.3.1">
 <h3 data-number="4.3.1" class="anchored" data-anchor-id="specify-combiner-class-in-the-driver"><span class="header-section-number">4.3.1</span> Specify combiner class in the Driver</h3>
 <p>Add the call to the combiner class in the Driver, before the return around line 68</p>
@@ -3489,8 +3524,8 @@ Combiner scope of application
 <li><code>public String toString()</code></li>
 </ul>
 <p>Suppose to be interested in complex values composed of two parts, such as a counter (int) and a sum (float). In this case, an ad-hoc Data Type can be used to implement this complex data type in Hadoop.</p>
-<section id="example" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="example"><span class="header-section-number">5.1</span> Example</h2>
+<section id="example-2" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="example-2"><span class="header-section-number">5.1</span> Example</h2>
 <div class="sourceCode" id="cb15"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb15-1"><a href="#cb15-1"></a><span class="co">/* Set package */</span></span>
 <span id="cb15-2"><a href="#cb15-2"></a></span>
 <span id="cb15-3"><a href="#cb15-3"></a><span class="kw">package</span><span class="im"> it</span><span class="op">.</span><span class="im">polito</span><span class="op">.</span><span class="im">bigdata</span><span class="op">.</span><span class="im">hadoop</span><span class="op">.</span><span class="im">combinerexample</span><span class="op">;</span></span>
@@ -3548,7 +3583,11 @@ Combiner scope of application
 </section>
 <section id="complex-keys" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="complex-keys"><span class="header-section-number">5.2</span> Complex keys</h2>
-<p>Personalized Data Types can be used also to manage complex <strong>keys</strong>. In that case the Personalized Data Type must implement the <code>org.apache.hadoop.io.WritableComparable</code> interface, since keys must be - compared/sorted: it is possible by implementing the <code>compareTo()</code> method - split in groups: it is possible by implementing the <code>hashCode()</code> method</p>
+<p>Personalized Data Types can be used also to manage complex <strong>keys</strong>. In that case the Personalized Data Type must implement the <code>org.apache.hadoop.io.WritableComparable</code> interface, since keys must be</p>
+<ul>
+<li>compared/sorted: it is possible by implementing the <code>compareTo()</code> method</li>
+<li>split in groups: it is possible by implementing the <code>hashCode()</code> method</li>
+</ul>
 </section>
 </section>
 <section id="sharing-parameters-among-driver-mappers-and-reducers" class="level1" data-number="6">
@@ -3657,7 +3696,14 @@ Combiner scope of application
 </section>
 </section>
 
-</main>
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>An <strong>interface</strong> is like a template of a class, defining which methods must be implemented to be compliant with the interface<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Setting the number of Reducers is a balancing problem: having more Reducers decreases the time to aggregate the data, however it also increases the overhead needed to instantiate the Reducers<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
