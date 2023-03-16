@@ -1,5 +1,5 @@
 ---
-title: "MapReduce patterns"
+title: "MapReduce patterns (1)"
 ---
 # Summarization Patterns
 Summarization Patterns are used to implement applications that produce top-level/summarized view of the data, such as
@@ -18,7 +18,7 @@ The goal is to group records/objects by a key field(s) and calculate a numerical
 - Reducers receive a set of numerical values for each "group-by" key and compute the final statistics for each "group".
 Combiners can be used to speed up performances, if the computed statistic has specific properties (e.g., it is commutative and associative).
 
-![Numerical summarization structure](images\05_mapreduce_patterns\numerical_summarization_structure.png){width=80%}
+![Numerical summarization structure](images\05_mapreduce_patterns_1\numerical_summarization_structure.png){width=80%}
 
 Use cases are
 
@@ -37,7 +37,7 @@ The goal is to build an index from the input data to support faster searches or 
 - Reducers receive a set of identifiers for each keyword and simply concatenate them
 - Combiners are usually not useful when using this pattern, since there are no values to aggregate
 
-![Numerical summarization structure](images\05_mapreduce_patterns\inverted_index_summarization_structure.png){width=80%}
+![Numerical summarization structure](images\05_mapreduce_patterns_1\inverted_index_summarization_structure.png){width=80%}
 
 A use case is a web search engine (word – List of URLs, i.e. Inverted Index).
 
@@ -49,7 +49,7 @@ The goal is to compute count summarizations of data sets to provide a top-level 
 - This is a map-only job: no reducers and no combiners have to be implemented
 - The results are stored/printed by the Driver of the application
 
-![Numerical summarization structure](images\05_mapreduce_patterns\counting_counters_structure.png){width=80%}
+![Numerical summarization structure](images\05_mapreduce_patterns_1\counting_counters_structure.png){width=80%}
 
 Use cases
 
@@ -80,7 +80,7 @@ Mappers output one `(key, value)` pair for each record that satisfies the enforc
 
 Reducers are useless in this pattern, since a map-only job is executed (number of reduce set to 0).
 
-![Numerical summarization structure](images\05_mapreduce_patterns\filtering_structure.png){width=80%}
+![Numerical summarization structure](images\05_mapreduce_patterns_1\filtering_structure.png){width=80%}
 
 Use cases
 
@@ -107,7 +107,7 @@ The cleanup method emits the k `(key, value)` pairs associated with the in-mappe
 #### Reducer
 A single reducer must be instantiated (i.e., one single instance of the reducer class). One single global view over the intermediate results emitted by the mappers to compute the final top k records. It computes the final top k list by merging the local lists emitted by the mappers. All input `(key, value)` pairs have the same key, hence the reduce method is called only once
 
-![Numerical summarization structure](images\05_mapreduce_patterns\topk_structure.png){width=80%}
+![Numerical summarization structure](images\05_mapreduce_patterns_1\topk_structure.png){width=80%}
 
 Use cases
 
@@ -124,7 +124,7 @@ The goal is to find a unique set of values/records, since in some applications d
     - Key = input key, (i.e., input record)
     - Value = null value
 
-![Numerical summarization structure](images\05_mapreduce_patterns\distinct_structure.png){width=80%}
+![Numerical summarization structure](images\05_mapreduce_patterns_1\distinct_structure.png){width=80%}
 
 Use cases
 

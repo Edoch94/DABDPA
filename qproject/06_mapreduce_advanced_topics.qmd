@@ -10,6 +10,7 @@ Hadoop allows reading data from multiple inputs (multiple datasets) with differe
 ## Example of a use case
 The input data is collected from different sensors: all sensors measure the same "measure", but sensors developed by different vendors use a different data format to store the gathered data/measurements.
 :::
+
 In the driver use the `addInputPath` method of the `MultipleInputs` class multiple times to
 
 - Add one input path at a time
@@ -17,6 +18,7 @@ In the driver use the `addInputPath` method of the `MultipleInputs` class multip
 - Specify the Mapper class associated with each input path
 
 :::{.callout-note collapse="true"}
+
 ## Multiple inputs example
 ```java
 MultipleInputs.addInputPath(
@@ -99,6 +101,7 @@ Create an instance of the `MultipleOutputs` class in the setup method of the map
 mos = new MultipleOutputs<Text, NullWritable>(context);
 ```
 Use the write method of the `MultipleOutputs` object in the map method (or in the reduce method) to write the key-value pairs in the file of interest 
+
 :::{.callout-note collapse="true"}
 ## Example
 ```java
@@ -110,13 +113,16 @@ mos.write("normaltemp", key, value);
 ```
 This example writes the current key-value pair in a file with the prefix `"normaltemp-"`
 :::
+
 Close the `MultipleOutputs` object in the cleanup method of the mapper (or of the reducer)
+
 :::{.callout-note collapse="true"}
 ## Example
 ```java
 mos.close();
 ```
 :::
+
 # Distributed cache
 Some applications need to share and cache (small) read-only files to perform efficiently their task. These files should be accessible by all nodes of the cluster in an efficient way, hence a copy of the shared/cached (HDFS) files should be available locally in all nodes used to run the application.
 
@@ -146,6 +152,7 @@ public int run(String[] args) throws Exception {
     //...
 }
 ```
+
 ### Mapper/Reducer
 ```java
 protected void setup(Context context) throws IOException, InterruptedException{
