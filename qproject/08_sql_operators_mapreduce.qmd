@@ -1,0 +1,52 @@
+---
+title: "Relational Algebra Operations and MapReduce"
+---
+The relational algebra and the SQL language have many useful operators
+
+- Selection
+- Projection
+- Union, intersection, and difference
+- Join (see Join design patterns)
+- Aggregations and Group by (see the Summarization design patterns)
+
+The MapReduce paradigm can be used to implement relational operators, however the MapReduce implementation is efficient only when a full scan of the input table(s) is needed (i.e., when queries are not selective and process all data). Selective queries, which return few tuples/records of the input tables, are usually not efficient when implemented by using a MapReduce approach.
+
+Most preprocessing activities involve relational operators (e.g., ETL processes in the data warehousing application context).
+
+Relations/Tables (also the big ones) can be stored in the HDFS distributed file system, broken in blocks and spread across the servers of the Hadoop cluster.
+
+Notice that in relational algebra, relations/tables do not contain duplicate records by definition, and this constraint must be satisfied by both the input and the output relations/tables.
+
+# Selection
+$$
+\sigma_C(R)
+$$
+
+Applies predicate (condition) $C$ to each record of table $R$, and produces a relation containing only the records that satisfy predicate $C$.
+
+The selection operator can be implemented by using the filtering pattern.
+
+:::{.callout-note collapse="true"}
+## Example
+Given the table *Courses*
+
+| CCode | CName | Semester | ProfID |
+|-------|-------|----------|--------|
+| M2170 | Computer science | 1 | D102 |
+| M4880 | Digital systems | 2 | D104 |
+| F1401 | Electronics | 1 | D104 |
+| F0410 | Databases | 2 | D102 |
+
+Find the courses held in the second semester
+
+$$
+\sigma_{\textbf{Semester}=2}(\textbf{Courses})
+$$
+
+The resulting table is 
+
+| CCode | CName | Semester | ProfID |
+|-------|-------|----------|--------|
+| M4880 | Digital systems | 2 | D104 |
+| F0410 | Databases | 2 | D102 |
+:::
