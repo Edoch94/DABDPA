@@ -1,0 +1,13 @@
+name: DABDPA
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - ipykernel
+  - nbformat
+  - nbclient
+  - ca-certificates
+  - openssl
+  - bash_kernel
+prefix: C:\Users\edo_c\miniconda3\envs\DABDPA
