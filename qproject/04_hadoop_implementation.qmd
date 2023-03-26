@@ -905,3 +905,13 @@ class MAPPER
         for all word w in A do
             EMIT(term w , count A{w})
 ```
+
+# Maven project structure
+
+- *src* folder: contains the source code. May contain subfolders, but the important point is that it must contain the java files
+    - DriverBigData.java
+    - MapperBigData.java
+    - ReducerBigData.java
+- *target* folder: 
+    - *.jar* file: useful to run the application on the cluster. It's the java archive that collects the three classes of the Hadoop application
+- *pom.xml* file: used to configure the Hadoop application
