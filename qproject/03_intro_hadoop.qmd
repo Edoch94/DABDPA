@@ -62,18 +62,18 @@ Instead of moving data to the data centre, the code (i.e., programs) should be m
 
 # Architectures
 ## Single node architecture
-![Single node architecture](images\03_intro_hadoop\single_node.png){width=200}
+![Single node architecture](images/03_intro_hadoop/single_node.png){width=200}
 
 :::: {.columns}
 :::{.column width="45%"}
-![Single node architecture: Machine Learning and Statistics](images\03_intro_hadoop\single_node_ML.png){width=200}
+![Single node architecture: Machine Learning and Statistics](images/03_intro_hadoop/single_node_ML.png){width=200}
 
 Small data: data can be completely loaded in main memory.
 :::
 :::{.column width="10%"}
 :::
 :::{.column width="45%"}
-![Single node architecture: "Classical" data mining"](images\03_intro_hadoop\single_node_classicalML.png){width=200}
+![Single node architecture: "Classical" data mining"](images/03_intro_hadoop/single_node_classicalML.png){width=200}
 
 Large data: data can not be completely loaded in main memory.
 
@@ -94,7 +94,7 @@ The standard architecture in the Big data context (∼2012) is based on
 - Gigabit Ethernet interconnection
 
 ### Commodity cluster architecture
-![Commodity cluster architecture](images\03_intro_hadoop\commodity_cluster_architecture.png){width=80%}
+![Commodity cluster architecture](images/03_intro_hadoop/commodity_cluster_architecture.png){width=80%}
 
 The servers in each rack are very similar to each other, so that the servers would take the same time to process the data and none of them will become a bottleneck for the overall processing.
 
@@ -238,7 +238,7 @@ So Hadoop is in charge of:
 - store the data in different servers 
 - managing the reputation of the blocks
 
-![Hadoop main components](images\03_intro_hadoop\hadoop_main_components.png){width=80%}
+![Hadoop main components](images/03_intro_hadoop/hadoop_main_components.png){width=80%}
 
 Notice that, in this example, the number of replicas (i.e., the number of copies) of each block (e.g., $C_0$, $C_1$, $C_6$, etc.) is equal to two. Multiple copies are needed to correctly manage server failures: two copies are never stored in the same server.
 
@@ -271,7 +271,7 @@ Each file is split in **chunks** (also called **blocks**) that are spread across
 
 :::{.callout-note collapse="true"}
 ## Example
-![2 files in 4 chunks](images\03_intro_hadoop\hdfs_chunks_example.png){width=80%}
+![2 files in 4 chunks](images/03_intro_hadoop/hdfs_chunks_example.png){width=80%}
 
 Each square represents a chunk in the HDFS. Each chunk contains 64 MB of data, so file 1 (65 MB) sticks out by 1 MB from a single chunk, while file 2 (127 MB) does not completely fill two chunks. The empty chunk portions are not filled by any other file.
 
@@ -318,7 +318,7 @@ Assuming that
 - The input file is split into 2 chunks
 - The number of replicas is 1
 
-![Word count solution](images\03_intro_hadoop\word_count.png){width=80%}
+![Word count solution](images/03_intro_hadoop/word_count.png){width=80%}
 
 The problem can be easily parallelized:
 
@@ -409,7 +409,7 @@ $$
 L = [\text{toy}, \text{example}, \text{toy}, \text{example}, \text{hadoop}]
 $$
 
-![Word count running example](images\03_intro_hadoop\mapreduce_paradigm.png){width=80%}
+![Word count running example](images/03_intro_hadoop/mapreduce_paradigm.png){width=80%}
 
 - Map phase: apply a function on each element of a list of key-value pairs (notice that the example above is not 100% correct: the elements of the list should also be key-value pairs);
 - Shuffle and sort phase: group by key; in this phase the key-value pairs having the same key are collected together in the same node, but no computation is performed;

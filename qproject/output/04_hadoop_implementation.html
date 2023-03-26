@@ -2686,6 +2686,7 @@ vertical-align: -.125em;
   <li><a href="#cleanup-method" id="toc-cleanup-method" class="nav-link" data-scroll-target="#cleanup-method"><span class="toc-section-number">9.2</span>  Cleanup method</a></li>
   <li><a href="#in-mapper-combiner-word-count-pseudocode" id="toc-in-mapper-combiner-word-count-pseudocode" class="nav-link" data-scroll-target="#in-mapper-combiner-word-count-pseudocode"><span class="toc-section-number">9.3</span>  In-Mapper combiner: Word count pseudocode</a></li>
   </ul></li>
+  <li><a href="#maven-project-structure" id="toc-maven-project-structure" class="nav-link" data-scroll-target="#maven-project-structure"><span class="toc-section-number">10</span>  Maven project structure</a></li>
   </ul>
 </nav>
 </div>
@@ -3043,10 +3044,11 @@ Example
 </section>
 <section id="structure-of-a-mapreduce-program-in-hadoop" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Structure of a MapReduce program in Hadoop</h1>
+<p>Always start from these templates. The parts of the code that should be changed to customize the Hadoop application are highlighted using notes.</p>
 <section id="driver" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="driver"><span class="header-section-number">3.1</span> Driver</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">/* Set package */</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="kw">package</span><span class="im"> it</span><span class="op">.</span><span class="im">polito</span><span class="op">.</span><span class="im">bigdata</span><span class="op">.</span><span class="im">hadoop</span><span class="op">.</span><span class="im">mypackage</span><span class="op">;</span></span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">/* Set package */</span> <span class="co">// # &lt;1&gt; </span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="kw">package</span><span class="im"> it</span><span class="op">.</span><span class="im">polito</span><span class="op">.</span><span class="im">bigdata</span><span class="op">.</span><span class="im">hadoop</span><span class="op">.</span><span class="im">mypackage</span><span class="op">;</span> </span>
 <span id="cb5-3"><a href="#cb5-3"></a></span>
 <span id="cb5-4"><a href="#cb5-4"></a><span class="co">/* Import libraries */</span></span>
 <span id="cb5-5"><a href="#cb5-5"></a><span class="kw">import</span> <span class="im">java</span><span class="op">.</span><span class="im">io</span><span class="op">.</span><span class="im">IOException</span><span class="op">;</span></span>
@@ -3061,7 +3063,7 @@ Example
 <span id="cb5-14"><a href="#cb5-14"></a><span class="kw">import</span> <span class="im">org</span><span class="op">.</span><span class="im">apache</span><span class="op">.</span><span class="im">hadoop</span><span class="op">.</span><span class="im">mapreduce</span><span class="op">.</span><span class="im">lib</span><span class="op">.</span><span class="im">output</span><span class="op">.</span><span class="im">TextOutputFormat</span><span class="op">;</span></span>
 <span id="cb5-15"><a href="#cb5-15"></a></span>
 <span id="cb5-16"><a href="#cb5-16"></a><span class="co">/* Driver class */</span></span>
-<span id="cb5-17"><a href="#cb5-17"></a><span class="kw">public</span> <span class="kw">class</span> MapReduceAppDriver <span class="kw">extends</span> Configured <span class="kw">implements</span> <span class="bu">Tool</span> <span class="op">{</span></span>
+<span id="cb5-17"><a href="#cb5-17"></a><span class="kw">public</span> <span class="kw">class</span> MapReduceAppDriver <span class="kw">extends</span> Configured <span class="kw">implements</span> <span class="bu">Tool</span> <span class="op">{</span> <span class="co">// # &lt;2&gt; </span></span>
 <span id="cb5-18"><a href="#cb5-18"></a>    <span class="at">@Override</span></span>
 <span id="cb5-19"><a href="#cb5-19"></a>    <span class="kw">public</span> <span class="dt">int</span> <span class="fu">run</span><span class="op">(</span><span class="bu">String</span><span class="op">[]</span> args<span class="op">)</span> <span class="kw">throws</span> <span class="bu">Exception</span> <span class="op">{</span></span>
 <span id="cb5-20"><a href="#cb5-20"></a>        <span class="co">/* variables */</span></span>
@@ -3069,16 +3071,16 @@ Example
 <span id="cb5-22"><a href="#cb5-22"></a>        <span class="co">//...</span></span>
 <span id="cb5-23"><a href="#cb5-23"></a></span>
 <span id="cb5-24"><a href="#cb5-24"></a>        <span class="co">// Parse parameters</span></span>
-<span id="cb5-25"><a href="#cb5-25"></a>        numberOfReducers <span class="op">=</span> <span class="bu">Integer</span><span class="op">.</span><span class="fu">parseInt</span><span class="op">(</span>args<span class="op">[</span><span class="dv">0</span><span class="op">]);</span></span>
-<span id="cb5-26"><a href="#cb5-26"></a>        inputPath <span class="op">=</span> <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>args<span class="op">[</span><span class="dv">1</span><span class="op">]);</span></span>
-<span id="cb5-27"><a href="#cb5-27"></a>        outputDir <span class="op">=</span> <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>args<span class="op">[</span><span class="dv">2</span><span class="op">]);</span></span>
+<span id="cb5-25"><a href="#cb5-25"></a>        numberOfReducers <span class="op">=</span> <span class="bu">Integer</span><span class="op">.</span><span class="fu">parseInt</span><span class="op">(</span>args<span class="op">[</span><span class="dv">0</span><span class="op">]);</span> <span class="co">// Number of instances of the Reducer class</span></span>
+<span id="cb5-26"><a href="#cb5-26"></a>        inputPath <span class="op">=</span> <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>args<span class="op">[</span><span class="dv">1</span><span class="op">]);</span> <span class="co">// Can be the path to a folder or to a file. If this is a folder path, the application will read all the files in it</span></span>
+<span id="cb5-27"><a href="#cb5-27"></a>        outputDir <span class="op">=</span> <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>args<span class="op">[</span><span class="dv">2</span><span class="op">]);</span> <span class="co">// This is always the path to a folder</span></span>
 <span id="cb5-28"><a href="#cb5-28"></a></span>
-<span id="cb5-29"><a href="#cb5-29"></a>        <span class="co">// Define and configure a new job</span></span>
-<span id="cb5-30"><a href="#cb5-30"></a>        <span class="bu">Configuration</span> conf <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="fu">getConf</span><span class="op">();</span></span>
-<span id="cb5-31"><a href="#cb5-31"></a>        Job job <span class="op">=</span> Job<span class="op">.</span><span class="fu">getInstance</span><span class="op">(</span>conf<span class="op">);</span> </span>
+<span id="cb5-29"><a href="#cb5-29"></a>        <span class="co">// Define and configure a new job </span></span>
+<span id="cb5-30"><a href="#cb5-30"></a>        <span class="bu">Configuration</span> conf <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="fu">getConf</span><span class="op">();</span> <span class="co">// Create a configuration object to design in it the application configuration</span></span>
+<span id="cb5-31"><a href="#cb5-31"></a>        Job job <span class="op">=</span> Job<span class="op">.</span><span class="fu">getInstance</span><span class="op">(</span>conf<span class="op">);</span> <span class="co">// Creation of the job, that is the application instance</span></span>
 <span id="cb5-32"><a href="#cb5-32"></a></span>
 <span id="cb5-33"><a href="#cb5-33"></a>        <span class="co">// Assign a name to the job</span></span>
-<span id="cb5-34"><a href="#cb5-34"></a>        job<span class="op">.</span><span class="fu">setJobName</span><span class="op">(</span><span class="st">&quot;My First MapReduce program&quot;</span><span class="op">);</span></span>
+<span id="cb5-34"><a href="#cb5-34"></a>        job<span class="op">.</span><span class="fu">setJobName</span><span class="op">(</span><span class="st">&quot;My First MapReduce program&quot;</span><span class="op">);</span> <span class="co">// # &lt;3&gt;</span></span>
 <span id="cb5-35"><a href="#cb5-35"></a></span>
 <span id="cb5-36"><a href="#cb5-36"></a>        <span class="co">// Set path of the input file/folder (if it is a folder, the job reads all the files in the specified folder) for this job</span></span>
 <span id="cb5-37"><a href="#cb5-37"></a>        FileInputFormat<span class="op">.</span><span class="fu">addInputPath</span><span class="op">(</span>job<span class="op">,</span> inputPath<span class="op">);</span></span>
@@ -3087,56 +3089,72 @@ Example
 <span id="cb5-40"><a href="#cb5-40"></a>        FileOutputFormat<span class="op">.</span><span class="fu">setOutputPath</span><span class="op">(</span>job<span class="op">,</span> outputDir<span class="op">);</span></span>
 <span id="cb5-41"><a href="#cb5-41"></a></span>
 <span id="cb5-42"><a href="#cb5-42"></a>        <span class="co">// Set input format</span></span>
-<span id="cb5-43"><a href="#cb5-43"></a>        <span class="co">// TextInputFormat = textual files</span></span>
-<span id="cb5-44"><a href="#cb5-44"></a>        job<span class="op">.</span><span class="fu">setInputFormatClass</span><span class="op">(</span>TextInputFormat<span class="op">.</span><span class="fu">class</span><span class="op">);</span></span>
-<span id="cb5-45"><a href="#cb5-45"></a></span>
-<span id="cb5-46"><a href="#cb5-46"></a>        <span class="co">// Set job output format</span></span>
-<span id="cb5-47"><a href="#cb5-47"></a>        job<span class="op">.</span><span class="fu">setOutputFormatClass</span><span class="op">(</span>TextOutputFormat<span class="op">.</span><span class="fu">class</span><span class="op">);</span></span>
-<span id="cb5-48"><a href="#cb5-48"></a></span>
-<span id="cb5-49"><a href="#cb5-49"></a>        <span class="co">// Specify the class of the Driver for this job</span></span>
-<span id="cb5-50"><a href="#cb5-50"></a>        job<span class="op">.</span><span class="fu">setJarByClass</span><span class="op">(</span>MapReduceAppDriver <span class="op">.</span><span class="fu">class</span><span class="op">);</span></span>
-<span id="cb5-51"><a href="#cb5-51"></a></span>
-<span id="cb5-52"><a href="#cb5-52"></a>        <span class="co">// Set mapper class</span></span>
-<span id="cb5-53"><a href="#cb5-53"></a>        job<span class="op">.</span><span class="fu">setMapperClass</span><span class="op">(</span>MyMapperClass<span class="op">.</span><span class="fu">class</span><span class="op">);</span></span>
-<span id="cb5-54"><a href="#cb5-54"></a>        </span>
-<span id="cb5-55"><a href="#cb5-55"></a>        <span class="co">// Set map output key and value classes</span></span>
-<span id="cb5-56"><a href="#cb5-56"></a>        job<span class="op">.</span><span class="fu">setMapOutputKeyClass</span><span class="op">(</span>output key type<span class="op">.</span><span class="fu">class</span><span class="op">);</span></span>
-<span id="cb5-57"><a href="#cb5-57"></a>        job<span class="op">.</span><span class="fu">setMapOutputValueClass</span><span class="op">(</span>output value type<span class="op">.</span><span class="fu">class</span><span class="op">);</span></span>
-<span id="cb5-58"><a href="#cb5-58"></a></span>
-<span id="cb5-59"><a href="#cb5-59"></a>        <span class="co">// Set reduce class</span></span>
-<span id="cb5-60"><a href="#cb5-60"></a>        job<span class="op">.</span><span class="fu">setReducerClass</span><span class="op">(</span>MyReducerClass<span class="op">.</span><span class="fu">class</span><span class="op">);</span></span>
-<span id="cb5-61"><a href="#cb5-61"></a></span>
-<span id="cb5-62"><a href="#cb5-62"></a>        <span class="co">// Set reduce output key and value classes</span></span>
-<span id="cb5-63"><a href="#cb5-63"></a>        job<span class="op">.</span><span class="fu">setOutputKeyClass</span><span class="op">(</span>output key type<span class="op">.</span><span class="fu">class</span><span class="op">);</span></span>
-<span id="cb5-64"><a href="#cb5-64"></a>        job<span class="op">.</span><span class="fu">setOutputValueClass</span><span class="op">(</span>output value type<span class="op">.</span><span class="fu">class</span><span class="op">);</span></span>
-<span id="cb5-65"><a href="#cb5-65"></a></span>
-<span id="cb5-66"><a href="#cb5-66"></a>        <span class="co">// Set number of reducers</span></span>
-<span id="cb5-67"><a href="#cb5-67"></a>        job<span class="op">.</span><span class="fu">setNumReduceTasks</span><span class="op">(</span>numberOfReducers<span class="op">);</span></span>
-<span id="cb5-68"><a href="#cb5-68"></a></span>
-<span id="cb5-69"><a href="#cb5-69"></a>        <span class="co">// Execute the job and wait for completion</span></span>
-<span id="cb5-70"><a href="#cb5-70"></a>        <span class="cf">if</span> <span class="op">(</span>job<span class="op">.</span><span class="fu">waitForCompletion</span><span class="op">(</span><span class="kw">true</span><span class="op">)==</span><span class="kw">true</span><span class="op">)</span></span>
-<span id="cb5-71"><a href="#cb5-71"></a>            exitCode<span class="op">=</span><span class="dv">0</span><span class="op">;</span></span>
-<span id="cb5-72"><a href="#cb5-72"></a>        <span class="cf">else</span></span>
-<span id="cb5-73"><a href="#cb5-73"></a>            exitCode<span class="op">=</span><span class="dv">1</span><span class="op">;</span></span>
-<span id="cb5-74"><a href="#cb5-74"></a>        <span class="cf">return</span> exitCode<span class="op">;</span></span>
-<span id="cb5-75"><a href="#cb5-75"></a>    <span class="op">}</span> <span class="co">// End of the run method</span></span>
-<span id="cb5-76"><a href="#cb5-76"></a></span>
-<span id="cb5-77"><a href="#cb5-77"></a>    <span class="co">/* main method of the driver class */</span></span>
-<span id="cb5-78"><a href="#cb5-78"></a>    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span><span class="op">(</span><span class="bu">String</span> args<span class="op">[])</span> <span class="kw">throws</span> <span class="bu">Exception</span> <span class="op">{</span></span>
-<span id="cb5-79"><a href="#cb5-79"></a>        <span class="co">/* Exploit the ToolRunner class to &quot;configure&quot; and run the Hadoop application */</span></span>
-<span id="cb5-80"><a href="#cb5-80"></a>        <span class="dt">int</span> res <span class="op">=</span> ToolRunner<span class="op">.</span><span class="fu">run</span><span class="op">(</span></span>
-<span id="cb5-81"><a href="#cb5-81"></a>            <span class="kw">new</span> <span class="bu">Configuration</span><span class="op">(),</span> </span>
-<span id="cb5-82"><a href="#cb5-82"></a>            <span class="kw">new</span> <span class="fu">MapReduceAppDriver</span><span class="op">(),</span> </span>
-<span id="cb5-83"><a href="#cb5-83"></a>            args</span>
-<span id="cb5-84"><a href="#cb5-84"></a>        <span class="op">);</span></span>
-<span id="cb5-85"><a href="#cb5-85"></a>        <span class="bu">System</span><span class="op">.</span><span class="fu">exit</span><span class="op">(</span>res<span class="op">);</span></span>
-<span id="cb5-86"><a href="#cb5-86"></a>    <span class="op">}</span> <span class="co">// End of the main method</span></span>
-<span id="cb5-87"><a href="#cb5-87"></a><span class="op">}</span> <span class="co">// End of public class MapReduceAppDriver</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-43"><a href="#cb5-43"></a>        <span class="co">// TextInputFormat = textual files; the input types are (keys: LongWritable, values: text)</span></span>
+<span id="cb5-44"><a href="#cb5-44"></a>        <span class="co">// KeyValueTextInputFormat = textual files; the input types are (keys: text, values: text)</span></span>
+<span id="cb5-45"><a href="#cb5-45"></a>        job<span class="op">.</span><span class="fu">setInputFormatClass</span><span class="op">(</span>TextInputFormat<span class="op">.</span><span class="fu">class</span><span class="op">);</span> <span class="co">// This class also includes the information about the type of input data // # &lt;4&gt;</span></span>
+<span id="cb5-46"><a href="#cb5-46"></a></span>
+<span id="cb5-47"><a href="#cb5-47"></a>        <span class="co">// Set job output format</span></span>
+<span id="cb5-48"><a href="#cb5-48"></a>        job<span class="op">.</span><span class="fu">setOutputFormatClass</span><span class="op">(</span>TextOutputFormat<span class="op">.</span><span class="fu">class</span><span class="op">);</span> <span class="co">// # &lt;5&gt;</span></span>
+<span id="cb5-49"><a href="#cb5-49"></a></span>
+<span id="cb5-50"><a href="#cb5-50"></a>        <span class="co">// Specify the class of the Driver for this job</span></span>
+<span id="cb5-51"><a href="#cb5-51"></a>        job<span class="op">.</span><span class="fu">setJarByClass</span><span class="op">(</span>MapReduceAppDriver<span class="op">.</span><span class="fu">class</span><span class="op">);</span> <span class="co">// # &lt;6&gt;</span></span>
+<span id="cb5-52"><a href="#cb5-52"></a></span>
+<span id="cb5-53"><a href="#cb5-53"></a>        <span class="co">// Set mapper class</span></span>
+<span id="cb5-54"><a href="#cb5-54"></a>        job<span class="op">.</span><span class="fu">setMapperClass</span><span class="op">(</span>MyMapperClass<span class="op">.</span><span class="fu">class</span><span class="op">);</span> <span class="co">// # &lt;7&gt;</span></span>
+<span id="cb5-55"><a href="#cb5-55"></a>        </span>
+<span id="cb5-56"><a href="#cb5-56"></a>        <span class="co">// Set map output key and value classes; these are also the key - value types of the reduces class</span></span>
+<span id="cb5-57"><a href="#cb5-57"></a>        job<span class="op">.</span><span class="fu">setMapOutputKeyClass</span><span class="op">(</span>output key type<span class="op">.</span><span class="fu">class</span><span class="op">);</span> <span class="co">// where type changes depending on the type (e.g., text, IntWritable) // # &lt;8&gt;</span></span>
+<span id="cb5-58"><a href="#cb5-58"></a>        job<span class="op">.</span><span class="fu">setMapOutputValueClass</span><span class="op">(</span>output value type<span class="op">.</span><span class="fu">class</span><span class="op">);</span> <span class="co">// # &lt;9&gt;</span></span>
+<span id="cb5-59"><a href="#cb5-59"></a></span>
+<span id="cb5-60"><a href="#cb5-60"></a>        <span class="co">// Set reduce class</span></span>
+<span id="cb5-61"><a href="#cb5-61"></a>        job<span class="op">.</span><span class="fu">setReducerClass</span><span class="op">(</span>MyReducerClass<span class="op">.</span><span class="fu">class</span><span class="op">);</span> <span class="co">// # &lt;10&gt;</span></span>
+<span id="cb5-62"><a href="#cb5-62"></a></span>
+<span id="cb5-63"><a href="#cb5-63"></a>        <span class="co">// Set reduce output key and value classes</span></span>
+<span id="cb5-64"><a href="#cb5-64"></a>        job<span class="op">.</span><span class="fu">setOutputKeyClass</span><span class="op">(</span>output key type<span class="op">.</span><span class="fu">class</span><span class="op">);</span> <span class="co">// # &lt;11&gt;</span></span>
+<span id="cb5-65"><a href="#cb5-65"></a>        job<span class="op">.</span><span class="fu">setOutputValueClass</span><span class="op">(</span>output value type<span class="op">.</span><span class="fu">class</span><span class="op">);</span> <span class="co">// # &lt;12&gt;</span></span>
+<span id="cb5-66"><a href="#cb5-66"></a></span>
+<span id="cb5-67"><a href="#cb5-67"></a>        <span class="co">// Set number of reducers</span></span>
+<span id="cb5-68"><a href="#cb5-68"></a>        job<span class="op">.</span><span class="fu">setNumReduceTasks</span><span class="op">(</span>numberOfReducers<span class="op">);</span></span>
+<span id="cb5-69"><a href="#cb5-69"></a></span>
+<span id="cb5-70"><a href="#cb5-70"></a>        <span class="co">// Execute the job and wait for completion</span></span>
+<span id="cb5-71"><a href="#cb5-71"></a>        <span class="cf">if</span> <span class="op">(</span>job<span class="op">.</span><span class="fu">waitForCompletion</span><span class="op">(</span><span class="kw">true</span><span class="op">)==</span><span class="kw">true</span><span class="op">)</span> <span class="co">// with this method the application is run</span></span>
+<span id="cb5-72"><a href="#cb5-72"></a>            exitCode<span class="op">=</span><span class="dv">0</span><span class="op">;</span></span>
+<span id="cb5-73"><a href="#cb5-73"></a>        <span class="cf">else</span></span>
+<span id="cb5-74"><a href="#cb5-74"></a>            exitCode<span class="op">=</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb5-75"><a href="#cb5-75"></a>        <span class="cf">return</span> exitCode<span class="op">;</span></span>
+<span id="cb5-76"><a href="#cb5-76"></a>    <span class="op">}</span> <span class="co">// End of the run method</span></span>
+<span id="cb5-77"><a href="#cb5-77"></a></span>
+<span id="cb5-78"><a href="#cb5-78"></a>    <span class="co">/* main method of the driver class */</span></span>
+<span id="cb5-79"><a href="#cb5-79"></a>    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span><span class="op">(</span><span class="bu">String</span> args<span class="op">[])</span> <span class="kw">throws</span> <span class="bu">Exception</span> <span class="op">{</span> <span class="co">// This part of the code is always the same</span></span>
+<span id="cb5-80"><a href="#cb5-80"></a>        <span class="co">/* Exploit the ToolRunner class to &quot;configure&quot; and run the Hadoop application */</span></span>
+<span id="cb5-81"><a href="#cb5-81"></a>        <span class="dt">int</span> res <span class="op">=</span> ToolRunner<span class="op">.</span><span class="fu">run</span><span class="op">(</span></span>
+<span id="cb5-82"><a href="#cb5-82"></a>            <span class="kw">new</span> <span class="bu">Configuration</span><span class="op">(),</span> </span>
+<span id="cb5-83"><a href="#cb5-83"></a>            <span class="kw">new</span> <span class="fu">MapReduceAppDriver</span><span class="op">(),</span> <span class="co">// # &lt;13&gt;</span></span>
+<span id="cb5-84"><a href="#cb5-84"></a>            args</span>
+<span id="cb5-85"><a href="#cb5-85"></a>        <span class="op">);</span></span>
+<span id="cb5-86"><a href="#cb5-86"></a>        <span class="bu">System</span><span class="op">.</span><span class="fu">exit</span><span class="op">(</span>res<span class="op">);</span></span>
+<span id="cb5-87"><a href="#cb5-87"></a>    <span class="op">}</span> <span class="co">// End of the main method</span></span>
+<span id="cb5-88"><a href="#cb5-88"></a><span class="op">}</span> <span class="co">// End of public class MapReduceAppDriver</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol type="1">
+<li><code>mypackage</code></li>
+<li><code>MapReduceAppDriver</code></li>
+<li><code>&quot;My First MapReduce program&quot;</code></li>
+<li><code>TextInputFormat</code></li>
+<li><code>TextInputFormat</code></li>
+<li><code>MapReduceAppDriver</code></li>
+<li><code>MyMapperClass</code></li>
+<li><code>output value type</code></li>
+<li><code>output value type</code></li>
+<li><code>MyReducerClass</code></li>
+<li><code>output value type</code></li>
+<li><code>output value type</code></li>
+<li><code>MapReduceAppDriver</code></li>
+</ol>
 </section>
 <section id="mapper" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="mapper"><span class="header-section-number">3.2</span> Mapper</h2>
 <div class="sourceCode" id="cb6"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">/* Set package */</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="kw">package</span><span class="im"> it</span><span class="op">.</span><span class="im">polito</span><span class="op">.</span><span class="im">bigdata</span><span class="op">.</span><span class="im">hadoop</span><span class="op">.</span><span class="im">mypackage</span><span class="op">;</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="kw">package</span><span class="im"> it</span><span class="op">.</span><span class="im">polito</span><span class="op">.</span><span class="im">bigdata</span><span class="op">.</span><span class="im">hadoop</span><span class="op">.</span><span class="im">mypackage</span><span class="op">;</span> <span class="co">// # &lt;1&gt;</span></span>
 <span id="cb6-3"><a href="#cb6-3"></a></span>
 <span id="cb6-4"><a href="#cb6-4"></a><span class="co">/* Import libraries */</span></span>
 <span id="cb6-5"><a href="#cb6-5"></a><span class="kw">import</span> <span class="im">java</span><span class="op">.</span><span class="im">io</span><span class="op">.</span><span class="im">IOException</span><span class="op">;</span></span>
@@ -3145,28 +3163,47 @@ Example
 <span id="cb6-8"><a href="#cb6-8"></a><span class="kw">import</span> <span class="im">org</span><span class="op">.</span><span class="im">apache</span><span class="op">.</span><span class="im">hadoop</span><span class="op">.</span><span class="im">io</span><span class="op">.*;</span></span>
 <span id="cb6-9"><a href="#cb6-9"></a></span>
 <span id="cb6-10"><a href="#cb6-10"></a><span class="co">/* Mapper Class */</span></span>
-<span id="cb6-11"><a href="#cb6-11"></a><span class="kw">class</span> myMapperClass <span class="kw">extends</span> Mapper<span class="op">&lt;</span></span>
-<span id="cb6-12"><a href="#cb6-12"></a>    MapperInputKeyType<span class="op">,</span> <span class="co">// Input key type (must be consistent with the InputFormat class specified in the Driver)</span></span>
-<span id="cb6-13"><a href="#cb6-13"></a>    MapperInputValueType<span class="op">,</span> <span class="co">// Input value type (must be consistent with the InputFormat class specified in the Driver)</span></span>
-<span id="cb6-14"><a href="#cb6-14"></a>    MapperOutputKeyType<span class="op">,</span> <span class="co">// Output key type</span></span>
-<span id="cb6-15"><a href="#cb6-15"></a>    MapperOutputValueType <span class="co">// Output value type</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="kw">class</span> myMapperClass <span class="kw">extends</span> Mapper<span class="op">&lt;</span> <span class="co">// Mapper is a template // # &lt;2&gt;</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a>    MapperInputKeyType<span class="op">,</span> <span class="co">// Input key type (must be consistent with the InputFormat class specified in the Driver) // # &lt;3&gt;</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a>    MapperInputValueType<span class="op">,</span> <span class="co">// Input value type (must be consistent with the InputFormat class specified in the Driver) // # &lt;4&gt;</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a>    MapperOutputKeyType<span class="op">,</span> <span class="co">// Output key type // # &lt;5&gt;</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a>    MapperOutputValueType <span class="co">// Output value type // # &lt;6&gt;</span></span>
 <span id="cb6-16"><a href="#cb6-16"></a><span class="op">&gt;{</span></span>
 <span id="cb6-17"><a href="#cb6-17"></a><span class="co">/* Implementation of the map method */</span></span>
 <span id="cb6-18"><a href="#cb6-18"></a>    <span class="kw">protected</span> <span class="dt">void</span> <span class="fu">map</span><span class="op">(</span></span>
-<span id="cb6-19"><a href="#cb6-19"></a>        MapperInputKeyType key<span class="op">,</span> <span class="co">// Input key</span></span>
-<span id="cb6-20"><a href="#cb6-20"></a>        MapperInputValueType value<span class="op">,</span> <span class="co">// Input value</span></span>
-<span id="cb6-21"><a href="#cb6-21"></a>        <span class="bu">Context</span> context</span>
+<span id="cb6-19"><a href="#cb6-19"></a>        MapperInputKeyType key<span class="op">,</span> <span class="co">// Input key // # &lt;7&gt;</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a>        MapperInputValueType value<span class="op">,</span> <span class="co">// Input value // # &lt;8&gt;</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a>        <span class="bu">Context</span> context <span class="co">// This is an object containing the write method, that has to be invoked to return the (key, value) pairs</span></span>
 <span id="cb6-22"><a href="#cb6-22"></a>    <span class="op">)</span> <span class="kw">throws</span> <span class="bu">IOException</span><span class="op">,</span> <span class="bu">InterruptedException</span> <span class="op">{</span></span>
 <span id="cb6-23"><a href="#cb6-23"></a></span>
-<span id="cb6-24"><a href="#cb6-24"></a>        <span class="co">/* Process the input (key, value) pair and emit a set of (key,value pairs.context.write(..) is used to emit (key, value) pairs context.write(new outputkey, new outputvalue); */</span></span>
-<span id="cb6-25"><a href="#cb6-25"></a></span>
-<span id="cb6-26"><a href="#cb6-26"></a>    <span class="op">}</span> <span class="co">// End of the map method</span></span>
-<span id="cb6-27"><a href="#cb6-27"></a><span class="op">}</span> <span class="co">// End of class myMapperClass</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-24"><a href="#cb6-24"></a>        <span class="co">/* </span></span>
+<span id="cb6-25"><a href="#cb6-25"></a><span class="co">        Process the input (key, value) pair and emit a set of (key,value) pairs. </span></span>
+<span id="cb6-26"><a href="#cb6-26"></a><span class="co">        context.write(...) is used to emit (key, value) pairs context.write(new outputkey, new outputvalue); </span></span>
+<span id="cb6-27"><a href="#cb6-27"></a><span class="co">        */</span> </span>
+<span id="cb6-28"><a href="#cb6-28"></a></span>
+<span id="cb6-29"><a href="#cb6-29"></a>        context<span class="op">.</span><span class="fu">write</span><span class="op">(</span><span class="kw">new</span> outputkey<span class="op">,</span> <span class="kw">new</span> outputvalue<span class="op">);</span> <span class="co">// # &lt;9&gt;</span></span>
+<span id="cb6-30"><a href="#cb6-30"></a>        <span class="co">// Notice context.write(...) has to be invoked a number of times equal to the number of (key, value) pairs have to be returned. Even 0 times is accepted</span></span>
+<span id="cb6-31"><a href="#cb6-31"></a></span>
+<span id="cb6-32"><a href="#cb6-32"></a>        <span class="co">// In the mapper instance also setup and cleanup methods can be implemented, but are not mandatory. Instead, the map method is mandatory</span></span>
+<span id="cb6-33"><a href="#cb6-33"></a></span>
+<span id="cb6-34"><a href="#cb6-34"></a>    <span class="op">}</span> <span class="co">// End of the map method</span></span>
+<span id="cb6-35"><a href="#cb6-35"></a><span class="op">}</span> <span class="co">// End of class myMapperClass</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol type="1">
+<li><code>mypackage</code></li>
+<li><code>myMapperClass</code></li>
+<li><code>MapperInputKeyType</code></li>
+<li><code>MapperInputValueType</code></li>
+<li><code>MapperOutputKeyType</code></li>
+<li><code>MapperOutputValueType</code></li>
+<li><code>MapperInputKeyType</code></li>
+<li><code>MapperInputValueType</code></li>
+<li><code>outputkey</code> and <code>outputvalue</code></li>
+</ol>
 </section>
 <section id="reducer" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="reducer"><span class="header-section-number">3.3</span> Reducer</h2>
 <div class="sourceCode" id="cb7"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb7-1"><a href="#cb7-1"></a><span class="co">/* Set package */</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="kw">package</span><span class="im"> it</span><span class="op">.</span><span class="im">polito</span><span class="op">.</span><span class="im">bigdata</span><span class="op">.</span><span class="im">hadoop</span><span class="op">.</span><span class="im">mypackage</span><span class="op">;</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="kw">package</span><span class="im"> it</span><span class="op">.</span><span class="im">polito</span><span class="op">.</span><span class="im">bigdata</span><span class="op">.</span><span class="im">hadoop</span><span class="op">.</span><span class="im">mypackage</span><span class="op">;</span> <span class="co">// # &lt;1&gt;</span></span>
 <span id="cb7-3"><a href="#cb7-3"></a></span>
 <span id="cb7-4"><a href="#cb7-4"></a><span class="co">/* Import libraries */</span></span>
 <span id="cb7-5"><a href="#cb7-5"></a><span class="kw">import</span> <span class="im">java</span><span class="op">.</span><span class="im">io</span><span class="op">.</span><span class="im">IOException</span><span class="op">;</span></span>
@@ -3174,23 +3211,40 @@ Example
 <span id="cb7-7"><a href="#cb7-7"></a><span class="kw">import</span> <span class="im">org</span><span class="op">.</span><span class="im">apache</span><span class="op">.</span><span class="im">hadoop</span><span class="op">.</span><span class="im">io</span><span class="op">.*;</span></span>
 <span id="cb7-8"><a href="#cb7-8"></a></span>
 <span id="cb7-9"><a href="#cb7-9"></a><span class="co">/* Reducer Class */</span></span>
-<span id="cb7-10"><a href="#cb7-10"></a><span class="kw">class</span> myReducerClass <span class="kw">extends</span> Reducer<span class="op">&lt;</span></span>
-<span id="cb7-11"><a href="#cb7-11"></a>    ReducerInputKeyType<span class="op">,</span> <span class="co">// Input key type (must be consistent with the OutputKeyType of the Mapper)</span></span>
-<span id="cb7-12"><a href="#cb7-12"></a>    ReducerInputValueType<span class="op">,</span> <span class="co">// Input value type (must be consistent with the OutputValueType of the Mapper)</span></span>
-<span id="cb7-13"><a href="#cb7-13"></a>    ReducerOutputKeyType<span class="op">,</span> <span class="co">// Output key type (must be consistent with the OutputFormat class specified in the Driver)</span></span>
-<span id="cb7-14"><a href="#cb7-14"></a>    ReducerOutputValueType <span class="co">// Output value type (must be consistent with the OutputFormat class specified in the Driver)</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="kw">class</span> myReducerClass <span class="kw">extends</span> Reducer<span class="op">&lt;</span> <span class="co">// Reducer is a template // # &lt;2&gt;</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a>    ReducerInputKeyType<span class="op">,</span> <span class="co">// Input key type (must be consistent with the OutputKeyType of the Mapper) // # &lt;3&gt;</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a>    ReducerInputValueType<span class="op">,</span> <span class="co">// Input value type (must be consistent with the OutputValueType of the Mapper) // # &lt;4&gt;</span></span>
+<span id="cb7-13"><a href="#cb7-13"></a>    ReducerOutputKeyType<span class="op">,</span> <span class="co">// Output key type (must be consistent with the OutputFormat class specified in the Driver) // # &lt;5&gt;</span></span>
+<span id="cb7-14"><a href="#cb7-14"></a>    ReducerOutputValueType <span class="co">// Output value type (must be consistent with the OutputFormat class specified in the Driver) // # &lt;6&gt;</span></span>
 <span id="cb7-15"><a href="#cb7-15"></a><span class="op">&gt;{</span></span>
 <span id="cb7-16"><a href="#cb7-16"></a>    <span class="co">/* Implementation of the reduce method */</span></span>
 <span id="cb7-17"><a href="#cb7-17"></a>    <span class="kw">protected</span> <span class="dt">void</span> <span class="fu">reduce</span><span class="op">(</span></span>
-<span id="cb7-18"><a href="#cb7-18"></a>        ReducerInputKeyType key<span class="op">,</span> <span class="co">// Input key</span></span>
-<span id="cb7-19"><a href="#cb7-19"></a>        <span class="bu">Iterable</span><span class="op">&lt;</span>ReducerInputValueType<span class="op">&gt;</span> values<span class="op">,</span> <span class="co">// Input values (list of values)</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a>        ReducerInputKeyType key<span class="op">,</span> <span class="co">// Input key // # &lt;7&gt;</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a>        <span class="bu">Iterable</span><span class="op">&lt;</span>ReducerInputValueType<span class="op">&gt;</span> values<span class="op">,</span> <span class="co">// Input values (list of values). Notice that since this is an Iterable it is not possible to iterate over it more than once (it works like a Python generator). This is done because the iterable can read directly the list from the file system without moving and storing the data on the local server // # &lt;8&gt;</span></span>
 <span id="cb7-20"><a href="#cb7-20"></a>        <span class="bu">Context</span> context</span>
 <span id="cb7-21"><a href="#cb7-21"></a>    <span class="op">)</span> <span class="kw">throws</span> <span class="bu">IOException</span><span class="op">,</span> <span class="bu">InterruptedException</span> <span class="op">{</span></span>
 <span id="cb7-22"><a href="#cb7-22"></a></span>
-<span id="cb7-23"><a href="#cb7-23"></a>        <span class="co">/* Process the input (key, [list of values]) pair and emit a set of (key,value) pairs. context.write(..) is used to emit (key, value) pairs context.write(new outputkey, new outputvalue); */</span></span>
-<span id="cb7-24"><a href="#cb7-24"></a></span>
-<span id="cb7-25"><a href="#cb7-25"></a>    <span class="op">}</span> <span class="co">// End of the reduce method</span></span>
-<span id="cb7-26"><a href="#cb7-26"></a><span class="op">}</span> <span class="co">// End of class myReducerClass</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-23"><a href="#cb7-23"></a>        <span class="co">/* </span></span>
+<span id="cb7-24"><a href="#cb7-24"></a><span class="co">        Process the input (key, [list of values]) pair and emit a set of (key,value) pairs. </span></span>
+<span id="cb7-25"><a href="#cb7-25"></a><span class="co">        context.write(...) is used to emit (key, value) pairs context.write(new outputkey, new outputvalue); </span></span>
+<span id="cb7-26"><a href="#cb7-26"></a><span class="co">        */</span></span>
+<span id="cb7-27"><a href="#cb7-27"></a></span>
+<span id="cb7-28"><a href="#cb7-28"></a>        context<span class="op">.</span><span class="fu">write</span><span class="op">(</span><span class="kw">new</span> outputkey<span class="op">,</span> <span class="kw">new</span> outputvalue<span class="op">);</span> <span class="co">// # &lt;9&gt;</span></span>
+<span id="cb7-29"><a href="#cb7-29"></a>        <span class="co">// Notice context.write(...) has to be invoked a number of times equal to the number of (key, value) pairs have to be returned. Even 0 times is accepted</span></span>
+<span id="cb7-30"><a href="#cb7-30"></a></span>
+<span id="cb7-31"><a href="#cb7-31"></a>    <span class="op">}</span> <span class="co">// End of the reduce method</span></span>
+<span id="cb7-32"><a href="#cb7-32"></a><span class="op">}</span> <span class="co">// End of class myReducerClass</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol type="1">
+<li><code>mypackage</code></li>
+<li><code>myReducerClass</code></li>
+<li><code>ReducerInputKeyType</code></li>
+<li><code>ReducerInputValueType</code></li>
+<li><code>ReducerOutputKeyType</code></li>
+<li><code>ReducerOutputValueType</code></li>
+<li><code>ReducerInputKeyType</code></li>
+<li><code>ReducerInputValueType</code></li>
+<li><code>outputkey</code> and <code>outputvalue</code></li>
+</ol>
 </section>
 <section id="sec-wordcountexample" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="sec-wordcountexample"><span class="header-section-number">3.4</span> Example of a MapReduce program in Hadoop: Word Count</h2>
@@ -3694,6 +3748,22 @@ Combiner scope of application
 <span id="cb24-8"><a href="#cb24-8"></a>        <span class="cf">for</span> all word w in A <span class="cf">do</span></span>
 <span id="cb24-9"><a href="#cb24-9"></a>            <span class="fu">EMIT</span><span class="op">(</span>term w <span class="op">,</span> count A<span class="op">{</span>w<span class="op">})</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
+</section>
+<section id="maven-project-structure" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Maven project structure</h1>
+<ul>
+<li><em>src</em> folder: contains the source code. May contain subfolders, but the important point is that it must contain the java files
+<ul>
+<li>DriverBigData.java</li>
+<li>MapperBigData.java</li>
+<li>ReducerBigData.java</li>
+</ul></li>
+<li><em>target</em> folder:
+<ul>
+<li><em>.jar</em> file: useful to run the application on the cluster. It’s the java archive that collects the three classes of the Hadoop application</li>
+</ul></li>
+<li><em>pom.xml</em> file: used to configure the Hadoop application</li>
+</ul>
 </section>
 
 

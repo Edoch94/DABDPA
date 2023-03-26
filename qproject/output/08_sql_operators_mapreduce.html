@@ -2555,6 +2555,12 @@ vertical-align: -.125em;
    
   <ul>
   <li><a href="#selection" id="toc-selection" class="nav-link active" data-scroll-target="#selection"><span class="toc-section-number">1</span>  Selection</a></li>
+  <li><a href="#projection" id="toc-projection" class="nav-link" data-scroll-target="#projection"><span class="toc-section-number">2</span>  Projection</a></li>
+  <li><a href="#union" id="toc-union" class="nav-link" data-scroll-target="#union"><span class="toc-section-number">3</span>  Union</a></li>
+  <li><a href="#intersection" id="toc-intersection" class="nav-link" data-scroll-target="#intersection"><span class="toc-section-number">4</span>  Intersection</a></li>
+  <li><a href="#difference" id="toc-difference" class="nav-link" data-scroll-target="#difference"><span class="toc-section-number">5</span>  Difference</a></li>
+  <li><a href="#join" id="toc-join" class="nav-link" data-scroll-target="#join"><span class="toc-section-number">6</span>  Join</a></li>
+  <li><a href="#aggregations-and-group-by" id="toc-aggregations-and-group-by" class="nav-link" data-scroll-target="#aggregations-and-group-by"><span class="toc-section-number">7</span>  Aggregations and Group by</a></li>
   </ul>
 </nav>
 </div>
@@ -2594,7 +2600,7 @@ vertical-align: -.125em;
 <p><span class="math display">\[
 \sigma_C(R)
 \]</span></p>
-<p>Applies predicate (condition) <span class="math inline">\(C\)</span> to each record of table <span class="math inline">\(R\)</span>, and produces a relation containing only the records that satisfy predicate <span class="math inline">\(C\)</span>.</p>
+<p>Selection applies predicate (condition) <span class="math inline">\(C\)</span> to each record of table <span class="math inline">\(R\)</span>, and produces a relation containing only the records that satisfy predicate <span class="math inline">\(C\)</span>.</p>
 <p>The selection operator can be implemented by using the filtering pattern.</p>
 <div class="callout-note callout callout-style-default callout-captioned">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
@@ -2677,6 +2683,401 @@ Example
 </div>
 </div>
 </div>
+<p>Selection is a map-only job, where each mapper analyzes one record at a time of its split and, if the record satisfies <span class="math inline">\(C\)</span> then it emits a <code>(key,value)</code> pair with <code>key=record</code> and <code>value=null</code>, otherwise, it discards the record.</p>
+</section>
+<section id="projection" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Projection</h1>
+<p><span class="math display">\[
+\pi_S(R)
+\]</span></p>
+<p>Projection, for each record of table <span class="math inline">\(R\)</span>, keeps only the attributes in <span class="math inline">\(S\)</span>. It produces a relation with a schema equal to <span class="math inline">\(S\)</span> (i.e., a relation containing only the attributes in <span class="math inline">\(S\)</span>), an it removes duplicates, if any.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Given the table <em>Professors</em></p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>ProfId</th>
+<th>PSurname</th>
+<th>Department</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D102</td>
+<td>Smith</td>
+<td>Computer Engineering</td>
+</tr>
+<tr class="even">
+<td>D105</td>
+<td>Jones</td>
+<td>Computer Engineering</td>
+</tr>
+<tr class="odd">
+<td>D104</td>
+<td>Smith</td>
+<td>Electronics</td>
+</tr>
+</tbody>
+</table>
+<p>Find the surnames of all professors.</p>
+<p><span class="math display">\[
+\pi_{\textbf{PSurname}}(\textbf{Professors})
+\]</span></p>
+<p>The resulting table is</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>PSurname</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Smith</td>
+</tr>
+<tr class="even">
+<td>Jones</td>
+</tr>
+</tbody>
+</table>
+<p>Notice that duplicated values are removed.</p>
+</div>
+</div>
+</div>
+<p>In a projection</p>
+<ul>
+<li>Each mapper analyzes one record at a time of its split, and, for each record <span class="math inline">\(r\)</span> in <span class="math inline">\(R\)</span>, it selects the values of the attributes in <span class="math inline">\(S\)</span> and constructs a new record <span class="math inline">\(r&#39;\)</span>, and emits a <code>(key,value)</code> pair with <code>key=r&#39;</code> and <code>value=null</code>.</li>
+<li>Each reducer emits one <code>(key, value)</code> pair for each input <code>(key, [list of values])</code> pair with <code>key=r&#39;</code> and <code>value=null</code>.</li>
+</ul>
+</section>
+<section id="union" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Union</h1>
+<p><span class="math display">\[
+R \cup S
+\]</span></p>
+<p>Given that <span class="math inline">\(R\)</span> and <span class="math inline">\(S\)</span> have the same schema, an union produces a relation with the same schema of <span class="math inline">\(R\)</span> and <span class="math inline">\(S\)</span>. There is a record <span class="math inline">\(t\)</span> in the output of the union operator for each record <span class="math inline">\(t\)</span> appearing in <span class="math inline">\(R\)</span> or <span class="math inline">\(S\)</span>. Duplicated records are removed.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Given the tables <em>DegreeCourseProf</em></p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>ProfId</th>
+<th>PSurname</th>
+<th>Department</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D102</td>
+<td>Smith</td>
+<td>Computer Engineering</td>
+</tr>
+<tr class="even">
+<td>D105</td>
+<td>Jones</td>
+<td>Computer Engineering</td>
+</tr>
+<tr class="odd">
+<td>D104</td>
+<td>White</td>
+<td>Electronics</td>
+</tr>
+</tbody>
+</table>
+<p>and <em>MasterCourseProf</em></p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>ProfId</th>
+<th>PSurname</th>
+<th>Department</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D102</td>
+<td>Smith</td>
+<td>Computer Engineering</td>
+</tr>
+<tr class="even">
+<td>D101</td>
+<td>Red</td>
+<td>Electronics</td>
+</tr>
+</tbody>
+</table>
+<p>Find information relative to the professors of degree courses or master’s degrees.</p>
+<p><span class="math display">\[
+\textbf{DegreeCourseProf} \cup \textbf{MasterCourseProf}
+\]</span></p>
+<p>The resulting table is</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>ProfId</th>
+<th>PSurname</th>
+<th>Department</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D102</td>
+<td>Smith</td>
+<td>Computer Engineering</td>
+</tr>
+<tr class="even">
+<td>D105</td>
+<td>Jones</td>
+<td>Computer Engineering</td>
+</tr>
+<tr class="odd">
+<td>D104</td>
+<td>White</td>
+<td>Electronics</td>
+</tr>
+<tr class="even">
+<td>D101</td>
+<td>Red</td>
+<td>Electronics</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>In a union</p>
+<ul>
+<li><p>Mappers, for each input record <span class="math inline">\(t\)</span> in <span class="math inline">\(R\)</span>, emit one <code>(key, value)</code> pair with <code>key=t</code> and <code>value=null</code>, and for each input record <span class="math inline">\(t\)</span> in <span class="math inline">\(S\)</span>, emit one <code>(key, value)</code> pair with <code>key=t</code> and <code>value=null</code>.</p></li>
+<li><p>Reducers emit one <code>(key, value)</code> pair for each input <code>(key, [list of values])</code> pair with <code>key=t</code> and <code>value=null</code> (i.e., one single copy of each input record is emitted).</p></li>
+</ul>
+</section>
+<section id="intersection" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Intersection</h1>
+<p><span class="math display">\[
+R \cap S
+\]</span></p>
+<p>Given that <span class="math inline">\(R\)</span> and <span class="math inline">\(S\)</span> have the same schema, an intersection produces a relation with the same schema of <span class="math inline">\(R\)</span> and <span class="math inline">\(S\)</span>. There is a record <span class="math inline">\(t\)</span> in the output of the intersection operator if and only if <span class="math inline">\(t\)</span> appears in both relations (<span class="math inline">\(R\)</span> and <span class="math inline">\(S\)</span>).</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Given the tables <em>DegreeCourseProf</em></p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>ProfId</th>
+<th>PSurname</th>
+<th>Department</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D102</td>
+<td>Smith</td>
+<td>Computer Engineering</td>
+</tr>
+<tr class="even">
+<td>D105</td>
+<td>Jones</td>
+<td>Computer Engineering</td>
+</tr>
+<tr class="odd">
+<td>D104</td>
+<td>White</td>
+<td>Electronics</td>
+</tr>
+</tbody>
+</table>
+<p>and <em>MasterCourseProf</em></p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>ProfId</th>
+<th>PSurname</th>
+<th>Department</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D102</td>
+<td>Smith</td>
+<td>Computer Engineering</td>
+</tr>
+<tr class="even">
+<td>D101</td>
+<td>Red</td>
+<td>Electronics</td>
+</tr>
+</tbody>
+</table>
+<p>Find information relative to professors teaching both degree courses and master’s courses.</p>
+<p><span class="math display">\[
+\textbf{DegreeCourseProf} \cap \textbf{MasterCourseProf}
+\]</span></p>
+<p>The resulting table is</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>ProfId</th>
+<th>PSurname</th>
+<th>Department</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D102</td>
+<td>Smith</td>
+<td>Computer Engineering</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>In an intersection</p>
+<ul>
+<li>Mappers, for each input record <span class="math inline">\(t\)</span> in <span class="math inline">\(R\)</span>, emit one <code>(key, value)</code> pair with <code>key=t</code> and <code>value=&quot;R&quot;</code>, and For each input record <span class="math inline">\(t\)</span> in <span class="math inline">\(S\)</span>, emit one <code>(key, value)</code> pair with <code>key=t</code> and <code>value=&quot;S&quot;</code>.</li>
+<li>Reducers emit one <code>(key, value)</code> pair with <code>key=t</code> and <code>value=null</code> for each input <code>(key, [list of values])</code> pair with <code>[list of values]</code> containing two values. Notice that it happens if and only if both <span class="math inline">\(R\)</span> and <span class="math inline">\(S\)</span> contain <span class="math inline">\(t\)</span>.</li>
+</ul>
+</section>
+<section id="difference" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Difference</h1>
+<p><span class="math display">\[
+R-S
+\]</span></p>
+<p>Given that <span class="math inline">\(R\)</span> and <span class="math inline">\(S\)</span> have the same schema, a difference produces a relation with the same schema of <span class="math inline">\(R\)</span> and <span class="math inline">\(S\)</span>. There is a record <span class="math inline">\(t\)</span> in the output of the difference operator if and only if <span class="math inline">\(t\)</span> appears in <span class="math inline">\(R\)</span> but not in <span class="math inline">\(S\)</span>.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Given the tables <em>DegreeCourseProf</em></p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>ProfId</th>
+<th>PSurname</th>
+<th>Department</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D102</td>
+<td>Smith</td>
+<td>Computer Engineering</td>
+</tr>
+<tr class="even">
+<td>D105</td>
+<td>Jones</td>
+<td>Computer Engineering</td>
+</tr>
+<tr class="odd">
+<td>D104</td>
+<td>White</td>
+<td>Electronics</td>
+</tr>
+</tbody>
+</table>
+<p>and <em>MasterCourseProf</em></p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>ProfId</th>
+<th>PSurname</th>
+<th>Department</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D102</td>
+<td>Smith</td>
+<td>Computer Engineering</td>
+</tr>
+<tr class="even">
+<td>D101</td>
+<td>Red</td>
+<td>Electronics</td>
+</tr>
+</tbody>
+</table>
+<p>Find the professors teaching degree courses but not master’s courses.</p>
+<p><span class="math display">\[
+\textbf{DegreeCourseProf} - \textbf{MasterCourseProf}
+\]</span></p>
+<p>The resulting table is</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>ProfId</th>
+<th>PSurname</th>
+<th>Department</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D105</td>
+<td>Jones</td>
+<td>Computer Engineering</td>
+</tr>
+<tr class="even">
+<td>D104</td>
+<td>White</td>
+<td>Electronics</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>In a difference</p>
+<ul>
+<li>Mappers, for each input record <span class="math inline">\(t\)</span> in <span class="math inline">\(R\)</span>, emit one <code>(key, value)</code> pair with <code>key=t</code> and <code>value=name</code> of the relation (i.e., <span class="math inline">\(R\)</span>). For each input record <span class="math inline">\(t\)</span> in <span class="math inline">\(S\)</span>, emit one <code>(key, value)</code> pair with <code>key=t</code> and <code>value=name</code> of the relation (i.e., <span class="math inline">\(S\)</span>). Notice that two mapper classes are needed: one for each relation.</li>
+<li>Reducers emit one <code>(key, value)</code> pair with <code>key=t</code> and <code>value=null</code> for each input <code>(key, [list of values])</code> pair with <code>[list of values]</code> containing only the value <span class="math inline">\(R\)</span>. Notice that it happens if and only if <span class="math inline">\(t\)</span> appears in <span class="math inline">\(R\)</span> but not in <span class="math inline">\(S\)</span>.</li>
+</ul>
+</section>
+<section id="join" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Join</h1>
+<p>The join operators can be implemented by using the Join pattern, using the reduce side or the map side pattern depending on the size of the input relations/tables.</p>
+</section>
+<section id="aggregations-and-group-by" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Aggregations and Group by</h1>
+<p>Aggregations and Group by are implemented by using the Summarization pattern.</p>
 </section>
 
 </main>

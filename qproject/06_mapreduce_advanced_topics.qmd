@@ -128,7 +128,7 @@ Some applications need to share and cache (small) read-only files to perform eff
 
 `DistributedCache` is a facility provided by the Hadoop-based MapReduce framework to cache files (e.g., text, archives, jars needed by applications).
 
-![Distributed cache structure](images\06_mapreduce_advanced_topics\distributed_cache.png){width=80%, #fig-distributed_cache}
+![Distributed cache structure](images/06_mapreduce_advanced_topics/distributed_cache.png){width=80%, #fig-distributed_cache}
 
 In image @fig-distributed_cache, in HDFS disks there are the HDFS file(s) to be shared by means of the distributed cache, while on the disks there are local copies of the file(s) shared by means of the distributed cache. A local copy of the file(s) shared by means of the distributed cache is created only in the servers running the application that uses the shared file(s).
 

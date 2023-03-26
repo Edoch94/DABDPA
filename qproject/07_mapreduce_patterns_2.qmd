@@ -23,7 +23,7 @@ Binning is based on a Map-only job
     - value of the emitted pair is value of the input pair
 - No Combiner or Reducer is used in this pattern
 
-![Binning structure](images\07_mapreduce_patterns_2\binning_structure.png){width=80%}
+![Binning structure](images/07_mapreduce_patterns_2/binning_structure.png){width=80%}
 
 ## Shuffling
 The goal is to randomize the order of the data (records), for anonymization reasons or for selecting a subset of random data (records).
@@ -34,7 +34,7 @@ The goal is to randomize the order of the data (records), for anonymization reas
     - value is the input record
 - Reducers emit one `(key, value)` pair for each value in `[list-of-values]` of the input `(key, [list-of-values])` pair
 
-![Shuffling structure](images\07_mapreduce_patterns_2\shuffling_structure.png){width=80%}
+![Shuffling structure](images/07_mapreduce_patterns_2/shuffling_structure.png){width=80%}
 
 # Metapatterns
 Metapatterns are used to organize the workflow of a complex application executing many jobs
@@ -48,7 +48,7 @@ The goal is to execute a sequence of jobs (synchronizing them). Job chaining all
 - The (single) Driver contains the workflow of the application and executes the jobs in the proper order
 - Mappers, reducers, and combiners: each phase of the complex application is implement by a MapReduce Job (i.e., it is associated with a mapper, a reducer, and a combiner, if it is useful)
 
-![Job chaining structure](images\07_mapreduce_patterns_2\jobchaining_structure.png){width=80%}
+![Job chaining structure](images/07_mapreduce_patterns_2/jobchaining_structure.png){width=80%}
 
 More complex workflows, which execute jobs in parallel, can also be implemented, however, the synchronization of the jobs become more complex.
 
@@ -108,7 +108,7 @@ will generate the following output `(key,value)` pairs
 ```
 :::
 
-![Reduce side natural join structure](images\07_mapreduce_patterns_2\reducesidenaturaljoin_structure.png){width=80%}
+![Reduce side natural join structure](images/07_mapreduce_patterns_2/reducesidenaturaljoin_structure.png){width=80%}
 
 ## Map side natural join
 The goal is to join the content of two relations (i.e., relational tables) when one table is large, while the other is small enough to be completely loaded in main memory (frequently one of the two tables is small).
@@ -122,7 +122,7 @@ The distributed cache approach is used to "provide" a copy of the small table to
 
 Notice that the content of the small table (file) is loaded in the main memory of each mapper during the execution of its setup method.
 
-![Map side natural join structure](images\07_mapreduce_patterns_2\mapsidenaturaljoin_structure.png){width=80%}
+![Map side natural join structure](images/07_mapreduce_patterns_2/mapsidenaturaljoin_structure.png){width=80%}
 
 ## Other join patterns
 The SQL language is characterized by many types of joins
