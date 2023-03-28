@@ -2686,7 +2686,13 @@ vertical-align: -.125em;
   <li><a href="#cleanup-method" id="toc-cleanup-method" class="nav-link" data-scroll-target="#cleanup-method"><span class="toc-section-number">9.2</span>  Cleanup method</a></li>
   <li><a href="#in-mapper-combiner-word-count-pseudocode" id="toc-in-mapper-combiner-word-count-pseudocode" class="nav-link" data-scroll-target="#in-mapper-combiner-word-count-pseudocode"><span class="toc-section-number">9.3</span>  In-Mapper combiner: Word count pseudocode</a></li>
   </ul></li>
-  <li><a href="#maven-project-structure" id="toc-maven-project-structure" class="nav-link" data-scroll-target="#maven-project-structure"><span class="toc-section-number">10</span>  Maven project structure</a></li>
+  <li><a href="#maven-project" id="toc-maven-project" class="nav-link" data-scroll-target="#maven-project"><span class="toc-section-number">10</span>  Maven project</a>
+  <ul class="collapse">
+  <li><a href="#structure" id="toc-structure" class="nav-link" data-scroll-target="#structure"><span class="toc-section-number">10.1</span>  Structure</a></li>
+  <li><a href="#how-to-run-the-project" id="toc-how-to-run-the-project" class="nav-link" data-scroll-target="#how-to-run-the-project"><span class="toc-section-number">10.2</span>  How to run the project</a></li>
+  <li><a href="#how-to-create-a-.jar-file-from-the-project" id="toc-how-to-create-a-.jar-file-from-the-project" class="nav-link" data-scroll-target="#how-to-create-a-.jar-file-from-the-project"><span class="toc-section-number">10.3</span>  How to create a <code>.jar</code> file from the project</a></li>
+  <li><a href="#how-to-run-the-.jar-in-the-bigdatapolito-cluster" id="toc-how-to-run-the-.jar-in-the-bigdatapolito-cluster" class="nav-link" data-scroll-target="#how-to-run-the-.jar-in-the-bigdatapolito-cluster"><span class="toc-section-number">10.4</span>  How to run the <code>.jar</code> in the BigData@Polito cluster</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -3231,9 +3237,10 @@ Example
 <span id="cb7-27"><a href="#cb7-27"></a></span>
 <span id="cb7-28"><a href="#cb7-28"></a>        context<span class="op">.</span><span class="fu">write</span><span class="op">(</span><span class="kw">new</span> outputkey<span class="op">,</span> <span class="kw">new</span> outputvalue<span class="op">);</span> <span class="co">// # &lt;9&gt;</span></span>
 <span id="cb7-29"><a href="#cb7-29"></a>        <span class="co">// Notice context.write(...) has to be invoked a number of times equal to the number of (key, value) pairs have to be returned. Even 0 times is accepted</span></span>
-<span id="cb7-30"><a href="#cb7-30"></a></span>
-<span id="cb7-31"><a href="#cb7-31"></a>    <span class="op">}</span> <span class="co">// End of the reduce method</span></span>
-<span id="cb7-32"><a href="#cb7-32"></a><span class="op">}</span> <span class="co">// End of class myReducerClass</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-30"><a href="#cb7-30"></a>        <span class="co">// &quot;new&quot; has to be always specified</span></span>
+<span id="cb7-31"><a href="#cb7-31"></a></span>
+<span id="cb7-32"><a href="#cb7-32"></a>    <span class="op">}</span> <span class="co">// End of the reduce method</span></span>
+<span id="cb7-33"><a href="#cb7-33"></a><span class="op">}</span> <span class="co">// End of class myReducerClass</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ol type="1">
 <li><code>mypackage</code></li>
 <li><code>myReducerClass</code></li>
@@ -3749,8 +3756,10 @@ Combiner scope of application
 <span id="cb24-9"><a href="#cb24-9"></a>            <span class="fu">EMIT</span><span class="op">(</span>term w <span class="op">,</span> count A<span class="op">{</span>w<span class="op">})</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
-<section id="maven-project-structure" class="level1" data-number="10">
-<h1 data-number="10"><span class="header-section-number">10</span> Maven project structure</h1>
+<section id="maven-project" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Maven project</h1>
+<section id="structure" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="structure"><span class="header-section-number">10.1</span> Structure</h2>
 <ul>
 <li><em>src</em> folder: contains the source code. May contain subfolders, but the important point is that it must contain the java files
 <ul>
@@ -3764,6 +3773,55 @@ Combiner scope of application
 </ul></li>
 <li><em>pom.xml</em> file: used to configure the Hadoop application</li>
 </ul>
+</section>
+<section id="how-to-run-the-project" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="how-to-run-the-project"><span class="header-section-number">10.2</span> How to run the project</h2>
+<p>Using Eclipse</p>
+<ul>
+<li>select the Driver <code>.java</code> file</li>
+<li>Right click</li>
+<li>Click “Run As”</li>
+<li>If the arguments have already been set:
+<ul>
+<li>Click “Java Application”</li>
+</ul></li>
+<li>Otherwise
+<ul>
+<li>Click “Run Configurations”, to set the arguments</li>
+<li>Go to “Arguments” section, and write the arguments. The arguments are
+<ul>
+<li>the number of reducers: <code>2</code></li>
+<li>the (relative) path of the input folder <code>example_data</code></li>
+<li>the (relative) path of the output folder <code>example_data_output</code></li>
+</ul></li>
+</ul></li>
+</ul>
+<pre><code>2 example_data example_data_output</code></pre>
+<p>The output files are</p>
+<ul>
+<li>an empty file “_SUCCESS”, if the application run successfully</li>
+<li>one file for each reducer instance: the intersection between the sets of words in each file is empty, which means that all the same words were processed by the same Reducer. For this reason the output is always a folder and not a single file.</li>
+</ul>
+</section>
+<section id="how-to-create-a-.jar-file-from-the-project" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="how-to-create-a-.jar-file-from-the-project"><span class="header-section-number">10.3</span> How to create a <code>.jar</code> file from the project</h2>
+<p>Using Eclipse, to create a <code>.jar</code> file from the project to run the project on the cluster</p>
+<ul>
+<li>Right click on the project name (e.g., “MapReduceProject”)</li>
+<li>Click “Runs As”</li>
+<li>Click “Maven build…”</li>
+<li>In “Goals” write “package”</li>
+<li>Click “Run”</li>
+</ul>
+</section>
+<section id="how-to-run-the-.jar-in-the-bigdatapolito-cluster" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="how-to-run-the-.jar-in-the-bigdatapolito-cluster"><span class="header-section-number">10.4</span> How to run the <code>.jar</code> in the BigData@Polito cluster</h2>
+<ul>
+<li>Go to https://jupyter.polito.it/</li>
+<li>Connect using the credentials</li>
+<li>Use the terminal to run the <code>.jar</code>, using the <code>hadoop</code> command</li>
+</ul>
+</section>
 </section>
 
 

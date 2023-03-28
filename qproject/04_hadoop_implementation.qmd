@@ -409,6 +409,7 @@ class myReducerClass extends Reducer< // Reducer is a template // # <2>
 
         context.write(new outputkey, new outputvalue); // # <9>
         // Notice context.write(...) has to be invoked a number of times equal to the number of (key, value) pairs have to be returned. Even 0 times is accepted
+        // "new" has to be always specified
 
     } // End of the reduce method
 } // End of class myReducerClass
@@ -906,8 +907,8 @@ class MAPPER
             EMIT(term w , count A{w})
 ```
 
-# Maven project structure
-
+# Maven project 
+## Structure
 - *src* folder: contains the source code. May contain subfolders, but the important point is that it must contain the java files
     - DriverBigData.java
     - MapperBigData.java
@@ -915,3 +916,55 @@ class MAPPER
 - *target* folder: 
     - *.jar* file: useful to run the application on the cluster. It's the java archive that collects the three classes of the Hadoop application
 - *pom.xml* file: used to configure the Hadoop application
+
+## How to run the project
+Using Eclipse
+
+- select the Driver `.java` file
+- Right click
+- Click "Run As"
+- If the arguments have already been set: 
+    - Click "Java Application"
+- Otherwise
+    - Click "Run Configurations", to set the arguments
+    - Go to "Arguments" section, and write the arguments. The arguments are
+        - the number of reducers: `2`
+        - the (relative) path of the input folder `example_data`
+        - the (relative) path of the output folder `example_data_output`
+
+```
+2 example_data example_data_output
+```
+
+The output files are
+
+- an empty file "_SUCCESS", if the application run successfully
+- one file for each reducer instance: the intersection between the sets of words in each file is empty, which means that all the same words were processed by the same Reducer. For this reason the output is always a folder and not a single file.
+
+## How to create a `.jar` file from the project
+Using Eclipse, to create a `.jar` file from the project to run the project on the cluster
+
+- Right click on the project name (e.g., "MapReduceProject")
+- Click "Runs As"
+- Click "Maven build..."
+- In "Goals" write "package"
+- Click "Run"
+
+## How to run the `.jar` in the BigData@Polito cluster
+- Go to https://jupyter.polito.it/ (i.e., the server gateway) and connect using the credentials
+- Copy the `.jar` file on server 
+- Upload the input data in the HDFS
+- Use the terminal to run the `.jar`, using the `hadoop` command
+
+```bash
+hadoop jar Exercise1-1.0.0.jar \
+it.polito.bigdata.hadoop.exercise1.DriverBigData \
+2 example_data example_data_output
+```
+
+In this configuration there are 3 file systems
+
+- The local file system on the personal PC
+- The local file system on the gateway server
+- The distributed file system on the Hadoop cluster (the interface to manage it is https://bigdatalab.polito.it/hue)
+
