@@ -1,0 +1,154 @@
+---
+title: "Introduction to Spark"
+---
+
+Apache Spark<sup>TM</sup> is a fast and general-purpose engine for large-scale data processing. Spark aims at achieving the following goals in the Big data context:
+
+- Generality: diverse workloads, operators, job sizes
+- Low latency: sub-second
+- Fault tolerance: faults are the norm, not the exception
+- Simplicity: often comes from generality
+
+:::{.callout-tip collapse="true"}
+## History
+Originally developed at the University of California - Berkeley's AMPLab
+
+![Spark history](images/10_intro_spark/spark_history.png){width=80%}
+
+:::
+
+# Motivations
+## MapReduce and Spark iterative jobs and data I/O
+Iterative jobs, with MapReduce, involve a lot of disk I/O for each iteration and stage, and disk I/O is very slow (even if it is local I/O)
+
+![Iterative jobs](images/10_intro_spark/iterative_jobs.png){width=80%}
+
+- Motivation: using MapReduce for complex iterative jobs or multiple jobs on the same data involves lots of disk I/O
+- Opportunity: the cost of main memory decreased, hence, large main memories are available in each server
+- Solution: keep more data in main memory, and that's the basic idea of Spark
+
+So an iterative job in MapReduce makes wide use of disk reading/writing
+
+![Iterative jobs in MapReduce](images/10_intro_spark/mapreduce_iterative_jobs.png){width=80%}
+
+Instead, an iterative job in Spark uses the main memory
+
+![Iterative jobs in Spark](images/10_intro_spark/spark_iterative_jobs.png){width=80%}
+
+Data (or at least part of it) are shared between the iterations by using the main memory , which is 10 to 100 times faster than disk.
+
+Moreover, to run multiple queries on the same data, in MapReduce the data must be read multiple times (once for each query)
+
+![Analysing the same data jobs in MapReduce](images/10_intro_spark/mapreduce_same_data_analysis.png){width=80%}
+
+Instead, in Spark the data have to be loaded only once in the main memory
+
+![Analysing the same data jobs in Spark](images/10_intro_spark/spark_same_data_analysis.png){width=80%}
+
+In other words, data are read only once from HDFS and stored in main memory, splitting of the data across the main memory of each server.
+
+## Resilient distributed data sets (RDDs)
+In Spark, data are represented as Resilient Distributed Datasets (RDDs), which are Partitioned/Distributed collections of objects spread across the nodes of a cluster, and are stored in main memory (when it is possible) or on local disk. 
+
+Spark programs are written in terms of operations on resilient distributed data sets.
+
+RDDs are built and manipulated through a set of parallel transformations (e.g., map, filter, join) and actions (e.g., count, collect, save), and RDDs are automatically rebuilt on machine failure.
+
+The Spark computing framework provides a programming abstraction (based on RDDs) and transparent mechanisms to execute code in parallel on RDDs
+
+- It hides complexities of fault-tolerance and slow machines
+- It manages scheduling and synchronization of the jobs
+
+## MapReduce vs Spark
+| | Hadoop MapReduce | Spark |
+|---|---|---|
+| Storage | Disk only | In-memory or on disk |
+| Operations | Map and Reduce | Map, Reduce, Join, Sample, ... |
+| Execution model | Batch | Batch, interactive, streaming |
+| Programming environments | Java | Scala, Java, Python, R |
+
+With respect to MapReduce, Spark has a lower overhead for starting jobs and has less expensive shuffles.
+
+In-memory RDDs can make a big difference in performance
+
+![Perfomance comparison](images/10_intro_spark/iterative_ML_algorithms_performance.png){width=80%}
+
+# Main components
+
+![Spark main components](images/10_intro_spark/spark_main_components.png){width=80%}
+
+Spark is based on a basic component (the Spark Core component) that is exploited by all the high-level data analytics components: this solution provides a more uniform and efficient solution with respect to Hadoop where many non-integrated tools are available. In this way, when the efficiency of the core component is increased also the efficiency of the other high-level components increases.
+
+### Spark Core
+Spark Core contains the basic functionalities of Spark exploited by all components
+
+- Task scheduling
+- Memory management
+- Fault recovery
+- ...
+
+It provides the APIs that are used to create RDDs and applies transformations and actions on them.
+
+### Spark SQL
+Spark SQL for structured data is used to interact with structured datasets by means of the SQL language or specific querying APIs (based on Datasets). 
+
+It exploits a query optimizer engine, and supports also Hive Query Language (HQL). It interacts with many data sources (e.g., Hive Tables, Parquet, Json).
+
+### Spark Streaming
+Spark Streaming for real-time data is used to process live streams of data in real-time. The APIs of the Streaming real-time components operated on RDDs and are similar to the ones used to process standard RDDs associated with "static" data sources.
+
+### MLlib
+MLlib is a machine learning/data mining library that can be used to apply the parallel versions of some machine learning/data mining algorithms
+
+- Data preprocessing and dimensional reduction
+- Classification algorithms
+- Clustering algorithms
+- Itemset mining
+- ...
+
+### GraphX and GraphFrames
+
+GraphX is a graph processing library that provides algorithms for manipulating graphs (e.g., subgraph searching, PageRank). Notice that the Python version is not available.
+
+GraphFrames is a graph library based on DataFrames and Python.
+
+### Spark schedulers
+Spark can exploit many schedulers to execute its applications
+
+- Hadoop YARN: it is the standard scheduler of Hadoop
+- Mesos cluster: another popular scheduler
+- Standalone Spark Scheduler: a simple cluster scheduler included in Spark
+
+# Basic concepts
+## Resilient Distributed Data sets (RDDs)
+RDDs are the primary abstraction in Spark: they are distributed collections of objects spread across the nodes of a clusters, which means that they are split in partitions, and each node of the cluster that is running an application contains at least one partition of the RDD(s) that is (are) defined in the application.
+
+RDDs are stored in the main memory of the executors running in the nodes of the cluster (when it is possible) or in the local disk of the nodes if there is
+not enough main memory. This allows to execute in parallel the code invoked on eah node: each executor of a worker node runs the specified code on its partition of the RDD.
+
+:::{.callout-note collapse="true"}
+## Example of an RDD split in 3 partitions
+
+![Example of RDD splits](images/10_intro_spark/example_rdd_split.png){width=80%}
+
+More partitions mean more parallelism.
+:::
+
+RDDs are immutable once constructed (i.e., the content of an RDD cannot be modified). Spark tracks lineage information to efficiently recompute lost data in case of failures of some executors: for each RDD, Spark knows how it has been constructed and can rebuilt it if a failure occurs. This information is represented by means of a DAG (Direct Acyclic Graph) connecting input data and RDDs.
+
+RDDs can be created 
+
+- by parallelizing existing collections of the hosting programming language (e.g., collections and lists of Scala, Java, Pyhton, or R): in this case the number of partition is specified by the user
+- from (large) files stored in HDFS: in this case there is one partition per HDFS block
+- from files stored in many traditional file systems or databases
+- by transforming an existing RDDs: in this case the number of partitions depends on the type of transformation
+
+Spark programs are written in terms of operations on resilient distributed data sets
+
+- Transformations: map, filter, join, ...
+- Actions: count, collect, save, ...
+
+To summarize, in the Spark framework
+- Spark manages scheduling and synchronization of the jobs
+- Spark manages the split of RDDs in partitions and allocates RDDs partitions in the nodes of the cluster
+- Spark hides complexities of fault-tolerance and slow machines (RDDs are automatically rebuilt in case of machine failures)
