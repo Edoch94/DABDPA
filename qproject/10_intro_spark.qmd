@@ -39,11 +39,11 @@ Data (or at least part of it) are shared between the iterations by using the mai
 
 Moreover, to run multiple queries on the same data, in MapReduce the data must be read multiple times (once for each query)
 
-![Analysing the same data jobs in MapReduce](images/10_intro_spark/mapreduce_same_data_analysis.png){width=80%}
+![Analysing the same data in MapReduce](images/10_intro_spark/mapreduce_same_data_analysis.png){width=80%}
 
 Instead, in Spark the data have to be loaded only once in the main memory
 
-![Analysing the same data jobs in Spark](images/10_intro_spark/spark_same_data_analysis.png){width=80%}
+![Analysing the same data in Spark](images/10_intro_spark/spark_same_data_analysis.png){width=80%}
 
 In other words, data are read only once from HDFS and stored in main memory, splitting of the data across the main memory of each server.
 
@@ -149,6 +149,162 @@ Spark programs are written in terms of operations on resilient distributed data 
 - Actions: count, collect, save, ...
 
 To summarize, in the Spark framework
+
 - Spark manages scheduling and synchronization of the jobs
 - Spark manages the split of RDDs in partitions and allocates RDDs partitions in the nodes of the cluster
 - Spark hides complexities of fault-tolerance and slow machines (RDDs are automatically rebuilt in case of machine failures)
+
+# Spark Programs
+## Supported languages
+Spark supports many programming languages
+
+- Scala: this is the language used to develop the Spark framework and all its components (Spark Core, Spark SQL, Spark Streaming, MLlib, GraphX)
+- Java
+- Python
+- R
+
+## Structure of Spark programs
+
+:::{.callout-tip}
+## Spark official terminology
+| Term | Definition |
+| --- | --- |
+| Application | User program built on Spark, consisting of a driver program and executors on the cluster. |
+| Driver program | The process running the `main()` function of the application and creating the `SparkContext`. |
+| Cluster manager | An external service for acquiring resources on the cluster (e.g. standalone manager, Mesos, YARN). |
+| Deploy mode | It distinguishes where the driver process runs: in "cluster" mode (in this case the framework launches the driver inside of the cluster) or in "client" mode (in this case the submitter launches the driver outside of the cluster). |
+| Worker node | Any node of the cluster that can run application code in the cluster. |
+| Executor | A process launched for an application on a worker node, that runs tasks and keeps data in memory or disk storage across them; each application has its own executors. |
+| Task | A unit of work that will be sent to one executor. |
+| Job | A parallel computation consisting of multiple tasks that gets spawned in response to a Spark action (e.g. save, collect). |
+| Stage | Each job gets divided into smaller sets of tasks called stages, such that the output of one stage is the input of the next stage(s), except for the stages that compute (part of) the final result (i.e., the stages without output edges in the graph representing the workflow of the application). Indeed, the outputs of those stages is stored in HDFS or a database. |
+: {tbl-colwidths="[20,80]"}
+
+The shuffle operation is always executed between two stages
+
+- Data must be grouped/repartitioned based on a grouping criteria that is different with respect to the one used in the previous stage
+- Similar to the shuffle operation between the map and the reduce phases in MapReduce
+- Shuffle is a heavy operation 
+
+See the [official documentation](http://spark.apache.org/docs/latest/cluster-overview.html) for more.
+:::
+
+The Driver program contains the main method. It defines the workflow of the application, and accesses Spark through the `SparkContext` object, which represents a connection to the cluster.
+
+The Driver program defines Resilient Distributed Datasets (RDDs) that are allocated in the nodes of the cluster, and invokes parallel operations on RDDs.
+
+The Driver program defines
+
+- Local variables: these are standard variables of the Python programs
+- RDDs: these are distributed variables stored in the nodes of the cluster
+- The `SparkContext` object, which allows to
+    - create RDDs
+    - submit executors (processes) that execute in parallel specific operations on RDDs
+    - perform Transformations and Actions
+
+The worker nodes of the cluster are used to run your application by means of executors. Each executor runs on its partition of the RDD(s) the operations that are specified in the driver.
+
+![Distributed execution of Spark](images/10_intro_spark/spark_distributed_execution.png){width=80%}
+
+RDDs are distributed across executors (each RDD is split in partitions that are spread across the available executors).
+
+## Local execution of Spark
+Spark programs can also be executed locally: local threads are used to parallelize the execution of the application on RDDs on a single PC. Local threads can be seen are "pseudo-worker" nodes, and a local scheduler is launched to run Spark programs locally. It is useful to develop and test the applications before deploying them on the cluster.
+
+![Distributed execution of Spark](images/10_intro_spark/spark_local_execution.png){width=80%}
+
+# Spark program examples
+## Count line program
+The steps of this program are 
+
+- count the number of lines of the input file, whose name is set to "myfile.txt"
+- print the results on the standard output
+
+```python
+from pyspark import SparkConf, SparkContext
+
+if __name__ == "__main__":
+
+    # Create a configuration object and
+    # set the name of the application
+    conf = SparkConf().setAppName("Spark Line Count") # <1>
+
+    # Create a Spark Context object
+    sc = SparkContext(conf=conf) # <1>
+
+    # Store the path of the input file in inputfile
+    inputFile= "myfile.txt" # <1>
+
+    # Build an RDD of Strings from the input textual file
+    # Each element of the RDD is a line of the input file
+    linesRDD = sc.textFile(inputFile) # <2>
+
+    # Count the number of lines in the input file
+    # Store the returned value in the local variable numLines
+    numLines = linesRDD.count() # <1>
+
+    # Print the output in the standard output
+    print("NumLines:", numLines)
+
+    # Close the Spark Context object
+    sc.stop()
+```
+1. Local Python variable: it is allocated in the main memory of the same process instancing the Driver.
+2. It is allocated/stored in the main memory or in the local disk of the executors of the worker nodes.
+
+- Local variables can be used to store only "small" objects/data (i.e., the maximum size is equal to the main memory of the process associated with the Driver)
+- RDDs are used to store "big/large" collections of objects/data in the nodes of the cluster
+    - In the main memory of the worker nodes, when it is possible
+    - In the local disks of the worker nodes, when it is necessary
+
+## Word Count program
+In the Word Count implemented by means of Spark
+
+- The name of the input file is specified by using a command line parameter (i.e., `argv[1]`)
+- The output of the application (i.e., the pairs (word, number of occurrences) are stored in an output folder (i.e., `argv[2]`))
+
+Notice that there is no need to worry about the details.
+
+```python
+from pyspark import SparkConf, SparkContext
+import sys
+
+if __name__ == "__main__":
+    """
+    Word count example
+    """
+    inputFile= sys.argv[1]
+    outputPath = sys.argv[2]
+
+    # Create a configuration object and
+    # set the name of the application
+    conf = SparkConf().setAppName("Spark Word Count")
+    
+    # Create a Spark Context object
+    sc = SparkContext(conf=conf)
+
+    # Build an RDD of Strings from the input textual file
+    # Each element of the RDD is a line of the input file
+    lines = sc.textFile(inputFile)
+
+    # Split/transform the content of lines in a
+    # list of words and store them in the words RDD
+    words = lines.flatMap(lambda line: line.split(sep=' '))
+    
+    # Map/transform each word in the words RDD
+    # to a pair/tuple (word,1) and store the result 
+    # in the words_one RDD
+    words_one = words.map(lambda word: (word, 1))
+
+    # Count the num. of occurrences of each word.
+    # Reduce by key the pairs of the words_one RDD and store
+    # the result (the list of pairs (word, num. of occurrences)
+    # in the counts RDD
+    counts = words_one.reduceByKey(lambda c1, c2: c1 + c2)
+
+    # Store the result in the output folder
+    counts.saveAsTextFile(outputPath)
+
+    # Close/Stop the Spark Context object
+    sc.stop()
+```

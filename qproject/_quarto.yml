@@ -14,3 +14,4 @@ format:
     # theme: litera
     theme: simplex
     code-line-numbers: true
+    fig-cap-location: top
