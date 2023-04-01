@@ -1,0 +1,287 @@
+---
+title: "RDD based programming"
+---
+
+# Spark Context
+The "connection" of the driver to the cluster is based on the Spark Context object
+
+- In Python the name of the class is `SparkContext`
+- The Spark Context is built by means of the constructor of the `SparkContext` class
+- The only parameter is a configuration object
+
+:::{.callout-note collapse="true"}
+## Example
+```python
+# Create a configuration object and
+# set the name of the application
+conf = SparkConf().setAppName("Application name")
+
+# Create a Spark Context object
+sc = SparkContext(conf=conf)
+```
+:::
+
+The Spark Context object can be obtained also by using the `SparkContext.getOrCreate(conf)` method, whose only parameter is a configuration object. Notice that, if the `SparkContext` object already exists for this application, the current `SparkContext` object is returned, otherwise, a new `SparkContext` object is returned: there is always one single `SparkContext` object for each application.
+
+:::{.callout-note collapse="true"}
+## Example
+```python
+# Create a configuration object and
+# set the name of the application
+conf = SparkConf().setAppName("Application name")
+
+# Retrieve the current SparkContext object or
+# create a new one
+sc = SparkContext.getOrCreate(conf=conf)
+```
+:::
+
+# RDD basics
+A Spark RDD is an immutable distributed collection of objects. Each RDD is split in partitions, allowing to parallelize the code based on RDDs (i.e., code is executed on each partition in isolation).
+
+RDDs can contain any type of Scala, Java, and Python objects, including user-defined classes.
+
+# RDD: create and save
+RDDs can be created
+
+- By loading an external dataset (e.g., the content of a folder, a single file, a database table)
+- By parallelizing a local collection of objects created in the Driver (e.g., a Java collection)
+
+## Create RDDs from files
+To built an RDD from **an input textual file**, use the `textFile(name)` method of the `SparkContext` class. 
+
+- The returned RDD is an RDD of Strings associated with the content of the name textual file;
+- Each line of the input file is associated with an object (a string) of the instantiated RDD;
+- By default, if the input file is an HDFS file the number of partitions of the created RDD is equal to the number of HDFS blocks used to store the file, in order to support data locality.
+
+:::{.callout-note collapse="true"}
+## Example
+```python
+# Build an RDD of strings from the input textual file
+# myfile.txt
+# Each element of the RDD is a line of the input file
+inputFile = "myfile.txt"
+lines = sc.textFile(inputFile)
+```
+
+Notice that no computation occurs when `sc.textFile()` is invoked: Spark only records how to create the RDD, and the data is lazily read from the input file only when the data is needed (i.e., when an action is applied on lines, or on one of its "descendant" RDDs).
+:::
+
+To build an RDD from a **folder containing textual files**, use the `textFile(name)` method of the `SparkContext` class.
+
+- If name is the path of a folder all files inside that folder are considered;
+- The returned RDD contains one string for each line of the files contained on the name folder.
+
+:::{.callout-note collapse="true"}
+## Example
+```python
+# Build an RDD of strings from all the files stored in
+# myfolder
+# Each element of the RDD is a line of the input files
+inputFolder = "myfolder/"
+lines = sc.textFile(inputFolder)
+```
+
+Notice that all files inside myfolder are considered, also those without suffix or with a suffix different from ".txt".
+:::
+
+To set the (minimum) **number of partitions**, use the `textFile(name, minPartitions)` method of the `SparkContext` class.
+
+- This option can be used to increase the parallelization of the submitted application;
+- For the HDFS files, the number of partitions `minPartitions` must be greater than the number of blocks/chunks.
+
+:::{.callout-note collapse="true"}
+## Example
+```python
+# Build an RDD of strings from the input textual file
+# myfile.txt
+# The number of partitions is manually set to 4
+# Each element of the RDD is a line of the input file
+inputFile = "myfile.txt“
+lines = sc.textFile(inputFile, 4)
+```
+:::
+
+## Create RDDs from a local Python collection
+An RDD can be built from a local Python collection/list of local python objects using the `parallelize(c)` method of the `SparkContext` class
+
+- The created RDD is an RDD of objects of the same type of objects of the input python collection `c`
+- In the created RDD, there is one object for each element of the input collection
+- Spark tries to set the number of partitions automatically based on your cluster's characteristics
+
+:::{.callout-note collapse="true"}
+## Example
+```python
+# Create a local python list
+inputList = ['First element', 'Second element', 'Third element']
+
+# Build an RDD of Strings from the local list.
+# The number of partitions is set automatically by Spark
+# There is one element of the RDD for each element
+# of the local list
+distRDDList = sc.parallelize(inputList)
+```
+
+Notice that no computation occurs when `sc.parallelize(c)` is invoked: Spark only records how to create the RDD, and the data is lazily read from the input file only when the data is needed (i.e., when an action is applied on `distRDDlist`, or on one of its "descendant" RDDs).
+:::
+
+When the `parallelize(c)` is invoked, Spark tries to set the number of partitions automatically based on the cluster's characteristics, but the developer can set the number of partition by using the method `parallelize(c, numSlices)` of the `SparkContext` class.
+
+:::{.callout-note collapse="true"}
+## Example
+```python
+# Create a local python list
+inputList = ['First element', 'Second element', 'Third element']
+
+# Build an RDD of Strings from the local list.
+# The number of partitions is set to 3
+# There is one element of the RDD for each element
+# of the local list
+distRDDList = sc.parallelize(inputList, 3)
+```
+:::
+
+## Save RDDs
+An RDD can be easily stored in textual (HDFS) files using the `saveAsTextFile(path)` method of the `RDD` class
+
+- `path` is the path of a folder
+- The method is invoked on the RDD to store in the output folder
+- Each object of the RDD on which the `saveAsTextFile` method is invoked is stored in one line of the output files stored in the output folder, and there is one output file for each partition of the input RDD.
+
+:::{.callout-note collapse="true"}
+## Example
+```python
+# Store the content of linesRDD in the output folder
+# Each element of the RDD is stored in one line
+# of the textual files of the output folder
+outputPath="risFolder/"
+linesRDD.saveAsTextFile(outputPath)
+```
+
+Notice that `saveAsTextFile()` is an action, hence Spark computes the content associated with `linesRDD` when `saveAsTextFile()` is invoked. Spark computes the content of an RDD only when that content is needed.
+
+Moreover, notice that the output folder contains one textual file for each partition of `linesRDD`, such that each output file contains the elements of one partition.
+:::
+
+## Retrieve the content of RDDs and store it local Python variables
+The content of an RDD can be retrieved from the nodes of the cluster and stored in a local python variable of the Driver using the `collect()` method of the `RDD` class.
+
+The `collect()` method of the `RDD` class is invoked on the RDD to retrieve. It returns a local python list of objects containing the same objects of the considered RDD. 
+
+:::{.callout-warning}
+Pay attention to the size of the RDD: large RDDs cannot be stored in a local variable of the Driver.
+:::
+
+:::{.callout-note collapse="true"}
+## Example
+```python
+# Retrieve the content of the linesRDD and store it
+# in a local python list
+# The local python list contains a copy of each
+# element of linesRDD
+contentOfLines=linesRDD.collect()
+```
+
+| | |
+|---|---|
+| `contentOfLines` | Local python variable: it is allocated in the main memory of the Driver process/task |
+| `linesRDD` | RDD of strings: it is distributed across the nodes of the cluster |
+: {tbl-colwidths="[20,80]"}
+:::
+
+# Transformations and Actions
+RDD support two types of operations
+
+- Transformations
+- Actions
+
+## Transformations
+Transformations are operations on RDDs that **return a new RDD**. This type of operation apply a transformation on the elements of the input RDD(s) and the result of the transformation is stored in/associated with a new RDD. 
+
+Remember that RDDs are immutable, hence the content of an already existing RDD cannot be changed, and it only possible to applied a transformation on the content of an RDD and then store/assign the result in/to a new RDD.
+
+Transformations are computed **lazily**, which means that transformations are computed (executed) only when an action is applied on the RDDs generated by the transformation operations. When a transformation is invoked, Spark keeps only track of the dependency between the input RDD and the new RDD returned by the transformation, and the content of the new RDD is not computed.
+
+The graph of dependencies between RDDs represents the information about which RDDs are used to create a new RDD. This is called **lineage graph**, and it is represented as a **DAG** **(Directed Acyclic Graph)**: it is needed to compute the content of an RDD the first time an action is invoked on it, or to compute again the content of an RDD (or some of its partitions) when failures occur.
+
+The lineage graph is also useful for **optimization** purposes: when the content of an RDD is needed, Spark can consider the chain of transformations that are applied to compute the content of the needed RDD and potentially decide how to execute the chain of transformations. In this way, Spark can potentially change the order of some transformations or merge some of them based on its optimization engine.
+
+## Actions
+Actions are operations that 
+
+- return **results to the Driver program** (i.e., return local python variables). Pay attention to the size of the returned results because they must be stored in the main memory of the Driver program.
+- write the result in the storage (output file/folder). The size of the result can be large in this case since it is directly stored in the (distributed) file system.
+
+### Example of lineage graph (DAG)
+Consider the following code
+
+```python
+from pyspark import SparkConf, SparkContext
+import sys
+
+if __name__ == "__main__":
+conf = SparkConf().setAppName("Spark Application")
+sc = SparkContext(conf=conf)
+
+# Read the content of a log file
+inputRDD = sc.textFile("log.txt")
+
+# Select the rows containing the word "error"
+errorsRDD = inputRDD.filter(lambda line:
+line.find('error')>=0)
+
+# Select the rows containing the word "warning"
+warningRDD = inputRDD.filter(lambda line:
+line.find('warning')>=0)
+
+# Union of errorsRDD and warningRDD
+# The result is associated with a new RDD: badLinesRDD
+badLinesRDD = errorsRDD.union(warningRDD)
+
+# Remove duplicates lines (i.e., those lines containing
+# both "error" and "warning")
+uniqueBadLinesRDD = badLinesRDD.distinct()
+
+# Count the number of bad lines by applying
+# the count() action
+numBadLines = uniqueBadLinesRDD.count()
+
+# Print the result on the standard output of the driver
+print("Lines with problems:", numBadLines)
+```
+
+![Visual representation of the DAG](images/11_rdd_based_programming/dag_example.png){width=80%}
+
+Notice that:
+
+- The application reads the input log file only when the `count()` action is invoked: this is the first action of the program;
+- `filter()`, `union()`, and `distinct()` are transformations, so they are computed lazily;
+- Also `textFile()` is computed lazily, however it is not a transformation because it is not applied on an RDD.
+
+Spark, similarly to an SQL optimizer, can potentially optimize the execution of some transformations; for instance, in this case the two filters + union + distinct can be potentially optimized and transformed in one single filter applying the constraint (i.e. The element contains the string "error" or "warning"). This optimization improves the efficiency of the application, but Spark can performs this kind of optimizations only on particular types of RDDs: Datasets and DataFrames.
+
+# Passing functions to Transformations and Actions
+Many transformations (and some actions) are based on user provided functions that specify which transformation function must be applied on the elements of the input RDD. For example, the `filter()` transformation selects the elements of an RDD satisfying a user specified constraint, which is a Boolean function applied on each element of the input RDD.
+
+Each language has its own solution to pass functions to Spark's transformations and actions. In Python, it is possible to use
+
+- Lambda functions/expressions: simple functions that can be written as one single expression
+- Local user defined functions (local defs): used for multi-statement functions or statements that do not return a value
+
+## Example based on the filter transformation
+1. Create an RDD from a log file;
+2. Create a new RDD containing only the lines of the log file containing the word "error". The `filter()` transformation applies the filter constraint on each element of the input RDD; the filter constraint is specified by means of a Boolean function that returns true for the elements satisfying the constraint and false for the others.
+
+### Solution based on lambda expressions
+```python
+# Read the content of a log file
+inputRDD = sc.textFile("log.txt")
+
+# Select the rows containing the word "error"
+errorsRDD = inputRDD.filter(lambda l: l.find('error')>=0)
+```
+
+| | |
+|---|---|
+| `lambda l: l.find('error')>=0` | This part of the code, which is based on a lambda expression, defines on the fly the function to apply. This part of the code is applied on each object of `inputRDD`: if it returns true then the current object is "stored" in the new `errorsRDD` RDD, otherwise the input object is discarded. |
+: {tbl-colwidths="[20,80]"}
