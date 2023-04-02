@@ -484,8 +484,7 @@ In many applications, the key part of the input data set is ignored. In other wo
 
 ## Pseudocode of word count solution using MapReduce
 **Map**
-```{python code-fold="false"}
-#| eval: false
+```python
 def map(key, value):
     '''
     :key: offset of the word in the file
@@ -495,8 +494,7 @@ def map(key, value):
 ```
 
 **Reduce**
-```{python code-fold="false"}
-#| eval: false
+```python
 def reduce(key, values):
     '''
     :key: a word 

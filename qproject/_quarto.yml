@@ -1,13 +1,32 @@
 project:
   title: "qproject"
   output-dir: output
+  # type: book
   # pre-render: prepare.py
+
+# book: 
+#   title: "Distributed architectures for big data processing and analytics"
+#   date: now
+#   chapters: 
+#     - index.qmd
+#     - 00_01_intro.qmd
+#     - 02_architectures.qmd
+#     - 03b_HDFS_clc.qmd
+#     - 03_intro_hadoop.qmd
+#     - 04_hadoop_implementation.qmd
+#     - 05_mapreduce_patterns_1.qmd
+#     - 06_mapreduce_advanced_topics.qmd
+#     - 07_mapreduce_patterns_2.qmd
+#     - 08_sql_operators_mapreduce.qmd
+#     - 10b_spark_submit_execute.qmd
+#     - 10_intro_spark.qmd
+#     - 11_rdd_based_programming.qmd
 
 format:
   html:
     toc: true
     number-sections: true
-    code-overflow: wrap
+    code-overflow: scroll
     code-tools: false
     embed-resources: true
     # theme: flatly
@@ -15,3 +34,8 @@ format:
     theme: simplex
     code-line-numbers: true
     fig-cap-location: top
+  # pdf: 
+  #   toc: true
+  #   number-sections: true
+  #   code-line-numbers: true
+  #   fig-cap-location: top
