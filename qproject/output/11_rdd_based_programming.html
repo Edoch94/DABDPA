@@ -2672,6 +2672,21 @@ vertical-align: -.125em;
   <li><a href="#basic-actions" id="toc-basic-actions" class="nav-link" data-scroll-target="#basic-actions"><span class="toc-section-number">7</span>  Basic Actions</a>
   <ul class="collapse">
   <li><a href="#collect-action" id="toc-collect-action" class="nav-link" data-scroll-target="#collect-action"><span class="toc-section-number">7.1</span>  Collect action</a></li>
+  <li><a href="#count-action" id="toc-count-action" class="nav-link" data-scroll-target="#count-action"><span class="toc-section-number">7.2</span>  Count action</a></li>
+  <li><a href="#countbyvalue-action" id="toc-countbyvalue-action" class="nav-link" data-scroll-target="#countbyvalue-action"><span class="toc-section-number">7.3</span>  CountByValue action</a></li>
+  <li><a href="#take-action" id="toc-take-action" class="nav-link" data-scroll-target="#take-action"><span class="toc-section-number">7.4</span>  Take action</a></li>
+  <li><a href="#first-action" id="toc-first-action" class="nav-link" data-scroll-target="#first-action"><span class="toc-section-number">7.5</span>  First action</a></li>
+  <li><a href="#top-action" id="toc-top-action" class="nav-link" data-scroll-target="#top-action"><span class="toc-section-number">7.6</span>  Top action</a></li>
+  <li><a href="#takeordered-action" id="toc-takeordered-action" class="nav-link" data-scroll-target="#takeordered-action"><span class="toc-section-number">7.7</span>  TakeOrdered action</a></li>
+  <li><a href="#takesample-action" id="toc-takesample-action" class="nav-link" data-scroll-target="#takesample-action"><span class="toc-section-number">7.8</span>  TakeSample action</a></li>
+  <li><a href="#reduce" id="toc-reduce" class="nav-link" data-scroll-target="#reduce"><span class="toc-section-number">7.9</span>  Reduce</a></li>
+  <li><a href="#fold-action" id="toc-fold-action" class="nav-link" data-scroll-target="#fold-action"><span class="toc-section-number">7.10</span>  Fold action</a></li>
+  <li><a href="#aggregate-action" id="toc-aggregate-action" class="nav-link" data-scroll-target="#aggregate-action"><span class="toc-section-number">7.11</span>  Aggregate action</a>
+  <ul class="collapse">
+  <li><a href="#how-it-works" id="toc-how-it-works" class="nav-link" data-scroll-target="#how-it-works"><span class="toc-section-number">7.11.1</span>  How it works</a></li>
+  <li><a href="#aggregate-action-visual-simulation" id="toc-aggregate-action-visual-simulation" class="nav-link" data-scroll-target="#aggregate-action-visual-simulation"><span class="toc-section-number">7.11.2</span>  Aggregate action: visual simulation</a></li>
+  </ul></li>
+  <li><a href="#summary-1" id="toc-summary-1" class="nav-link" data-scroll-target="#summary-1"><span class="toc-section-number">7.12</span>  Summary</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -3210,7 +3225,7 @@ Example 1
 <div id="callout-11" class="callout-11-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="1">
-<li>Create an RDD from a log file</li>
+<li>Create an RDD from a log file;</li>
 <li>Create a new RDD containing only the lines of the log file containing the word “error”.</li>
 </ol>
 <div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># Read the content of a log file</span></span>
@@ -3340,7 +3355,7 @@ Example
 <div id="callout-15" class="callout-15-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="1">
-<li>Create an RDD from a textual file containing a generic text (each line of the input file can contain many words).</li>
+<li>Create an RDD from a textual file containing a generic text (each line of the input file can contain many words);</li>
 <li>Create a new RDD containing the list of words, with repetitions, occurring in the input textual document. In other words, each element of the returned RDD is one of the words occurring in the input textual file, and the words occurring multiple times in the input file appear multiple times, as distinct elements, also in the returned RDD.</li>
 </ol>
 <div class="sourceCode" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># Read the content of the input textual file</span></span>
@@ -3941,6 +3956,680 @@ Example
 </div>
 </div>
 </div>
+</section>
+<section id="count-action" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="count-action"><span class="header-section-number">7.2</span> Count action</h2>
+<p>Count the number of elements of an RDD.</p>
+<p>The count action is based on the <code>count()</code> method of the <code>RDD</code> class: it returns the number of elements of the input RDD.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-27" class="callout-27-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Consider the textual files “document1.txt” and “document2.txt”;</li>
+<li>Print the name of the file with more lines.</li>
+</ol>
+<div class="sourceCode" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># Read the content of the two input textual files</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a>inputRDD1 <span class="op">=</span> sc.textFile(<span class="st">&quot;document1.txt&quot;</span>)</span>
+<span id="cb29-3"><a href="#cb29-3"></a>inputRDD2 <span class="op">=</span> sc.textFile(<span class="st">&quot;document2.txt&quot;</span>)</span>
+<span id="cb29-4"><a href="#cb29-4"></a></span>
+<span id="cb29-5"><a href="#cb29-5"></a><span class="co"># Count the number of lines of the two files = number of elements</span></span>
+<span id="cb29-6"><a href="#cb29-6"></a><span class="co"># of the two RDDs</span></span>
+<span id="cb29-7"><a href="#cb29-7"></a>numLinesDoc1 <span class="op">=</span> inputRDD1.count()</span>
+<span id="cb29-8"><a href="#cb29-8"></a>numLinesDoc2 <span class="op">=</span> inputRDD2.count()</span>
+<span id="cb29-9"><a href="#cb29-9"></a></span>
+<span id="cb29-10"><a href="#cb29-10"></a><span class="cf">if</span> numLinesDoc1<span class="op">&gt;</span> numLinesDoc2: </span>
+<span id="cb29-11"><a href="#cb29-11"></a>    <span class="bu">print</span>(<span class="st">&quot;document1.txt&quot;</span>)</span>
+<span id="cb29-12"><a href="#cb29-12"></a><span class="cf">elif</span> numLinesDoc2<span class="op">&gt;</span> numLinesDoc1: </span>
+<span id="cb29-13"><a href="#cb29-13"></a>    <span class="bu">print</span>(<span class="st">&quot;document2.txt&quot;</span>)</span>
+<span id="cb29-14"><a href="#cb29-14"></a><span class="cf">else</span>: </span>
+<span id="cb29-15"><a href="#cb29-15"></a>    <span class="bu">print</span>(<span class="st">&quot;Same number of lines&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="countbyvalue-action" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="countbyvalue-action"><span class="header-section-number">7.3</span> CountByValue action</h2>
+<p>The countByValue action returns a local python dictionary containing the information about the number of times each element occurs in the RDD</p>
+<ul>
+<li>The keys of the dictionary are associated with the input elements</li>
+<li>The values are the frequencies of the elements</li>
+</ul>
+<p>The countByValue action is based on the <code>countByValue()</code> method of the <code>RDD</code> class. The amount of used main memory in the Driver is related to the number of distinct elements/keys.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-28" class="callout-28-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD from a textual file containing the first names of a list of users (each line contain one name);</li>
+<li>Compute the number of occurrences of each name and store this information in a local variable of the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a><span class="co"># Read the content of the input textual file</span></span>
+<span id="cb30-2"><a href="#cb30-2"></a>namesRDD <span class="op">=</span> sc.textFile(<span class="st">&quot;names.txt&quot;</span>)</span>
+<span id="cb30-3"><a href="#cb30-3"></a></span>
+<span id="cb30-4"><a href="#cb30-4"></a><span class="co"># Compute the number of occurrencies of each name</span></span>
+<span id="cb30-5"><a href="#cb30-5"></a>namesOccurrences <span class="op">=</span> namesRDD.countByValue()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 80%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>namesOccurrences = namesRDD.countByValue()</code></td>
+<td>Also in this case, pay attention to the size of the returned dictionary (that is related to the number of distinct names in this case). Use the <code>countByValue()</code> action if and only if you are sure that the returned dictionary is small. Otherwise, use an appropriate chain of Spark’s transformations and write the final result in a file by using the <code>saveAsTextFile</code> method.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="take-action" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="take-action"><span class="header-section-number">7.4</span> Take action</h2>
+<p>The <code>take(num)</code> action returns a local python list of objects containing the first <code>num</code> elements of the considered RDD. The order of the elements in an RDD is consistent with the order of the elements in the file or collection that has been used to create the RDD.</p>
+<p>The take action is based on the <code>take(num)</code> method of the <code>RDD</code> class.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1,5,3,3,2]</code>;</li>
+<li>Retrieve the first two values of the created RDD and store them in a local python list that is instantiated in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1"></a><span class="co"># Create an RDD of integers. Load the values 1, 5, 3, 3,2 in this RDD</span></span>
+<span id="cb31-2"><a href="#cb31-2"></a>inputList <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">2</span>]</span>
+<span id="cb31-3"><a href="#cb31-3"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb31-4"><a href="#cb31-4"></a></span>
+<span id="cb31-5"><a href="#cb31-5"></a><span class="co"># Retrieve the first two elements of the inputRDD and store them in</span></span>
+<span id="cb31-6"><a href="#cb31-6"></a><span class="co"># a local python list</span></span>
+<span id="cb31-7"><a href="#cb31-7"></a>retrievedValues <span class="op">=</span> inputRDD.take(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="first-action" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="first-action"><span class="header-section-number">7.5</span> First action</h2>
+<p>The <code>first()</code> action returns a local python object containing the first element of the considered RDD. The order of the elements in an RDD is consistent with the order of the elements in the file or collection that has been used to create the RDD.</p>
+<p>The first action is based on the <code>first()</code> method of the <code>RDD</code> class.</p>
+<p>Notice that the only difference between <code>first()</code> and <code>take(1)</code> is given by the fact that <code>first()</code> returns a single element (the returned element is the first element of the RDD), while <code>take(1)</code> returns a list of elements containing one single element (the only element of the returned list is the first element of the RDD).</p>
+</section>
+<section id="top-action" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="top-action"><span class="header-section-number">7.6</span> Top action</h2>
+<p>The <code>top(num)</code> action returns a local python list of objects containing the top num (largest) elements of the considered RDD. The ordering is the default one of class associated with the objects stored in the RDD (the descending order is used).</p>
+<p>The top action is based on the <code>top(num)</code> method of the <code>RDD</code> class.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-30" class="callout-30-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1,5,3,4,2]</code>;</li>
+<li>Retrieve the top-2 greatest values of the created RDD and store them in a local python list that is instantiated in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a><span class="co"># Create an RDD of integers. Load the values 1, 5, 3, 4,2 in this RDD</span></span>
+<span id="cb32-2"><a href="#cb32-2"></a>inputList <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">2</span>]</span>
+<span id="cb32-3"><a href="#cb32-3"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb32-4"><a href="#cb32-4"></a></span>
+<span id="cb32-5"><a href="#cb32-5"></a><span class="co"># Retrieve the top-2 elements of the inputRDD and store them in</span></span>
+<span id="cb32-6"><a href="#cb32-6"></a><span class="co"># a local python list</span></span>
+<span id="cb32-7"><a href="#cb32-7"></a>retrievedValues <span class="op">=</span> inputRDD.top(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p>The <code>top(num, key)</code> action returns a local python list of objects containing the num largest elements of the considered RDD sorted by considering a user specified sorting function.</p>
+<p>The top action is based on the <code>top(num, key)</code> method of the <code>RDD</code> class</p>
+<ul>
+<li><code>num</code> is the number of elements to be selected;</li>
+<li><code>key</code> is a function that is applied on each input element before comparing them.</li>
+</ul>
+<p>The comparison between elements is based on the values returned by the invocations of this function.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of strings containing the values <code>[&#39;Paolo&#39;,&#39;Giovanni&#39;,&#39;Luca&#39;]</code>;</li>
+<li>Retrieve the 2 longest names (longest strings) of the created RDD and store them in a local python list that is instantiated in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1"></a><span class="co"># Create an RDD of strings. Load the values &#39;Paolo&#39;, &#39;Giovanni&#39;, &#39;Luca&#39;]</span></span>
+<span id="cb33-2"><a href="#cb33-2"></a><span class="co"># in the RDD</span></span>
+<span id="cb33-3"><a href="#cb33-3"></a>inputList <span class="op">=</span> [<span class="st">&#39;Paolo&#39;</span>,<span class="st">&#39;Giovanni&#39;</span>,<span class="st">&#39;Luca&#39;</span>]</span>
+<span id="cb33-4"><a href="#cb33-4"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb33-5"><a href="#cb33-5"></a></span>
+<span id="cb33-6"><a href="#cb33-6"></a><span class="co"># Retrieve the 2 longest names of the inputRDD and store them in</span></span>
+<span id="cb33-7"><a href="#cb33-7"></a><span class="co"># a local python list</span></span>
+<span id="cb33-8"><a href="#cb33-8"></a>retrievedValues <span class="op">=</span> inputRDD.top(<span class="dv">2</span>,<span class="kw">lambda</span> s:<span class="bu">len</span>(s))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="takeordered-action" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="takeordered-action"><span class="header-section-number">7.7</span> TakeOrdered action</h2>
+<p>The <code>takeOrdered(num)</code> action returns a local python list of objects containing the num smallest elements of the considered RDD. The ordering is the default one of class associated with the objects stored in the RDD (the ascending order is used).</p>
+<p>The takeOrdered action is based on the <code>takeOrdered(num)</code> method of the <code>RDD</code> class.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-32" class="callout-32-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1,5,3,4,2]</code>;</li>
+<li>Retrieve the 2 smallest values of the created RDD and store them in a local python list that is instantiated in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1"></a><span class="co"># Create an RDD of integers. Load the values 1, 5, 3, 4,2 in this RDD</span></span>
+<span id="cb34-2"><a href="#cb34-2"></a>inputList <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">2</span>]</span>
+<span id="cb34-3"><a href="#cb34-3"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb34-4"><a href="#cb34-4"></a></span>
+<span id="cb34-5"><a href="#cb34-5"></a><span class="co"># Retrieve the 2 smallest elements of the inputRDD and store them in</span></span>
+<span id="cb34-6"><a href="#cb34-6"></a><span class="co"># a local python list</span></span>
+<span id="cb34-7"><a href="#cb34-7"></a>retrievedValues <span class="op">=</span> inputRDD.takeOrdered(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p>The <code>takeOrdered(num, key)</code> action returns a local python list of objects containing the num smallest elements of the considered RDD sorted by considering a user specified sorting function.</p>
+<p>The takeOrdered action is based on the <code>takeOrdered(num, key)</code> method of the <code>RDD</code> class</p>
+<ul>
+<li><code>num</code> is the number of elements to be selected;</li>
+<li><code>key</code> is a function that is applied on each input element before comparing them.</li>
+</ul>
+<p>The comparison between elements is based on the values returned by the invocations of this function.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-33" class="callout-33-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of strings containing the values <code>[&#39;Paolo&#39;,&#39;Giovanni&#39;,&#39;Luca&#39;]</code>;</li>
+<li>Retrieve the 2 shortest names (shortest strings) of the created RDD and store them in a local python list that is instantiated in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1"></a><span class="co"># Create an RDD of strings. Load the values &#39;Paolo&#39;, &#39;Giovanni&#39;, &#39;Luca&#39;]</span></span>
+<span id="cb35-2"><a href="#cb35-2"></a><span class="co"># in the RDD</span></span>
+<span id="cb35-3"><a href="#cb35-3"></a>inputList <span class="op">=</span> [<span class="st">&#39;Paolo&#39;</span>,<span class="st">&#39;Giovanni&#39;</span>,<span class="st">&#39;Luca&#39;</span>]</span>
+<span id="cb35-4"><a href="#cb35-4"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb35-5"><a href="#cb35-5"></a></span>
+<span id="cb35-6"><a href="#cb35-6"></a><span class="co"># Retrieve the 2 shortest names of the inputRDD and store them in</span></span>
+<span id="cb35-7"><a href="#cb35-7"></a><span class="co"># a local python list</span></span>
+<span id="cb35-8"><a href="#cb35-8"></a>retrievedValues <span class="op">=</span> inputRDD.takeOrdered(<span class="dv">2</span>,<span class="kw">lambda</span> s:<span class="bu">len</span>(s))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="takesample-action" class="level2" data-number="7.8">
+<h2 data-number="7.8" class="anchored" data-anchor-id="takesample-action"><span class="header-section-number">7.8</span> TakeSample action</h2>
+<p>The <code>takeSample(withReplacement, num)</code> action returns a local python list of objects containing num random elements of the considered RDD.</p>
+<p>The takeSampleaction is based on the <code>takeSample(withReplacement, num)</code> method of the <code>RDD</code> class, where <code>withReplacement</code> specifies if the random sample is with replacement (True) or not (False).</p>
+<p>The <code>takeSample(withReplacement, num, seed)</code> method of the <code>RDD</code> class is used when the seed has to be set.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-34" class="callout-34-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1,5,3,3,2]</code>;</li>
+<li>Retrieve randomly, without replacement, 2 values from the created RDD and store them in a local python list that is instantiated in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a><span class="co"># Create an RDD of integers. Load the values 1, 5, 3, 3,2 in this RDD</span></span>
+<span id="cb36-2"><a href="#cb36-2"></a>inputList <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">2</span>]</span>
+<span id="cb36-3"><a href="#cb36-3"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb36-4"><a href="#cb36-4"></a></span>
+<span id="cb36-5"><a href="#cb36-5"></a><span class="co"># Retrieve randomly two elements of the inputRDD and store them in</span></span>
+<span id="cb36-6"><a href="#cb36-6"></a><span class="co"># a local python list</span></span>
+<span id="cb36-7"><a href="#cb36-7"></a>randomValues<span class="op">=</span> inputRDD.takeSample(<span class="va">True</span>, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="reduce" class="level2" data-number="7.9">
+<h2 data-number="7.9" class="anchored" data-anchor-id="reduce"><span class="header-section-number">7.9</span> Reduce</h2>
+<p>Return a single python object obtained by combining all the objects of the input RDD by using a user provide function. The provided function must be associative and commutative, otherwise the result depends on the content of the partitions and the order used to analyze the elements of the RDD’s partitions. The returned object and the ones of the input RDD are all instances of the same data type/class.</p>
+<p>The reduce action is based on the <code>reduce(f)</code> method of the <code>RDD</code> class: a function <code>f</code> is passed to the reduce method</p>
+<ul>
+<li>Given two arbitrary input elements, <code>f</code> is used to combine them in one single value</li>
+<li><code>f</code> is recursively invoked over the elements of the input RDD until the input values are reduced to one single value</li>
+</ul>
+<p>Suppose <span class="math inline">\(L\)</span> contains the list of elements of the input RDD. To compute the final element/value, the reduce action operates as follows</p>
+<ol type="1">
+<li>Apply the user specified function on a pair of elements <span class="math inline">\(e_1\)</span> and <span class="math inline">\(e_2\)</span> occurring in <span class="math inline">\(L\)</span> and obtain a new element <span class="math inline">\(e_\textbf{new}\)</span>;</li>
+<li>Remove the original elements <span class="math inline">\(e_1\)</span> and <span class="math inline">\(e_2\)</span> from <span class="math inline">\(L\)</span> and then insert the element <span class="math inline">\(e_\textbf{new}\)</span> in <span class="math inline">\(L\)</span>;</li>
+<li>If <span class="math inline">\(L\)</span> contains only one value, then return it as final result of the reduce action, otherwise, return to step 1.</li>
+</ol>
+<p>Function <span class="math inline">\(f\)</span> must be associative and commutative, so that the computation of the reduce action can be performed in parallel without problems, otherwise the result depends on how the input RDD is partitioned (i.e., for the functions that are not associative and commutative the output depends on how the RDD is split in partitions and how the content of each partition is analyzed).</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-35" class="callout-35-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1,2,3,3]</code>;</li>
+<li>Compute the sum of the values occurring in the RDD and store the result in a local python integer variable in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1"></a><span class="co"># Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
+<span id="cb37-2"><a href="#cb37-2"></a>inputListReduce <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>]</span>
+<span id="cb37-3"><a href="#cb37-3"></a>inputRDDReduce <span class="op">=</span> sc.parallelize(inputListReduce)</span>
+<span id="cb37-4"><a href="#cb37-4"></a></span>
+<span id="cb37-5"><a href="#cb37-5"></a><span class="co"># Compute the sum of the values</span></span>
+<span id="cb37-6"><a href="#cb37-6"></a>sumValues <span class="op">=</span> inputRDDReduce.<span class="bu">reduce</span>(<span class="kw">lambda</span> e1, e2: e1<span class="op">+</span>e2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 80%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>lambda e1, e2: e1+e2</code></td>
+<td>This lambda function combines two input integer elements at a time and returns theirs sum.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-36-contents" aria-controls="callout-36" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-36" class="callout-36-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1,2,3,3]</code>;</li>
+<li>Compute the maximum value occurring in the RDD and store the result in a local python integer variable in the Driver.</li>
+</ol>
+<p><strong>Solution 1</strong></p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1"></a><span class="co"># Define the function for the reduce action</span></span>
+<span id="cb38-2"><a href="#cb38-2"></a><span class="kw">def</span> computeMax(v1,v2):</span>
+<span id="cb38-3"><a href="#cb38-3"></a>    <span class="cf">if</span> v1<span class="op">&gt;</span>v2:</span>
+<span id="cb38-4"><a href="#cb38-4"></a>        <span class="cf">return</span> v1</span>
+<span id="cb38-5"><a href="#cb38-5"></a>    <span class="cf">else</span>:</span>
+<span id="cb38-6"><a href="#cb38-6"></a>        <span class="cf">return</span> v2</span>
+<span id="cb38-7"><a href="#cb38-7"></a></span>
+<span id="cb38-8"><a href="#cb38-8"></a><span class="co"># Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
+<span id="cb38-9"><a href="#cb38-9"></a>inputListReduce <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>]</span>
+<span id="cb38-10"><a href="#cb38-10"></a>inputRDDReduce <span class="op">=</span> sc.parallelize(inputListReduce)</span>
+<span id="cb38-11"><a href="#cb38-11"></a></span>
+<span id="cb38-12"><a href="#cb38-12"></a><span class="co"># Compute the maximum value</span></span>
+<span id="cb38-13"><a href="#cb38-13"></a>maxValue <span class="op">=</span> inputRDDReduce.<span class="bu">reduce</span>(computeMax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Solution 2</strong></p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1"></a><span class="co"># Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
+<span id="cb39-2"><a href="#cb39-2"></a>inputListReduce <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>]</span>
+<span id="cb39-3"><a href="#cb39-3"></a>inputRDDReduce <span class="op">=</span> sc.parallelize(inputListReduce)</span>
+<span id="cb39-4"><a href="#cb39-4"></a></span>
+<span id="cb39-5"><a href="#cb39-5"></a><span class="co"># Compute the maximum value</span></span>
+<span id="cb39-6"><a href="#cb39-6"></a>maxValue <span class="op">=</span> inputRDDReduce.<span class="bu">reduce</span>(<span class="kw">lambda</span> e1, e2: <span class="bu">max</span>(e1, e2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="fold-action" class="level2" data-number="7.10">
+<h2 data-number="7.10" class="anchored" data-anchor-id="fold-action"><span class="header-section-number">7.10</span> Fold action</h2>
+<p>Return a single python object obtained by combining all the objects of the input RDD and a “zero” value by using a user provided function, which must be associative (otherwise the result depends on how the RDD is partitioned), but it is not required to be commutative. An initial neutral “zero” value is also specified.</p>
+<p>The fold action is based on the <code>fold(zeroValue, op)</code> method of the <code>RDD</code> class. A function <code>op</code> is passed to the fold method; given two arbitrary input elements, <code>op</code> is</p>
+<ul>
+<li>used to combine them in one single value</li>
+<li>used to combine input elements with the “zero” value</li>
+<li>recursively invoked over the elements of the input RDD until the input values are reduced to one single value</li>
+</ul>
+<p>The “zero” value is the neutral value for the used function <code>op</code> (i.e., “zero” combined with any value <span class="math inline">\(v\)</span> by using <code>op</code> is equal to <span class="math inline">\(v\)</span>).</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-37-contents" aria-controls="callout-37" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-37" class="callout-37-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of strings containing the values <code>[&#39;This &#39;,&#39;is &#39;,&#39;a &#39;,&#39;test&#39;]</code>;</li>
+<li>Compute the concatenation of the values occurring in the RDD (from left to right) and store the result in a local python string variable in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1"></a><span class="co"># Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
+<span id="cb40-2"><a href="#cb40-2"></a>inputListFold <span class="op">=</span> [<span class="st">&#39;This &#39;</span>,<span class="st">&#39;is &#39;</span>,<span class="st">&#39;a &#39;</span>,<span class="st">&#39;test&#39;</span>]</span>
+<span id="cb40-3"><a href="#cb40-3"></a>inputRDDFold <span class="op">=</span> sc.parallelize(inputListFold)</span>
+<span id="cb40-4"><a href="#cb40-4"></a></span>
+<span id="cb40-5"><a href="#cb40-5"></a><span class="co"># Concatenate the input strings</span></span>
+<span id="cb40-6"><a href="#cb40-6"></a>finalString <span class="op">=</span> inputRDDFold.fold(<span class="st">&#39;&#39;</span>, <span class="kw">lambda</span> s1, s2: s1<span class="op">+</span>s2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Fold vs Reduce
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Fold is characterized by the “zero” value;</li>
+<li>Fold can be used to parallelize functions that are associative but non-commutative (e.g., concatenation of a list of strings).</li>
+</ol>
+</div>
+</div>
+</section>
+<section id="aggregate-action" class="level2" data-number="7.11">
+<h2 data-number="7.11" class="anchored" data-anchor-id="aggregate-action"><span class="header-section-number">7.11</span> Aggregate action</h2>
+<p>Return a single python object obtained by combining the objects of the RDD and an initial “zero” value by using two user provide functions. The provided functions must be associative, otherwise the result depends on how the RDD is partitioned. The returned objects and the ones of the input RDD can be instances of different classes (this is the main difference with respect to <code>reduce()</code> and <code>fold()</code>).</p>
+<p>The aggregate action is based on the <code>aggregate(zeroValue,seqOp,combOp)</code> method of the <code>RDD</code> class. The input RDD contains objects of type <code>T</code> while the returned object is of type <code>U</code>, with <code>U</code> different from <code>T</code>.</p>
+<ul>
+<li>One function is needed for merging an element of type <code>T</code> with an element of type <code>U</code> to return a new element of type <code>U</code>: it is used to merge the elements of the input RDD and the accumulator of each partition;</li>
+<li>One function is needed for merging two elements of type <code>U</code> to return a new element of type <code>U</code>: it is used to merge two elements of type U obtained as partial results generated by two different partitions.</li>
+</ul>
+<p>The <code>seqOp</code> function contains the code that is applied to combine the accumulator value (one accumulator for each partition) with the elements of each partition: one local result per partition is computed by recursively applying <code>seqOp</code>.</p>
+<p>The <code>combOp</code> function contains the code that is applied to combine two elements of type U returned as partial results by two different partitions: the global final result is computed by recursively applying <code>combOp</code>.</p>
+<section id="how-it-works" class="level3" data-number="7.11.1">
+<h3 data-number="7.11.1" class="anchored" data-anchor-id="how-it-works"><span class="header-section-number">7.11.1</span> How it works</h3>
+<p>Suppose that <span class="math inline">\(L\)</span> contains the list of elements of the input RDD and this RDD is split in a set of partitions (i.e., a set of lists <span class="math inline">\({L_1,..., L_n}\)</span>). The aggregate action computes a partial result in each partition and then combines/merges the results. It operates as follows:</p>
+<ol type="1">
+<li>Aggregate the partial results in each partition, obtaining a set of partial results (of type <code>U</code>) <span class="math inline">\(P={p_1, .., p_n}\)</span>;</li>
+<li>Apply the <code>combOp</code> function on a pair of elements <span class="math inline">\(p_1\)</span> and <span class="math inline">\(p_2\)</span> in <span class="math inline">\(P\)</span> and obtain a new element <span class="math inline">\(p_\textbf{new}\)</span>;</li>
+<li>Remove the original elements <span class="math inline">\(p1\)</span> and <span class="math inline">\(p2\)</span> from <span class="math inline">\(P\)</span> and then insert the element <span class="math inline">\(p_\textbf{new}\)</span> in <span class="math inline">\(P\)</span>;</li>
+<li>If <span class="math inline">\(P\)</span> contains only one value then return it as final result of the aggregate action. Otherwise, return to step 2.</li>
+</ol>
+<p>Suppose that <span class="math inline">\(L_i\)</span> is the list of elements on the <span class="math inline">\(i\)</span>-th partition of the input RDD, and <code>zeroValue</code> is the initial zero value. To compute the partial result over the elements in <span class="math inline">\(L_i\)</span> the aggregate action operates as follows</p>
+<ol type="1">
+<li>Set <code>accumulator</code> to <code>zeroValue</code> (<code>accumulator=zeroValue</code>);</li>
+<li>Apply the <code>seqOp</code> function on <code>accumulator</code> and an elements <span class="math inline">\(ej\)</span> in <span class="math inline">\(L_i\)</span> and update <code>accumulator</code> with the value returned by <code>seqOp</code>;</li>
+<li>Remove the original elements <span class="math inline">\(e_j\)</span> from <span class="math inline">\(L_i\)</span>;</li>
+<li>If <span class="math inline">\(L_i\)</span> is empty return <code>accumulator</code> as (final) partial result <span class="math inline">\(p_i\)</span> of the <span class="math inline">\(i\)</span>-th partition. Otherwise, return to step 2.</li>
+</ol>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-39" class="callout-39-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1,2,3,3]</code>;</li>
+<li>Compute both
+<ul>
+<li>the sum of the values occurring in the input RDD</li>
+<li>and the number of elements of the input RDD</li>
+</ul></li>
+<li>Store in a local python variable of the Driver the average computed over the values of the input RDD.</li>
+</ol>
+<div class="sourceCode" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1"></a><span class="co"># Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
+<span id="cb41-2"><a href="#cb41-2"></a>inputListAggr <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>]</span>
+<span id="cb41-3"><a href="#cb41-3"></a>inRDD <span class="op">=</span> sc.parallelize(inputListAggr)</span>
+<span id="cb41-4"><a href="#cb41-4"></a></span>
+<span id="cb41-5"><a href="#cb41-5"></a><span class="co"># Instantiate the zero value</span></span>
+<span id="cb41-6"><a href="#cb41-6"></a><span class="co"># We use a tuple containing two values:</span></span>
+<span id="cb41-7"><a href="#cb41-7"></a><span class="co"># (sum, number of represented elements)</span></span>
+<span id="cb41-8"><a href="#cb41-8"></a>zeroValue <span class="op">=</span> (<span class="dv">0</span>,<span class="dv">0</span>)</span>
+<span id="cb41-9"><a href="#cb41-9"></a></span>
+<span id="cb41-10"><a href="#cb41-10"></a><span class="co"># Compute the sum of the elements in inputRDDAggr and count them</span></span>
+<span id="cb41-11"><a href="#cb41-11"></a>sumCount <span class="op">=</span> inRDD.aggregate(</span>
+<span id="cb41-12"><a href="#cb41-12"></a>    zeroValue,</span>
+<span id="cb41-13"><a href="#cb41-13"></a>    <span class="kw">lambda</span> acc, e: (acc[<span class="dv">0</span>]<span class="op">+</span>e, acc[<span class="dv">1</span>]<span class="op">+</span><span class="dv">1</span>),</span>
+<span id="cb41-14"><a href="#cb41-14"></a>    <span class="kw">lambda</span> p1, p2: (p1[<span class="dv">0</span>]<span class="op">+</span>p2[<span class="dv">0</span>], p1[<span class="dv">1</span>]<span class="op">+</span>p2[<span class="dv">1</span>])</span>
+<span id="cb41-15"><a href="#cb41-15"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 80%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>zeroValue(0,0)</code></td>
+<td>Instantiate the “zero” value</td>
+</tr>
+<tr class="even">
+<td><code>lambda acc, e: (acc[0]+e, acc[1]+1)</code></td>
+<td>Given a partition <span class="math inline">\(p\)</span> of the input RDD, this is the function that is used to combine the elements of partition <span class="math inline">\(p\)</span> with the accumulator of partition <span class="math inline">\(p\)</span></td>
+</tr>
+<tr class="odd">
+<td><code>acc</code></td>
+<td>It is a tupe object, initialized to the “zero” value</td>
+</tr>
+<tr class="even">
+<td><code>e</code></td>
+<td>It is an integer</td>
+</tr>
+<tr class="odd">
+<td><code>lambda p1, p2: (p1[0]+p2[0], p1[1]+p2[1])</code></td>
+<td>This is the function that is used to combine the partial results emitted by the RDD partitions</td>
+</tr>
+<tr class="even">
+<td><code>p1</code> and <code>p2</code></td>
+<td>These are tuple objects</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb42"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1"></a><span class="co"># Compute the average value</span></span>
+<span id="cb42-2"><a href="#cb42-2"></a>myAvg <span class="op">=</span> sumCount[<span class="dv">0</span>]<span class="op">/</span>sumCount[<span class="dv">1</span>]</span>
+<span id="cb42-3"><a href="#cb42-3"></a></span>
+<span id="cb42-4"><a href="#cb42-4"></a><span class="co"># Print the average on the standard output of the driver</span></span>
+<span id="cb42-5"><a href="#cb42-5"></a><span class="bu">print</span>(<span class="st">&#39;Average:&#39;</span>, myAvg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="aggregate-action-visual-simulation" class="level3" data-number="7.11.2">
+<h3 data-number="7.11.2" class="anchored" data-anchor-id="aggregate-action-visual-simulation"><span class="header-section-number">7.11.2</span> Aggregate action: visual simulation</h3>
+<ul>
+<li><code>inRDD = [1,2,3,3]</code>;</li>
+<li>Suppose <code>inRDD</code> is split in the following two partitions, <code>[1,2]</code> and <code>[3,3]</code>.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Visual simulation of the aggregate action</figcaption><p></p>
+<p><img src="data:image/png;base64,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pejoaElSlSpVNGXKFN1xxx2qX7++YmNj9c0332j27NmKjo5Wamqq7rjjDm3dulVdu3YtdczOHN/Hx0ddu3bV+vXrJV1JCIo7pRGAayQnJ2vPnj0KDw/X6dOnlZSUpKpVqyo4OFg333yzOnbs6PL9sSfGhLw5MlcgT7BHngCUTrneS8TExOizzz7TihUrzD8+krRv3z61b9/eJTFERUVp3rx5Wrp0aYHf7gUHB2v27NkaNWqUS+KCvUceeUSTJk3K87VWrVqpX79+GjdunG699VZduHBBmZmZmj17ttasWZNvny+++KLdjviZZ57Riy++KC+vvyfiNG/eXN27d9d9992nrKws2Ww2h/fx6aefFukIRX6Cg4P10EMP2T23b98+ZWZmSpJat25tfotdkPHjx5s707p162rLli1250HWrFlT119/ve655x717NlTx48fV3p6uh588EEdOXKk1F/WOXv8bt26mTv03bt3s0MHPExUVJQmTJigr776SikpKfm2a9iwoZ566ik98sgjuf6eloeYkD9H5wrkCfbIE4BSKuy8Aaud43/x4kVjyZIlRt++fQ1vb+88z8vZt2+fkyP/2z//+c9CzwXL+XjqqaeK1T/n8LnWokWLzM+7cuXKRkZGRp7toqKiDD8/P7Pt+PHjiz2WI/owDMMYMmRIsX4Gr36Ehobm6vP11183Xx8xYkShMRw+fNiuz2+//bbA9seOHbM7t27ZsmUleu+uHH/16tVm+44dO5YqXpR9nOPveef479u3r1h/+/r372+kpDj3PTgzJvID9ylKrkCeYI88Acgb5/jnISYmRnfddZeCgoI0atQorV+/XhkZGe4Oy7yFSdu2bTVr1ix99913+u233xQbG6vw8HC9++67dlcGnTt3rr799lt3hYtCDBw40Fy+fPmy4uLi8my3bNkyJScnS7pyJdvZs2cXeyxH9OEsv/32m7lclNtnLVy40Fzu0aOH+vTpU2D7Fi1a6O677zbXS3tLKleMf/3115vLOT8fAJ6jUqVKGjhwoN5//33t27dPkZGRiouL088//6yPPvrIbjbgunXrNG7cuHIZE0qnKLkCeYI98gSg9MrNVP+//vpLn332md1zfn5+6tOnj4YMGaIpU6YoISHB5XENGTJEzz33nNq2bZvrtZo1a6pt27a655571KlTJ3Oa1VtvvaXbbrvN1aGi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lZSUpKpVq6pJkybq0KGD6tat67I+HGXLli3q3bu3pCtXqD106JBsNluRtk1PT9f333+vkydP6vz586pWrZoaNWqknj17FunethMmTND8+fMlXbkN5jfffFOs2Es7frZXXnlFzz77rCTpoYce0vvvv1+sOGBN3Xdc0tSmvhq657JskrKGBLo7JKdbeDpND4UnK6iiTfPb+Ol0cpYmN6no1DGLmycU1dq1azVkyBBzff/+/QoNDc3VzlG5giNjykZ+4DzOzBXIE/5GngBIG6IztPdCprbGZmhzbIYmNamoea0q5dm2XN3O79KlSzp9+nSh7SIjI3M9l5CQYC4nJSVp165d5vrQoUNLHNOMGTPsin5J5u1CChMTE1PicVEyAQEBGjx4sNP6b9SokRo1auT2PhylV69euv3227Vx40YdPnxYH330kR588MEibevj46PevXubCUFxbdy40Vwuye9oaceXpHPnzmnOnDmSrtwH+Pnnny9xXwA8x+DBg9WsWTNFRERIktatW5eryHZkruComOAazswVyBP+Rp4AFI+XuwMoizZv3qz09HRJV37p+/fv7+aIAM81b948cwbN9OnTFRUV5fQxT506ZSa/NptNgwYNcvqYeXnssceUmJgoSXr22WfzvJcxgLLppptuMpd///33XK+7I1coLCbAE5EnkCfANcpV4X/33XfLuHJdg2I/pk+fbvaT8xvCXr16KTCw5FM0T506VeKYPv3001J9HoArhISE6LnnnpN0ZZbK/fffb55W4ywbNmwwlzt27Kjg4GCnjpeXxYsX6/PPP5ckhYaGaurUqS6PAYDz+Pn5mcvZBX5OjswVHBUT4InIE8gT4BrlqvB3lNJODQLKmxkzZuj222+XdGVnO2PGDKeOl/N3NOc5r66yZ88ePfroo5KkGjVqaNWqVfLx8XF5HACc59SpU+ZynTp1cr3ujlyhsJgAT0WeQJ4A56PwL6arpwY583xvwCq8vLz02Wef6cYbb1TFihXVtWtXp42VmZmpzZs3m+vu+HLummuuUZMmTeTn56cvv/xSTZo0cXkMAJwnOjra7vz9Dh062L3ujlyhsJgAT0aeQJ4A57PMxf0+/vhj1apVy+65oKAgjRgxwqHj5Jwa1L59e486F2flypW5zouKjY11UzSAvcDAQG3atEnHjh3TzTff7LRx9uzZo/j4eElSs2bN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AOTv+PHjuv/++9W6dWu3fwFAngCUTRT+gIfwlC8Apk6dqqSkJEnSrFmz1KRJE7fE4Uw2m00ffPCBmajMmDFDcXFxbo4KAICCecIXAOQJQNnk7e4APNnKlStdflGPixcvmsuffvqpfvzxR5eOD9dLTU21W8/+AuDrr7/W0KFDNXPmTLVt29Ylsezfv1+fffaZJKlp06aaOHGiS8Z1h8aNG+vxxx/X3LlzFR8fr9mzZ+u1115zd1gAypATJ07o4Ycfdvm4Z86ckST9/PPPbhkfrrVr165cz2V/ATBnzhw999xzGj58uLy8nH88jzyBPAFll80o5KQV/68vKinD0PLQylrwe6p2dK/qqtjc4tdff1XTpk3dHQZgstlsuvPOO/XRRx+pcuXKTh3rzjvv1BdffCFJeu+99yyfUEZFRalRo0ZKTU1V1apV9ccff6h69eruDgvlQPcdlzS1qa+G7rksm6SsIYHuDsnpFp5O00PhyQqqaNP8Nn46nZylyU3K5vTgG2+8UeHh4e4OAzCFhIRoxYoVTj9QQJ5AngDPsiE6Q3svZGprbIY2x2ZoUpOKmteqUp5tmep/lUaNGql3797uDgOQJPn4+GjMmDGaM2eO04v+yMhI/e9//5MkBQYG6v777y9RPzExMTp16pROnTqltLQ0R4bo8DGDgoJ01113SZKSkpLMCxUBQEHuvfde+fr6ujsMQJLUrVs3vfXWW04v+oubJyQnJ2vr1q1688039cQTT2js2LF64okn9Nprr+mHH35QRkaGU+O9WklyBfIEWAmF/1W8vb21adMmGYbhlsfJkyfNWN555x23xcHDdY8qVark+jn08fHRyJEjdezYMX3wwQe69tprnf6zv3z5cvNcwaFDh6pSpby/LcxLTEyM5s+fr5tvvll16tTRddddp+uuu86pp8o4aswRI0aYy0uWLHF0mAAsaOrUqUpNTXXbfqNdu3aSpF69erl9H8bD+Y9Ro0bl+XPYtWtXrV27Vt9//7369Onj9J/7ouYJUVFRuvPOO1WjRg316tVLTzzxhN58800tWrRIb775pp566indfPPNatKkiebPny/DcN4V8x2RK5AnwCo4xx/wID4+Prr77rv1/PPPu/yUk7Vr15rLw4YNK7R9YmKi1qxZoxUrVui7775zyTf3zhizT58+qlatmuLj43XgwAH9+eefatCggQOi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AAAAAABYGMEfAAAAAAALI/gDAAAAAGBhBH8AAAAAACyM4A8AAAAAgIUR/AEAAAAAsDCCPwAAAAAAFkbwBwAAAADAwgj+AAAAAABYGMEfAAAAAAALI/gDAAAAAGBhBH8AAAAAACyM4A8AAAAAgIUR/AEAAAAAsDCCPwAAAAAAFkbwBwAAAADAwgj+AAAAAABYGMEfAAAAAAALI/gDAAAAAGBhBH8AAAAAACyM4A8AAAAAgIUR/AEAAAAAsDCCPwAAAAAAFkbwBwAAAADAwgj+AAAAAABYGMEfAAAAAAALI/gDAAAAAGBhBH8AAAAAACyM4A8AAAAAgIUR/AEAAAAAsDCCPwAAAAAAFkbwBwAAAADAwgj+AAAAAABYGMEfAAAAAAALI/gDAAAAAGBhBH8AAAAAACyM4A8AAAAAgIUR/AEAAAAAsDCCPwAAAAAAFkbwBwAAAADAwgj+AAAAAABYGMEfAAAAAAALI/gDAAAAAGBhBH8AAAAAACyM4A8AAAAAgIUR/AEAAAAAsDCCPwAAAAAAFkbwBwAAAADAwgj+AAAAAABYGMEfAAAAAAALI/gDAAAAAGBhBH8AAAAAACyM4A8AAAAAgIUR/AEAAAAAsDCCPwAAAAAAFkbwBwAAAADAwgj+AAAAAABYGMEfAAAAAAALI/gDAAAAAGBhBH8AAAAAACyM4A8AAAAAgIUR/AEAAAAAsDCCPwAAAAAAFkbwBwAAAADAwgj+AAAAAABYGMEfAAAAAAALI/gDAAAAAGBhBH8AAAAAACyM4A8AAAAAgIUR/AEAAAAAsDCCPwAAAAAAFkbwBwAAAADAwgj+AAAAAABYGMEfAAAAAAALI/gDAAAAAGBhBH8AAAAAACyM4A8AAAAAgIUR/AEAAAAAsDCCPwAAAAAAFkbwBwAAAADAwgj+AAAAAABYGMEfAAAAAAALI/gDAAAAAGBhBH8AAAAAACyM4A8AAAAAgIUR/AEAAAAAsDCCPwAAAAAAFkbwBwAAAADAwgj+AAAAAABYGMEfAAAAAAALI/gDAAAAAGBhBH8AAAAAACyM4A8AAAAAgIUR/AEAAAAAsDCCPwAAAAAAFkbwBwAAAADAwgj+AAAAAABYGMEfAAAAAAALI/gDAAAAAGBhBH8AAAAAACyM4A8AAAAAgIUR/AEAAAAAsDCCPwAAAAAAFkbwBwAAAADAwjxdXQAA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R124cMHVpThVcnKyhgwZoqVLl7q6FACwNE9XFwAAAPJOQkKC5s2bp/fff1+XL19Ot83169cVERGhn376Sf/85z91/fp1lShRIp8rRUZOnjypzp0769KlS3rxxRe1YcMGV5fkNLNnz9aSJUv01VdfqWzZsurRo4erSwIASyL4AwBgUb/99pu6d++ukydP2j3v4+Oj+vXrq3z58nJzc9P58+cVGRmpixcvuqjSgufq1as6e/asJMnPz0/lypVzSR0JCQnq1auXLl26JF9fX33yyScuqSOvjBgxQt99950OHz6sAQMG6PDhwwoICHB1WQBgOUz1BwDAgnbs2KFHHnnEDP1ubm7q2bOntm3bpitXrujQoUPasmWLNm/erJCQEF24cEGhoaFasGCBihQp4uLqXe/777/X/fffr/vvv19ffPGFy+qYNm2ajh49KklasGCB6tat67Ja8kKxYsW0YsUKFS9eXHFxcXrhhRe41AQA8gDBHwAAiwkPD9czzzyj2NhYSVKlSpUUHBys9evXq3379hkG+4CAAL388ssE/wLixIkT5hn+p556Sv369XNxRXkjICBAb7/9tiRp7969Wr58uYsrAgDrIfgDAGAhhmGob9++unLliiSpatWqOnDggFq3bu3iyuCod955R0lJSXJ3d7fcFP+7vfbaa6pRo4Yk6e2331ZycrJrCwIAiyH4AwBgIevXr9d///tfSZKXl5fWr1+vKlWquLgqOOrcuXNau3atJOnpp59WvXr1XFxR3ipSpIjGjBkjSTp9+rT+/e9/u7giALAWFvcDADjs5s2b8vHxcXUZaURGRmrZsmX66aefdObMGRmGobJly6pBgwbq0qWLunTpkma1+mPHjmnPnj2SpDZt2qhBgwaZHmPx4sVKSUmRr69vulOvz507p//85z9yd3fXsGHD5ObmpuTkZG3evFkrVqxQaGioEhISVLNmTfXt21d9+/aVh4eHXR8nT57UggULdPjwYUVGRqp06dJ68MEH9eKLL6pp06aZ1vfBBx+Y2y+++KJatGiRafucCAsL08qVKxUcHKzz58/LMAxVqlRJrVq1Up8+fbJ8DyXnvu/pveeGYWjbtm367rvvdOLECV28eFEVKlTQo48+quHDh6t69eppjhEYGKjTp09Lkvbt22c+v3//fi1cuNCube3atdWxY8csf8+cWrRokZKSkiRJ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" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</section>
+</section>
+<section id="summary-1" class="level2" data-number="7.12">
+<h2 data-number="7.12" class="anchored" data-anchor-id="summary-1"><span class="header-section-number">7.12</span> Summary</h2>
+<p>All the examples reported in the following tables are applied on inputRDD that is an RDD of integers containing the following elements (i.e., values): <code>[1,2,3,3]</code>.</p>
+<table class="table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 86%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Action</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>collect()</code></td>
+<td>Return a python list containing all the elements of the RDD on which it is applied. The objects of the RDD and objects of the returned list are objects of the same class.</td>
+</tr>
+<tr class="even">
+<td><code>count()</code></td>
+<td>Return the number of elements of the RDD.</td>
+</tr>
+<tr class="odd">
+<td><code>countByValue()</code></td>
+<td>Return a Map object containing the information about the number of times each element occurs in the RDD.</td>
+</tr>
+<tr class="even">
+<td><code>take(num)</code></td>
+<td>Return a Python list containing the first <code>num</code> elements of the RDD. The objects of the RDD and objects of the returned list are objects of the same class.</td>
+</tr>
+<tr class="odd">
+<td><code>first()</code></td>
+<td>Return the first element of the RDD.</td>
+</tr>
+<tr class="even">
+<td><code>top(num)</code></td>
+<td>Return a Python list containing the top <code>num</code> elements of the RDD based on the default sort order/comparator of the objects. The objects of the RDD and objects of the returned list are objects of the same class.</td>
+</tr>
+<tr class="odd">
+<td><p><code>takeSample(withReplacement, num)</code></p>
+<p><code>takeSample(withReplacement, num, seed)</code></p></td>
+<td>Return a (Python) List containing a random sample of size <code>n</code> of the RDD. The objects of the RDD and objects of the returned list are objects of the same class.</td>
+</tr>
+<tr class="even">
+<td><code>reduce(f)</code></td>
+<td>Return a single Python object obtained by combining the values of the objects of the RDD by using a user provide function. The provided function must be associative and commutative The object returned by the method and the objects of the RDD belong to the same class.</td>
+</tr>
+<tr class="odd">
+<td><code>fold(zeroValue, op)</code></td>
+<td>Same as reduce but with the provided zero value.</td>
+</tr>
+<tr class="even">
+<td><code>Aggregate(zeroValue, seqOp, combOp)</code></td>
+<td>Similar to <code>reduce()</code> but used to return a different type.</td>
+</tr>
+</tbody>
+</table>
+<table class="table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 66%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Action</th>
+<th>Example</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>collect()</code></td>
+<td><code>inputRDD.collect()</code></td>
+<td><code>[1,2,3,3]</code></td>
+</tr>
+<tr class="even">
+<td><code>count()</code></td>
+<td><code>inputRDD.count()</code></td>
+<td><code>4</code></td>
+</tr>
+<tr class="odd">
+<td><code>countByValue()</code></td>
+<td><code>inputRDD.countByValue()</code></td>
+<td><code>[(1,1),</code> <code>(2,1),</code> <code>(3,2)]</code></td>
+</tr>
+<tr class="even">
+<td><code>take(num)</code></td>
+<td><code>inputRDD.take(2)</code></td>
+<td><code>[1,2]</code></td>
+</tr>
+<tr class="odd">
+<td><code>first()</code></td>
+<td><code>first()</code></td>
+<td><code>1</code></td>
+</tr>
+<tr class="even">
+<td><code>top(num)</code></td>
+<td><code>inputRDD.top(2)</code></td>
+<td><code>[3,3]</code></td>
+</tr>
+<tr class="odd">
+<td><p><code>takeSample(withReplacement, num)</code></p>
+<p><code>takeSample(withReplacement, num, seed)</code></p></td>
+<td><code>inputRDD.takeSample(False,1)</code></td>
+<td>Nondeterministic</td>
+</tr>
+<tr class="even">
+<td><code>reduce(f)</code></td>
+<td><p><code>inputRDD.reduce(lambda e1,e2: e1+e2)</code></p>
+<p>The passed function is the sum</p></td>
+<td><code>9</code></td>
+</tr>
+<tr class="odd">
+<td><code>fold(zeroValue, op)</code></td>
+<td><p><code>inputRDD.fold(0, lambda v1, v2: v1+v2)</code></p>
+<p>The passed function is the sum and the passed zeroValue is 0.</p></td>
+<td><code>9</code></td>
+</tr>
+<tr class="even">
+<td><code>Aggregate(zeroValue, seqOp, combOp)</code></td>
+<td><p><code>inputRDD.aggregate(</code> <code>zeroValue,</code> <code>lambda acc, e: (acc[0]+e, acc[1]+1),</code> <code>lambda p1, p2: (p1[0]+p2[0], p1[1]+p2[1])</code> <code>)</code></p>
+<p>Compute a pair of integers where the first one is the sum of the values of the RDD and the second the number of elements</p></td>
+<td><code>(9,4)</code></td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 
