@@ -217,3 +217,132 @@ concatPairRDD= nameMessPairRDD.foldByKey('', lambda m1, m2: m1+m2)
 :::
 
 ## CombineByKey transformation
+Create a new RDD of key-value pairs where there is one pair for each distinct key $k$ of the input RDD of key-value pairs. The value associated with the key $k$ in the new RDD of key-value pairs is computed by applying user-provided functions on the values associated with $k$ in the input RDD of key-value pairs: the user-provided function must be associative, otherwise the result depends how data are partitioned and analyzed.
+
+The data type of the new RDD of key-value pairs can be different with respect to the data type of the input RDD of key-value pairs.
+
+The combineByKey transformation is based on the `combineByKey(createCombiner, mergeValue, mergeCombiner)` method of the `RDD` class
+
+- The values of the input RDD of pairs are of type $V$
+- The values of the returned RDD of pairs are of type $U$
+- The type of the keys is $K$ for both RDDs of pairs
+
+The `createCombiner` function contains the code that is used to transform a single value (type $V$) of the input RDD of key-value pairs into a value of the data type (type $U$) of the output RDD of key-value pairs. It is used to transform the first value of each key in each partition to a value of type $U$.
+
+The `mergeValue` function contains the code that is used to combine one value of type $U$ with one value of type $V$: it is used in each partition to combine the initial values (type $V$) of each key with the intermediate ones (type $U$) of each key.
+
+The `mergeCombiner` function contains the code that is used to combine two values of type $U$: it is used to combine intermediate values of each key returned by the analysis of different partitions.
+
+The `combineByKey` function is more general than `reduceByKey` and `foldByKey` because the data types of the values of the input and the returned RDD of pairs can be different; for this reason, more functions must be implemented in this case.
+
+A shuffle operation is executed for computing the result of the `combineByKey()` transformation: the result/value for each group/key is computed from data stored in different input partitions.
+
+:::{.callout-note collapse="true"}
+## Example
+1. Create an RDD from a local python list containing the the following pairs: the key is the first name of a user and the value is his/her age
+    - `("Paolo", 40)`
+    - `("Giorgio", 22)`
+    - `("Paolo", 35)`
+2. Store the results in an output HDFS folder. The output contains one line for each name followed by the average age of the users with that name
+
+```python
+# Create the local python list
+nameAge = [ ("Paolo", 40), ("Giorgio", 22), ("Paolo", 35)]
+
+# Create the RDD of pairs from the local collection
+nameAgePairRDD = sc.parallelize(nameAge)
+
+# Compute the sum of ages and
+# the number of input pairs for each name (key)
+sumNumPerNamePairRDD = nameAgePairRDD.combineByKey(
+    lambda inputElem: (inputElem, 1),
+    lambda intermediateElem, inputElem: (intermediateElem[0]+inputElem, intermediateElem[1]+1),
+    lambda intermediateElem1, intermediateElem2: (intermediateElem1[0]+intermediateElem2[0], intermediateElem1[1]+intermediateElem2[1])
+)
+
+# Compute the average for each name
+avgPerNamePairRDD = sumNumPerNamePairRDD.map(lambda pair: (pair[0], pair[1][0]/pair[1][1]))
+
+# Store the result in an output folder
+avgPerNamePairRDD.saveAsTextFile(outputPath)
+```
+
+|||
+|-|----|
+| `lambda inputElem:` | Given an input value (an age), it returns a tuple containing (age,1) |
+| `lambda intermediateElem, inputElem:` | Given an input value (an age) and an intermediate value (*sum ages*, *num represented values*), it combines them and returns a new updated tuple (*sum ages*, *num represented values*) |
+| `lambda intermediateElem1, intermediateElem2:` | Given two intermediate result tuples (*sum ages*, *num represented values*), it combines them and returns a new updated tuple (*sum ages*, *num represented values*) |
+| `lambda pair:` | Compute the average age for each key (i.e., for each name) by combining *sum ages* and *num represented values*. Each input pair is characterized by a value that is a tuple containing (*sum ages*, *num represented values*). |
+
+:::
+
+## GroupByKey transformation
+Create a new RDD of key-value pairs where there is one pair for each distinct key $k$ of the input RDD of key-value pairs: the value associated with key $k$ in the new RDD of key-value pairs is the list of values associated with $k$ in the input RDD of key-value pairs.
+
+The groupByKey transformation is based on the `groupByKey()` method of the `RDD` class.
+
+If grouping values per key to perform then an aggregation such as sum or average over the values of each key then groupByKey is not the right choice: `reduceByKey`, `aggregateByKey`, or `combineByKey` provide better performances for associative and commutative aggregations; `groupByKey` is useful if an aggregation or compute a function that is not associative must be applied.
+
+A shuffle operation is executed for computing the result of the `groupByKey()` transformation: each group/key is associated with/is composed of values which are stored in different partitions of the input RDD.
+
+:::{.callout-note collapse="true"}
+## Example
+1. Create an RDD from a local python list containing the following pairs: the key is the first name of a user and the value is his/her age.
+    - `("Paolo", 40)`
+    - `("Giorgio", 22)`
+    - `("Paolo", 35)`
+2. Store the results in an output HDFS folder. The output contains one line for each name followed by the ages of all the users with that name.
+
+```python
+# Create the local python list
+nameAge = [ ("Paolo", 40), ("Giorgio", 22), ("Paolo", 35)]
+
+# Create the RDD of pairs from the local collection
+nameAgePairRDD = sc.parallelize(nameAge)
+
+# Create one group for each name with the list of associated ages
+agesPerNamePairRDD = nameAgePairRDD.groupByKey()
+
+# Store the result in an output folder
+agesPerNamePairRDD.mapValues(lambda listValues: list(listValues)).saveAsTextFile(outputPath)
+```
+
+|||
+|-|----|
+| `agesPerNamePairRDD` | In this RDD of key-value pairs each tuple is composed of a string (key of the pair) and a collection of integers (the value of the pair - a `ResultIterable` object) |
+| `.mapValues(lambda listValues: list(listValues))` | This part is used to format the content of the value part of each pair before storing the result in the output folder: this transforms a `ResultIterable` object to a Python list. Without this map the output will contain the pointers to `ResultIterable` objects instead of a readable list of integer values |
+:::
+
+## MapValues transformation
+Apply a function $f$ over the value of each pair of an input RDD or key-value pairs and return a new RDD of key-value pairs: one pair is created in the returned RDD for each input pair
+
+- The key of the created pair is equal to the key of the input pair
+- The value of the created pair is obtained by applying the function $f$ on the value of the input pair
+
+The data type of the values of the new RDD of key-value pairs can be different from the data type of the values of the input RDD of key-value pairs. The data type of the key is the same.
+
+The mapValues transformation is based on the `mapValues(f)` method of the `RDD` class: a function `f` is passed to the mapValues method, where `f` contains the code that is applied to transform each input value into the a new value that is stored in the RDD of key-value pairs. The retuned RDD of pairs contains a number of key-value pairs equal to the number of key-value pairs of the input RDD of pairs (the key part is not changed).
+
+:::{.callout-note collapse="true"}
+1. Create an RDD from a local python list containing the following pairs: the key is the first name of a user and the value is his/her age.
+    - `("Paolo", 40)`
+    - `("Giorgio", 22)`
+    - `("Paolo", 35)`
+2. Increase the age of each user (+1 year) and store the result in the HDFS file system, one output line per user.
+
+```python
+# Create the local python list
+nameAge = [ ("Paolo", 40), ("Giorgio", 22), ("Paolo", 35)]
+
+# Create the RDD of pairs from the local collection
+nameAgePairRDD = sc.parallelize(nameAge)
+
+# Increment age of all users
+plusOnePairRDD = nameAgePairRDD.mapValues(lambda age: age+1)
+
+# Save the result on disk
+plusOnePairRDD.saveAsTextFile(outputPath)
+```
+:::
+
+## FlatMapValues transformation
