@@ -288,9 +288,8 @@ errorsRDD = inputRDD.filter(lambda l: l.find('error')>=0)
 ```
 
 | | |
-|---|---|
+|-|---|
 | `lambda l: l.find('error')>=0` | This part of the code, which is based on a lambda expression, defines on the fly the function to apply. This part of the code is applied on each object of `inputRDD`: if it returns true then the current object is "stored" in the new `errorsRDD` RDD, otherwise the input object is discarded. |
-: {tbl-colwidths="[20,80]"}
 
 ### Solution based on function (`def`)
 ```python
@@ -308,7 +307,7 @@ errorsRDD = inputRDD.filter(myFunction)
 ```
 
 | | |
-|---|---|
+|-|---|
 | `def myFunction(l):` | When it is invoked, this function analyses the value of the parameter line and returns True if the string line contains the substring "error". Otherwise, it returns False. |
 | `.filter(myFunction)` | For each object `o` in `inputRDD`, the `myFunction` function is automatically invoked. If `myFunction` returns True, then `o` is stored in the new RDD `errorsRDD`. Otherwise, `o` is discarded. |
 : {tbl-colwidths="[20,80]"}
@@ -646,7 +645,8 @@ inputRDD1 = sc.parallelize(inputList1)
 inputList2 = [3,4,5]
 inputRDD2 = sc.parallelize(inputList2)
 
-# Create four new RDDs by using union, intersection, subtract, and cartesian
+# Create four new RDDs by using union, intersection, 
+# subtract, and cartesian
 outputUnionRDD = inputRDD1.union(inputRDD2)
 
 outputIntersectionRDD = inputRDD1.intersection(inputRDD2)
@@ -657,7 +657,7 @@ outputCartesianRDD = inputRDD1.cartesian(inputRDD2)
 ```
 
 | | |
-|---|---|
+|-|---|
 | `outputCartesianRDD` | Each element of the returned RDD is a pair (tuple) of integer elements. |
 
 :::
@@ -682,7 +682,7 @@ outputCartesianRDD = inputRDD1.cartesian(inputRDD2)
 ```
 
 | | |
-|---|---|
+|-|---|
 | `outputCartesianRDD` | Each element of the returned RDD is a pair (tuple) of integer elements. |
 
 :::
@@ -735,9 +735,9 @@ All the examples reported in the following tables are applied on an RDD of integ
 |                                     |                                                                                           |                   |
 |                                     | For each input element `x`, the set of elements with values from `x` to 3 are returned    |                   |
 +-------------------------------------+-------------------------------------------------------------------------------------------+-------------------+
-| `distinct()`                        | `distinct()`                                                                              | `[1,2,3]`       |
+| `distinct()`                        | `distinct()`                                                                              | `[1,2,3]`         |
 +-------------------------------------+-------------------------------------------------------------------------------------------+-------------------+
-| `sortBy(keyfunc)`                   | `sortBy(lambda v: v)`                                                                     | `[1,2,3,3]`    |
+| `sortBy(keyfunc)`                   | `sortBy(lambda v: v)`                                                                     | `[1,2,3,3]`       |
 |                                     |                                                                                           |                   |
 |                                     | Sort the input integer values in ascending order by using the standard integer sort order |                   |
 +-------------------------------------+-------------------------------------------------------------------------------------------+-------------------+
@@ -798,9 +798,9 @@ All the examples reported in the following tables are applied on an RDD of integ
 |                                     |                                                                                           |                   |
 |                                     | For each input element `x`, the set of elements with values from `x` to 3 are returned    |                   |
 +-------------------------------------+-------------------------------------------------------------------------------------------+-------------------+
-| `distinct()`                        | `distinct()`                                                                              | `[1,2,3]`       |
+| `distinct()`                        | `distinct()`                                                                              | `[1,2,3]`         |
 +-------------------------------------+-------------------------------------------------------------------------------------------+-------------------+
-| `sortBy(keyfunc)`                   | `sortBy(lambda v: v)`                                                                     | `[1,2,3,3]`    |
+| `sortBy(keyfunc)`                   | `sortBy(lambda v: v)`                                                                     | `[1,2,3,3]`       |
 |                                     |                                                                                           |                   |
 |                                     | Sort the input integer values in ascending order by using the standard integer sort order |                   |
 +-------------------------------------+-------------------------------------------------------------------------------------------+-------------------+
@@ -951,10 +951,10 @@ retrievedValues = inputRDD.collect()
 ```
 
 |||
-|-|-|
+|-|---|
 | `inputRDD` | It is distributed across the nodes of the cluster. It can be large and it is stored in the local disks of the nodes if it is needed.|
 | `retrievedValues` | It is a local python variable. It can only be stored in the main memory of the process/task associated with the Driver. Pay attention to the size of the list. Use the `collect()` action if and only if sure that the list is small. Otherwise, store the content of the RDD in a file by using the `saveAsTextFile` method. |
-: {tbl-colwidths="[20,80]"}
+
 :::
 
 ## Count action
@@ -1010,7 +1010,7 @@ namesOccurrences = namesRDD.countByValue()
 |||
 |-|-|
 | `namesOccurrences = namesRDD.countByValue()` | Also in this case, pay attention to the size of the returned dictionary (that is related to the number of distinct names in this case). Use the `countByValue()` action if and only if you are sure that the returned dictionary is small. Otherwise, use an appropriate chain of Spark’s transformations and write the final result in a file by using the `saveAsTextFile` method.
-: {tbl-colwidths="[20,80]"}
+
 :::
 
 ## Take action
@@ -1107,6 +1107,7 @@ inputRDD = sc.parallelize(inputList)
 # a local python list
 retrievedValues = inputRDD.takeOrdered(2)
 ```
+
 :::
 
 
@@ -1134,6 +1135,7 @@ inputRDD = sc.parallelize(inputList)
 # a local python list
 retrievedValues = inputRDD.takeOrdered(2,lambda s:len(s))
 ```
+
 :::
 
 ## TakeSample action
@@ -1157,6 +1159,7 @@ inputRDD = sc.parallelize(inputList)
 # a local python list
 randomValues= inputRDD.takeSample(True, 2)
 ```
+
 :::
 
 ## Reduce
@@ -1190,7 +1193,7 @@ sumValues = inputRDDReduce.reduce(lambda e1, e2: e1+e2)
 ```
 
 |||
-|-|----|
+|-|---|
 | `lambda e1, e2: e1+e2` | This lambda function combines two input integer elements at a time and returns theirs sum. |
 :::
 
@@ -1253,6 +1256,7 @@ inputRDDFold = sc.parallelize(inputListFold)
 # Concatenate the input strings
 finalString = inputRDDFold.fold('', lambda s1, s2: s1+s2)
 ```
+
 :::
 
 :::{.callout-tip}
@@ -1315,7 +1319,7 @@ sumCount = inRDD.aggregate(
 ```
 
 |||
-|-|----|
+|-|--|
 | `zeroValue(0,0)` | Instantiate the "zero" value |
 | `lambda acc, e: (acc[0]+e, acc[1]+1)` | Given a partition $p$ of the input RDD, this is the function that is used to combine the elements of partition $p$ with the accumulator of partition $p$ |
 | `acc` | It is a tupe object, initialized to the "zero" value |

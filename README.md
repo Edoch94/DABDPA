@@ -30,6 +30,12 @@ Install Miniconda (see [here](https://docs.conda.io/en/latest/miniconda.html) fo
 conda env create -f environment.yml
 ```
 
+Otherwise, you can create the environment using pip and the requirements.txt file
+
+```bash
+pip install -r requirements.txt
+```
+
 ## How to use
 This repository is structured as a Quarto project. The configuration file of this project is `./qproject/_quarto.yml`. 
 
@@ -45,7 +51,7 @@ conda activate DABDPA
 3. Launch the Quarto project render
 
 ```bash
-quarto render qproject
+quarto render qproject/
 ```
 
-Notice that the output of the project is a series of `.html` files, saved in the `./qproject/output` folder. The output type can be changed to Microsoft Word (`.docx`) or PDF (`.pdf`) files in the `format` section of the `./qproject/_quarto.yml` configuration file.
+Notice that the output of the project is a series of `.html` files, saved in the `./qproject/output` folder. The output type can be easily changed to Microsoft Word (`.docx`) or PDF (`.pdf`) files in the `format` section of the `./qproject/_quarto.yml` configuration file.
