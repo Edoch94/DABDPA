@@ -489,6 +489,7 @@ The sortByKey transformation is based on the `sortByKey()` method of the `RDD` c
 A shuffle operation is executed for computing the result of the `sortByKey()` transformation, since pairs from different partitions of the input RDD must be compared to sort the input pairs by key.
 
 :::{.callout-note collapse="true"}
+## Example
 1. Create an RDD from a local python list containing the pairs: the key is the first name of a user and the value is his/her age
     - `("Paolo", 40)`
     - `("Giorgio", 22)`
@@ -697,6 +698,448 @@ All the examples reported in the following tables are applied on an RDD of pairs
 +----------------------------+---------------------------------------------------------------------------+--------------------------------+
 | `sortByKey()`              | `sortByKey()`                                                             | `[("k1",2),("k3",4),("k3",6)]` |
 +----------------------------+---------------------------------------------------------------------------+--------------------------------+
+
+: {tbl-colwidths="[25,45,30]"}
+
+\elandscape
+
+:::
+
+# RDD-based programming
+## Transformations on two RDDs of key-value pairs
+Spark supports also some transformations that are applied on two RDDs of key-value pairs at the same time (e.g., `subtractByKey`, `join`, `coGroup`).
+
+## SubtractByKey transformation
+The goal is to create a new RDD of key-value pairs containing only the pairs of the first input RDD of pairs associated with a key that is not appearing as key in the pairs of the second input RDD or pairs. The two input RDD of pairs must have the same type of keys, but the data type of the values can be different. The data type of the new RDD of pairs is the same of the first input RDD of pairs.
+
+The subtractByKey transformation is based on the `subtractByKey(other)` method of the `RDD` class. The two input RDDs of pairs analyzed by `subtractByKey` are the one which the method is invoked on and the one passed as parameter (i.e., `other`).
+
+A shuffle operation is executed for computing the result of the `subtractByKey()` transformation, since keys from different partitions of the two input RDDs must be compared.
+
+:::{.callout-note collapse="true"}
+## Example
+1. Create two RDDs of key-value pairs from two local python lists
+    - First list – Profiles of the users of a blog `(username,age)`: `[("PaoloG",40),("Giorgio",22),("PaoloB",35)]`
+    - Second list – Banned users `(username,motivation)`: `[("PaoloB","spam"),("Giorgio","Vandalism")]`
+2. Create a new RDD of pairs containing only the profiles of the non-banned users.
+
+```python
+# Create the first local python list
+profiles = [("PaoloG",40),("Giorgio",22),("PaoloB",35)]
+
+# Create the RDD of pairs from the profiles local list
+profilesPairRDD = sc.parallelize (profiles)
+
+# Create the second local python list
+banned = [("PaoloB","spam"),("Giorgio","Vandalism")]
+
+# Create the RDD of pairs from the banned local list
+bannedPairRDD = sc.parallelize (banned)
+
+# Select the profiles of the “good” users
+selectedProfiles = profilesPairRDD.subtractByKey(bannedPairRDD)
+```
+
+:::
+
+## Join transformation
+The goal is to Join the key-value pairs of two RDDs of key-value pairs based on the value of the key of the pairs: each pair of the input RDD of pairs is combined with all the pairs of the other RDD of pairs with the same key. The new RDD of key-value pairs has the same key data type of the input RDDs of pairs, and has a tuple as value (the pair of values of the two joined input pairs). The two input RDDs of key-value pairs must have the same type of keys, but the data types of the values can be different.
+
+The join transformation is based on the `join(other)` method of the `RDD` class: the two input RDDs of pairs analyzed by join are the one which the method is invoked on and the one passed as parameter (i.e., `other`).
+
+A shuffle operation is executed for computing the result of the `join()` transformation, since keys from different partitions of the two input RDDs must be compared and values from different partitions must be retrieved.
+
+:::{.callout-note collapse="true"}
+## Example
+1. Create two RDDs of key-value pairs from two local python lists
+    - First list – List of questions (QuestionId, Text of the question): `[(1,"What is ...?"),(2,"Who is ...?")]`
+    - Second list – List of answers (QuestionId, Text of the answer): `[(1,"It is a car"),(1,"It is a byke"),(2,"She is Jenny")]`
+2. Create a new RDD of pairs to associate each question with its answers: one pair for each possible pair (question-answer)
+
+```python
+# Create the first local Python list
+questions= [(1,"What is ...?"),(2,"Who is ...?")]
+
+# Create the RDD of pairs from the local list
+questionsPairRDD = sc.parallelize(questions)
+
+# Create the second local python list
+answers = [(1,"It is a car"),(1,"It is a byke"),(2,"She is Jenny")]
+
+# Create the RDD of pairs from the local list
+answersPairRDD = sc.parallelize(answers)
+
+# Join questions with answers
+joinPairRDD = questionsPairRDD.join(answersPairRDD)
+```
+
+|||
+|-|---|
+| `joinPairRDD` | The key part of the returned RDD of pairs is an integer number. The value part of the returned RDD of pairs is a tuple containing two values: (question,answer). |
+
+:::
+
+## CoGroup transformation
+The goal is to associate each key $k$ of the two input RDDs of key-value pairs with 
+
+- The list of values associated with $k$ in the first input RDD of pairs
+- The list of values associated with $k$ in the second input RDD of pairs
+
+The new RDD of key-value pairs has the same key data type of the two input RDDs of pairs, and has a tuple as value (the two lists of values of the two input RDDs of pairs). The two input RDDs of key-value pairs must have the same type of keys, but the data types of the values can be different.
+
+The cogroup transformation is based on the `cogroup(other)` method of the `RDD` class: the two input RDDs of pairs analyzed by cogroup are the one which the method is invoked on and the one passed as parameter (i.e., `other`).
+
+A shuffle operation is executed for computing the result of the `cogroup()` transformation, since keys from different partitions of the two input RDDs must be compared and values from different partitions must be retrieved.
+
+:::{.callout-note collapse="true"}
+## Example
+1. Create two RDDs of key-value pairs from two local python lists
+    - First list – List of liked movies `(userId,likedMovies)`: `[(1,"Star Trek"),(1,"Forrest Gump"),(2,"Forrest Gump")]`
+    - Second list – List of liked directors `(userId,likedDirector)`: `[(1,"Woody Allen"),(2,"Quentin Tarantino"),(2,"Alfred Hitchcock")]`
+2. Create a new RDD of pairs containing one pair for each userId (key) associated with
+    - The list of liked movies
+    - The list of liked directors
+
+*Inputs*
+- `[(1,"Star Trek"),(1,"Forrest Gump"),(2,"Forrest Gump")]`
+- `[(1,"Woody Allen"),(2,"Quentin Tarantino"),(2,"Alfred Hitchcock")]`
+
+*Output*
+- `(1,(["Star Trek","Forrest Gump"],["Woody Allen"]))`
+- `(2,(["Forrest Gump"],["Quentin Tarantino","Alfred Hitchcock"]))`
+
+```python
+# Create the first local python list
+movies= [
+    (1,"Star Trek"),
+    (1,"Forrest Gump"),
+    (2,"Forrest Gump")
+]
+
+# Create the RDD of pairs from the first local list
+moviesPairRDD = sc.parallelize(movies)
+
+# Create the second local python list
+directors = [
+    (1,"Woody Allen"),
+    (2,"Quentin Tarantino"),
+    (2,"Alfred Hitchcock")
+]
+
+# Create the RDD of pairs from the second local list
+directorsPairRDD = sc.parallelize(directors)
+
+# Cogroup movies and directors per user
+cogroupPairRDD = moviesPairRDD.cogroup(directorsPairRDD)
+```
+
+|||
+|-|---|
+| `cogroupPairRDD` | Notice that the value part of the returned tuples is a tuple containing two lists: the first value contains the list of movies (iterable) liked by a user; the second value contains the list of directors (iterable) liked by a user. |
+
+:::
+
+## Summary
+All the examples reported in the following tables are applied on the following two RDDs of key-value pairs
+
+- `inputRDD1`: `[('k1',2),('k3',4),('k3',6)]`
+- `inputRDD2`: `[('k3',9)]`
+
+::::{.content-visible when-format="html"}
+:::{.column-page}
+
+**Purposes**
+
++------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Transformation         | Purpose                                                                                                                                                                                                                                                     |
++========================+=============================================================================================================================================================================================================================================================+
+| `subtractByKey(other)` | Return a new RDD of key-value pairs. The returned pairs are those of input RDD on which the method is invoked such that the key part does not occur in the keys of the RDD that is passed as parameter. The values are not considered to take the decision. |
++------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `join(other)`          | Return a new RDD of pairs corresponding to join of the two input RDDs. The join is based on the value of the key.                                                                                                                                           |
++------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `cogroup(other)`       | For each key $k$ in one of the two input RDDs of pairs, return a pair $(k, tuple)$, where tuple contains:                                                                                                                                                   |
+|                        |                                                                                                                                                                                                                                                             |
+|                        | - the list (iterable) of values of the first input RDD associated with key $k$;                                                                                                                                                                             |
+|                        | - the list (iterable) of values of the second input RDD associated with key $k$.                                                                                                                                                                            |
++------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+: {tbl-colwidths="[25,75]"}
+
+**Examples**
+
++------------------------+--------------------------------------+----------------------------------------+
+| Transformation         | Example                              | Result                                 |
++========================+======================================+========================================+
+| `subtractByKey(other)` | `inputRDD1.subtractByKey(inputRDD2)` | `[('k1',2)]`                           |
++------------------------+--------------------------------------+----------------------------------------+
+| `join(other)`          | `inputRDD1.join(inputRDD2)`          | `[('k3',(4,9)),('k3',(6,9))]`          |
++------------------------+--------------------------------------+----------------------------------------+
+| `cogroup(other)`       | `inputRDD1.cogroup(inputRDD2)`       | `[('k1',([2],[])),('k3',([4,6],[9]))]` |
+|                        |                                      |                                        |
+|                        |                                      |                                        |
+|                        |                                      |                                        |
++------------------------+--------------------------------------+----------------------------------------+
+
+: {tbl-colwidths="[25,45,30]"}
+
+:::
+::::
+
+:::{.content-visible when-format="pdf"}
+
+\newpage
+
+\blandscape
+
+**Purposes**
+
++------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Transformation         | Purpose                                                                                                                                                                                                                                                     |
++========================+=============================================================================================================================================================================================================================================================+
+| `subtractByKey(other)` | Return a new RDD of key-value pairs. The returned pairs are those of input RDD on which the method is invoked such that the key part does not occur in the keys of the RDD that is passed as parameter. The values are not considered to take the decision. |
++------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `join(other)`          | Return a new RDD of pairs corresponding to join of the two input RDDs. The join is based on the value of the key.                                                                                                                                           |
++------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `cogroup(other)`       | For each key $k$ in one of the two input RDDs of pairs, return a pair $(k, tuple)$, where tuple contains:                                                                                                                                                   |
+|                        |                                                                                                                                                                                                                                                             |
+|                        | - the list (iterable) of values of the first input RDD associated with key $k$;                                                                                                                                                                             |
+|                        | - the list (iterable) of values of the second input RDD associated with key $k$.                                                                                                                                                                            |
++------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+: {tbl-colwidths="[25,75]"}
+
+\newpage
+
+**Examples**
+
++------------------------+--------------------------------------+----------------------------------------+
+| Transformation         | Example                              | Result                                 |
++========================+======================================+========================================+
+| `subtractByKey(other)` | `inputRDD1.subtractByKey(inputRDD2)` | `[('k1',2)]`                           |
++------------------------+--------------------------------------+----------------------------------------+
+| `join(other)`          | `inputRDD1.join(inputRDD2)`          | `[('k3',(4,9)),('k3',(6,9))]`          |
++------------------------+--------------------------------------+----------------------------------------+
+| `cogroup(other)`       | `inputRDD1.cogroup(inputRDD2)`       | `[('k1',([2],[])),('k3',([4,6],[9]))]` |
+|                        |                                      |                                        |
+|                        |                                      |                                        |
+|                        |                                      |                                        |
++------------------------+--------------------------------------+----------------------------------------+
+
+: {tbl-colwidths="[25,45,30]"}
+
+\elandscape
+
+:::
+
+# Actions on RDDs of key-value pairs
+Spark supports also some specific actions on RDDs of key-value pairs (e.g., `countByKey`, `collectAsMap`, `lookup`).
+
+## CountByKey action
+The countByKey action returns a local python dictionary containing the information about the number of elements associated with each key in the input RDD of key-value pairs (i.e., the number of times each key occurs in the input RDD).
+
+:::{.callout-warning}
+Pay attention to the number of distinct keys of the input RDD of pairs: if the number of distinct keys is large, the result of the action cannot be stored in a local variable of the Driver.
+:::
+
+The countBykey action is based on the `countBykey()` method of the `RDD` class. Notice that data are sent on the network to compute the final result.
+
+:::{.callout-note collapse="true"}
+## Examples
+1. Create an RDD of pairs from the following python list (each pair contains a movie and the rating given by someone to that movie): `[("Forrest Gump",4),("Star Trek",5),("Forrest Gump",3)]`;
+2. Compute the number of ratings for each movie.
+
+```python
+# Create the local python list
+movieRating= [
+    ("Forrest Gump",4),
+    ("Star Trek",5),
+    ("Forrest Gump",3)
+]
+
+# Create the RDD of pairs from the local collection
+movieRatingRDD = sc.parallelize(movieRating)
+
+# Compute the number of rating for each movie
+movieNumRatings = movieRatingRDD.countByKey()
+
+# Print the result on the standard output
+print(movieNumRatings)
+```
+
+|||
+|-|---|
+| `movieNumRatings` | Pay attention to the size of the returned local python dictionary (i.e., in this case, the number of distinct movies). |
+
+:::
+
+## CollectAsMap action
+The collectAsMap action returns a local dictionary containing the same pairs of the considered input RDD of pairs. Pay attention to the size of the returned RDD: data are sent on the network.
+
+The collectAsMap action is based on the `collectAsMap()` method of the `RDD` class.
+
+:::{.callout-warning}
+Pay attention that the collectAsMap action returns a dictionary object, and a dictionary cannot contain duplicate keys: each key can be associated with at most one value, and if the input RDD of pairs contains more than one pair with the same key, only one of those pairs is stored in the returned local python dictionary (usually, the last one occurring in the input RDD of pairs).
+:::
+
+Use collectAsMap only if sure that each key appears only once in the input RDD of key-value pairs.
+
+The `collectAsMap()` method returns a local dictionary while `collect()` return a list of key-value pairs (i.e., a list of tuples). Notice that the list of pairs returned by `collect()` can contain more than one pair associated with the same key.
+
+:::{.callout-note collapse="true"}
+## Example
+1. Create an RDD of pairs from the following python list (each pair contains a userId and the name of the user): `[("User1","Paolo"),("User2","Luca"),("User3","Daniele")]`;
+2. Retrieve the pairs of the created RDD of pairs and store them in a local python dictionary that is instantiated in the Driver.
+
+```python
+# Create the local python list
+users = [
+    ("User1","Paolo"),
+    ("User2","Luca"),
+    ("User3","Daniele")
+]
+
+#Create the RDD of pairs from the local list
+usersRDD = sc.parallelize(users)
+
+# Retrieve the content of usersRDD and store it in a
+# local python dictionary
+retrievedPairs = usersRDD.collectAsMap()
+
+# Print the result on the standard output
+print(retrievedPairs)
+```
+
+|||
+|-|---|
+| `retrievedPairs` | Pay attention to the size of the returned local python dictionary (i.e., in this case, the number of distinct users). |
+
+:::
+
+## Lookup action
+The lookup($k$) action returns a local python list containing the values of the pairs of the input RDD associated with the key $k$ specified as parameter.
+
+The lookup action is based on the `lookup(key)` method of the `RDD` class.
+
+:::{.callout-note collapse="true"}
+1. Create an RDD of pairs from the following python list (each pair contains a movie and the rating given by someone to that movie): `[("Forrest Gump",4),("Star Trek",5),("Forrest Gump",3)]`
+2. Retrieve the ratings associated with the movie "Forrest Gump" and store them in a local python list in the Driver.
+
+```python
+# Create the local python list
+movieRating= [("Forrest Gump",4),("Star Trek",5),("Forrest Gump",3)]
+
+# Create the RDD of pairs from the local collection
+movieRatingRDD = sc.parallelize(movieRating)
+
+# Select the ratings associated with “Forrest Gump”
+movieRatings = movieRatingRDD.lookup("Forrest Gump")
+
+# Print the result on the standard output
+print(movieRatings)
+```
+
+|||
+|-|---|
+| `movieRatings` | Pay attention to the size of the returned local list (i.e., in this case, the number of ratings associated with "Forrest Gump"). |
+
+:::
+
+## Summary
+All the examples reported in the following tables are applied on the following RDD of key-value pairs:
+
+- `inputRDD`: `[('k1',2),('k3',4),('k3',6)]`
+
+::::{.content-visible when-format="html"}
+:::{.column-page}
+
+**Purposes**
+
++------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| Transformation   | Purpose                                                                                                                     |
++==================+=============================================================================================================================+
+| `countByKey()`   | Return a local python dictionary containing the number of elements in the input RDD for each key of the input RDD of pairs. |
++------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| `collectAsMap()` | Return a local python dictionary containing the pairs of the input RDD of pairs.                                            |
+|                  |                                                                                                                             |
+|                  |                                                                                                                             |
+|                  |                                                                                                                             |
+|                  |                                                                                                                             |
+|                  |                                                                                                                             |
+|                  |                                                                                                                             |
++------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| `lookup(key)`    | Return a local python list containing all the values associated with the key specified as parameter.                        |
++------------------+-----------------------------------------------------------------------------------------------------------------------------+
+
+: {tbl-colwidths="[25,75]"}
+
+**Examples**
+
++------------------+---------------------------+---------------------------------------------------------------+
+| Transformation   | Example                   | Result                                                        |
++==================+===========================+===============================================================+
+| `countByKey()`   | `inputRDD.countByKey()`   | `{('k1',1),('K3',2)}`                                         |
++------------------+---------------------------+---------------------------------------------------------------+
+| `collectAsMap()` | `inputRDD.collectAsMap()` | `{('k1',2),('k3',6)}`                                         |
+|                  |                           |                                                               |
+|                  |                           | Or                                                            |
+|                  |                           |                                                               |
+|                  |                           | `{('k1',2),('k3',4)}`                                         |
+|                  |                           |                                                               |
+|                  |                           | Depending on the order of the pairs in the input RDD of pairs |
++------------------+---------------------------+---------------------------------------------------------------+
+| `lookup(key)`    | `inputRDD.lookup('k3')`   | `[4,6]`                                                       |
++------------------+---------------------------+---------------------------------------------------------------+
+
+: {tbl-colwidths="[25,45,30]"}
+
+:::
+::::
+
+:::{.content-visible when-format="pdf"}
+
+\newpage
+
+\blandscape
+
+**Purposes**
+
++------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| Transformation   | Purpose                                                                                                                     |
++==================+=============================================================================================================================+
+| `countByKey()`   | Return a local python dictionary containing the number of elements in the input RDD for each key of the input RDD of pairs. |
++------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| `collectAsMap()` | Return a local python dictionary containing the pairs of the input RDD of pairs.                                            |
+|                  |                                                                                                                             |
+|                  |                                                                                                                             |
+|                  |                                                                                                                             |
+|                  |                                                                                                                             |
+|                  |                                                                                                                             |
+|                  |                                                                                                                             |
++------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| `lookup(key)`    | Return a local python list containing all the values associated with the key specified as parameter.                        |
++------------------+-----------------------------------------------------------------------------------------------------------------------------+
+
+: {tbl-colwidths="[25,75]"}
+
+\newpage
+
+**Examples**
+
++------------------+---------------------------+---------------------------------------------------------------+
+| Transformation   | Example                   | Result                                                        |
++==================+===========================+===============================================================+
+| `countByKey()`   | `inputRDD.countByKey()`   | `{('k1',1),('K3',2)}`                                         |
++------------------+---------------------------+---------------------------------------------------------------+
+| `collectAsMap()` | `inputRDD.collectAsMap()` | `{('k1',2),('k3',6)}`                                         |
+|                  |                           |                                                               |
+|                  |                           | Or                                                            |
+|                  |                           |                                                               |
+|                  |                           | `{('k1',2),('k3',4)}`                                         |
+|                  |                           |                                                               |
+|                  |                           | Depending on the order of the pairs in the input RDD of pairs |
++------------------+---------------------------+---------------------------------------------------------------+
+| `lookup(key)`    | `inputRDD.lookup('k3')`   | `[4,6]`                                                       |
++------------------+---------------------------+---------------------------------------------------------------+
 
 : {tbl-colwidths="[25,45,30]"}
 

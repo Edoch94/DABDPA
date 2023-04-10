@@ -2634,6 +2634,21 @@ vertical-align: -.125em;
   <li><a href="#sortbykey-transformation" id="toc-sortbykey-transformation" class="nav-link" data-scroll-target="#sortbykey-transformation"><span class="toc-section-number">5.9</span>  SortByKey transformation</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="toc-section-number">5.10</span>  Summary</a></li>
   </ul></li>
+  <li><a href="#rdd-based-programming" id="toc-rdd-based-programming" class="nav-link" data-scroll-target="#rdd-based-programming"><span class="toc-section-number">6</span>  RDD-based programming</a>
+  <ul class="collapse">
+  <li><a href="#transformations-on-two-rdds-of-key-value-pairs" id="toc-transformations-on-two-rdds-of-key-value-pairs" class="nav-link" data-scroll-target="#transformations-on-two-rdds-of-key-value-pairs"><span class="toc-section-number">6.1</span>  Transformations on two RDDs of key-value pairs</a></li>
+  <li><a href="#subtractbykey-transformation" id="toc-subtractbykey-transformation" class="nav-link" data-scroll-target="#subtractbykey-transformation"><span class="toc-section-number">6.2</span>  SubtractByKey transformation</a></li>
+  <li><a href="#join-transformation" id="toc-join-transformation" class="nav-link" data-scroll-target="#join-transformation"><span class="toc-section-number">6.3</span>  Join transformation</a></li>
+  <li><a href="#cogroup-transformation" id="toc-cogroup-transformation" class="nav-link" data-scroll-target="#cogroup-transformation"><span class="toc-section-number">6.4</span>  CoGroup transformation</a></li>
+  <li><a href="#summary-1" id="toc-summary-1" class="nav-link" data-scroll-target="#summary-1"><span class="toc-section-number">6.5</span>  Summary</a></li>
+  </ul></li>
+  <li><a href="#actions-on-rdds-of-key-value-pairs" id="toc-actions-on-rdds-of-key-value-pairs" class="nav-link" data-scroll-target="#actions-on-rdds-of-key-value-pairs"><span class="toc-section-number">7</span>  Actions on RDDs of key-value pairs</a>
+  <ul class="collapse">
+  <li><a href="#countbykey-action" id="toc-countbykey-action" class="nav-link" data-scroll-target="#countbykey-action"><span class="toc-section-number">7.1</span>  CountByKey action</a></li>
+  <li><a href="#collectasmap-action" id="toc-collectasmap-action" class="nav-link" data-scroll-target="#collectasmap-action"><span class="toc-section-number">7.2</span>  CollectAsMap action</a></li>
+  <li><a href="#lookup-action" id="toc-lookup-action" class="nav-link" data-scroll-target="#lookup-action"><span class="toc-section-number">7.3</span>  Lookup action</a></li>
+  <li><a href="#summary-2" id="toc-summary-2" class="nav-link" data-scroll-target="#summary-2"><span class="toc-section-number">7.4</span>  Summary</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -3315,7 +3330,7 @@ Example
 <i class="callout-icon"></i>
 </div>
 <div class="callout-caption-container flex-fill">
-Note
+Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -3472,6 +3487,515 @@ Note
 <td><code>sortByKey()</code></td>
 <td><code>sortByKey()</code></td>
 <td><code>[(&quot;k1&quot;,2),(&quot;k3&quot;,4),(&quot;k3&quot;,6)]</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+<section id="rdd-based-programming" class="level1 page-columns page-full" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> RDD-based programming</h1>
+<section id="transformations-on-two-rdds-of-key-value-pairs" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="transformations-on-two-rdds-of-key-value-pairs"><span class="header-section-number">6.1</span> Transformations on two RDDs of key-value pairs</h2>
+<p>Spark supports also some transformations that are applied on two RDDs of key-value pairs at the same time (e.g., <code>subtractByKey</code>, <code>join</code>, <code>coGroup</code>).</p>
+</section>
+<section id="subtractbykey-transformation" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="subtractbykey-transformation"><span class="header-section-number">6.2</span> SubtractByKey transformation</h2>
+<p>The goal is to create a new RDD of key-value pairs containing only the pairs of the first input RDD of pairs associated with a key that is not appearing as key in the pairs of the second input RDD or pairs. The two input RDD of pairs must have the same type of keys, but the data type of the values can be different. The data type of the new RDD of pairs is the same of the first input RDD of pairs.</p>
+<p>The subtractByKey transformation is based on the <code>subtractByKey(other)</code> method of the <code>RDD</code> class. The two input RDDs of pairs analyzed by <code>subtractByKey</code> are the one which the method is invoked on and the one passed as parameter (i.e., <code>other</code>).</p>
+<p>A shuffle operation is executed for computing the result of the <code>subtractByKey()</code> transformation, since keys from different partitions of the two input RDDs must be compared.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create two RDDs of key-value pairs from two local python lists
+<ul>
+<li>First list – Profiles of the users of a blog <code>(username,age)</code>: <code>[(&quot;PaoloG&quot;,40),(&quot;Giorgio&quot;,22),(&quot;PaoloB&quot;,35)]</code></li>
+<li>Second list – Banned users <code>(username,motivation)</code>: <code>[(&quot;PaoloB&quot;,&quot;spam&quot;),(&quot;Giorgio&quot;,&quot;Vandalism&quot;)]</code></li>
+</ul></li>
+<li>Create a new RDD of pairs containing only the profiles of the non-banned users.</li>
+</ol>
+<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># Create the first local python list</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>profiles <span class="op">=</span> [(<span class="st">&quot;PaoloG&quot;</span>,<span class="dv">40</span>),(<span class="st">&quot;Giorgio&quot;</span>,<span class="dv">22</span>),(<span class="st">&quot;PaoloB&quot;</span>,<span class="dv">35</span>)]</span>
+<span id="cb14-3"><a href="#cb14-3"></a></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="co"># Create the RDD of pairs from the profiles local list</span></span>
+<span id="cb14-5"><a href="#cb14-5"></a>profilesPairRDD <span class="op">=</span> sc.parallelize (profiles)</span>
+<span id="cb14-6"><a href="#cb14-6"></a></span>
+<span id="cb14-7"><a href="#cb14-7"></a><span class="co"># Create the second local python list</span></span>
+<span id="cb14-8"><a href="#cb14-8"></a>banned <span class="op">=</span> [(<span class="st">&quot;PaoloB&quot;</span>,<span class="st">&quot;spam&quot;</span>),(<span class="st">&quot;Giorgio&quot;</span>,<span class="st">&quot;Vandalism&quot;</span>)]</span>
+<span id="cb14-9"><a href="#cb14-9"></a></span>
+<span id="cb14-10"><a href="#cb14-10"></a><span class="co"># Create the RDD of pairs from the banned local list</span></span>
+<span id="cb14-11"><a href="#cb14-11"></a>bannedPairRDD <span class="op">=</span> sc.parallelize (banned)</span>
+<span id="cb14-12"><a href="#cb14-12"></a></span>
+<span id="cb14-13"><a href="#cb14-13"></a><span class="co"># Select the profiles of the “good” users</span></span>
+<span id="cb14-14"><a href="#cb14-14"></a>selectedProfiles <span class="op">=</span> profilesPairRDD.subtractByKey(bannedPairRDD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="join-transformation" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="join-transformation"><span class="header-section-number">6.3</span> Join transformation</h2>
+<p>The goal is to Join the key-value pairs of two RDDs of key-value pairs based on the value of the key of the pairs: each pair of the input RDD of pairs is combined with all the pairs of the other RDD of pairs with the same key. The new RDD of key-value pairs has the same key data type of the input RDDs of pairs, and has a tuple as value (the pair of values of the two joined input pairs). The two input RDDs of key-value pairs must have the same type of keys, but the data types of the values can be different.</p>
+<p>The join transformation is based on the <code>join(other)</code> method of the <code>RDD</code> class: the two input RDDs of pairs analyzed by join are the one which the method is invoked on and the one passed as parameter (i.e., <code>other</code>).</p>
+<p>A shuffle operation is executed for computing the result of the <code>join()</code> transformation, since keys from different partitions of the two input RDDs must be compared and values from different partitions must be retrieved.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create two RDDs of key-value pairs from two local python lists
+<ul>
+<li>First list – List of questions (QuestionId, Text of the question): <code>[(1,&quot;What is ...?&quot;),(2,&quot;Who is ...?&quot;)]</code></li>
+<li>Second list – List of answers (QuestionId, Text of the answer): <code>[(1,&quot;It is a car&quot;),(1,&quot;It is a byke&quot;),(2,&quot;She is Jenny&quot;)]</code></li>
+</ul></li>
+<li>Create a new RDD of pairs to associate each question with its answers: one pair for each possible pair (question-answer)</li>
+</ol>
+<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># Create the first local Python list</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>questions<span class="op">=</span> [(<span class="dv">1</span>,<span class="st">&quot;What is ...?&quot;</span>),(<span class="dv">2</span>,<span class="st">&quot;Who is ...?&quot;</span>)]</span>
+<span id="cb15-3"><a href="#cb15-3"></a></span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="co"># Create the RDD of pairs from the local list</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a>questionsPairRDD <span class="op">=</span> sc.parallelize(questions)</span>
+<span id="cb15-6"><a href="#cb15-6"></a></span>
+<span id="cb15-7"><a href="#cb15-7"></a><span class="co"># Create the second local python list</span></span>
+<span id="cb15-8"><a href="#cb15-8"></a>answers <span class="op">=</span> [(<span class="dv">1</span>,<span class="st">&quot;It is a car&quot;</span>),(<span class="dv">1</span>,<span class="st">&quot;It is a byke&quot;</span>),(<span class="dv">2</span>,<span class="st">&quot;She is Jenny&quot;</span>)]</span>
+<span id="cb15-9"><a href="#cb15-9"></a></span>
+<span id="cb15-10"><a href="#cb15-10"></a><span class="co"># Create the RDD of pairs from the local list</span></span>
+<span id="cb15-11"><a href="#cb15-11"></a>answersPairRDD <span class="op">=</span> sc.parallelize(answers)</span>
+<span id="cb15-12"><a href="#cb15-12"></a></span>
+<span id="cb15-13"><a href="#cb15-13"></a><span class="co"># Join questions with answers</span></span>
+<span id="cb15-14"><a href="#cb15-14"></a>joinPairRDD <span class="op">=</span> questionsPairRDD.join(answersPairRDD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>joinPairRDD</code></td>
+<td>The key part of the returned RDD of pairs is an integer number. The value part of the returned RDD of pairs is a tuple containing two values: (question,answer).</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="cogroup-transformation" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="cogroup-transformation"><span class="header-section-number">6.4</span> CoGroup transformation</h2>
+<p>The goal is to associate each key <span class="math inline">\(k\)</span> of the two input RDDs of key-value pairs with</p>
+<ul>
+<li>The list of values associated with <span class="math inline">\(k\)</span> in the first input RDD of pairs</li>
+<li>The list of values associated with <span class="math inline">\(k\)</span> in the second input RDD of pairs</li>
+</ul>
+<p>The new RDD of key-value pairs has the same key data type of the two input RDDs of pairs, and has a tuple as value (the two lists of values of the two input RDDs of pairs). The two input RDDs of key-value pairs must have the same type of keys, but the data types of the values can be different.</p>
+<p>The cogroup transformation is based on the <code>cogroup(other)</code> method of the <code>RDD</code> class: the two input RDDs of pairs analyzed by cogroup are the one which the method is invoked on and the one passed as parameter (i.e., <code>other</code>).</p>
+<p>A shuffle operation is executed for computing the result of the <code>cogroup()</code> transformation, since keys from different partitions of the two input RDDs must be compared and values from different partitions must be retrieved.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create two RDDs of key-value pairs from two local python lists
+<ul>
+<li>First list – List of liked movies <code>(userId,likedMovies)</code>: <code>[(1,&quot;Star Trek&quot;),(1,&quot;Forrest Gump&quot;),(2,&quot;Forrest Gump&quot;)]</code></li>
+<li>Second list – List of liked directors <code>(userId,likedDirector)</code>: <code>[(1,&quot;Woody Allen&quot;),(2,&quot;Quentin Tarantino&quot;),(2,&quot;Alfred Hitchcock&quot;)]</code></li>
+</ul></li>
+<li>Create a new RDD of pairs containing one pair for each userId (key) associated with
+<ul>
+<li>The list of liked movies</li>
+<li>The list of liked directors</li>
+</ul></li>
+</ol>
+<p><em>Inputs</em> - <code>[(1,&quot;Star Trek&quot;),(1,&quot;Forrest Gump&quot;),(2,&quot;Forrest Gump&quot;)]</code> - <code>[(1,&quot;Woody Allen&quot;),(2,&quot;Quentin Tarantino&quot;),(2,&quot;Alfred Hitchcock&quot;)]</code></p>
+<p><em>Output</em> - <code>(1,([&quot;Star Trek&quot;,&quot;Forrest Gump&quot;],[&quot;Woody Allen&quot;]))</code> - <code>(2,([&quot;Forrest Gump&quot;],[&quot;Quentin Tarantino&quot;,&quot;Alfred Hitchcock&quot;]))</code></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Create the first local python list</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>movies<span class="op">=</span> [</span>
+<span id="cb16-3"><a href="#cb16-3"></a>    (<span class="dv">1</span>,<span class="st">&quot;Star Trek&quot;</span>),</span>
+<span id="cb16-4"><a href="#cb16-4"></a>    (<span class="dv">1</span>,<span class="st">&quot;Forrest Gump&quot;</span>),</span>
+<span id="cb16-5"><a href="#cb16-5"></a>    (<span class="dv">2</span>,<span class="st">&quot;Forrest Gump&quot;</span>)</span>
+<span id="cb16-6"><a href="#cb16-6"></a>]</span>
+<span id="cb16-7"><a href="#cb16-7"></a></span>
+<span id="cb16-8"><a href="#cb16-8"></a><span class="co"># Create the RDD of pairs from the first local list</span></span>
+<span id="cb16-9"><a href="#cb16-9"></a>moviesPairRDD <span class="op">=</span> sc.parallelize(movies)</span>
+<span id="cb16-10"><a href="#cb16-10"></a></span>
+<span id="cb16-11"><a href="#cb16-11"></a><span class="co"># Create the second local python list</span></span>
+<span id="cb16-12"><a href="#cb16-12"></a>directors <span class="op">=</span> [</span>
+<span id="cb16-13"><a href="#cb16-13"></a>    (<span class="dv">1</span>,<span class="st">&quot;Woody Allen&quot;</span>),</span>
+<span id="cb16-14"><a href="#cb16-14"></a>    (<span class="dv">2</span>,<span class="st">&quot;Quentin Tarantino&quot;</span>),</span>
+<span id="cb16-15"><a href="#cb16-15"></a>    (<span class="dv">2</span>,<span class="st">&quot;Alfred Hitchcock&quot;</span>)</span>
+<span id="cb16-16"><a href="#cb16-16"></a>]</span>
+<span id="cb16-17"><a href="#cb16-17"></a></span>
+<span id="cb16-18"><a href="#cb16-18"></a><span class="co"># Create the RDD of pairs from the second local list</span></span>
+<span id="cb16-19"><a href="#cb16-19"></a>directorsPairRDD <span class="op">=</span> sc.parallelize(directors)</span>
+<span id="cb16-20"><a href="#cb16-20"></a></span>
+<span id="cb16-21"><a href="#cb16-21"></a><span class="co"># Cogroup movies and directors per user</span></span>
+<span id="cb16-22"><a href="#cb16-22"></a>cogroupPairRDD <span class="op">=</span> moviesPairRDD.cogroup(directorsPairRDD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>cogroupPairRDD</code></td>
+<td>Notice that the value part of the returned tuples is a tuple containing two lists: the first value contains the list of movies (iterable) liked by a user; the second value contains the list of directors (iterable) liked by a user.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="summary-1" class="level2 page-columns page-full" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="summary-1"><span class="header-section-number">6.5</span> Summary</h2>
+<p>All the examples reported in the following tables are applied on the following two RDDs of key-value pairs</p>
+<ul>
+<li><code>inputRDD1</code>: <code>[(&#39;k1&#39;,2),(&#39;k3&#39;,4),(&#39;k3&#39;,6)]</code></li>
+<li><code>inputRDD2</code>: <code>[(&#39;k3&#39;,9)]</code></li>
+</ul>
+<div class="page-columns page-full">
+<div class="column-page">
+<p><strong>Purposes</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Transformation</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>subtractByKey(other)</code></td>
+<td>Return a new RDD of key-value pairs. The returned pairs are those of input RDD on which the method is invoked such that the key part does not occur in the keys of the RDD that is passed as parameter. The values are not considered to take the decision.</td>
+</tr>
+<tr class="even">
+<td><code>join(other)</code></td>
+<td>Return a new RDD of pairs corresponding to join of the two input RDDs. The join is based on the value of the key.</td>
+</tr>
+<tr class="odd">
+<td><code>cogroup(other)</code></td>
+<td><p>For each key <span class="math inline">\(k\)</span> in one of the two input RDDs of pairs, return a pair <span class="math inline">\((k, tuple)\)</span>, where tuple contains:</p>
+<ul>
+<li>the list (iterable) of values of the first input RDD associated with key <span class="math inline">\(k\)</span>;</li>
+<li>the list (iterable) of values of the second input RDD associated with key <span class="math inline">\(k\)</span>.</li>
+</ul></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 45%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Transformation</th>
+<th>Example</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>subtractByKey(other)</code></td>
+<td><code>inputRDD1.subtractByKey(inputRDD2)</code></td>
+<td><code>[(&#39;k1&#39;,2)]</code></td>
+</tr>
+<tr class="even">
+<td><code>join(other)</code></td>
+<td><code>inputRDD1.join(inputRDD2)</code></td>
+<td><code>[(&#39;k3&#39;,(4,9)),(&#39;k3&#39;,(6,9))]</code></td>
+</tr>
+<tr class="odd">
+<td><code>cogroup(other)</code></td>
+<td><code>inputRDD1.cogroup(inputRDD2)</code></td>
+<td><code>[(&#39;k1&#39;,([2],[])),(&#39;k3&#39;,([4,6],[9]))]</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+<section id="actions-on-rdds-of-key-value-pairs" class="level1 page-columns page-full" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Actions on RDDs of key-value pairs</h1>
+<p>Spark supports also some specific actions on RDDs of key-value pairs (e.g., <code>countByKey</code>, <code>collectAsMap</code>, <code>lookup</code>).</p>
+<section id="countbykey-action" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="countbykey-action"><span class="header-section-number">7.1</span> CountByKey action</h2>
+<p>The countByKey action returns a local python dictionary containing the information about the number of elements associated with each key in the input RDD of key-value pairs (i.e., the number of times each key occurs in the input RDD).</p>
+<div class="callout-warning callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Pay attention to the number of distinct keys of the input RDD of pairs: if the number of distinct keys is large, the result of the action cannot be stored in a local variable of the Driver.</p>
+</div>
+</div>
+<p>The countBykey action is based on the <code>countBykey()</code> method of the <code>RDD</code> class. Notice that data are sent on the network to compute the final result.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Examples
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of pairs from the following python list (each pair contains a movie and the rating given by someone to that movie): <code>[(&quot;Forrest Gump&quot;,4),(&quot;Star Trek&quot;,5),(&quot;Forrest Gump&quot;,3)]</code>;</li>
+<li>Compute the number of ratings for each movie.</li>
+</ol>
+<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Create the local python list</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>movieRating<span class="op">=</span> [</span>
+<span id="cb17-3"><a href="#cb17-3"></a>    (<span class="st">&quot;Forrest Gump&quot;</span>,<span class="dv">4</span>),</span>
+<span id="cb17-4"><a href="#cb17-4"></a>    (<span class="st">&quot;Star Trek&quot;</span>,<span class="dv">5</span>),</span>
+<span id="cb17-5"><a href="#cb17-5"></a>    (<span class="st">&quot;Forrest Gump&quot;</span>,<span class="dv">3</span>)</span>
+<span id="cb17-6"><a href="#cb17-6"></a>]</span>
+<span id="cb17-7"><a href="#cb17-7"></a></span>
+<span id="cb17-8"><a href="#cb17-8"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
+<span id="cb17-9"><a href="#cb17-9"></a>movieRatingRDD <span class="op">=</span> sc.parallelize(movieRating)</span>
+<span id="cb17-10"><a href="#cb17-10"></a></span>
+<span id="cb17-11"><a href="#cb17-11"></a><span class="co"># Compute the number of rating for each movie</span></span>
+<span id="cb17-12"><a href="#cb17-12"></a>movieNumRatings <span class="op">=</span> movieRatingRDD.countByKey()</span>
+<span id="cb17-13"><a href="#cb17-13"></a></span>
+<span id="cb17-14"><a href="#cb17-14"></a><span class="co"># Print the result on the standard output</span></span>
+<span id="cb17-15"><a href="#cb17-15"></a><span class="bu">print</span>(movieNumRatings)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>movieNumRatings</code></td>
+<td>Pay attention to the size of the returned local python dictionary (i.e., in this case, the number of distinct movies).</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="collectasmap-action" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="collectasmap-action"><span class="header-section-number">7.2</span> CollectAsMap action</h2>
+<p>The collectAsMap action returns a local dictionary containing the same pairs of the considered input RDD of pairs. Pay attention to the size of the returned RDD: data are sent on the network.</p>
+<p>The collectAsMap action is based on the <code>collectAsMap()</code> method of the <code>RDD</code> class.</p>
+<div class="callout-warning callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Pay attention that the collectAsMap action returns a dictionary object, and a dictionary cannot contain duplicate keys: each key can be associated with at most one value, and ff the input RDD of pairs contains more than one pair with the same key, only one of those pairs is stored in the returned local python dictionary (usually, the last one occurring in the input RDD of pairs).</p>
+</div>
+</div>
+<p>Use collectAsMap only if sure that each key appears only once in the input RDD of key-value pairs.</p>
+<p>The <code>collectAsMap()</code> method returns a local dictionary while <code>collect()</code> return a list of key-value pairs (i.e., a list of tuples). Notice that the list of pairs returned by <code>collect()</code> can contain more than one pair associated with the same key.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of pairs from the following python list (each pair contains a userId and the name of the user): <code>[(&quot;User1&quot;,&quot;Paolo&quot;),(&quot;User2&quot;,&quot;Luca&quot;),(&quot;User3&quot;,&quot;Daniele&quot;)]</code>;</li>
+<li>Retrieve the pairs of the created RDD of pairs and store them in a local python dictionary that is instantiated in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Create the local python list</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a>users <span class="op">=</span> [</span>
+<span id="cb18-3"><a href="#cb18-3"></a>    (<span class="st">&quot;User1&quot;</span>,<span class="st">&quot;Paolo&quot;</span>),</span>
+<span id="cb18-4"><a href="#cb18-4"></a>    (<span class="st">&quot;User2&quot;</span>,<span class="st">&quot;Luca&quot;</span>),</span>
+<span id="cb18-5"><a href="#cb18-5"></a>    (<span class="st">&quot;User3&quot;</span>,<span class="st">&quot;Daniele&quot;</span>)</span>
+<span id="cb18-6"><a href="#cb18-6"></a>]</span>
+<span id="cb18-7"><a href="#cb18-7"></a></span>
+<span id="cb18-8"><a href="#cb18-8"></a><span class="co">#Create the RDD of pairs from the local list</span></span>
+<span id="cb18-9"><a href="#cb18-9"></a>usersRDD <span class="op">=</span> sc.parallelize(users)</span>
+<span id="cb18-10"><a href="#cb18-10"></a></span>
+<span id="cb18-11"><a href="#cb18-11"></a><span class="co"># Retrieve the content of usersRDD and store it in a</span></span>
+<span id="cb18-12"><a href="#cb18-12"></a><span class="co"># local python dictionary</span></span>
+<span id="cb18-13"><a href="#cb18-13"></a>retrievedPairs <span class="op">=</span> usersRDD.collectAsMap()</span>
+<span id="cb18-14"><a href="#cb18-14"></a></span>
+<span id="cb18-15"><a href="#cb18-15"></a><span class="co"># Print the result on the standard output</span></span>
+<span id="cb18-16"><a href="#cb18-16"></a><span class="bu">print</span>(retrievedPairs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>retrievedPairs</code></td>
+<td>Pay attention to the size of the returned local python dictionary (i.e., in this case, the number of distinct users).</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="lookup-action" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="lookup-action"><span class="header-section-number">7.3</span> Lookup action</h2>
+<p>The lookup(<span class="math inline">\(k\)</span>) action returns a local python list containing the values of the pairs of the input RDD associated with the key <span class="math inline">\(k\)</span> specified as parameter.</p>
+<p>The lookup action is based on the <code>lookup(key)</code> method of the <code>RDD</code> class.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of pairs from the following python list (each pair contains a movie and the rating given by someone to that movie): <code>[(&quot;Forrest Gump&quot;,4),(&quot;Star Trek&quot;,5),(&quot;Forrest Gump&quot;,3)]</code></li>
+<li>Retrieve the ratings associated with the movie “Forrest Gump” and store them in a local python list in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># Create the local python list</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a>movieRating<span class="op">=</span> [(<span class="st">&quot;Forrest Gump&quot;</span>,<span class="dv">4</span>),(<span class="st">&quot;Star Trek&quot;</span>,<span class="dv">5</span>),(<span class="st">&quot;Forrest Gump&quot;</span>,<span class="dv">3</span>)]</span>
+<span id="cb19-3"><a href="#cb19-3"></a></span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
+<span id="cb19-5"><a href="#cb19-5"></a>movieRatingRDD <span class="op">=</span> sc.parallelize(movieRating)</span>
+<span id="cb19-6"><a href="#cb19-6"></a></span>
+<span id="cb19-7"><a href="#cb19-7"></a><span class="co"># Select the ratings associated with “Forrest Gump”</span></span>
+<span id="cb19-8"><a href="#cb19-8"></a>movieRatings <span class="op">=</span> movieRatingRDD.lookup(<span class="st">&quot;Forrest Gump&quot;</span>)</span>
+<span id="cb19-9"><a href="#cb19-9"></a></span>
+<span id="cb19-10"><a href="#cb19-10"></a><span class="co"># Print the result on the standard output</span></span>
+<span id="cb19-11"><a href="#cb19-11"></a><span class="bu">print</span>(movieRatings)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>movieRatings</code></td>
+<td>Pay attention to the size of the returned local list (i.e., in this case, the number of ratings associated with “Forrest Gump”).</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="summary-2" class="level2 page-columns page-full" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="summary-2"><span class="header-section-number">7.4</span> Summary</h2>
+<p>All the examples reported in the following tables are applied on the following RDD of key-value pairs:</p>
+<ul>
+<li><code>inputRDD</code>: <code>[(&#39;k1&#39;,2),(&#39;k3&#39;,4),(&#39;k3&#39;,6)]</code></li>
+</ul>
+<div class="page-columns page-full">
+<div class="column-page">
+<p><strong>Purposes</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Transformation</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>countByKey()</code></td>
+<td>Return a local python dictionary containing the number of elements in the input RDD for each key of the input RDD of pairs.</td>
+</tr>
+<tr class="even">
+<td><code>collectAsMap()</code></td>
+<td>Return a local python dictionary containing the pairs of the input RDD of pairs.</td>
+</tr>
+<tr class="odd">
+<td><code>lookup(key)</code></td>
+<td>Return a local python list containing all the values associated with the key specified as parameter.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 45%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Transformation</th>
+<th>Example</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>countByKey()</code></td>
+<td><code>inputRDD.countByKey()</code></td>
+<td><code>{(&#39;k1&#39;,1),(&#39;K3&#39;,2)}</code></td>
+</tr>
+<tr class="even">
+<td><code>collectAsMap()</code></td>
+<td><code>inputRDD.collectAsMap()</code></td>
+<td><p><code>{(&#39;k1&#39;,2),(&#39;k3&#39;,6)}</code></p>
+<p>Or</p>
+<p><code>{(&#39;k1&#39;,2),(&#39;k3&#39;,4)}</code></p>
+<p>Depending on the order of the pairs in the input RDD of pairs</p></td>
+</tr>
+<tr class="odd">
+<td><code>lookup(key)</code></td>
+<td><code>inputRDD.lookup(&#39;k3&#39;)</code></td>
+<td><code>[4,6]</code></td>
 </tr>
 </tbody>
 </table>
