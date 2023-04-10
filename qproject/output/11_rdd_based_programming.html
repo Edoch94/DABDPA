@@ -2691,7 +2691,7 @@ vertical-align: -.125em;
   </ul>
 </nav>
 </div>
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -2878,13 +2878,17 @@ Example
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Create a local python list</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a>inputList <span class="op">=</span> [<span class="st">&#39;First element&#39;</span>, <span class="st">&#39;Second element&#39;</span>, <span class="st">&#39;Third element&#39;</span>]</span>
-<span id="cb6-3"><a href="#cb6-3"></a></span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="co"># Build an RDD of Strings from the local list.</span></span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="co"># The number of partitions is set automatically by Spark</span></span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="co"># There is one element of the RDD for each element</span></span>
-<span id="cb6-7"><a href="#cb6-7"></a><span class="co"># of the local list</span></span>
-<span id="cb6-8"><a href="#cb6-8"></a>distRDDList <span class="op">=</span> sc.parallelize(inputList)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-2"><a href="#cb6-2"></a>inputList <span class="op">=</span> [</span>
+<span id="cb6-3"><a href="#cb6-3"></a>    <span class="st">&#39;First element&#39;</span>,</span>
+<span id="cb6-4"><a href="#cb6-4"></a>    <span class="st">&#39;Second element&#39;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5"></a>    <span class="st">&#39;Third element&#39;</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>]</span>
+<span id="cb6-7"><a href="#cb6-7"></a></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="co"># Build an RDD of Strings from the local list.</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="co"># The number of partitions is set automatically by Spark</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="co"># There is one element of the RDD for each element</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="co"># of the local list</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a>distRDDList <span class="op">=</span> sc.parallelize(inputList)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Notice that no computation occurs when <code>sc.parallelize(c)</code> is invoked: Spark only records how to create the RDD, and the data is lazily read from the input file only when the data is needed (i.e., when an action is applied on <code>distRDDlist</code>, or on one of its “descendant” RDDs).</p>
 </div>
 </div>
@@ -2903,13 +2907,17 @@ Example
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Create a local python list</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>inputList <span class="op">=</span> [<span class="st">&#39;First element&#39;</span>, <span class="st">&#39;Second element&#39;</span>, <span class="st">&#39;Third element&#39;</span>]</span>
-<span id="cb7-3"><a href="#cb7-3"></a></span>
-<span id="cb7-4"><a href="#cb7-4"></a><span class="co"># Build an RDD of Strings from the local list.</span></span>
-<span id="cb7-5"><a href="#cb7-5"></a><span class="co"># The number of partitions is set to 3</span></span>
-<span id="cb7-6"><a href="#cb7-6"></a><span class="co"># There is one element of the RDD for each element</span></span>
-<span id="cb7-7"><a href="#cb7-7"></a><span class="co"># of the local list</span></span>
-<span id="cb7-8"><a href="#cb7-8"></a>distRDDList <span class="op">=</span> sc.parallelize(inputList, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-2"><a href="#cb7-2"></a>inputList <span class="op">=</span> [</span>
+<span id="cb7-3"><a href="#cb7-3"></a>    <span class="st">&#39;First element&#39;</span>,</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    <span class="st">&#39;Second element&#39;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5"></a>    <span class="st">&#39;Third element&#39;</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>]</span>
+<span id="cb7-7"><a href="#cb7-7"></a></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="co"># Build an RDD of Strings from the local list.</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="co"># The number of partitions is set to 3</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="co"># There is one element of the RDD for each element</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="co"># of the local list</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a>distRDDList <span class="op">=</span> sc.parallelize(inputList, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -3200,7 +3208,7 @@ Example
 </section>
 </section>
 </section>
-<section id="basic-transformations" class="level1" data-number="6">
+<section id="basic-transformations" class="level1 page-columns page-full" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Basic Transformations</h1>
 <ul>
 <li>Some basic transformations analyze the content of one single RDD and return a new RDD (e.g., <code>filter()</code>, <code>map()</code>, <code>flatMap()</code>, <code>distinct()</code>, <code>sample()</code>)</li>
@@ -3256,7 +3264,7 @@ Example 2
 <p><strong>Using <code>lambda</code></strong></p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
 <span id="cb15-2"><a href="#cb15-2"></a>inputList <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>]</span>
-<span id="cb15-3"><a href="#cb15-3"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)<span class="op">;</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
 <span id="cb15-4"><a href="#cb15-4"></a></span>
 <span id="cb15-5"><a href="#cb15-5"></a><span class="co"># Select the values greater than 2</span></span>
 <span id="cb15-6"><a href="#cb15-6"></a>greaterRDD <span class="op">=</span> inputRDD.<span class="bu">filter</span>(<span class="kw">lambda</span> num : num<span class="op">&gt;</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -3268,7 +3276,7 @@ Example 2
 <span id="cb16-4"><a href="#cb16-4"></a></span>
 <span id="cb16-5"><a href="#cb16-5"></a><span class="co"># Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
 <span id="cb16-6"><a href="#cb16-6"></a>inputList <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>]</span>
-<span id="cb16-7"><a href="#cb16-7"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)<span class="op">;</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
 <span id="cb16-8"><a href="#cb16-8"></a></span>
 <span id="cb16-9"><a href="#cb16-9"></a><span class="co"># Select the values greater than 2</span></span>
 <span id="cb16-10"><a href="#cb16-10"></a>greaterRDD <span class="op">=</span> inputRDD.<span class="bu">filter</span>(greaterThan2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -3622,10 +3630,10 @@ Example 1
 </ul></li>
 </ol>
 <div class="sourceCode" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a><span class="co"># Create two RDD of integers</span></span>
-<span id="cb26-2"><a href="#cb26-2"></a>inputList1 <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>]</span>
+<span id="cb26-2"><a href="#cb26-2"></a>inputList1 <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>]</span>
 <span id="cb26-3"><a href="#cb26-3"></a>inputRDD1 <span class="op">=</span> sc.parallelize(inputList1)</span>
 <span id="cb26-4"><a href="#cb26-4"></a></span>
-<span id="cb26-5"><a href="#cb26-5"></a>inputList2 <span class="op">=</span> [<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>]</span>
+<span id="cb26-5"><a href="#cb26-5"></a>inputList2 <span class="op">=</span> [<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>]</span>
 <span id="cb26-6"><a href="#cb26-6"></a>inputRDD2 <span class="op">=</span> sc.parallelize(inputList2)</span>
 <span id="cb26-7"><a href="#cb26-7"></a></span>
 <span id="cb26-8"><a href="#cb26-8"></a><span class="co"># Create four new RDDs by using union, intersection, subtract, and cartesian</span></span>
@@ -3672,10 +3680,10 @@ Example 2
 <li>Create a new RDD containing the cartesian product of <code>inputRDD1</code> and <code>inputRDD2</code></li>
 </ol>
 <div class="sourceCode" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># Create an RDD of Integers and an RDD of Strings</span></span>
-<span id="cb27-2"><a href="#cb27-2"></a>inputList1 <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]</span>
+<span id="cb27-2"><a href="#cb27-2"></a>inputList1 <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]</span>
 <span id="cb27-3"><a href="#cb27-3"></a>inputRDD1 <span class="op">=</span> sc.parallelize(inputList1)</span>
 <span id="cb27-4"><a href="#cb27-4"></a></span>
-<span id="cb27-5"><a href="#cb27-5"></a>inputList2 <span class="op">=</span> [<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>]</span>
+<span id="cb27-5"><a href="#cb27-5"></a>inputList2 <span class="op">=</span> [<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>]</span>
 <span id="cb27-6"><a href="#cb27-6"></a>inputRDD2 <span class="op">=</span> sc.parallelize(inputList2)</span>
 <span id="cb27-7"><a href="#cb27-7"></a></span>
 <span id="cb27-8"><a href="#cb27-8"></a><span class="co"># Compute the cartesian product</span></span>
@@ -3697,11 +3705,13 @@ Example 2
 </div>
 </section>
 </section>
-<section id="summary" class="level2" data-number="6.3">
+<section id="summary" class="level2 page-columns page-full" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="summary"><span class="header-section-number">6.3</span> Summary</h2>
-<section id="single-input-rdd-transformations-1" class="level3" data-number="6.3.1">
+<section id="single-input-rdd-transformations-1" class="level3 page-columns page-full" data-number="6.3.1">
 <h3 data-number="6.3.1" class="anchored" data-anchor-id="single-input-rdd-transformations-1"><span class="header-section-number">6.3.1</span> Single input RDD transformations</h3>
 <p>All the examples reported in the following tables are applied on an RDD of integers containing the following elements (i.e., values): <code>[1,2,3,3]</code>.</p>
+<div class="page-columns page-full">
+<div class="column-page">
 <p><strong>Purposes</strong></p>
 <table class="table">
 <colgroup>
@@ -3793,14 +3803,18 @@ Example 2
 </tbody>
 </table>
 <!-- : {tbl-colwidths="[15,45,20,20]"} -->
+</div>
+</div>
 </section>
-<section id="two-input-rdd-transformations" class="level3" data-number="6.3.2">
+<section id="two-input-rdd-transformations" class="level3 page-columns page-full" data-number="6.3.2">
 <h3 data-number="6.3.2" class="anchored" data-anchor-id="two-input-rdd-transformations"><span class="header-section-number">6.3.2</span> Two input RDD transformations</h3>
 <p>All the examples reported in the following tables are applied on the following two RDDs of integers</p>
 <ul>
 <li><code>inputRDD1</code>: <code>[1,2,2,3,3]</code></li>
 <li><code>inputRDD2</code>: <code>[3,4,5]</code></li>
 </ul>
+<div class="page-columns page-full">
+<div class="column-page">
 <p><strong>Purposes</strong></p>
 <table class="table">
 <colgroup>
@@ -3869,10 +3883,12 @@ Example 2
 </tr>
 </tbody>
 </table>
+</div>
+</div>
 </section>
 </section>
 </section>
-<section id="basic-actions" class="level1" data-number="7">
+<section id="basic-actions" class="level1 page-columns page-full" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> Basic Actions</h1>
 <p>Spark actions can retrieve the content of an RDD or the result of a function applied on an RDD and</p>
 <ul>
@@ -3931,7 +3947,7 @@ Example
 <li>Retrieve the values of the created RDD and store them in a local python list that is instantiated in the Driver.</li>
 </ol>
 <div class="sourceCode" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a><span class="co"># Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
-<span id="cb28-2"><a href="#cb28-2"></a>inputList <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>]</span>
+<span id="cb28-2"><a href="#cb28-2"></a>inputList <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>]</span>
 <span id="cb28-3"><a href="#cb28-3"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
 <span id="cb28-4"><a href="#cb28-4"></a></span>
 <span id="cb28-5"><a href="#cb28-5"></a><span class="co"># Retrieve the elements of the inputRDD and store them in</span></span>
@@ -4502,9 +4518,12 @@ Note
 </div>
 </section>
 </section>
-<section id="summary-1" class="level2" data-number="7.12">
+<section id="summary-1" class="level2 page-columns page-full" data-number="7.12">
 <h2 data-number="7.12" class="anchored" data-anchor-id="summary-1"><span class="header-section-number">7.12</span> Summary</h2>
 <p>All the examples reported in the following tables are applied on inputRDD that is an RDD of integers containing the following elements (i.e., values): <code>[1,2,3,3]</code>.</p>
+<div class="page-columns page-full">
+<div class="column-page">
+<p><strong>Purposes</strong></p>
 <table class="table">
 <colgroup>
 <col style="width: 13%">
@@ -4560,6 +4579,7 @@ Note
 </tr>
 </tbody>
 </table>
+<p><strong>Examples</strong></p>
 <table class="table">
 <colgroup>
 <col style="width: 23%">
@@ -4630,6 +4650,8 @@ Note
 </tr>
 </tbody>
 </table>
+</div>
+</div>
 </section>
 </section>
 

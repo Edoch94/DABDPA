@@ -88,7 +88,7 @@ linesRDD = sc.textFile("document.txt")
 wordOnePairRDD = linesRDD.flatMap(wordsOnes)
 ```
 
-**Version 1**
+**Version 2**
 ```python
 # Read the content of the input textual file
 linesRDD = sc.textFile("document.txt")
@@ -121,7 +121,11 @@ Create an RDD from a local python list containing the following key-value pairs
 
 ```python
 # Create the local python list
-nameAge = [ ("Paolo", 40), ("Giorgio", 22), ("Paolo", 35)]
+nameAge = [
+    ("Paolo",40),
+    ("Giorgio",22),
+    ("Paolo",35)
+]
 
 # Create the RDD of pairs from the local collection
 nameAgePairRDD = sc.parallelize(nameAge)
@@ -138,7 +142,7 @@ nameAgePairRDD = sc.parallelize(nameAge)
 All the standard transformations can be applied, where the specified functions operate on tuples, but also specific transformations are available (e.g., `reduceByKey()`, `groupyKey()`, `mapValues()`, `join()`).
 
 ## ReduceByKey transformation
-Create a new RDD of key-value pairs where there is one pair for each distinct key `k` of the input RDD of key-value pairs: 
+The goal is to create a new RDD of key-value pairs where there is one pair for each distinct key `k` of the input RDD of key-value pairs: 
 
 - The value associated with key `k` in the new RDD of key-value pairs is computed by applying a function `f` on the values associated with `k` in the input RDD of key-value pairs; the function `f` must be associative and commutative, otherwise the result depends on how data are partitioned and analyzed;
 - The data type of the new RDD of key-value pairs is the same of the input RDD of key-value pairs.
@@ -164,7 +168,11 @@ A shuffle operation is executed for computing the result of the `reduceByKey()` 
 
 ```python
 # Create the local python list
-nameAge = [ ("Paolo", 40), ("Giorgio", 22), ("Paolo", 35)]
+nameAge = [
+    ("Paolo",40),
+    ("Giorgio",22),
+    ("Paolo",35)
+]
 
 # Create the RDD of pairs from the local collection
 nameAgePairRDD = sc.parallelize(nameAge)
@@ -205,7 +213,11 @@ A shuffle operation is executed for computing the result of the `foldByKey()` tr
 
 ```python
 # Create the local python list
-nameMess = [("Paolo", "Message1"), ("Giorgio", "Message2"), ("Paolo", "Message3")]
+nameMess = [
+    ("Paolo","Message1"),
+    ("Giorgio","Message2"),
+    ("Paolo","Message3")
+]
 
 # Create the RDD of pairs from the local collection
 nameMessPairRDD = sc.parallelize(nameMess)
@@ -217,7 +229,7 @@ concatPairRDD= nameMessPairRDD.foldByKey('', lambda m1, m2: m1+m2)
 :::
 
 ## CombineByKey transformation
-Create a new RDD of key-value pairs where there is one pair for each distinct key $k$ of the input RDD of key-value pairs. The value associated with the key $k$ in the new RDD of key-value pairs is computed by applying user-provided functions on the values associated with $k$ in the input RDD of key-value pairs: the user-provided function must be associative, otherwise the result depends how data are partitioned and analyzed.
+The goal is to create a new RDD of key-value pairs where there is one pair for each distinct key $k$ of the input RDD of key-value pairs. The value associated with the key $k$ in the new RDD of key-value pairs is computed by applying user-provided functions on the values associated with $k$ in the input RDD of key-value pairs: the user-provided function must be associative, otherwise the result depends how data are partitioned and analyzed.
 
 The data type of the new RDD of key-value pairs can be different with respect to the data type of the input RDD of key-value pairs.
 
@@ -247,7 +259,11 @@ A shuffle operation is executed for computing the result of the `combineByKey()`
 
 ```python
 # Create the local python list
-nameAge = [ ("Paolo", 40), ("Giorgio", 22), ("Paolo", 35)]
+nameAge = [
+    ("Paolo",40),
+    ("Giorgio",22),
+    ("Paolo",35)
+]
 
 # Create the RDD of pairs from the local collection
 nameAgePairRDD = sc.parallelize(nameAge)
@@ -256,12 +272,20 @@ nameAgePairRDD = sc.parallelize(nameAge)
 # the number of input pairs for each name (key)
 sumNumPerNamePairRDD = nameAgePairRDD.combineByKey(
     lambda inputElem: (inputElem, 1),
-    lambda intermediateElem, inputElem: (intermediateElem[0]+inputElem, intermediateElem[1]+1),
-    lambda intermediateElem1, intermediateElem2: (intermediateElem1[0]+intermediateElem2[0], intermediateElem1[1]+intermediateElem2[1])
+    lambda intermediateElem, inputElem: (
+        intermediateElem[0]+inputElem, 
+        intermediateElem[1]+1
+    ),
+    lambda intermediateElem1, intermediateElem2: (
+        intermediateElem1[0]+intermediateElem2[0], 
+        intermediateElem1[1]+intermediateElem2[1]
+    )
 )
 
 # Compute the average for each name
-avgPerNamePairRDD = sumNumPerNamePairRDD.map(lambda pair: (pair[0], pair[1][0]/pair[1][1]))
+avgPerNamePairRDD = sumNumPerNamePairRDD.map(
+    lambda pair: (pair[0], pair[1][0]/pair[1][1])
+)
 
 # Store the result in an output folder
 avgPerNamePairRDD.saveAsTextFile(outputPath)
@@ -277,7 +301,7 @@ avgPerNamePairRDD.saveAsTextFile(outputPath)
 :::
 
 ## GroupByKey transformation
-Create a new RDD of key-value pairs where there is one pair for each distinct key $k$ of the input RDD of key-value pairs: the value associated with key $k$ in the new RDD of key-value pairs is the list of values associated with $k$ in the input RDD of key-value pairs.
+The goal is to create a new RDD of key-value pairs where there is one pair for each distinct key $k$ of the input RDD of key-value pairs: the value associated with key $k$ in the new RDD of key-value pairs is the list of values associated with $k$ in the input RDD of key-value pairs.
 
 The groupByKey transformation is based on the `groupByKey()` method of the `RDD` class.
 
@@ -295,7 +319,11 @@ A shuffle operation is executed for computing the result of the `groupByKey()` t
 
 ```python
 # Create the local python list
-nameAge = [ ("Paolo", 40), ("Giorgio", 22), ("Paolo", 35)]
+nameAge = [
+    ("Paolo",40),
+    ("Giorgio",22),
+    ("Paolo",35)
+]
 
 # Create the RDD of pairs from the local collection
 nameAgePairRDD = sc.parallelize(nameAge)
@@ -304,7 +332,9 @@ nameAgePairRDD = sc.parallelize(nameAge)
 agesPerNamePairRDD = nameAgePairRDD.groupByKey()
 
 # Store the result in an output folder
-agesPerNamePairRDD.mapValues(lambda listValues: list(listValues)).saveAsTextFile(outputPath)
+agesPerNamePairRDD\
+    .mapValues(lambda listValues: list(listValues))\
+    .saveAsTextFile(outputPath)
 ```
 
 |||
@@ -314,7 +344,7 @@ agesPerNamePairRDD.mapValues(lambda listValues: list(listValues)).saveAsTextFile
 :::
 
 ## MapValues transformation
-Apply a function $f$ over the value of each pair of an input RDD or key-value pairs and return a new RDD of key-value pairs: one pair is created in the returned RDD for each input pair
+The goal is to apply a function $f$ over the value of each pair of an input RDD or key-value pairs and return a new RDD of key-value pairs: one pair is created in the returned RDD for each input pair
 
 - The key of the created pair is equal to the key of the input pair
 - The value of the created pair is obtained by applying the function $f$ on the value of the input pair
@@ -324,6 +354,7 @@ The data type of the values of the new RDD of key-value pairs can be different f
 The mapValues transformation is based on the `mapValues(f)` method of the `RDD` class: a function `f` is passed to the mapValues method, where `f` contains the code that is applied to transform each input value into the a new value that is stored in the RDD of key-value pairs. The retuned RDD of pairs contains a number of key-value pairs equal to the number of key-value pairs of the input RDD of pairs (the key part is not changed).
 
 :::{.callout-note collapse="true"}
+## Example
 1. Create an RDD from a local python list containing the following pairs: the key is the first name of a user and the value is his/her age.
     - `("Paolo", 40)`
     - `("Giorgio", 22)`
@@ -332,7 +363,11 @@ The mapValues transformation is based on the `mapValues(f)` method of the `RDD` 
 
 ```python
 # Create the local python list
-nameAge = [ ("Paolo", 40), ("Giorgio", 22), ("Paolo", 35)]
+nameAge = [
+    ("Paolo",40),
+    ("Giorgio",22),
+    ("Paolo",35)
+]
 
 # Create the RDD of pairs from the local collection
 nameAgePairRDD = sc.parallelize(nameAge)
@@ -346,3 +381,325 @@ plusOnePairRDD.saveAsTextFile(outputPath)
 :::
 
 ## FlatMapValues transformation
+The goal is to apply a function $f$ over the value of each pair of an input RDD or key-value pairs and return a new RDD of key-value pairs ($f$ returns a list of values for each input value). A list of pairs is inserted in the returned RDD for each input pair
+
+- The key of the created pairs is equal to the key of the input pair
+- The values of the created pairs are obtained by applying the function $f$ on the value of the input pair
+
+The data type of the values of the new RDD of key-value pairs can be different from the data type of the values of the input RDD of key-value pairs. The data type of the key is the same.
+
+The flatMapValues transformation is based on `flatMapValues(f)` method of the `RDD` class: a function `f` is passed to the `mapValues` method, where `f` contains the code that is applied to transform each input value into a set of new values that are stored in the new RDD of key-value pairs. The keys of the input pairs are not changed.
+
+:::{.callout-note collapse="true"}
+## Example
+1. Create an RDD from a local python list containing the pairs
+    - `("Sentence#1", "Sentence test")`
+    - `("Sentence#2", "Sentence test number 2")`
+    - `("Sentence#3", "Sentence test number 3")`
+2. Select the words of each sentence and store in the HDFS file system one pair (senteceId, word) per line.
+
+```python
+# Create the local python list
+sentences = [
+    ("Sentence#1", "Sentence test"),
+    ("Sentence#2", "Sentence test number 2"),
+    ("Sentence#3", "Sentence test number 3")
+]
+
+# Create the RDD of pairs from the local collection
+sentPairRDD = sc.parallelize(sentences)
+
+# “Extract” words from each sentence
+sentIdWord = sentPairRDD.flatMapValues(lambda s: s.split(' '))
+
+# Save the result on disk
+sentIdWord.saveAsTextFile(outputPath)
+```
+:::
+
+## Keys transformation
+The goal is to return the list of keys of the input RDD of pairs and store them in a new RDD. The returned RDD is not an RDD of key-value pairs, instead it is a standard RDD of single elements, with duplicate keys not removed.
+
+The keys transformation is based on the `keys()` method of the `RDD` class.
+
+:::{.callout-note collapse="true"}
+## Example
+1. Create an RDD from a local python list containing the following pairs: the key is the first name of a user and the value is his/her age
+    - `("Paolo", 40)`
+    - `("Giorgio", 22)`
+    - `("Paolo", 35)`
+2. Store the names of the input users in an output HDFS folder. The output contains one name per line (duplicate names are removed).
+
+```python
+# Create the local python list
+nameAge = [
+    ("Paolo",40),
+    ("Giorgio",22),
+    ("Paolo",35)
+]
+
+# Create the RDD of pairs from the local collection
+nameAgePairRDD = sc.parallelize(nameAge)
+
+# Select the key part of the input RDD of key-value pairs
+namesRDD = nameAgePairRDD.keys().distinct()
+
+# Store the result in an output folder
+namesRDD.saveAsTextFile(outputPath)
+```
+:::
+
+## Values transformation
+The goal is to return the list of values of the input RDD of pairs and store them in a new RDD. The returned RDD is not an RDD of key-value pairs, instead it is a standard RDD of single elements, with duplicate values are not removed. 
+
+The values transformation is based on the `values()` method of the `RDD` class.
+
+:::{.callout-note collapse="true"}
+## Example
+1. Create an RDD from a local python list containing the pairs: the key is the first name of a user and the value is his/her age
+    - `("Paolo", 40)`
+    - `("Giorgio", 22)`
+    - `("Paolo", 22)`
+2. Store the ages of the input users in an output HDFS folder, containing one age per line and duplicate ages/values are not removed.
+
+```python
+# Create the local python list
+nameAge = [
+    ("Paolo",40),
+    ("Giorgio",22),
+    ("Paolo",22)
+]
+
+# Create the RDD of pairs from the local collection
+nameAgePairRDD = sc.parallelize(nameAge)
+
+# Select the value part of the input RDD of key-value pairs
+agesRDD = nameAgePairRDD.values()
+
+# Store the result in an output folder
+agesRDD.saveAsTextFile(outputPath)
+```
+:::
+
+## SortByKey transformation
+The goal is to return a new RDD of key-value pairs obtained by sorting, in ascending order, the pairs of the input RDD by key (notice that the final order is related to the default sorting function of the data type of the input keys). The content of the new RDD of key-value pairs is the same of the input RDD but the pairs are sorted by key in the new returned RDD.
+
+The sortByKey transformation is based on the `sortByKey()` method of the `RDD` class (pairs are sorted by key in ascending order). The `sortByKey(ascending)` method of the `RDD` class is also available: this method allows to specify if the sort order is ascending or descending by means of a Boolean parameter (`True` for ascending, `False` for descending).
+
+A shuffle operation is executed for computing the result of the `sortByKey()` transformation, since pairs from different partitions of the input RDD must be compared to sort the input pairs by key.
+
+:::{.callout-note collapse="true"}
+1. Create an RDD from a local python list containing the pairs: the key is the first name of a user and the value is his/her age
+    - `("Paolo", 40)`
+    - `("Giorgio", 22)`
+    - `("Paolo", 35)`
+2. Sort the users by name and store the result in the HDFS file system.
+
+```python
+# Create the local python list
+nameAge = [
+    ("Paolo",40),
+    ("Giorgio",22),
+    ("Paolo",35)
+]
+
+# Create the RDD of pairs from the local collection
+nameAgePairRDD = sc.parallelize(nameAge)
+
+# Sort by name the content of the input RDD of key-value pairs
+sortedNameAgePairRDD = nameAgePairRDD.sortByKey()
+
+# Store the result in an output folder
+sortedNameAgePairRDD.saveAsTextFile(outputPath)
+```
+:::
+
+## Summary
+All the examples reported in the following tables are applied on an RDD of pairs containing the following tuples (pairs): `[("k1", 2), ("k3", 4), ("k3", 6)]`.
+
+- The key of each tuple is a string
+- The value of each tuple is an integer
+
+::::{.content-visible when-format="html"}
+:::{.column-page}
+
+**Purposes**
+
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Transformation             | Purpose                                                                                                                                                                                                                                                                                                                                                    |
++============================+============================================================================================================================================================================================================================================================================================================================================================+
+| `reduceByKey(f)`           | Return an RDD of pairs containing one pair for each key of the input RDD of pairs. The value of each pair of the new RDD of pairs is obtained by combining the values of the input RDD associated with the same key. The input RDD of pairs and the new RDD of pairs have the same data type.                                                              |
+|                            |                                                                                                                                                                                                                                                                                                                                                            |
+|                            |                                                                                                                                                                                                                                                                                                                                                            |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `foldByKey(zeroValue, op)` | Similar to the `reduceByKey()` transformation, however `foldByKey()` is characterized also by a zero value.                                                                                                                                                                                                                                                |
+|                            |                                                                                                                                                                                                                                                                                                                                                            |
+|                            |                                                                                                                                                                                                                                                                                                                                                            |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `combineByKey(`            | Return an RDD of key-value pairs containing one pair for each key of the input RDD of pairs. The value of each pair of the new RDD is obtained by combining the values of the input RDD associated with the same key. The values of the input RDD of pairs and the values of the new (returned) RDD of pairs can be characterized by different data types. |
+|     `createCombiner,`      |                                                                                                                                                                                                                                                                                                                                                            |
+|     `mergeValue,`          |                                                                                                                                                                                                                                                                                                                                                            |
+|     `mergeCombiner`        |                                                                                                                                                                                                                                                                                                                                                            |
+| `)`                        |                                                                                                                                                                                                                                                                                                                                                            |
+|                            |                                                                                                                                                                                                                                                                                                                                                            |
+|                            |                                                                                                                                                                                                                                                                                                                                                            |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `groupByKey()`             | Return an RDD of pairs containing one pair for each key of the input RDD of pairs. The value of each pair of the new RDD of pairs is a collection containing all the values of the input RDD associated with one of the input keys.                                                                                                                        |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `mapValues(f)`             | Apply a function over each pair of an RDD of pairs and return a new RDD of pairs. The applied function returns one pair for each pair of the input RDD of pairs. The function is applied only on the value part without changing the key. The values of the input RDD and the values of new RDD can have different data types.                             |
+|                            |                                                                                                                                                                                                                                                                                                                                                            |
+|                            |                                                                                                                                                                                                                                                                                                                                                            |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `flatMapValues(f)`         | Apply a function over each pair of an RDD of pairs and return a new RDD of pairs. The applied function returns a set of pairs (from 0 to many) for each pair of the input RDD of pairs. The function is applied only on the value part without changing the key. The values of the input RDD and the values of new RDD can have different data types.      |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `keys()`                   | Return an RDD containing the keys of the input `pairRDD`.                                                                                                                                                                                                                                                                                                  |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `values()`                 | Return an RDD containing the values of the input `pairRDD`.                                                                                                                                                                                                                                                                                                |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `sortByKey()`              | Return a `PairRDD` sorted by key. The input `PairRDD` and the new `PairRDD` have the same data type.                                                                                                                                                                                                                                                       |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+: {tbl-colwidths="[25,75]"}
+
+**Examples**
+
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| Transformation             | Example                                                                   | Result                         |
++============================+===========================================================================+================================+
+| `reduceByKey(f)`           | `reduceByKey(lambda v1, v2: v1+v2)`                                       | `[("k1",2),("k3",10)]`         |
+|                            |                                                                           |                                |
+|                            | Sum values per key                                                        |                                |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| `foldByKey(zeroValue, op)` | `foldByKey(0,lambda v1, v2: v1+v2)`                                       | `[("k1",2),("k3",10)]`         |
+|                            |                                                                           |                                |
+|                            | Sum values per key. The zero value is 0                                   |                                |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| `combineByKey(`            | `combineByKey(`                                                           | `[("k1",(2,1)),("k3",(10,2))]` |
+|     `createCombiner,`      |     `lambda e: (e, 1),`                                                   |                                |
+|     `mergeValue,`          |     `lambda c, e: (c[0]+e, c[1]+1),`                                      |                                |
+|     `mergeCombiner`        |     `lambda c1, c2: (c1[0]+c2[0], c1[1]+c2[1])`                           |                                |
+| `)`                        | `)`                                                                       |                                |
+|                            |                                                                           |                                |
+|                            | Sum values by key and count the number of pairs by key in one single step |                                |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| `groupByKey()`             | `groupByKey()`                                                            | `[("k1",[2]),("k3",[4,6])]`    |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| `mapValues(f)`             | `mapValues(lambda v: v+1)`                                                | `[("k1",3),("k3",5),("k3",7)]` |
+|                            |                                                                           |                                |
+|                            | Increment the value part by 1                                             |                                |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| `flatMapValues(f)`         | `flatMapValues(lambda v: list(range(v,6)))`                               | `[`                            |
+|                            |                                                                           |     `("k1",2),`                |
+|                            |                                                                           |     `("k1",3),`                |
+|                            |                                                                           |     `("k1",4),`                |
+|                            |                                                                           |     `("k1",5),`                |
+|                            |                                                                           |     `("k3",4),`                |
+|                            |                                                                           |     `("k3",5)`                 |
+|                            |                                                                           | `]`                            |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| `keys()`                   | `keys()`                                                                  | `["k1","k3“,"k3"]`             |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| `values()`                 | `values()`                                                                | `[2, 4, 6]`                    |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| `sortByKey()`              | `sortByKey()`                                                             | `[("k1",2),("k3",4),("k3",6)]` |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+
+: {tbl-colwidths="[25,45,30]"}
+
+:::
+::::
+
+:::{.content-visible when-format="pdf"}
+
+\newpage
+
+\blandscape
+
+**Purposes**
+
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Transformation             | Purpose                                                                                                                                                                                                                                                                                                                                                    |
++============================+============================================================================================================================================================================================================================================================================================================================================================+
+| `reduceByKey(f)`           | Return an RDD of pairs containing one pair for each key of the input RDD of pairs. The value of each pair of the new RDD of pairs is obtained by combining the values of the input RDD associated with the same key. The input RDD of pairs and the new RDD of pairs have the same data type.                                                              |
+|                            |                                                                                                                                                                                                                                                                                                                                                            |
+|                            |                                                                                                                                                                                                                                                                                                                                                            |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `foldByKey(zeroValue, op)` | Similar to the `reduceByKey()` transformation, however `foldByKey()` is characterized also by a zero value.                                                                                                                                                                                                                                                |
+|                            |                                                                                                                                                                                                                                                                                                                                                            |
+|                            |                                                                                                                                                                                                                                                                                                                                                            |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `combineByKey(`            | Return an RDD of key-value pairs containing one pair for each key of the input RDD of pairs. The value of each pair of the new RDD is obtained by combining the values of the input RDD associated with the same key. The values of the input RDD of pairs and the values of the new (returned) RDD of pairs can be characterized by different data types. |
+|     `createCombiner,`      |                                                                                                                                                                                                                                                                                                                                                            |
+|     `mergeValue,`          |                                                                                                                                                                                                                                                                                                                                                            |
+|     `mergeCombiner`        |                                                                                                                                                                                                                                                                                                                                                            |
+| `)`                        |                                                                                                                                                                                                                                                                                                                                                            |
+|                            |                                                                                                                                                                                                                                                                                                                                                            |
+|                            |                                                                                                                                                                                                                                                                                                                                                            |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `groupByKey()`             | Return an RDD of pairs containing one pair for each key of the input RDD of pairs. The value of each pair of the new RDD of pairs is a collection containing all the values of the input RDD associated with one of the input keys.                                                                                                                        |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `mapValues(f)`             | Apply a function over each pair of an RDD of pairs and return a new RDD of pairs. The applied function returns one pair for each pair of the input RDD of pairs. The function is applied only on the value part without changing the key. The values of the input RDD and the values of new RDD can have different data types.                             |
+|                            |                                                                                                                                                                                                                                                                                                                                                            |
+|                            |                                                                                                                                                                                                                                                                                                                                                            |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `flatMapValues(f)`         | Apply a function over each pair of an RDD of pairs and return a new RDD of pairs. The applied function returns a set of pairs (from 0 to many) for each pair of the input RDD of pairs. The function is applied only on the value part without changing the key. The values of the input RDD and the values of new RDD can have different data types.      |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `keys()`                   | Return an RDD containing the keys of the input `pairRDD`.                                                                                                                                                                                                                                                                                                  |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `values()`                 | Return an RDD containing the values of the input `pairRDD`.                                                                                                                                                                                                                                                                                                |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `sortByKey()`              | Return a `PairRDD` sorted by key. The input `PairRDD` and the new `PairRDD` have the same data type.                                                                                                                                                                                                                                                       |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+: {tbl-colwidths="[25,75]"}
+
+\newpage
+
+**Examples**
+
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| Transformation             | Example                                                                   | Result                         |
++============================+===========================================================================+================================+
+| `reduceByKey(f)`           | `reduceByKey(lambda v1, v2: v1+v2)`                                       | `[("k1",2),("k3",10)]`         |
+|                            |                                                                           |                                |
+|                            | Sum values per key                                                        |                                |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| `foldByKey(zeroValue, op)` | `foldByKey(0,lambda v1, v2: v1+v2)`                                       | `[("k1",2),("k3",10)]`         |
+|                            |                                                                           |                                |
+|                            | Sum values per key. The zero value is 0                                   |                                |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| `combineByKey(`            | `combineByKey(`                                                           | `[("k1",(2,1)),("k3",(10,2))]` |
+|     `createCombiner,`      |     `lambda e: (e, 1),`                                                   |                                |
+|     `mergeValue,`          |     `lambda c, e: (c[0]+e, c[1]+1),`                                      |                                |
+|     `mergeCombiner`        |     `lambda c1, c2: (c1[0]+c2[0], c1[1]+c2[1])`                           |                                |
+| `)`                        | `)`                                                                       |                                |
+|                            |                                                                           |                                |
+|                            | Sum values by key and count the number of pairs by key in one single step |                                |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| `groupByKey()`             | `groupByKey()`                                                            | `[("k1",[2]),("k3",[4,6])]`    |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| `mapValues(f)`             | `mapValues(lambda v: v+1)`                                                | `[("k1",3),("k3",5),("k3",7)]` |
+|                            |                                                                           |                                |
+|                            | Increment the value part by 1                                             |                                |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| `flatMapValues(f)`         | `flatMapValues(lambda v: list(range(v,6)))`                               | `[`                            |
+|                            |                                                                           |     `("k1",2),`                |
+|                            |                                                                           |     `("k1",3),`                |
+|                            |                                                                           |     `("k1",4),`                |
+|                            |                                                                           |     `("k1",5),`                |
+|                            |                                                                           |     `("k3",4),`                |
+|                            |                                                                           |     `("k3",5)`                 |
+|                            |                                                                           | `]`                            |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| `keys()`                   | `keys()`                                                                  | `["k1","k3“,"k3"]`             |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| `values()`                 | `values()`                                                                | `[2, 4, 6]`                    |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+| `sortByKey()`              | `sortByKey()`                                                             | `[("k1",2),("k3",4),("k3",6)]` |
++----------------------------+---------------------------------------------------------------------------+--------------------------------+
+
+: {tbl-colwidths="[25,45,30]"}
+
+\elandscape
+
+:::

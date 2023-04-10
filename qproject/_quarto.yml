@@ -34,8 +34,16 @@ format:
     theme: simplex
     code-line-numbers: true
     fig-cap-location: top
-  # pdf: 
-  #   toc: true
-  #   number-sections: true
-  #   code-line-numbers: true
-  #   fig-cap-location: top
+  pdf: 
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    code-line-numbers: true
+    code-block-bg: "#f0f3f5"
+    fig-cap-location: top
+    code-overflow: wrap
+    include-in-header: 
+      text: |
+        \usepackage{lscape}
+        \newcommand{\blandscape}{\begin{landscape}}
+        \newcommand{\elandscape}{\end{landscape}}

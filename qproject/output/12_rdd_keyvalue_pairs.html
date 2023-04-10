@@ -2629,11 +2629,15 @@ vertical-align: -.125em;
   <li><a href="#groupbykey-transformation" id="toc-groupbykey-transformation" class="nav-link" data-scroll-target="#groupbykey-transformation"><span class="toc-section-number">5.4</span>  GroupByKey transformation</a></li>
   <li><a href="#mapvalues-transformation" id="toc-mapvalues-transformation" class="nav-link" data-scroll-target="#mapvalues-transformation"><span class="toc-section-number">5.5</span>  MapValues transformation</a></li>
   <li><a href="#flatmapvalues-transformation" id="toc-flatmapvalues-transformation" class="nav-link" data-scroll-target="#flatmapvalues-transformation"><span class="toc-section-number">5.6</span>  FlatMapValues transformation</a></li>
+  <li><a href="#keys-transformation" id="toc-keys-transformation" class="nav-link" data-scroll-target="#keys-transformation"><span class="toc-section-number">5.7</span>  Keys transformation</a></li>
+  <li><a href="#values-transformation" id="toc-values-transformation" class="nav-link" data-scroll-target="#values-transformation"><span class="toc-section-number">5.8</span>  Values transformation</a></li>
+  <li><a href="#sortbykey-transformation" id="toc-sortbykey-transformation" class="nav-link" data-scroll-target="#sortbykey-transformation"><span class="toc-section-number">5.9</span>  SortByKey transformation</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="toc-section-number">5.10</span>  Summary</a></li>
   </ul></li>
   </ul>
 </nav>
 </div>
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -2760,7 +2764,7 @@ Example
 <span id="cb2-11"><a href="#cb2-11"></a><span class="co"># Create an RDD of key-value pairs based on the input document</span></span>
 <span id="cb2-12"><a href="#cb2-12"></a><span class="co"># One pair (word,1) for each input word</span></span>
 <span id="cb2-13"><a href="#cb2-13"></a>wordOnePairRDD <span class="op">=</span> linesRDD.flatMap(wordsOnes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><strong>Version 1</strong></p>
+<p><strong>Version 2</strong></p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># Read the content of the input textual file</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a>linesRDD <span class="op">=</span> sc.textFile(<span class="st">&quot;document.txt&quot;</span>)</span>
 <span id="cb3-3"><a href="#cb3-3"></a></span>
@@ -2808,10 +2812,14 @@ Example
 <li><code>(&quot;Paolo&quot;, 35)</code></li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Create the local python list</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>nameAge <span class="op">=</span> [ (<span class="st">&quot;Paolo&quot;</span>, <span class="dv">40</span>), (<span class="st">&quot;Giorgio&quot;</span>, <span class="dv">22</span>), (<span class="st">&quot;Paolo&quot;</span>, <span class="dv">35</span>)]</span>
-<span id="cb4-3"><a href="#cb4-3"></a></span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a>nameAgePairRDD <span class="op">=</span> sc.parallelize(nameAge)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-2"><a href="#cb4-2"></a>nameAge <span class="op">=</span> [</span>
+<span id="cb4-3"><a href="#cb4-3"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="dv">40</span>),</span>
+<span id="cb4-4"><a href="#cb4-4"></a>    (<span class="st">&quot;Giorgio&quot;</span>,<span class="dv">22</span>),</span>
+<span id="cb4-5"><a href="#cb4-5"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="dv">35</span>)</span>
+<span id="cb4-6"><a href="#cb4-6"></a>]</span>
+<span id="cb4-7"><a href="#cb4-7"></a></span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a>nameAgePairRDD <span class="op">=</span> sc.parallelize(nameAge)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <table class="table">
 <colgroup>
 <col style="width: 20%">
@@ -2832,12 +2840,12 @@ Example
 </div>
 </div>
 </section>
-<section id="transformations-on-rdds-of-key-value-pairs" class="level1" data-number="5">
+<section id="transformations-on-rdds-of-key-value-pairs" class="level1 page-columns page-full" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Transformations on RDDs of key-value pairs</h1>
 <p>All the standard transformations can be applied, where the specified functions operate on tuples, but also specific transformations are available (e.g., <code>reduceByKey()</code>, <code>groupyKey()</code>, <code>mapValues()</code>, <code>join()</code>).</p>
 <section id="reducebykey-transformation" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="reducebykey-transformation"><span class="header-section-number">5.1</span> ReduceByKey transformation</h2>
-<p>Create a new RDD of key-value pairs where there is one pair for each distinct key <code>k</code> of the input RDD of key-value pairs:</p>
+<p>The goal is to create a new RDD of key-value pairs where there is one pair for each distinct key <code>k</code> of the input RDD of key-value pairs:</p>
 <ul>
 <li>The value associated with key <code>k</code> in the new RDD of key-value pairs is computed by applying a function <code>f</code> on the values associated with <code>k</code> in the input RDD of key-value pairs; the function <code>f</code> must be associative and commutative, otherwise the result depends on how data are partitioned and analyzed;</li>
 <li>The data type of the new RDD of key-value pairs is the same of the input RDD of key-value pairs.</li>
@@ -2872,13 +2880,17 @@ Example
 <li>Create a new RDD of key-value pairs containing one pair for each name. In the returned RDD, associate each name with the age of the youngest user with that name.</li>
 </ol>
 <div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Create the local python list</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>nameAge <span class="op">=</span> [ (<span class="st">&quot;Paolo&quot;</span>, <span class="dv">40</span>), (<span class="st">&quot;Giorgio&quot;</span>, <span class="dv">22</span>), (<span class="st">&quot;Paolo&quot;</span>, <span class="dv">35</span>)]</span>
-<span id="cb5-3"><a href="#cb5-3"></a></span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a>nameAgePairRDD <span class="op">=</span> sc.parallelize(nameAge)</span>
-<span id="cb5-6"><a href="#cb5-6"></a></span>
-<span id="cb5-7"><a href="#cb5-7"></a><span class="co"># Select for each name the lowest age value</span></span>
-<span id="cb5-8"><a href="#cb5-8"></a>youngestPairRDD<span class="op">=</span> nameAgePairRDD.reduceByKey(<span class="kw">lambda</span> age1, age2: <span class="bu">min</span>(age1, age2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-2"><a href="#cb5-2"></a>nameAge <span class="op">=</span> [</span>
+<span id="cb5-3"><a href="#cb5-3"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="dv">40</span>),</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    (<span class="st">&quot;Giorgio&quot;</span>,<span class="dv">22</span>),</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="dv">35</span>)</span>
+<span id="cb5-6"><a href="#cb5-6"></a>]</span>
+<span id="cb5-7"><a href="#cb5-7"></a></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a>nameAgePairRDD <span class="op">=</span> sc.parallelize(nameAge)</span>
+<span id="cb5-10"><a href="#cb5-10"></a></span>
+<span id="cb5-11"><a href="#cb5-11"></a><span class="co"># Select for each name the lowest age value</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a>youngestPairRDD<span class="op">=</span> nameAgePairRDD.reduceByKey(<span class="kw">lambda</span> age1, age2: <span class="bu">min</span>(age1, age2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <table class="table">
 <colgroup>
 <col style="width: 20%">
@@ -2932,20 +2944,24 @@ Example
 <li>Create a new RDD of key-value pairs containing one pair for each name. In the returned RDD, associate each name the concatenation of its messages (preserving the order of the messages in the input RDD).</li>
 </ol>
 <div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Create the local python list</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a>nameMess <span class="op">=</span> [(<span class="st">&quot;Paolo&quot;</span>, <span class="st">&quot;Message1&quot;</span>), (<span class="st">&quot;Giorgio&quot;</span>, <span class="st">&quot;Message2&quot;</span>), (<span class="st">&quot;Paolo&quot;</span>, <span class="st">&quot;Message3&quot;</span>)]</span>
-<span id="cb6-3"><a href="#cb6-3"></a></span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
-<span id="cb6-5"><a href="#cb6-5"></a>nameMessPairRDD <span class="op">=</span> sc.parallelize(nameMess)</span>
-<span id="cb6-6"><a href="#cb6-6"></a></span>
-<span id="cb6-7"><a href="#cb6-7"></a><span class="co"># Concatenate the messages of each user</span></span>
-<span id="cb6-8"><a href="#cb6-8"></a>concatPairRDD<span class="op">=</span> nameMessPairRDD.foldByKey(<span class="st">&#39;&#39;</span>, <span class="kw">lambda</span> m1, m2: m1<span class="op">+</span>m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-2"><a href="#cb6-2"></a>nameMess <span class="op">=</span> [</span>
+<span id="cb6-3"><a href="#cb6-3"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="st">&quot;Message1&quot;</span>),</span>
+<span id="cb6-4"><a href="#cb6-4"></a>    (<span class="st">&quot;Giorgio&quot;</span>,<span class="st">&quot;Message2&quot;</span>),</span>
+<span id="cb6-5"><a href="#cb6-5"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="st">&quot;Message3&quot;</span>)</span>
+<span id="cb6-6"><a href="#cb6-6"></a>]</span>
+<span id="cb6-7"><a href="#cb6-7"></a></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a>nameMessPairRDD <span class="op">=</span> sc.parallelize(nameMess)</span>
+<span id="cb6-10"><a href="#cb6-10"></a></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="co"># Concatenate the messages of each user</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a>concatPairRDD<span class="op">=</span> nameMessPairRDD.foldByKey(<span class="st">&#39;&#39;</span>, <span class="kw">lambda</span> m1, m2: m1<span class="op">+</span>m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 </section>
 <section id="combinebykey-transformation" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="combinebykey-transformation"><span class="header-section-number">5.3</span> CombineByKey transformation</h2>
-<p>Create a new RDD of key-value pairs where there is one pair for each distinct key <span class="math inline">\(k\)</span> of the input RDD of key-value pairs. The value associated with the key <span class="math inline">\(k\)</span> in the new RDD of key-value pairs is computed by applying user-provided functions on the values associated with <span class="math inline">\(k\)</span> in the input RDD of key-value pairs: the user-provided function must be associative, otherwise the result depends how data are partitioned and analyzed.</p>
+<p>The goal is to create a new RDD of key-value pairs where there is one pair for each distinct key <span class="math inline">\(k\)</span> of the input RDD of key-value pairs. The value associated with the key <span class="math inline">\(k\)</span> in the new RDD of key-value pairs is computed by applying user-provided functions on the values associated with <span class="math inline">\(k\)</span> in the input RDD of key-value pairs: the user-provided function must be associative, otherwise the result depends how data are partitioned and analyzed.</p>
 <p>The data type of the new RDD of key-value pairs can be different with respect to the data type of the input RDD of key-value pairs.</p>
 <p>The combineByKey transformation is based on the <code>combineByKey(createCombiner, mergeValue, mergeCombiner)</code> method of the <code>RDD</code> class</p>
 <ul>
@@ -2980,24 +2996,36 @@ Example
 <li>Store the results in an output HDFS folder. The output contains one line for each name followed by the average age of the users with that name</li>
 </ol>
 <div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Create the local python list</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>nameAge <span class="op">=</span> [ (<span class="st">&quot;Paolo&quot;</span>, <span class="dv">40</span>), (<span class="st">&quot;Giorgio&quot;</span>, <span class="dv">22</span>), (<span class="st">&quot;Paolo&quot;</span>, <span class="dv">35</span>)]</span>
-<span id="cb7-3"><a href="#cb7-3"></a></span>
-<span id="cb7-4"><a href="#cb7-4"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
-<span id="cb7-5"><a href="#cb7-5"></a>nameAgePairRDD <span class="op">=</span> sc.parallelize(nameAge)</span>
-<span id="cb7-6"><a href="#cb7-6"></a></span>
-<span id="cb7-7"><a href="#cb7-7"></a><span class="co"># Compute the sum of ages and</span></span>
-<span id="cb7-8"><a href="#cb7-8"></a><span class="co"># the number of input pairs for each name (key)</span></span>
-<span id="cb7-9"><a href="#cb7-9"></a>sumNumPerNamePairRDD <span class="op">=</span> nameAgePairRDD.combineByKey(</span>
-<span id="cb7-10"><a href="#cb7-10"></a>    <span class="kw">lambda</span> inputElem: (inputElem, <span class="dv">1</span>),</span>
-<span id="cb7-11"><a href="#cb7-11"></a>    <span class="kw">lambda</span> intermediateElem, inputElem: (intermediateElem[<span class="dv">0</span>]<span class="op">+</span>inputElem, intermediateElem[<span class="dv">1</span>]<span class="op">+</span><span class="dv">1</span>),</span>
-<span id="cb7-12"><a href="#cb7-12"></a>    <span class="kw">lambda</span> intermediateElem1, intermediateElem2: (intermediateElem1[<span class="dv">0</span>]<span class="op">+</span>intermediateElem2[<span class="dv">0</span>], intermediateElem1[<span class="dv">1</span>]<span class="op">+</span>intermediateElem2[<span class="dv">1</span>])</span>
-<span id="cb7-13"><a href="#cb7-13"></a>)</span>
-<span id="cb7-14"><a href="#cb7-14"></a></span>
-<span id="cb7-15"><a href="#cb7-15"></a><span class="co"># Compute the average for each name</span></span>
-<span id="cb7-16"><a href="#cb7-16"></a>avgPerNamePairRDD <span class="op">=</span> sumNumPerNamePairRDD.<span class="bu">map</span>(<span class="kw">lambda</span> pair: (pair[<span class="dv">0</span>], pair[<span class="dv">1</span>][<span class="dv">0</span>]<span class="op">/</span>pair[<span class="dv">1</span>][<span class="dv">1</span>]))</span>
-<span id="cb7-17"><a href="#cb7-17"></a></span>
-<span id="cb7-18"><a href="#cb7-18"></a><span class="co"># Store the result in an output folder</span></span>
-<span id="cb7-19"><a href="#cb7-19"></a>avgPerNamePairRDD.saveAsTextFile(outputPath)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-2"><a href="#cb7-2"></a>nameAge <span class="op">=</span> [</span>
+<span id="cb7-3"><a href="#cb7-3"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="dv">40</span>),</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    (<span class="st">&quot;Giorgio&quot;</span>,<span class="dv">22</span>),</span>
+<span id="cb7-5"><a href="#cb7-5"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="dv">35</span>)</span>
+<span id="cb7-6"><a href="#cb7-6"></a>]</span>
+<span id="cb7-7"><a href="#cb7-7"></a></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>nameAgePairRDD <span class="op">=</span> sc.parallelize(nameAge)</span>
+<span id="cb7-10"><a href="#cb7-10"></a></span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="co"># Compute the sum of ages and</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a><span class="co"># the number of input pairs for each name (key)</span></span>
+<span id="cb7-13"><a href="#cb7-13"></a>sumNumPerNamePairRDD <span class="op">=</span> nameAgePairRDD.combineByKey(</span>
+<span id="cb7-14"><a href="#cb7-14"></a>    <span class="kw">lambda</span> inputElem: (inputElem, <span class="dv">1</span>),</span>
+<span id="cb7-15"><a href="#cb7-15"></a>    <span class="kw">lambda</span> intermediateElem, inputElem: (</span>
+<span id="cb7-16"><a href="#cb7-16"></a>        intermediateElem[<span class="dv">0</span>]<span class="op">+</span>inputElem, </span>
+<span id="cb7-17"><a href="#cb7-17"></a>        intermediateElem[<span class="dv">1</span>]<span class="op">+</span><span class="dv">1</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a>    ),</span>
+<span id="cb7-19"><a href="#cb7-19"></a>    <span class="kw">lambda</span> intermediateElem1, intermediateElem2: (</span>
+<span id="cb7-20"><a href="#cb7-20"></a>        intermediateElem1[<span class="dv">0</span>]<span class="op">+</span>intermediateElem2[<span class="dv">0</span>], </span>
+<span id="cb7-21"><a href="#cb7-21"></a>        intermediateElem1[<span class="dv">1</span>]<span class="op">+</span>intermediateElem2[<span class="dv">1</span>]</span>
+<span id="cb7-22"><a href="#cb7-22"></a>    )</span>
+<span id="cb7-23"><a href="#cb7-23"></a>)</span>
+<span id="cb7-24"><a href="#cb7-24"></a></span>
+<span id="cb7-25"><a href="#cb7-25"></a><span class="co"># Compute the average for each name</span></span>
+<span id="cb7-26"><a href="#cb7-26"></a>avgPerNamePairRDD <span class="op">=</span> sumNumPerNamePairRDD.<span class="bu">map</span>(</span>
+<span id="cb7-27"><a href="#cb7-27"></a>    <span class="kw">lambda</span> pair: (pair[<span class="dv">0</span>], pair[<span class="dv">1</span>][<span class="dv">0</span>]<span class="op">/</span>pair[<span class="dv">1</span>][<span class="dv">1</span>])</span>
+<span id="cb7-28"><a href="#cb7-28"></a>)</span>
+<span id="cb7-29"><a href="#cb7-29"></a></span>
+<span id="cb7-30"><a href="#cb7-30"></a><span class="co"># Store the result in an output folder</span></span>
+<span id="cb7-31"><a href="#cb7-31"></a>avgPerNamePairRDD.saveAsTextFile(outputPath)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <table class="table">
 <colgroup>
 <col style="width: 20%">
@@ -3028,7 +3056,7 @@ Example
 </section>
 <section id="groupbykey-transformation" class="level2" data-number="5.4">
 <h2 data-number="5.4" class="anchored" data-anchor-id="groupbykey-transformation"><span class="header-section-number">5.4</span> GroupByKey transformation</h2>
-<p>Create a new RDD of key-value pairs where there is one pair for each distinct key <span class="math inline">\(k\)</span> of the input RDD of key-value pairs: the value associated with key <span class="math inline">\(k\)</span> in the new RDD of key-value pairs is the list of values associated with <span class="math inline">\(k\)</span> in the input RDD of key-value pairs.</p>
+<p>The goal is to create a new RDD of key-value pairs where there is one pair for each distinct key <span class="math inline">\(k\)</span> of the input RDD of key-value pairs: the value associated with key <span class="math inline">\(k\)</span> in the new RDD of key-value pairs is the list of values associated with <span class="math inline">\(k\)</span> in the input RDD of key-value pairs.</p>
 <p>The groupByKey transformation is based on the <code>groupByKey()</code> method of the <code>RDD</code> class.</p>
 <p>If grouping values per key to perform then an aggregation such as sum or average over the values of each key then groupByKey is not the right choice: <code>reduceByKey</code>, <code>aggregateByKey</code>, or <code>combineByKey</code> provide better performances for associative and commutative aggregations; <code>groupByKey</code> is useful if an aggregation or compute a function that is not associative must be applied.</p>
 <p>A shuffle operation is executed for computing the result of the <code>groupByKey()</code> transformation: each group/key is associated with/is composed of values which are stored in different partitions of the input RDD.</p>
@@ -3054,16 +3082,22 @@ Example
 <li>Store the results in an output HDFS folder. The output contains one line for each name followed by the ages of all the users with that name.</li>
 </ol>
 <div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Create the local python list</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a>nameAge <span class="op">=</span> [ (<span class="st">&quot;Paolo&quot;</span>, <span class="dv">40</span>), (<span class="st">&quot;Giorgio&quot;</span>, <span class="dv">22</span>), (<span class="st">&quot;Paolo&quot;</span>, <span class="dv">35</span>)]</span>
-<span id="cb8-3"><a href="#cb8-3"></a></span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
-<span id="cb8-5"><a href="#cb8-5"></a>nameAgePairRDD <span class="op">=</span> sc.parallelize(nameAge)</span>
-<span id="cb8-6"><a href="#cb8-6"></a></span>
-<span id="cb8-7"><a href="#cb8-7"></a><span class="co"># Create one group for each name with the list of associated ages</span></span>
-<span id="cb8-8"><a href="#cb8-8"></a>agesPerNamePairRDD <span class="op">=</span> nameAgePairRDD.groupByKey()</span>
-<span id="cb8-9"><a href="#cb8-9"></a></span>
-<span id="cb8-10"><a href="#cb8-10"></a><span class="co"># Store the result in an output folder</span></span>
-<span id="cb8-11"><a href="#cb8-11"></a>agesPerNamePairRDD.mapValues(<span class="kw">lambda</span> listValues: <span class="bu">list</span>(listValues)).saveAsTextFile(outputPath)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-2"><a href="#cb8-2"></a>nameAge <span class="op">=</span> [</span>
+<span id="cb8-3"><a href="#cb8-3"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="dv">40</span>),</span>
+<span id="cb8-4"><a href="#cb8-4"></a>    (<span class="st">&quot;Giorgio&quot;</span>,<span class="dv">22</span>),</span>
+<span id="cb8-5"><a href="#cb8-5"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="dv">35</span>)</span>
+<span id="cb8-6"><a href="#cb8-6"></a>]</span>
+<span id="cb8-7"><a href="#cb8-7"></a></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>nameAgePairRDD <span class="op">=</span> sc.parallelize(nameAge)</span>
+<span id="cb8-10"><a href="#cb8-10"></a></span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="co"># Create one group for each name with the list of associated ages</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a>agesPerNamePairRDD <span class="op">=</span> nameAgePairRDD.groupByKey()</span>
+<span id="cb8-13"><a href="#cb8-13"></a></span>
+<span id="cb8-14"><a href="#cb8-14"></a><span class="co"># Store the result in an output folder</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a>agesPerNamePairRDD<span class="op">\</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a>    .mapValues(<span class="kw">lambda</span> listValues: <span class="bu">list</span>(listValues))<span class="op">\</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a>    .saveAsTextFile(outputPath)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <table class="table">
 <colgroup>
 <col style="width: 20%">
@@ -3086,7 +3120,7 @@ Example
 </section>
 <section id="mapvalues-transformation" class="level2" data-number="5.5">
 <h2 data-number="5.5" class="anchored" data-anchor-id="mapvalues-transformation"><span class="header-section-number">5.5</span> MapValues transformation</h2>
-<p>Apply a function <span class="math inline">\(f\)</span> over the value of each pair of an input RDD or key-value pairs and return a new RDD of key-value pairs: one pair is created in the returned RDD for each input pair</p>
+<p>The goal is to apply a function <span class="math inline">\(f\)</span> over the value of each pair of an input RDD or key-value pairs and return a new RDD of key-value pairs: one pair is created in the returned RDD for each input pair</p>
 <ul>
 <li>The key of the created pair is equal to the key of the input pair</li>
 <li>The value of the created pair is obtained by applying the function <span class="math inline">\(f\)</span> on the value of the input pair</li>
@@ -3099,7 +3133,7 @@ Example
 <i class="callout-icon"></i>
 </div>
 <div class="callout-caption-container flex-fill">
-Note
+Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -3115,22 +3149,334 @@ Note
 <li>Increase the age of each user (+1 year) and store the result in the HDFS file system, one output line per user.</li>
 </ol>
 <div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Create the local python list</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a>nameAge <span class="op">=</span> [ (<span class="st">&quot;Paolo&quot;</span>, <span class="dv">40</span>), (<span class="st">&quot;Giorgio&quot;</span>, <span class="dv">22</span>), (<span class="st">&quot;Paolo&quot;</span>, <span class="dv">35</span>)]</span>
-<span id="cb9-3"><a href="#cb9-3"></a></span>
-<span id="cb9-4"><a href="#cb9-4"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
-<span id="cb9-5"><a href="#cb9-5"></a>nameAgePairRDD <span class="op">=</span> sc.parallelize(nameAge)</span>
-<span id="cb9-6"><a href="#cb9-6"></a></span>
-<span id="cb9-7"><a href="#cb9-7"></a><span class="co"># Increment age of all users</span></span>
-<span id="cb9-8"><a href="#cb9-8"></a>plusOnePairRDD <span class="op">=</span> nameAgePairRDD.mapValues(<span class="kw">lambda</span> age: age<span class="op">+</span><span class="dv">1</span>)</span>
-<span id="cb9-9"><a href="#cb9-9"></a></span>
-<span id="cb9-10"><a href="#cb9-10"></a><span class="co"># Save the result on disk</span></span>
-<span id="cb9-11"><a href="#cb9-11"></a>plusOnePairRDD.saveAsTextFile(outputPath)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-2"><a href="#cb9-2"></a>nameAge <span class="op">=</span> [</span>
+<span id="cb9-3"><a href="#cb9-3"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="dv">40</span>),</span>
+<span id="cb9-4"><a href="#cb9-4"></a>    (<span class="st">&quot;Giorgio&quot;</span>,<span class="dv">22</span>),</span>
+<span id="cb9-5"><a href="#cb9-5"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="dv">35</span>)</span>
+<span id="cb9-6"><a href="#cb9-6"></a>]</span>
+<span id="cb9-7"><a href="#cb9-7"></a></span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a>nameAgePairRDD <span class="op">=</span> sc.parallelize(nameAge)</span>
+<span id="cb9-10"><a href="#cb9-10"></a></span>
+<span id="cb9-11"><a href="#cb9-11"></a><span class="co"># Increment age of all users</span></span>
+<span id="cb9-12"><a href="#cb9-12"></a>plusOnePairRDD <span class="op">=</span> nameAgePairRDD.mapValues(<span class="kw">lambda</span> age: age<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb9-13"><a href="#cb9-13"></a></span>
+<span id="cb9-14"><a href="#cb9-14"></a><span class="co"># Save the result on disk</span></span>
+<span id="cb9-15"><a href="#cb9-15"></a>plusOnePairRDD.saveAsTextFile(outputPath)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 </section>
 <section id="flatmapvalues-transformation" class="level2" data-number="5.6">
 <h2 data-number="5.6" class="anchored" data-anchor-id="flatmapvalues-transformation"><span class="header-section-number">5.6</span> FlatMapValues transformation</h2>
+<p>The goal is to apply a function <span class="math inline">\(f\)</span> over the value of each pair of an input RDD or key-value pairs and return a new RDD of key-value pairs (<span class="math inline">\(f\)</span> returns a list of values for each input value). A list of pairs is inserted in the returned RDD for each input pair</p>
+<ul>
+<li>The key of the created pairs is equal to the key of the input pair</li>
+<li>The values of the created pairs are obtained by applying the function <span class="math inline">\(f\)</span> on the value of the input pair</li>
+</ul>
+<p>The data type of the values of the new RDD of key-value pairs can be different from the data type of the values of the input RDD of key-value pairs. The data type of the key is the same.</p>
+<p>The flatMapValues transformation is based on <code>flatMapValues(f)</code> method of the <code>RDD</code> class: a function <code>f</code> is passed to the <code>mapValues</code> method, where <code>f</code> contains the code that is applied to transform each input value into a set of new values that are stored in the new RDD of key-value pairs. The keys of the input pairs are not changed.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD from a local python list containing the pairs
+<ul>
+<li><code>(&quot;Sentence#1&quot;, &quot;Sentence test&quot;)</code></li>
+<li><code>(&quot;Sentence#2&quot;, &quot;Sentence test number 2&quot;)</code></li>
+<li><code>(&quot;Sentence#3&quot;, &quot;Sentence test number 3&quot;)</code></li>
+</ul></li>
+<li>Select the words of each sentence and store in the HDFS file system one pair (senteceId, word) per line.</li>
+</ol>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Create the local python list</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>sentences <span class="op">=</span> [</span>
+<span id="cb10-3"><a href="#cb10-3"></a>    (<span class="st">&quot;Sentence#1&quot;</span>, <span class="st">&quot;Sentence test&quot;</span>),</span>
+<span id="cb10-4"><a href="#cb10-4"></a>    (<span class="st">&quot;Sentence#2&quot;</span>, <span class="st">&quot;Sentence test number 2&quot;</span>),</span>
+<span id="cb10-5"><a href="#cb10-5"></a>    (<span class="st">&quot;Sentence#3&quot;</span>, <span class="st">&quot;Sentence test number 3&quot;</span>)</span>
+<span id="cb10-6"><a href="#cb10-6"></a>]</span>
+<span id="cb10-7"><a href="#cb10-7"></a></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
+<span id="cb10-9"><a href="#cb10-9"></a>sentPairRDD <span class="op">=</span> sc.parallelize(sentences)</span>
+<span id="cb10-10"><a href="#cb10-10"></a></span>
+<span id="cb10-11"><a href="#cb10-11"></a><span class="co"># “Extract” words from each sentence</span></span>
+<span id="cb10-12"><a href="#cb10-12"></a>sentIdWord <span class="op">=</span> sentPairRDD.flatMapValues(<span class="kw">lambda</span> s: s.split(<span class="st">&#39; &#39;</span>))</span>
+<span id="cb10-13"><a href="#cb10-13"></a></span>
+<span id="cb10-14"><a href="#cb10-14"></a><span class="co"># Save the result on disk</span></span>
+<span id="cb10-15"><a href="#cb10-15"></a>sentIdWord.saveAsTextFile(outputPath)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="keys-transformation" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="keys-transformation"><span class="header-section-number">5.7</span> Keys transformation</h2>
+<p>The goal is to return the list of keys of the input RDD of pairs and store them in a new RDD. The returned RDD is not an RDD of key-value pairs, instead it is a standard RDD of single elements, with duplicate keys not removed.</p>
+<p>The keys transformation is based on the <code>keys()</code> method of the <code>RDD</code> class.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD from a local python list containing the following pairs: the key is the first name of a user and the value is his/her age
+<ul>
+<li><code>(&quot;Paolo&quot;, 40)</code></li>
+<li><code>(&quot;Giorgio&quot;, 22)</code></li>
+<li><code>(&quot;Paolo&quot;, 35)</code></li>
+</ul></li>
+<li>Store the names of the input users in an output HDFS folder. The output contains one name per line (duplicate names are removed).</li>
+</ol>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Create the local python list</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>nameAge <span class="op">=</span> [</span>
+<span id="cb11-3"><a href="#cb11-3"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="dv">40</span>),</span>
+<span id="cb11-4"><a href="#cb11-4"></a>    (<span class="st">&quot;Giorgio&quot;</span>,<span class="dv">22</span>),</span>
+<span id="cb11-5"><a href="#cb11-5"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="dv">35</span>)</span>
+<span id="cb11-6"><a href="#cb11-6"></a>]</span>
+<span id="cb11-7"><a href="#cb11-7"></a></span>
+<span id="cb11-8"><a href="#cb11-8"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
+<span id="cb11-9"><a href="#cb11-9"></a>nameAgePairRDD <span class="op">=</span> sc.parallelize(nameAge)</span>
+<span id="cb11-10"><a href="#cb11-10"></a></span>
+<span id="cb11-11"><a href="#cb11-11"></a><span class="co"># Select the key part of the input RDD of key-value pairs</span></span>
+<span id="cb11-12"><a href="#cb11-12"></a>namesRDD <span class="op">=</span> nameAgePairRDD.keys().distinct()</span>
+<span id="cb11-13"><a href="#cb11-13"></a></span>
+<span id="cb11-14"><a href="#cb11-14"></a><span class="co"># Store the result in an output folder</span></span>
+<span id="cb11-15"><a href="#cb11-15"></a>namesRDD.saveAsTextFile(outputPath)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="values-transformation" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="values-transformation"><span class="header-section-number">5.8</span> Values transformation</h2>
+<p>The goal is to return the list of values of the input RDD of pairs and store them in a new RDD. The returned RDD is not an RDD of key-value pairs, instead it is a standard RDD of single elements, with duplicate values are not removed.</p>
+<p>The values transformation is based on the <code>values()</code> method of the <code>RDD</code> class.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD from a local python list containing the pairs: the key is the first name of a user and the value is his/her age
+<ul>
+<li><code>(&quot;Paolo&quot;, 40)</code></li>
+<li><code>(&quot;Giorgio&quot;, 22)</code></li>
+<li><code>(&quot;Paolo&quot;, 22)</code></li>
+</ul></li>
+<li>Store the ages of the input users in an output HDFS folder, containing one age per line and duplicate ages/values are not removed.</li>
+</ol>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># Create the local python list</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a>nameAge <span class="op">=</span> [</span>
+<span id="cb12-3"><a href="#cb12-3"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="dv">40</span>),</span>
+<span id="cb12-4"><a href="#cb12-4"></a>    (<span class="st">&quot;Giorgio&quot;</span>,<span class="dv">22</span>),</span>
+<span id="cb12-5"><a href="#cb12-5"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="dv">22</span>)</span>
+<span id="cb12-6"><a href="#cb12-6"></a>]</span>
+<span id="cb12-7"><a href="#cb12-7"></a></span>
+<span id="cb12-8"><a href="#cb12-8"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
+<span id="cb12-9"><a href="#cb12-9"></a>nameAgePairRDD <span class="op">=</span> sc.parallelize(nameAge)</span>
+<span id="cb12-10"><a href="#cb12-10"></a></span>
+<span id="cb12-11"><a href="#cb12-11"></a><span class="co"># Select the value part of the input RDD of key-value pairs</span></span>
+<span id="cb12-12"><a href="#cb12-12"></a>agesRDD <span class="op">=</span> nameAgePairRDD.values()</span>
+<span id="cb12-13"><a href="#cb12-13"></a></span>
+<span id="cb12-14"><a href="#cb12-14"></a><span class="co"># Store the result in an output folder</span></span>
+<span id="cb12-15"><a href="#cb12-15"></a>agesRDD.saveAsTextFile(outputPath)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="sortbykey-transformation" class="level2" data-number="5.9">
+<h2 data-number="5.9" class="anchored" data-anchor-id="sortbykey-transformation"><span class="header-section-number">5.9</span> SortByKey transformation</h2>
+<p>The goal is to return a new RDD of key-value pairs obtained by sorting, in ascending order, the pairs of the input RDD by key (notice that the final order is related to the default sorting function of the data type of the input keys). The content of the new RDD of key-value pairs is the same of the input RDD but the pairs are sorted by key in the new returned RDD.</p>
+<p>The sortByKey transformation is based on the <code>sortByKey()</code> method of the <code>RDD</code> class (pairs are sorted by key in ascending order). The <code>sortByKey(ascending)</code> method of the <code>RDD</code> class is also available: this method allows to specify if the sort order is ascending or descending by means of a Boolean parameter (<code>True</code> for ascending, <code>False</code> for descending).</p>
+<p>A shuffle operation is executed for computing the result of the <code>sortByKey()</code> transformation, since pairs from different partitions of the input RDD must be compared to sort the input pairs by key.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD from a local python list containing the pairs: the key is the first name of a user and the value is his/her age
+<ul>
+<li><code>(&quot;Paolo&quot;, 40)</code></li>
+<li><code>(&quot;Giorgio&quot;, 22)</code></li>
+<li><code>(&quot;Paolo&quot;, 35)</code></li>
+</ul></li>
+<li>Sort the users by name and store the result in the HDFS file system.</li>
+</ol>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># Create the local python list</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>nameAge <span class="op">=</span> [</span>
+<span id="cb13-3"><a href="#cb13-3"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="dv">40</span>),</span>
+<span id="cb13-4"><a href="#cb13-4"></a>    (<span class="st">&quot;Giorgio&quot;</span>,<span class="dv">22</span>),</span>
+<span id="cb13-5"><a href="#cb13-5"></a>    (<span class="st">&quot;Paolo&quot;</span>,<span class="dv">35</span>)</span>
+<span id="cb13-6"><a href="#cb13-6"></a>]</span>
+<span id="cb13-7"><a href="#cb13-7"></a></span>
+<span id="cb13-8"><a href="#cb13-8"></a><span class="co"># Create the RDD of pairs from the local collection</span></span>
+<span id="cb13-9"><a href="#cb13-9"></a>nameAgePairRDD <span class="op">=</span> sc.parallelize(nameAge)</span>
+<span id="cb13-10"><a href="#cb13-10"></a></span>
+<span id="cb13-11"><a href="#cb13-11"></a><span class="co"># Sort by name the content of the input RDD of key-value pairs</span></span>
+<span id="cb13-12"><a href="#cb13-12"></a>sortedNameAgePairRDD <span class="op">=</span> nameAgePairRDD.sortByKey()</span>
+<span id="cb13-13"><a href="#cb13-13"></a></span>
+<span id="cb13-14"><a href="#cb13-14"></a><span class="co"># Store the result in an output folder</span></span>
+<span id="cb13-15"><a href="#cb13-15"></a>sortedNameAgePairRDD.saveAsTextFile(outputPath)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="summary" class="level2 page-columns page-full" data-number="5.10">
+<h2 data-number="5.10" class="anchored" data-anchor-id="summary"><span class="header-section-number">5.10</span> Summary</h2>
+<p>All the examples reported in the following tables are applied on an RDD of pairs containing the following tuples (pairs): <code>[(&quot;k1&quot;, 2), (&quot;k3&quot;, 4), (&quot;k3&quot;, 6)]</code>.</p>
+<ul>
+<li>The key of each tuple is a string</li>
+<li>The value of each tuple is an integer</li>
+</ul>
+<div class="page-columns page-full">
+<div class="column-page">
+<p><strong>Purposes</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 92%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Transformation</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>reduceByKey(f)</code></td>
+<td>Return an RDD of pairs containing one pair for each key of the input RDD of pairs. The value of each pair of the new RDD of pairs is obtained by combining the values of the input RDD associated with the same key. The input RDD of pairs and the new RDD of pairs have the same data type.</td>
+</tr>
+<tr class="even">
+<td><code>foldByKey(zeroValue, op)</code></td>
+<td>Similar to the <code>reduceByKey()</code> transformation, however <code>foldByKey()</code> is characterized also by a zero value.</td>
+</tr>
+<tr class="odd">
+<td><code>combineByKey(</code> <code>createCombiner,</code> <code>mergeValue,</code> <code>mergeCombiner</code> <code>)</code></td>
+<td>Return an RDD of key-value pairs containing one pair for each key of the input RDD of pairs. The value of each pair of the new RDD is obtained by combining the values of the input RDD associated with the same key. The values of the input RDD of pairs and the values of the new (returned) RDD of pairs can be characterized by different data types.</td>
+</tr>
+<tr class="even">
+<td><code>groupByKey()</code></td>
+<td>Return an RDD of pairs containing one pair for each key of the input RDD of pairs. The value of each pair of the new RDD of pairs is a collection containing all the values of the input RDD associated with one of the input keys.</td>
+</tr>
+<tr class="odd">
+<td><code>mapValues(f)</code></td>
+<td>Apply a function over each pair of an RDD of pairs and return a new RDD of pairs. The applied function returns one pair for each pair of the input RDD of pairs. The function is applied only on the value part without changing the key. The values of the input RDD and the values of new RDD can have different data types.</td>
+</tr>
+<tr class="even">
+<td><code>flatMapValues(f)</code></td>
+<td>Apply a function over each pair of an RDD of pairs and return a new RDD of pairs. The applied function returns a set of pairs (from 0 to many) for each pair of the input RDD of pairs. The function is applied only on the value part without changing the key. The values of the input RDD and the values of new RDD can have different data types.</td>
+</tr>
+<tr class="odd">
+<td><code>keys()</code></td>
+<td>Return an RDD containing the keys of the input <code>pairRDD</code>.</td>
+</tr>
+<tr class="even">
+<td><code>values()</code></td>
+<td>Return an RDD containing the values of the input <code>pairRDD</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>sortByKey()</code></td>
+<td>Return a <code>PairRDD</code> sorted by key. The input <code>PairRDD</code> and the new <code>PairRDD</code> have the same data type.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 54%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Transformation</th>
+<th>Example</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>reduceByKey(f)</code></td>
+<td><p><code>reduceByKey(lambda v1, v2: v1+v2)</code></p>
+<p>Sum values per key</p></td>
+<td><code>[(&quot;k1&quot;,2),(&quot;k3&quot;,10)]</code></td>
+</tr>
+<tr class="even">
+<td><code>foldByKey(zeroValue, op)</code></td>
+<td><p><code>foldByKey(0,lambda v1, v2: v1+v2)</code></p>
+<p>Sum values per key. The zero value is 0</p></td>
+<td><code>[(&quot;k1&quot;,2),(&quot;k3&quot;,10)]</code></td>
+</tr>
+<tr class="odd">
+<td><code>combineByKey(</code> <code>createCombiner,</code> <code>mergeValue,</code> <code>mergeCombiner</code> <code>)</code></td>
+<td><p><code>combineByKey(</code> <code>lambda e: (e, 1),</code> <code>lambda c, e: (c[0]+e, c[1]+1),</code> <code>lambda c1, c2: (c1[0]+c2[0], c1[1]+c2[1])</code> <code>)</code></p>
+<p>Sum values by key and count the number of pairs by key in one single step</p></td>
+<td><code>[(&quot;k1&quot;,(2,1)),(&quot;k3&quot;,(10,2))]</code></td>
+</tr>
+<tr class="even">
+<td><code>groupByKey()</code></td>
+<td><code>groupByKey()</code></td>
+<td><code>[(&quot;k1&quot;,[2]),(&quot;k3&quot;,[4,6])]</code></td>
+</tr>
+<tr class="odd">
+<td><code>mapValues(f)</code></td>
+<td><p><code>mapValues(lambda v: v+1)</code></p>
+<p>Increment the value part by 1</p></td>
+<td><code>[(&quot;k1&quot;,3),(&quot;k3&quot;,5),(&quot;k3&quot;,7)]</code></td>
+</tr>
+<tr class="even">
+<td><code>flatMapValues(f)</code></td>
+<td><code>flatMapValues(lambda v: list(range(v,6)))</code></td>
+<td><code>[</code> <code>(&quot;k1&quot;,2),</code> <code>(&quot;k1&quot;,3),</code> <code>(&quot;k1&quot;,4),</code> <code>(&quot;k1&quot;,5),</code> <code>(&quot;k3&quot;,4),</code> <code>(&quot;k3&quot;,5)</code> <code>]</code></td>
+</tr>
+<tr class="odd">
+<td><code>keys()</code></td>
+<td><code>keys()</code></td>
+<td><code>[&quot;k1&quot;,&quot;k3“,&quot;k3&quot;]</code></td>
+</tr>
+<tr class="even">
+<td><code>values()</code></td>
+<td><code>values()</code></td>
+<td><code>[2, 4, 6]</code></td>
+</tr>
+<tr class="odd">
+<td><code>sortByKey()</code></td>
+<td><code>sortByKey()</code></td>
+<td><code>[(&quot;k1&quot;,2),(&quot;k3&quot;,4),(&quot;k3&quot;,6)]</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </section>
 </section>
 

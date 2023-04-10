@@ -113,7 +113,11 @@ An RDD can be built from a local Python collection/list of local python objects 
 ## Example
 ```python
 # Create a local python list
-inputList = ['First element', 'Second element', 'Third element']
+inputList = [
+    'First element',
+    'Second element',
+    'Third element'
+]
 
 # Build an RDD of Strings from the local list.
 # The number of partitions is set automatically by Spark
@@ -131,7 +135,11 @@ When the `parallelize(c)` is invoked, Spark tries to set the number of partition
 ## Example
 ```python
 # Create a local python list
-inputList = ['First element', 'Second element', 'Third element']
+inputList = [
+    'First element',
+    'Second element',
+    'Third element'
+]
 
 # Build an RDD of Strings from the local list.
 # The number of partitions is set to 3
@@ -370,7 +378,7 @@ Notice that, in this case, the input RDD contains strings, hence, the implemente
 ```python
 # Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD
 inputList = [1, 2, 3, 3]
-inputRDD = sc.parallelize(inputList);
+inputRDD = sc.parallelize(inputList)
 
 # Select the values greater than 2
 greaterRDD = inputRDD.filter(lambda num : num>2)
@@ -386,7 +394,7 @@ def greaterThan2(num):
 
 # Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD
 inputList = [1, 2, 3, 3]
-inputRDD = sc.parallelize(inputList);
+inputRDD = sc.parallelize(inputList)
 
 # Select the values greater than 2
 greaterRDD = inputRDD.filter(greaterThan2)
@@ -632,10 +640,10 @@ In this transformation a large amount of data is sent on the network: elements f
 
 ```python
 # Create two RDD of integers
-inputList1 = [1, 2, 2, 3, 3]
+inputList1 = [1,2,2,3,3]
 inputRDD1 = sc.parallelize(inputList1)
 
-inputList2 = [3, 4, 5]
+inputList2 = [3,4,5]
 inputRDD2 = sc.parallelize(inputList2)
 
 # Create four new RDDs by using union, intersection, subtract, and cartesian
@@ -663,10 +671,10 @@ outputCartesianRDD = inputRDD1.cartesian(inputRDD2)
 
 ```python
 # Create an RDD of Integers and an RDD of Strings
-inputList1 = [1, 2, 3]
+inputList1 = [1,2,3]
 inputRDD1 = sc.parallelize(inputList1)
 
-inputList2 = ["A", "B"]
+inputList2 = ["A","B"]
 inputRDD2 = sc.parallelize(inputList2)
 
 # Compute the cartesian product
@@ -682,6 +690,9 @@ outputCartesianRDD = inputRDD1.cartesian(inputRDD2)
 ## Summary
 ### Single input RDD transformations
 All the examples reported in the following tables are applied on an RDD of integers containing the following elements (i.e., values): `[1,2,3,3]`.
+
+::::{.content-visible when-format="html"}
+:::{.column-page}
 
 **Purposes**
 
@@ -706,7 +717,8 @@ All the examples reported in the following tables are applied on an RDD of integ
 +-------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | `sample(withReplacement, fraction)` | Sample the content of the input RDD, with or without replacement and return the selected sample. The input RDD and the new RDD have the same data type.                                                                                      |
 +-------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-<!-- : {tbl-colwidths="[15,45,20,20]"} -->
+
+: {tbl-colwidths="[25,75]"}
 
 **Examples**
 
@@ -731,13 +743,84 @@ All the examples reported in the following tables are applied on an RDD of integ
 +-------------------------------------+-------------------------------------------------------------------------------------------+-------------------+
 | `sample(withReplacement, fraction)` | `sample(True, 0.2)`                                                                       | Non deterministic |
 +-------------------------------------+-------------------------------------------------------------------------------------------+-------------------+
-<!-- : {tbl-colwidths="[15,45,20,20]"} -->
+
+: {tbl-colwidths="[25,45,30]"}
+
+:::
+::::
+
+:::{.content-visible when-format="pdf"}
+
+\newpage
+
+\blandscape
+
+**Purposes**
+
++-------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Transformation                      | Purpose                                                                                                                                                                                                                                      |
++=====================================+==============================================================================================================================================================================================================================================+
+| `filter(f)`                         | Return an RDD consisting only of the elements of the input RDD that pass the condition passed to `filter()`. The input RDD and the new RDD have the same data type.                                                                          |
++-------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `map(f)`                            | Apply a function to each element in the RDD and return an RDD of the result. The applied function return one element for each element of the input RDD. The input RDD and the new RDD can have a different data type.                        |
+|                                     |                                                                                                                                                                                                                                              |
+|                                     |                                                                                                                                                                                                                                              |
++-------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `flatMap(f)`                        | Apply a function to each element in the RDD and return an RDD of the result. The applied function return a set of elements (from 0 to many) for each element of the input RDD. The input RDD and the new RDD can have a different data type. |
+|                                     |                                                                                                                                                                                                                                              |
+|                                     |                                                                                                                                                                                                                                              |
++-------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `distinct()`                        | Remove duplicates.                                                                                                                                                                                                                           |
++-------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `sortBy(keyfunc)`                   | Return a new RDD containing the same values of the input RDD sorted in ascending order.                                                                                                                                                      |
+|                                     |                                                                                                                                                                                                                                              |
+|                                     |                                                                                                                                                                                                                                              |
++-------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `sample(withReplacement, fraction)` | Sample the content of the input RDD, with or without replacement and return the selected sample. The input RDD and the new RDD have the same data type.                                                                                      |
++-------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+: {tbl-colwidths="[25,75]"}
+
+\newpage
+
+**Examples**
+
++-------------------------------------+-------------------------------------------------------------------------------------------+-------------------+
+| Transformation                      | Example function                                                                          | Example result    |
++=====================================+===========================================================================================+===================+
+| `filter(f)`                         | `filter(lambda x: x != 1)`                                                                | `[2,3,3]`         |
++-------------------------------------+-------------------------------------------------------------------------------------------+-------------------+
+| `map(f)`                            | `map(lambda x: x+1)`                                                                      | `[2,3,4,4]`       |
+|                                     |                                                                                           |                   |
+|                                     | For each input element `x`, the element with value `x+1` is included in the new RDD       |                   |
++-------------------------------------+-------------------------------------------------------------------------------------------+-------------------+
+| `flatMap(f)`                        | `flatMap(lambda x: list(range(x,4))`                                                      | `[1,2,3,2,3,3,3]` |
+|                                     |                                                                                           |                   |
+|                                     | For each input element `x`, the set of elements with values from `x` to 3 are returned    |                   |
++-------------------------------------+-------------------------------------------------------------------------------------------+-------------------+
+| `distinct()`                        | `distinct()`                                                                              | `[1,2,3]`       |
++-------------------------------------+-------------------------------------------------------------------------------------------+-------------------+
+| `sortBy(keyfunc)`                   | `sortBy(lambda v: v)`                                                                     | `[1,2,3,3]`    |
+|                                     |                                                                                           |                   |
+|                                     | Sort the input integer values in ascending order by using the standard integer sort order |                   |
++-------------------------------------+-------------------------------------------------------------------------------------------+-------------------+
+| `sample(withReplacement, fraction)` | `sample(True, 0.2)`                                                                       | Non deterministic |
++-------------------------------------+-------------------------------------------------------------------------------------------+-------------------+
+
+: {tbl-colwidths="[25,45,30]"}
+
+\elandscape
+
+:::
 
 ### Two input RDD transformations
 All the examples reported in the following tables are applied on the following two RDDs of integers
 
 - `inputRDD1`: `[1,2,2,3,3]`
 - `inputRDD2`: `[3,4,5]`
+
+::::{.content-visible when-format="html"}
+:::{.column-page}
 
 **Purposes**
 
@@ -753,6 +836,8 @@ All the examples reported in the following tables are applied on the following t
 | `cartesian(other)`    | Return a new RDD containing the cartesian product of the elements of the input RDD and the elements of the one passed as parameter to `cartesian()`. All the RDDs have the same data type.                   |
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
+: {tbl-colwidths="[25,75]"}
+
 **Examples**
 
 +-----------------------+-------------------------------------+---------------------------+
@@ -766,6 +851,55 @@ All the examples reported in the following tables are applied on the following t
 +-----------------------+-------------------------------------+---------------------------+
 | `cartesian(other)`    | `inputRDD1.cartesian(inputRDD2)`    | `[(1,3),(1,4),...,(3,5)]` |
 +-----------------------+-------------------------------------+---------------------------+
+
+: {tbl-colwidths="[25,45,30]"}
+
+:::
+::::
+
+:::{.content-visible when-format="pdf"}
+
+\newpage
+
+\blandscape
+
+**Purposes**
+
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Transformation        | Purpose                                                                                                                                                                                                      |
++=======================+==============================================================================================================================================================================================================+
+| `union(other)`        | Return a new RDD containing the union of the elements of the input RDD and the elements of the one passed as parameter to `union()`. Duplicate values are not removed. All the RDDs have the same data type. |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `intersection(other)` | Return a new RDD containing the intersection of the elements of the input RDD and the elements of the one passed as parameter to `intersection()`. All the RDDs have the same data type.                     |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `subtract(other)`     | Return a new RDD the elements appearing only in the input RDD and not in the one passed as parameter to `subtract()`. All the RDDs have the same data type.                                                  |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `cartesian(other)`    | Return a new RDD containing the cartesian product of the elements of the input RDD and the elements of the one passed as parameter to `cartesian()`. All the RDDs have the same data type.                   |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+: {tbl-colwidths="[25,75]"}
+
+\newpage
+
+**Examples**
+
++-----------------------+-------------------------------------+---------------------------+
+| Transformation        | Example function                    | Example result            |
++=======================+=====================================+===========================+
+| `union(other)`        | `inputRDD1.union(inputRDD2)`        | `[1,2,2,3,3,3,4,5]`       |
++-----------------------+-------------------------------------+---------------------------+
+| `intersection(other)` | `inputRDD1.intersection(inputRDD2)` | `[3]`                     |
++-----------------------+-------------------------------------+---------------------------+
+| `subtract(other)`     | `inputRDD1.subtract(inputRDD2)`     | `[1,2,2]`                 |
++-----------------------+-------------------------------------+---------------------------+
+| `cartesian(other)`    | `inputRDD1.cartesian(inputRDD2)`    | `[(1,3),(1,4),...,(3,5)]` |
++-----------------------+-------------------------------------+---------------------------+
+
+: {tbl-colwidths="[25,45,30]"}
+
+\elandscape
+
+:::
 
 # Basic Actions
 Spark actions can retrieve the content of an RDD or the result of a function applied on an RDD and 
@@ -808,7 +942,7 @@ The collect action is based on the `collect()` method of the `RDD` class.
 
 ```python
 # Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD
-inputList = [1, 2, 3, 3]
+inputList = [1,2,3,3]
 inputRDD = sc.parallelize(inputList)
 
 # Retrieve the elements of the inputRDD and store them in
@@ -1208,6 +1342,11 @@ print('Average:', myAvg)
 ## Summary
 All the examples reported in the following tables are applied on inputRDD that is an RDD of integers containing the following elements (i.e., values): `[1,2,3,3]`.
 
+::::{.content-visible when-format="html"}
+:::{.column-page}
+
+**Purposes**
+
 +------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Action                                   | Purpose                                                                                                                                                                                                                                                                     |
 +==========================================+=============================================================================================================================================================================================================================================================================+
@@ -1233,6 +1372,10 @@ All the examples reported in the following tables are applied on inputRDD that i
 +------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | `Aggregate(zeroValue, seqOp, combOp)`    | Similar to `reduce()` but used to return a different type.                                                                                                                                                                                                                  |
 +------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+: {tbl-colwidths="[25,75]"}
+
+**Examples**
 
 +------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+------------------+
 | Action                                   | Example                                                                                                                  | Result           |
@@ -1271,3 +1414,92 @@ All the examples reported in the following tables are applied on inputRDD that i
 |                                          |                                                                                                                          |                  |
 |                                          | Compute a pair of integers where the first one is the sum of the values of the RDD and the second the number of elements |                  |
 +------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+------------------+
+
+: {tbl-colwidths="[25,45,30]"}
+
+:::
+::::
+
+:::{.content-visible when-format="pdf"}
+
+\newpage
+
+\blandscape
+
+**Purposes**
+
++------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Action                                   | Purpose                                                                                                                                                                                                                                                                     |
++==========================================+=============================================================================================================================================================================================================================================================================+
+| `collect()`                              | Return a python list containing all the elements of the RDD on which it is applied. The objects of the RDD and objects of the returned list are objects of the same class.                                                                                                  |
++------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `count()`                                | Return the number of elements of the RDD.                                                                                                                                                                                                                                   |
++------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `countByValue()`                         | Return a Map object containing the information about the number of times each element occurs in the RDD.                                                                                                                                                                    |
++------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `take(num)`                              | Return a Python list containing the first `num` elements of the RDD. The objects of the RDD and objects of the returned list are objects of the same class.                                                                                                                 |
++------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `first()`                                | Return the first element of the RDD.                                                                                                                                                                                                                                        |
++------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `top(num)`                               | Return a Python list containing the top `num` elements of the RDD based on the default sort order/comparator of the objects. The objects of the RDD and objects of the returned list are objects of the same class.                                                         |
++------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `takeSample(withReplacement, num)`       | Return a (Python) List containing a random sample of size `n` of the RDD. The objects of the RDD and objects of the returned list are objects of the same class.                                                                                                            |
+|                                          |                                                                                                                                                                                                                                                                             |
+| `takeSample(withReplacement, num, seed)` |                                                                                                                                                                                                                                                                             |
++------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `reduce(f)`                              | Return a single Python object obtained by combining the values of the objects of the RDD by using a user provide function. The provided function must be associative and commutative The object returned by the method and the objects of the RDD belong to the same class. |
++------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `fold(zeroValue, op)`                    | Same as reduce but with the provided zero value.                                                                                                                                                                                                                            |
++------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `Aggregate(zeroValue, seqOp, combOp)`    | Similar to `reduce()` but used to return a different type.                                                                                                                                                                                                                  |
++------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+: {tbl-colwidths="[25,75]"}
+
+\newpage
+
+**Examples**
+
++------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+------------------+
+| Action                                   | Example                                                                                                                  | Result           |
++==========================================+==========================================================================================================================+==================+
+| `collect()`                              | `inputRDD.collect()`                                                                                                     | `[1,2,3,3]`      |
++------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+------------------+
+| `count()`                                | `inputRDD.count()`                                                                                                       | `4`              |
++------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+------------------+
+| `countByValue()`                         | `inputRDD.countByValue()`                                                                                                | `[(1,1),`        |
+|                                          |                                                                                                                          | `(2,1),`         |
+|                                          |                                                                                                                          | `(3,2)]`         |
++------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+------------------+
+| `take(num)`                              | `inputRDD.take(2)`                                                                                                       | `[1,2]`          |
++------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+------------------+
+| `first()`                                | `first()`                                                                                                                | `1`              |
++------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+------------------+
+| `top(num)`                               | `inputRDD.top(2)`                                                                                                        | `[3,3]`          |
++------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+------------------+
+| `takeSample(withReplacement, num)`       | `inputRDD.takeSample(False,1)`                                                                                           | Nondeterministic |
+|                                          |                                                                                                                          |                  |
+| `takeSample(withReplacement, num, seed)` |                                                                                                                          |                  |
++------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+------------------+
+| `reduce(f)`                              | `inputRDD.reduce(lambda e1,e2: e1+e2)`                                                                                   | `9`              |
+|                                          |                                                                                                                          |                  |
+|                                          | The passed function is the sum                                                                                           |                  |
++------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+------------------+
+| `fold(zeroValue, op)`                    | `inputRDD.fold(0, lambda v1, v2: v1+v2)`                                                                                 | `9`              |
+|                                          |                                                                                                                          |                  |
+|                                          | The passed function is the sum and the passed zeroValue is 0.                                                            |                  |
++------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+------------------+
+| `Aggregate(zeroValue, seqOp, combOp)`    | `inputRDD.aggregate(`                                                                                                    | `(9,4)`          |
+|                                          | `    zeroValue,`                                                                                                         |                  |
+|                                          | `    lambda acc, e: (acc[0]+e, acc[1]+1),`                                                                               |                  |
+|                                          | `    lambda p1, p2: (p1[0]+p2[0], p1[1]+p2[1])`                                                                          |                  |
+|                                          | `)`                                                                                                                      |                  |
+|                                          |                                                                                                                          |                  |
+|                                          | Compute a pair of integers where the first one is the sum of the values of the RDD and the second the number of elements |                  |
++------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+------------------+
+
+: {tbl-colwidths="[25,45,30]"}
+
+\elandscape
+
+:::
