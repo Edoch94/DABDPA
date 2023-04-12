@@ -1,0 +1,35 @@
+---
+title: "Cache, Accumulators, Broadcast Variables"
+---
+
+# Persistence and Cache
+Spark computes the content of an RDD each time an action is invoked on it. If the same RDD is used multiple times in an application, Spark recomputes its content every time an action is invoked on the RDD, or on one of its descendants, but this is expensive, especially for iterative applications.
+
+So, it is possible to ask Spark to persist/cache RDDs: in this way, each node stores the content of its partitions in memory and reuses them in other actions on that RDD/dataset (or RDDs derived from it).
+
+- The first time the content of a persistent/cached RDD is computed in an action, it will be kept in the main memory of the nodes;
+- The next actions on the same RDD will read its content from memory (i.e., Spark persists/caches the content of the RDD across operations). This allows future actions to be much faster, often by more than ten times faster.
+
+Spark supports several storage levels, which are used to specify if the content of the RDD is stored
+
+- In the main memory of the nodes
+- On the local disks of the nodes
+- Partially in the main memory and partially on disk
+
++--------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Storage Level                              | Meaning                                                                                                                                                                                                         |
++============================================+=================================================================================================================================================================================================================+
+| `MEMORY_ONLY`                              | Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory, some partitions will not be cached and will be recomputed on the fly each time they're needed. This is the default level. |
++--------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `MEMORY_AND_DISK`                          | Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory, store the partitions that don't fit on (local) disk, and read them from there when they're needed.                        |
++--------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `DISK_ONLY`                                | Store the RDD partitions only on disk.                                                                                                                                                                          |
++--------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `MEMORY_ONLY_2`, `MEMORY_AND_DISK_2`, etc. | Same as the levels above, but replicate each partition on two cluster nodes.                                                                                                                                    |
++--------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| `OFF_HEAP` (experimental)                  | Similar to `MEMORY_ONLY`, but store the data in off-heap memory. This requires off-heap memory to be enabled.                                                                                                   |
++--------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+: Storage levels {tbl-colwidths="[40,50]"}
+
+See [here](https://spark.apache.org/docs/2.4.0/rdd-programming-guide.html#rdd-persistence) for more details.

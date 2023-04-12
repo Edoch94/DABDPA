@@ -944,7 +944,7 @@ Pay attention to the number of distinct keys of the input RDD of pairs: if the n
 The countBykey action is based on the `countBykey()` method of the `RDD` class. Notice that data are sent on the network to compute the final result.
 
 :::{.callout-note collapse="true"}
-## Examples
+## Example
 1. Create an RDD of pairs from the following python list (each pair contains a movie and the rating given by someone to that movie): `[("Forrest Gump",4),("Star Trek",5),("Forrest Gump",3)]`;
 2. Compute the number of ratings for each movie.
 
@@ -1021,6 +1021,7 @@ The lookup($k$) action returns a local python list containing the values of the 
 The lookup action is based on the `lookup(key)` method of the `RDD` class.
 
 :::{.callout-note collapse="true"}
+## Example
 1. Create an RDD of pairs from the following python list (each pair contains a movie and the rating given by someone to that movie): `[("Forrest Gump",4),("Star Trek",5),("Forrest Gump",3)]`
 2. Retrieve the ratings associated with the movie "Forrest Gump" and store them in a local python list in the Driver.
 
