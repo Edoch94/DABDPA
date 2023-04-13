@@ -33,3 +33,132 @@ Spark supports several storage levels, which are used to specify if the content 
 : Storage levels {tbl-colwidths="[40,50]"}
 
 See [here](https://spark.apache.org/docs/2.4.0/rdd-programming-guide.html#rdd-persistence) for more details.
+
+It is possible to mark an RDD to be persisted by using the `persist(storageLevel)` method of the `RDD` class. The parameter of persist can assume the following values
+
+- `pyspark.StorageLevel.MEMORY_ONLY`
+- `pyspark.StorageLevel.MEMORY_AND_DISK`
+- `pyspark.StorageLevel.DISK_ONLY`
+- `pyspark.StorageLevel.NONE`
+- `pyspark.StorageLevel.OFF_HEAP`
+- `pyspark.StorageLevel.MEMORY_ONLY_2`
+- `pyspark.StorageLevel.MEMORY_AND_DISK_2`
+
+The storage level `*_2` replicate each partition on two cluster nodes, so that, ff one node fails, the other one can be used to perform the actions on the RDD without recomputing the content of the RDD.
+
+It is possible to cache an RDD by using the `cache()` method of the `RDD` class: it corresponds to persist the RDD with the storage level `'MEMORY_ONLY'` (i.e., it is equivalent to `inRDD.persist(pyspark.StorageLevel.MEMORY_ONLY)`)
+
+:::{.callout-important}
+Notice that both persist and cache return a new RDD, since RDDs are immutable.
+:::
+
+The use of the persist/cache mechanism on an RDD provides an advantage if the same RDD is used multiple times (i.e., multiples actions are applied on it or on its descendants).
+
+The storage levels that store RDDs on disk are useful if and only if
+
+- the size of the RDD is significantly smaller than the size of the input dataset;
+- the functions that are used to compute the content of the RDD are expensive.
+
+Otherwise, recomputing a partition may be as fast as reading it from disk.
+
+## Remove data from cache
+Spark automatically monitors cache usage on each node and drops out old data partitions in a least-recently-used (LRU) fashion. It is also possible to manually remove an RDD from the cache by using the `unpersist()` method of the `RDD` class.
+
+:::{.callout-note collapse="true"}
+## Example
+1. Create an RDD from a textual file containing a list of words (one word for each line);
+2. Print on the standard output
+    - The number of lines of the input file
+    - The number of distinct words
+
+```python
+# Read the content of a textual file
+# and cache the associated RDD
+inputRDD = sc.textFile("words.txt").cache()
+
+print("Number of words: ",inputRDD.count())
+print("Number of distinct words: ", inputRDD.distinct().count())
+```
+
+|||
+|-|---|
+| `.cache()` | The cache method is invoked, hence `inputRDD` is a cached RDD |
+| `inputRDD.count()` | This is the first time an action is invoked on the `inputRDD` RDD. The content of the RDD is computed by reading the lines of the words.txt file and the result of the count action is returned. The content of `inputRDD` is also stored in the main memory of the nodes of the cluster. |
+| `inputRDD.distinct().count()` | The content of `inputRDD` is in the main memory if the nodes of the cluster. Hence the computation of `distinct()` and `count()` is performed by reading the data from the main memory and not from the input (HDFS) file `words.txt`. |
+
+:::
+
+# Accumulators
+When a function passed to a Spark operation is executed on a remote cluster node, it works on separate copies of all the variables used in the function. These variables are copied to each node of the cluster, and no updates to the variables on the nodes are propagated back to the driver program.
+
+Spark provides a type of shared variables called **accumulators**: accumulators are shared variables that are only "added" to through an associative operation and can therefore be efficiently supported in parallel, and they can be used to implement counters or sums.
+
+Accumulators are usually used to compute simple statistics while performing some other actions on the input RDD, avoiding to use actions like `reduce()` to compute simple statistics (e.g., count the number of lines with some characteristics).
+
+## How to use accumulators
+1. The driver defines and initializes the accumulator
+2. The code executed in the worker nodes increases the value of the accumulator (i.e., the code in the functions associated with the transformations)
+3. The final value of the accumulator is returned to the driver node
+    - Only the driver node can access the final value of the accumulator
+    - The worker nodes cannot access the value of the accumulator: they can only add values to it
+
+:::{.callout-important collapse="true"}
+Pay attention that the value of the accumulator is increased in the functions associated with transformations, and, since transformations are lazily evaluated, the value of the accumulator is computed only when an action is executed on the RDD on which the transformations increasing the accumulator are applied.
+:::
+
+Spark natively supports numerical accumulators (integers and floats), but programmers can add support for new data types: accumulators are `pyspark.accumulators.Accumulator` objects.
+
+Accumulators are defined and initialized by using the `accumulator(value)` method of the `SparkContext` class: the value of an accumulator can be increased by using the `add(value)` method of the `Accumulator` class, that adds `value` to the current value of the accumulator. The final value of an accumulator can be retrieved in the driver program by using `value` of the `Accumulator` class.
+
+:::{.callout-note collapse="true"}
+1. Create an RDD from a textual file containing a list of email addresses (one email for each line);
+2. Select the lines containing a valid email and store them in an HDFS file (in this example, an email is considered a valid email if it contains the @ symbol);
+3. Print also, on the standard output, the number of invalid emails.
+
+```python
+# Define an accumulator. Initialize it to 0
+invalidEmails = sc.accumulator(0)
+
+# Read the content of the input textual file
+emailsRDD = sc.textFile("emails.txt")
+
+#Define the filtering function
+def validEmailFunc(line):
+    if (line.find('@')<0):
+        invalidEmails.add(1)
+        return False
+    else:
+        return True
+
+# Select only valid emails
+# Count also the number of invalid emails
+validEmailsRDD = emailsRDD.filter(validEmailFunc)
+
+# Store valid emails in the output file
+validEmailsRDD.saveAsTextFile(outputPath)
+
+# Print the number of invalid emails
+print("Invalid email addresses: ", invalidEmails.value)
+```
+
+|||
+|-|--|
+| `invalidEmails = sc.accumulator(0)` | Definition of an accumulator of type integer. |
+| `invalidEmails.add(1)` | This function increments the value of the `invalidEmails` accumulator if the email is invalid. |
+| `invalidEmails.value` | Read the final value of the accumulator. Pay attention that the value of the accumulator is correct only because an action (`saveAsTextFile`) has been executed on the `validEmailsRDD` and its content has been computed (the function `validEmailFunc` has been executed on each element of `emailsRDD`) |
+
+:::
+
+## Personalized accumulators
+Programmers can define accumulators based on new data types (different from integers and floats): to define a new accumulator data type of type $T$, the programmer must define a class subclassing the `AccumulatorParam` interface. The `AccumulatorParam` interface has two methods
+
+- `zero` for providing a zero value for your data type
+- `addInPlace` for adding two values together
+
+# Broadcast variables
+Spark supports broadcast variables. A broadcast variable is a read-only (small/medium) shared variable
+
+- It is instantiated in the driver: the broadcast variable is stored in the main memory of the driver in a local variable;
+- It is sent to all worker nodes that use it in one or more Spark operations: the broadcast variable is also stored in the main memory of the executors (which are instantiated in the used worker nodes).
+
+A copy each broadcast variable is sent to all executors that are used to run a task executing a Spark operation based on that variable (i.e., the variable is sent `num.executors` times). A broadcast variable is sent only one time to each executor that uses that variable in at least one Spark operation (i.e., in at least one of its tasks). Each executor can run multiples tasks associated with the same broadcast variable, but the broadcast variable is sent only one time for each executor, hence the amount of data sent on the network is limited by using broadcast variables instead of standard variables.
