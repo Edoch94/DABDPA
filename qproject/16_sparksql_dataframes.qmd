@@ -1,0 +1,137 @@
+---
+title: "Spark SQL and DataFrames"
+---
+# Spark SQL
+Spark SQL is the Spark component for structured data processing. It provides a programming abstraction called *Dataframe* and can act as a distributed SQL query engine: the input data can be queried by using
+
+- Ad-hoc methods
+- Or an SQL-like language
+
+## Spark SQL vs Spark RDD APIs
+The interfaces provided by Spark SQL provide more information about the structure of both the data and the computation being performed. Spark SQL uses this extra information to perform extra optimizations based on a "SQL-like" optimizer called **Catalyst**, and so programs based on Dataframe are usually faster than standard RDD-based programs.
+
+![Spark SQL vs Spark RDD APIs](images/16_sparksql_dataframes/sql_vs_rdd.png){width=80%}
+
+## DataFrames
+A DataFrame is a distributed collection of structured data. It is conceptually equivalent to a table in a relational database, and it can be created reading data from different types of external sources (CSV files, JSON files, RDBMs,...). A DataFrame benefits from Spark SQL optimized execution engine exploiting the information about the data structure.
+
+All the Spark SQL functionalities are based on an instance of the `pyspark.sql.SparkSession` class
+
+To import it in a standalone application use
+
+```python
+from pyspark.sql import SparkSession
+```
+
+To instance a `SparkSession` object use 
+
+```python
+spark = SparkSession.builder.getOrCreate()
+```
+
+To close a `SparkSession` use the `SparkSession.stop()` method
+
+```python
+spark.stop()
+```
+
+# DataFrames
+A DataFrame is a distributed collection of data organized into named columns, equivalent to a relational table: DataFrames are lists of **Row objects**.
+
+The classes used to define DataFrames are
+
+- `pyspark.sql.DataFrame`
+- `pyspark.sql.Row`
+
+DataFrames can be created from different sources
+
+- Structured (textual) data files (e.g., csv files, json files);
+- Existing RDDs;
+- Hive tables;
+- External relational databases.
+
+## Creating DataFrames from csv files
+Spark SQL provides an API that allows creating DataFrames directly from CSV files. The creation of a DataFrame from a csv file is based the `load(path)` method of the `pyspark.sql.DataFrameReader` class, where `path` is the path of the input file. To get a `DataFrameReader` using the the `read()` method of the `SparkSession` class.
+
+```python
+df = spark.read.load(path, options)
+```
+
+:::{.callout-note collapse="true"}
+## Example
+Create a DataFrame from a csv file ("people.csv") containing the profiles of a set of people. Each line of the file contains name and age of a person, and age can assume the null value (i.e., it can be missing). The first line contains the header (i.e., the names of the attributes/columns).
+
+Example of csv file
+
+```
+name,age
+Andy,30
+Michael,
+Justin,19
+```
+
+Notice that the age of the second person in unknown.
+
+```python
+# Create a Spark Session object
+spark = SparkSession.builder.getOrCreate()
+
+# Create a DataFrame from persons.csv
+df = spark.read.load(
+    "people.csv",
+    format="csv",
+    header=True,
+    inferSchema=True
+)
+```
+
+|||
+|-|---|
+| `format="csv"` | This is used to specify the format of the input file |
+| `header=True` | This is used to specify that the first line of the file contains the name of the attributes/columns |
+| `inferSchema=True` | This method is used to specify that the system must infer the data types of each column. Without this option all columns are considered strings |
+
+:::
+
+## Creating DataFrames from JSON files
+Spark SQL provides an API that allows creating a DataFrame directly from a textual file where each line contains a JSON object. Hence, the input file is not a standard JSON file: it must be properly formatted in order to have one JSON object (tuple) for each line. So, the format of the input file must be compliant with the **JSON Lines text format**, also called newline-delimited JSON.
+
+The creation of a DataFrame from JSON files is based on the same method used for reading csv files, that is the `load(path)` method of the `pyspark.sql.DataFrameReader` class, where `path` is the path of the input file. To get a DataFrameReader use the `read()` method of the `SparkSession` class.
+
+```python
+df = spark.read.load(path, format="json", options)
+```
+
+or
+
+```python
+df = spark.read.json(path, options)
+```
+
+The same API allows also reading standard multiline JSON files by setting the multiline option to true by setting the argument `multiLine=True` on the defined
+`DataFrameReader` for reading standard JSON files (this feature is available since Spark 2.2.0). 
+
+:::{.callout-caution}
+Pay attention that reading a set of small JSON files from HDFS is very slow.
+:::
+
+:::{.callout-note collapse="true"}
+## Example 1
+Create a DataFrame from a JSON Lines text formatted file ("people.json") containing the profiles of a set of people: each line of the file contains a JSON object containing name and age of a person. Age can assume the null value.
+
+```python
+# Create a Spark Session object
+spark = SparkSession.builder.getOrCreate()
+
+# Create a DataFrame from persons.csv
+df = spark.read.load(
+    "people.json",
+    format="json"
+)
+```
+
+|||
+|-|---|
+| `format="json"` | This method is used to specify the format of the input file. |
+
+:::
