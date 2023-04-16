@@ -911,3 +911,90 @@ nameAvgAgeCount.show()
 :::
 
 # Save DataFrames
+The content of DataFrames can be stored on disk by using two approches
+
+- Convert DataFrames to traditional RDDs by using the rdd method of the DataFrame, and then use `saveAsTextFile(outputFolder)`;
+- Use the `write()` method of DataFrames, that returns a `DatFrameWriter` class instance.
+
+:::{.callout-note collapse="true"}
+## Example 1
+1. Create a DataFrame from the "persons.csv" file that contains the profiles of a set of persons
+    - The first line contains the header;
+    - The others lines contain the users' profiles: each line contains name, age, and gender of a person.
+2. Store the DataFrame in the output folder by using the `saveAsTextFile()` method.
+
+```python
+# Create a Spark Session object
+spark = SparkSession.builder.getOrCreate()
+
+# Create a DataFrame from persons.csv
+df = spark.read.load(
+    "persons.csv",
+    format="csv",
+    header=True,
+    inferSchema=True
+)
+
+# Save it
+df.rdd.saveAsTextFile(outputPath)
+```
+
+:::
+
+:::{.callout-note collapse="true"}
+## Example 2
+1. Create a DataFrame from the "persons.csv" file that contains the profiles of a set of persons
+    - The first line contains the header;
+    - The others lines contain the users' profiles: each line contains name, age, and gender of a person.
+2. Store the DataFrame in the output folder by using the `write()` method, with the CSV format.
+
+```python
+# Create a Spark Session object
+spark = SparkSession.builder.getOrCreate()
+
+# Create a DataFrame from persons.csv
+df = spark.read.load(
+    "persons.csv",
+    format="csv",
+    header=True,
+    inferSchema=True
+)
+
+# Save it
+df.write.csv(outputPath, header=True)
+```
+
+:::
+
+# UDFs: User Defines Functions
+Spark SQL provides a set of system predefined functions, which can be used in some transformations (e.g., `selectExpr()`, `sort()`) but also in the SQL queries. Some examples are
+
+- `hour(Timestamp)`
+- `abs(Integer)`
+- ...
+
+However, users can also define custom functions, which are called **User Defined Functions** (**UDFs**).
+
+UDFs are defined/registered by invoking the `udf().register(name, function, datatype)` on the `SparkSession`, where
+
+- `name` is the name of the defined UDF
+- `function` is a lambda function used to specify how the parameters of the function are used to generate the returned value
+    - One of more input parameters are accepted
+    - One single returned value is accepted
+- `datatype` is the SQL data type of the returned value
+
+:::{.callout-note collapse="true"}
+## Example
+Define a UDFs that, given a string, returns the length of the string.
+
+```python
+# Create a Spark Session object
+spark = SparkSession.builder.getOrCreate()
+
+# Define the UDF
+# name: length
+# output: integer value
+spark.udf.register("length", lambda x: len(x))
+```
+
+:::
