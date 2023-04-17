@@ -2640,6 +2640,14 @@ vertical-align: -.125em;
   </ul></li>
   <li><a href="#dataframes-and-the-sql-language" id="toc-dataframes-and-the-sql-language" class="nav-link" data-scroll-target="#dataframes-and-the-sql-language"><span class="toc-section-number">4</span>  DataFrames and the SQL language</a></li>
   <li><a href="#save-dataframes" id="toc-save-dataframes" class="nav-link" data-scroll-target="#save-dataframes"><span class="toc-section-number">5</span>  Save DataFrames</a></li>
+  <li><a href="#udfs-user-defines-functions" id="toc-udfs-user-defines-functions" class="nav-link" data-scroll-target="#udfs-user-defines-functions"><span class="toc-section-number">6</span>  UDFs: User Defines Functions</a></li>
+  <li><a href="#other-notes" id="toc-other-notes" class="nav-link" data-scroll-target="#other-notes"><span class="toc-section-number">7</span>  Other notes</a>
+  <ul class="collapse">
+  <li><a href="#data-warehouse-methods-cube-and-rollup" id="toc-data-warehouse-methods-cube-and-rollup" class="nav-link" data-scroll-target="#data-warehouse-methods-cube-and-rollup"><span class="toc-section-number">7.1</span>  Data warehouse methods: cube and rollup</a></li>
+  <li><a href="#set-methods" id="toc-set-methods" class="nav-link" data-scroll-target="#set-methods"><span class="toc-section-number">7.2</span>  Set methods</a></li>
+  <li><a href="#broadcast-join" id="toc-broadcast-join" class="nav-link" data-scroll-target="#broadcast-join"><span class="toc-section-number">7.3</span>  Broadcast join</a></li>
+  <li><a href="#execution-plan" id="toc-execution-plan" class="nav-link" data-scroll-target="#execution-plan"><span class="toc-section-number">7.4</span>  Execution plan</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -3807,6 +3815,262 @@ Justin,19,1</code></pre>
 </section>
 <section id="save-dataframes" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Save DataFrames</h1>
+<p>The content of DataFrames can be stored on disk by using two approches</p>
+<ul>
+<li>Convert DataFrames to traditional RDDs by using the rdd method of the DataFrame, and then use <code>saveAsTextFile(outputFolder)</code>;</li>
+<li>Use the <code>write()</code> method of DataFrames, that returns a <code>DatFrameWriter</code> class instance.</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-27" class="callout-27-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create a DataFrame from the “people.csv” file that contains the profiles of a set of people
+<ul>
+<li>The first line contains the header;</li>
+<li>The others lines contain the users’ profiles: each line contains name, age, and gender of a person.</li>
+</ul></li>
+<li>Store the DataFrame in the output folder by using the <code>saveAsTextFile()</code> method.</li>
+</ol>
+<div class="sourceCode" id="cb45"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1"></a><span class="co"># Create a Spark Session object</span></span>
+<span id="cb45-2"><a href="#cb45-2"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
+<span id="cb45-3"><a href="#cb45-3"></a></span>
+<span id="cb45-4"><a href="#cb45-4"></a><span class="co"># Create a DataFrame from people.csv</span></span>
+<span id="cb45-5"><a href="#cb45-5"></a>df <span class="op">=</span> spark.read.load(</span>
+<span id="cb45-6"><a href="#cb45-6"></a>    <span class="st">&quot;people.csv&quot;</span>,</span>
+<span id="cb45-7"><a href="#cb45-7"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>,</span>
+<span id="cb45-8"><a href="#cb45-8"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb45-9"><a href="#cb45-9"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb45-10"><a href="#cb45-10"></a>)</span>
+<span id="cb45-11"><a href="#cb45-11"></a></span>
+<span id="cb45-12"><a href="#cb45-12"></a><span class="co"># Save it</span></span>
+<span id="cb45-13"><a href="#cb45-13"></a>df.rdd.saveAsTextFile(outputPath)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-28" class="callout-28-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create a DataFrame from the “people.csv” file that contains the profiles of a set of people
+<ul>
+<li>The first line contains the header;</li>
+<li>The others lines contain the users’ profiles: each line contains name, age, and gender of a person.</li>
+</ul></li>
+<li>Store the DataFrame in the output folder by using the <code>write()</code> method, with the CSV format.</li>
+</ol>
+<div class="sourceCode" id="cb46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1"></a><span class="co"># Create a Spark Session object</span></span>
+<span id="cb46-2"><a href="#cb46-2"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
+<span id="cb46-3"><a href="#cb46-3"></a></span>
+<span id="cb46-4"><a href="#cb46-4"></a><span class="co"># Create a DataFrame from people.csv</span></span>
+<span id="cb46-5"><a href="#cb46-5"></a>df <span class="op">=</span> spark.read.load(</span>
+<span id="cb46-6"><a href="#cb46-6"></a>    <span class="st">&quot;people.csv&quot;</span>,</span>
+<span id="cb46-7"><a href="#cb46-7"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>,</span>
+<span id="cb46-8"><a href="#cb46-8"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb46-9"><a href="#cb46-9"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb46-10"><a href="#cb46-10"></a>)</span>
+<span id="cb46-11"><a href="#cb46-11"></a></span>
+<span id="cb46-12"><a href="#cb46-12"></a><span class="co"># Save it</span></span>
+<span id="cb46-13"><a href="#cb46-13"></a>df.write.csv(outputPath, header<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="udfs-user-defines-functions" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> UDFs: User Defines Functions</h1>
+<p>Spark SQL provides a set of system predefined functions, which can be used in some transformations (e.g., <code>selectExpr()</code>, <code>sort()</code>) but also in the SQL queries. Some examples are</p>
+<ul>
+<li><code>hour(Timestamp)</code></li>
+<li><code>abs(Integer)</code></li>
+<li>…</li>
+</ul>
+<p>However, users can also define custom functions, which are called <strong>User Defined Functions</strong> (<strong>UDFs</strong>).</p>
+<p>UDFs are defined/registered by invoking the <code>udf().register(name, function, datatype)</code> on the <code>SparkSession</code>, where</p>
+<ul>
+<li><code>name</code> is the name of the defined UDF</li>
+<li><code>function</code> is a lambda function used to specify how the parameters of the function are used to generate the returned value
+<ul>
+<li>One of more input parameters are accepted</li>
+<li>One single returned value is accepted</li>
+</ul></li>
+<li><code>datatype</code> is the SQL data type of the returned value</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Define a UDFs that, given a string, returns the length of the string.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1"></a><span class="co"># Create a Spark Session object</span></span>
+<span id="cb47-2"><a href="#cb47-2"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
+<span id="cb47-3"><a href="#cb47-3"></a></span>
+<span id="cb47-4"><a href="#cb47-4"></a><span class="co"># Define the UDF</span></span>
+<span id="cb47-5"><a href="#cb47-5"></a><span class="co"># name: length</span></span>
+<span id="cb47-6"><a href="#cb47-6"></a><span class="co"># output: integer value</span></span>
+<span id="cb47-7"><a href="#cb47-7"></a>spark.udf.register(<span class="st">&quot;length&quot;</span>, <span class="kw">lambda</span> x: <span class="bu">len</span>(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Use of the defined UDF in a selectExpr transformation.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1"></a>result <span class="op">=</span> inputDF.selectExpr(<span class="st">&quot;length(name) as size&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Use of the defined UDF in a SQL query.</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1"></a>result <span class="op">=</span> spark.sql(<span class="st">&quot;SELECT length(name) FROM profiles&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="other-notes" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Other notes</h1>
+<section id="data-warehouse-methods-cube-and-rollup" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="data-warehouse-methods-cube-and-rollup"><span class="header-section-number">7.1</span> Data warehouse methods: cube and rollup</h2>
+<p>The method <code>cube(col1, ..., coln)</code> of the <code>DataFrame</code> class can be used to create a multi-dimensional cube for the input DataFrame, on top of which aggregate functions can be computed for each group.</p>
+<p>The method <code>rollup(col1, ..., coln)</code> of the <code>DataFrame</code> class can be used to create a multi-dimensional rollup for the input DataFrame, on top of which aggregate functions can be computed for each group.</p>
+<p>Specify which attributes are used to split the input data in groups by using <code>cube(col1, ..., coln)</code> or <code>rollup(col1, ..., coln)</code>, respectively, then, apply the aggregate functions to compute for each group of the cube/rollup. The result is a DataFrame. The same aggregate functions/methods already discussed for groupBy can be used also for cube and rollup.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-30" class="callout-30-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create a DataFrame from the “purchases.csv” file
+<ul>
+<li>The first line contains the header;</li>
+<li>The others lines contain the quantities of purchased products by users: each line contains userid, productid, quantity.</li>
+</ul></li>
+<li>Create a first DataFrame containing the result of the cube method. Define one group for each pair userid, productid and compute the sum of quantity in each group; 3.Create a second DataFrame containing the result of the rollup method. Define one group for each pair userid, productid and compute the sum of quantity in each group.</li>
+</ol>
+<p>Input file</p>
+<pre><code>userid,productid,quantity
+u1,p1,10
+u1,p1,20
+u1,p2,20
+u1,p3,10
+u2,p1,20
+u2,p3,40
+u2,p3,30</code></pre>
+<p>Expected output - cube</p>
+<pre><code>userid,productid,sum(quantity)
+null    null    150
+null    p1      50
+null    p2      20
+null    p3      80
+u1      null    60
+u1      p1      30
+u1      p2      20
+u1      p3      10
+u2      null    90
+u2      p1      20
+u2      p3      70</code></pre>
+<p>Expected output - rollup</p>
+<pre><code>userid,productid,sum(quantity)
+null    null    150
+u1      null    60
+u1      p1      30
+u1      p2      20
+u1      p3      10
+u2      null    90
+u2      p1      20
+u2      p3      70</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1"></a><span class="co"># Create a Spark Session object</span></span>
+<span id="cb53-2"><a href="#cb53-2"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
+<span id="cb53-3"><a href="#cb53-3"></a></span>
+<span id="cb53-4"><a href="#cb53-4"></a><span class="co"># Read purchases.csv and store it in a DataFrame</span></span>
+<span id="cb53-5"><a href="#cb53-5"></a>dfPurchases <span class="op">=</span> spark.read.load(</span>
+<span id="cb53-6"><a href="#cb53-6"></a>    <span class="st">&quot;purchases.csv&quot;</span>,</span>
+<span id="cb53-7"><a href="#cb53-7"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>,</span>
+<span id="cb53-8"><a href="#cb53-8"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb53-9"><a href="#cb53-9"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb53-10"><a href="#cb53-10"></a>)</span>
+<span id="cb53-11"><a href="#cb53-11"></a></span>
+<span id="cb53-12"><a href="#cb53-12"></a>dfCube<span class="op">=</span>dfPurchases <span class="op">\</span></span>
+<span id="cb53-13"><a href="#cb53-13"></a>    .cube(<span class="st">&quot;userid&quot;</span>,<span class="st">&quot;productid&quot;</span>) <span class="op">\</span></span>
+<span id="cb53-14"><a href="#cb53-14"></a>    .agg({<span class="st">&quot;quantity&quot;</span>: <span class="st">&quot;sum&quot;</span>})</span>
+<span id="cb53-15"><a href="#cb53-15"></a></span>
+<span id="cb53-16"><a href="#cb53-16"></a>dfRollup<span class="op">=</span>dfPurchases <span class="op">\</span></span>
+<span id="cb53-17"><a href="#cb53-17"></a>    .rollup(<span class="st">&quot;userid&quot;</span>,<span class="st">&quot;productid&quot;</span>)<span class="op">\</span></span>
+<span id="cb53-18"><a href="#cb53-18"></a>    .agg({<span class="st">&quot;quantity&quot;</span>: <span class="st">&quot;sum&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="set-methods" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="set-methods"><span class="header-section-number">7.2</span> Set methods</h2>
+<p>Similarly to RDDs also DataFrames can be combined by using set transformations</p>
+<ul>
+<li><code>df1.union(df2)</code></li>
+<li><code>df1.intersect(df2)</code></li>
+<li><code>df1.subtract(df2)</code></li>
+</ul>
+</section>
+<section id="broadcast-join" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="broadcast-join"><span class="header-section-number">7.3</span> Broadcast join</h2>
+<p>Spark SQL automatically implements a broadcast version of the join operation if one of the two input DataFrames is small enough to be stored in the main memory of each executor.</p>
+<p>It is possible to suggest/force it by creating a broadcast version of a DataFrame.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="sourceCode" id="cb54"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1"></a>dfPersonLikesBroadcast <span class="op">=</span> dfUidSports<span class="op">\</span></span>
+<span id="cb54-2"><a href="#cb54-2"></a>    .join(</span>
+<span id="cb54-3"><a href="#cb54-3"></a>        broadcast(dfPersons),</span>
+<span id="cb54-4"><a href="#cb54-4"></a>        dfPersons.uid <span class="op">==</span> dfUidSports.uid</span>
+<span id="cb54-5"><a href="#cb54-5"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 66%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>broadcast(dfPersons)</code></td>
+<td>In this case we specify that <code>dfPersons</code> must be broadcasted and hence Spark will execute the join operation by using a broadcast join.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="execution-plan" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="execution-plan"><span class="header-section-number">7.4</span> Execution plan</h2>
+<p>The method <code>explain()</code> can be invoked on a DataFrame to print on the standard output the execution plan of the part of the code that is used to compute the content of the DataFrame on which <code>explain()</code> is invoked.</p>
+</section>
 </section>
 
 </main>

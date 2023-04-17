@@ -918,7 +918,7 @@ The content of DataFrames can be stored on disk by using two approches
 
 :::{.callout-note collapse="true"}
 ## Example 1
-1. Create a DataFrame from the "persons.csv" file that contains the profiles of a set of persons
+1. Create a DataFrame from the "people.csv" file that contains the profiles of a set of people
     - The first line contains the header;
     - The others lines contain the users' profiles: each line contains name, age, and gender of a person.
 2. Store the DataFrame in the output folder by using the `saveAsTextFile()` method.
@@ -927,9 +927,9 @@ The content of DataFrames can be stored on disk by using two approches
 # Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from persons.csv
+# Create a DataFrame from people.csv
 df = spark.read.load(
-    "persons.csv",
+    "people.csv",
     format="csv",
     header=True,
     inferSchema=True
@@ -943,7 +943,7 @@ df.rdd.saveAsTextFile(outputPath)
 
 :::{.callout-note collapse="true"}
 ## Example 2
-1. Create a DataFrame from the "persons.csv" file that contains the profiles of a set of persons
+1. Create a DataFrame from the "people.csv" file that contains the profiles of a set of people
     - The first line contains the header;
     - The others lines contain the users' profiles: each line contains name, age, and gender of a person.
 2. Store the DataFrame in the output folder by using the `write()` method, with the CSV format.
@@ -952,9 +952,9 @@ df.rdd.saveAsTextFile(outputPath)
 # Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from persons.csv
+# Create a DataFrame from people.csv
 df = spark.read.load(
-    "persons.csv",
+    "people.csv",
     format="csv",
     header=True,
     inferSchema=True
@@ -997,4 +997,131 @@ spark = SparkSession.builder.getOrCreate()
 spark.udf.register("length", lambda x: len(x))
 ```
 
+Use of the defined UDF in a selectExpr transformation.
+
+```python
+result = inputDF.selectExpr("length(name) as size")
+```
+
+Use of the defined UDF in a SQL query.
+```python
+result = spark.sql("SELECT length(name) FROM profiles")
+```
+
 :::
+
+# Other notes
+## Data warehouse methods: cube and rollup
+The method `cube(col1, ..., coln)` of the `DataFrame` class can be used to create a multi-dimensional cube for the input DataFrame, on top of which aggregate functions can be computed for each group.
+
+The method `rollup(col1, ..., coln)` of the `DataFrame` class can be used to create a multi-dimensional rollup for the input DataFrame, on top of which aggregate functions can be computed for each group.
+
+Specify which attributes are used to split the input data in groups by using `cube(col1, ..., coln)` or `rollup(col1, ..., coln)`, respectively, then, apply the aggregate functions to compute for each group of the cube/rollup. The result is a DataFrame. The same aggregate functions/methods already discussed for groupBy can be used also for cube and rollup.
+
+:::{.callout-note collapse="true"}
+## Example
+1. Create a DataFrame from the "purchases.csv" file
+    - The first line contains the header;
+    - The others lines contain the quantities of purchased products by users: each line contains userid, productid, quantity.
+2. Create a first DataFrame containing the result of the cube method. Define one group for each pair userid, productid and compute the sum of quantity in each group;
+3.Create a second DataFrame containing the result of the rollup method. Define one group for each pair userid, productid and compute the sum of quantity in each group.
+
+Input file
+
+```
+userid,productid,quantity
+u1,p1,10
+u1,p1,20
+u1,p2,20
+u1,p3,10
+u2,p1,20
+u2,p3,40
+u2,p3,30
+```
+
+Expected output - cube
+
+```
+userid,productid,sum(quantity)
+null    null    150
+null    p1      50
+null    p2      20
+null    p3      80
+u1      null    60
+u1      p1      30
+u1      p2      20
+u1      p3      10
+u2      null    90
+u2      p1      20
+u2      p3      70
+```
+
+Expected output - rollup
+
+```
+userid,productid,sum(quantity)
+null    null    150
+u1      null    60
+u1      p1      30
+u1      p2      20
+u1      p3      10
+u2      null    90
+u2      p1      20
+u2      p3      70
+```
+
+```python
+# Create a Spark Session object
+spark = SparkSession.builder.getOrCreate()
+
+# Read purchases.csv and store it in a DataFrame
+dfPurchases = spark.read.load(
+    "purchases.csv",
+    format="csv",
+    header=True,
+    inferSchema=True
+)
+
+dfCube=dfPurchases \
+    .cube("userid","productid") \
+    .agg({"quantity": "sum"})
+
+dfRollup=dfPurchases \
+    .rollup("userid","productid")\
+    .agg({"quantity": "sum"})
+```
+
+:::
+
+## Set methods
+Similarly to RDDs also DataFrames can be combined by using set transformations
+
+- `df1.union(df2)`
+- `df1.intersect(df2)`
+- `df1.subtract(df2)`
+
+## Broadcast join
+Spark SQL automatically implements a broadcast version of the join operation if one of the two input DataFrames is small enough to be stored in the main memory of each executor.
+
+It is possible to suggest/force it by creating a broadcast version of a DataFrame.
+
+:::{.callout-note collapse="true"}
+## Example
+
+```python
+dfPersonLikesBroadcast = dfUidSports\
+    .join(
+        broadcast(dfPersons),
+        dfPersons.uid == dfUidSports.uid
+    )
+```
+
+|||
+|-|--|
+| `broadcast(dfPersons)` | In this case we specify that `dfPersons` must be broadcasted and hence Spark will execute the join operation by using a broadcast join. |
+
+:::
+
+## Execution plan
+The method `explain()` can be invoked on a DataFrame to print on the standard output the execution plan of the part of the code that is used to compute the content of the DataFrame on which `explain()` is invoked.
+
