@@ -1,0 +1,177 @@
+---
+title: "Spark MLlib"
+---
+
+Spark MLlib is the Spark component providing the machine learning/data mining algorithms
+
+- Pre-processing techniques
+- Classification (supervised learning)
+- Clustering (unsupervised learning)
+- Itemset mining
+
+MLlib APIs are divided into two packages:
+
+- `pyspark.mllib`: It contains the original APIs built on top of RDDs. This version of the APIs is in maintenance mode and will be probably deprecated in the next releases of Spark.
+- `pyspark.ml`: It provides higher-level API built on top of DataFrames (i.e, Dataset\<Row\>) for constructing ML pipelines. It is recommended because the DataFrame-based API is more versatile and flexible, also providing the pipeline concept. This is the one explained in this course.
+
+# Data types
+Spark MLlib is based on a set of basic local and distributed data types:
+
+- Local vector
+- Local matrix
+- Distributed matrix
+- ...
+
+DataFrames for ML-based applications contain objects based on these basic data types.
+
+## Local vectors
+Local `pyspark.ml.linalg.Vector` objects in MLlib are used to store vectors (in dense and sparse representations) of double values. The MLlib algorithms work on vectors of doubles, used to represent the input records/data (one vector for each input record). Non double attributes/values must be mapped to double values before applying MLlib algorithms.
+
+:::{.callout-note collapse="true"}
+## Example
+Consider the vector of doubles `[1.0, 0.0, 3.0]`. It can be represented
+
+- In dense format as `[1.0, 0.0, 3.0]`
+- In sparse format as `(3, [0, 2], [1.0, 3.0])`, where 
+    - 3 is the size of the vector
+    - The array `[0, 2]` contains the indexes of the non-zero cells
+    - The array `[1.0, 3.0]` contains the values of the non-zero cells
+
+The following code shows how dense and sparse vectors can be created in Spark 
+
+```python
+from pyspark.ml.linalg import Vectors
+
+# Create a dense vector [1.0, 0.0, 3.0]
+dv = Vectors.dense([1.0, 0.0, 3.0])
+
+# Create a sparse vector [1.0, 0.0, 3.0] by specifying
+# its indices and values corresponding to non-zero entries
+# by means of a dictionary
+sv = Vectors.sparse(3, { 0:1.0, 2:3.0 })
+```
+
+In the sparse vector
+
+|||
+|-|---|
+| `3` | Size of the vector |
+| `2:3.0` | Index and value of a non-empty cell |
+| `{ 0:1.0, 2:3.0 }` | Dictionary of $index:value$ pairs |
+
+:::
+
+## Local matrices
+Local `pyspark.ml.linalg.Matrix` objects in MLlib are used to store matrices (in dense and sparse representations) of double values. The column-major order is used to store the content of the matrix in a linear way.
+
+![Local matrices](images/18a_spark_mllib/matrix_example.png){width=80%}
+
+:::{.callout-note collapse="true"}
+## Example
+The following code shows how dense and sparse matrices can be created in Spark.
+
+```python
+from pyspark.ml.linalg import Matrices
+
+# Create a dense matrix with two rows and three columns
+# 3.0 0.0 0.0
+# 1.0 1.5 2.0
+dm =Matrices.dense(2,3,[3.0, 1.0, 0.0, 1.5, 0.0, 2.0])
+
+# Create a sparse version of the same matrix
+sm = Matrices.sparse(2,3, [0, 2, 3, 4], [0, 1, 1, 1] , [3, 1, 1.5, 2])
+```
+
+In the dense matrix vector
+
+|||
+|-|---|
+| `2` | Number of rows |
+| `3` | Number of columns |
+| `[3.0, 1.0, 0.0, 1.5, 0.0, 2.0]` | Values in column/major order |
+
+In the sparse matrix vector
+
+|||
+|-|---|
+| `2` | Number of rows |
+| `3` | Number of columns |
+| `[0, 2, 3, 4]` | One element per column that encodes the offset in the array of non-zero values where the values of the given column start. The last element is the number of non-zero values. |
+| `[0, 1, 1, 1]` | Row index of each non-zero value |
+| `[3, 1, 1.5, 2]` | Array of non-zero values of the represented matrix |
+
+:::
+
+# Main concepts
+Spark MLlib uses DataFrames as input data: the input of the MLlib algorithms are structured data (i.e., tables), and all input data must be represented by means of tables before applying the MLlib algorithms; also document collections must be transformed in a tabular format before applying the MLlib algorithms.
+
+The DataFrames used and created by the MLlib algorithms are characterized by several columns, and each column is associated with a different role/meaning
+
+- **label**: the target of a classification/regression analysis;
+- **features**: the vector containing the values of the attributes/features of the input record/data points;
+- **text**: the original text of a document before being transformed in a tabular format;
+- **prediction**: the predicted value of a classification/regression analysis.
+
+## Transformer
+A Transformer is an ML algorithm/procedure that transforms one DataFrame into another DataFrame by means of the method `transform(inputDataFrame)`.
+
+:::{.callout-note collapse="true"}
+## Example 1
+A feature transformer might take a DataFrame, read a column (e.g., text), map it into a new column (e.g., feature vectors), and output a new DataFrame with the mapped column appended.
+:::
+
+:::{.callout-note collapse="true"}
+## Example 2
+A classification model is a Transformer that can be applied on a DataFrame with features and transforms it into a DataFrame with also the prediction column.
+:::
+
+## Estimator
+An Estimator is an ML algorithm/procedure that is fit on an input (training) DataFrame to produce a Transformer: each Estimator implements a `fit()` method, which accepts a DataFrame and produces a Model of type `Transformer`.
+
+An Estimator abstracts the concept of a learning algorithm or any algorithm that fits/trains on an input dataset and returns a model
+
+:::{.callout-note collapse="true"}
+## Example
+The Logistic Regression classification algorithm is an Estimator: calling `fit(input training DataFrame)` on it a Logistic Regression Model is built, which is a Model/a Transformer.
+:::
+
+## Pipeline
+A Pipeline chains multiple Transformers and Estimators together to specify a Machine learning/Data Mining workflow. In a pipeline, the output of a transformer/estimator is the input of the next one.
+
+:::{.callout-note collapse="true"}
+## Example
+A simple text document processing workflow aiming at building a classification model includes several steps
+
+1. Split each document into a set of words;
+2. Convert each set of words into a numerical feature vector;
+3. Learn a prediction model using the feature vectors and the associated class labels.
+:::
+
+## Parameters
+Transformers and Estimators share common APIs for specifying the values of their parameters.
+
+In the new APIs of Spark MLlib the use of the pipeline approach is preferred/recommended. This approach is based on the following steps
+
+1. The set of Transformers and Estimators that are needed are instantiated;
+2. A pipeline object is created and the sequence of transformers and estimators associated with the pipeline are specified;
+3. The pipeline is executed and a model is trained;
+4. (optional) The model is applied on new data.
+
+# Data preprocessing
+Input data must be preprocessed before applying machine learning and data mining algorithms
+
+- To organize data in a format consistent with the one expected by the applied algorithms;
+- To define good (predictive) features;
+- To remove bias (e.g., normalization);
+- To remove noise and missing values.
+
+## Extracting, transformings, and selecting features
+MLlib provides a set of transformers than can be used to extract, transform and select features from DataFrames
+
+- Feature Extractors (e.g., TF-IDF, Word2Vec)
+- Feature Transformers (e.g., Tokenizer, StopWordsRemover, StringIndexer, IndexToString, OneHotEncoderEstimator, Normalizer)
+- Feature Selectors (e.g., VectorSlicer)
+
+See the up-to-date list [here](https://spark.apache.org/docs/latest/ml-features.html).
+
+# Feature transformations

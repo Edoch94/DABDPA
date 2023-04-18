@@ -499,23 +499,23 @@ The `join(right, on, how)` method of the `DataFrame` class is used to join two D
 
 `on` specifies the join condition. It can be:
     
-    - a string: the column to join
-    - a list of strings: multiple columns to join
-    - a condition/an expression on the columns (e.g., `joined_df = df.join(df2, df.name == df2.name)`)
+- a string: the column to join
+- a list of strings: multiple columns to join
+- a condition/an expression on the columns (e.g., `joined_df = df.join(df2, df.name == df2.name)`)
 
 `how` specifies the type of join
 
-    - `inner` (default type of join)
-    - `cross`
-    - `outer`
-    - `full`
-    - `full_outer`
-    - `left`
-    - `left_outer`
-    - `right`
-    - `right_outer`
-    - `left_semi`
-    - `left_anti`
+- `inner` (default type of join)
+- `cross`
+- `outer`
+- `full`
+- `full_outer`
+- `left`
+- `left_outer`
+- `right`
+- `right_outer`
+- `left_semi`
+- `left_anti`
 
 :::{.callout-caution}
 Pay attention that this method: can generate errors at runtime if there are errors in the join expression.
