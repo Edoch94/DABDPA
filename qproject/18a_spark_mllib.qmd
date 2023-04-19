@@ -175,3 +175,160 @@ MLlib provides a set of transformers than can be used to extract, transform and 
 See the up-to-date list [here](https://spark.apache.org/docs/latest/ml-features.html).
 
 # Feature transformations
+Several algorithms are provided by MLlib to transform features. They are used to create new columns/features by combining or transforming other features
+It is possible to perform feature transformations and feature creations by using the standard methods for DataFrames and RDDs.
+
+## Vector Assembler
+VectorAssembler (`pyspark.ml.feature.VectorAssembler`) is a transformer that combines a given list of columns into a single vector column. It is useful for combining features into a single feature vector before applying ML algorithms.
+
+`VectorAssembler(inputCols, outputCol)`
+
+- `inputCols`: the list of original columns to include in the new column of type `Vector`. The following input column types are accepted
+    - all numeric types, boolean type, and vector type
+    - Boolean values are mapped to 1 (True) and 0 (False)
+- `outputCol`: the name of the new output column
+
+When the transform method of VectorAssembler is invoked on a DataFrame the returned DataFrame has a new column (outputCol): for each record, the value of the new column is the concatenation of the values of the input columns. It has also all the columns of the input DataFrame.
+
+:::{.callout-note collapse="true"}
+## Example
+Consider an input DataFrame with three columns: create a new DataFrame with a new column containing the concatenation of colB and colC in a new vector column (the name of the new column is set to features).
+
+**Original DataFrame**
+
+|colA|colB|colC|
+|-|-|-|
+|$1$|$4.5$|True|
+|$2$|$0.6$|True|
+|$3$|$1.5$|False|
+|$4$|$12.1$|True|
+|$5$|$0.0$|True|
+
+**Transformed DataFrame**
+
+|colA|colB|colC|features|
+|-|-|-|-|-|
+|$1$|$4.5$|True|$[4.5,1.0]$|
+|$2$|$0.6$|True|$[0.6,1.0]$|
+|$3$|$1.5$|False|$[1.5,0.0]$|
+|$4$|$12.1$|True|$[12.1,1.0]$|
+|$5$|$0.0$|True|$[0.0,1.0]$|
+
+Notice that columns of DataFrames can also be vectors.
+
+```python
+from pyspark.mllib.linalg import Vectors
+from pyspark.ml.feature import VectorAssembler
+
+# input and output folders
+inputPath = "data/exampleDataAssembler.csv“
+
+# Create a DataFrame from the input data
+inputDF = spark.read.load(
+    inputPath,
+    format="csv",
+    header=True,
+    inferSchema=True
+)
+
+# Create a VectorAssembler that combines columns colB and colC
+# The new vetor column is called features
+myVectorAssembler = VectorAssembler(
+    inputCols = ['colB', 'colC'],
+    outputCol = 'features'
+)
+
+# Apply myVectorAssembler on the input DataFrame
+transformedDF = myVectorAssembler.transform(inputDF)
+```
+
+:::
+
+## Data Normalization
+MLlib provides a set of normalization algorithms (called scalers)
+
+- StandardScaler
+- MinMaxScaler
+- Normalizer
+- MaxAbsScaler
+
+### StandardScaler
+StandardScaler (`pyspark.ml.feature.StandardScaler`) is an Estimator that returns a Transformer (`pyspark.ml.feature.StandardScalerModel`). `StandardScalerModel` transforms a vector column of an input DataFrame normalizing each feature of the input vector column to have unit standard deviation and/or zero mean.
+
+`StandardScaler(inputCol, outputCol)`
+
+- `inputCol`: the name of the input vector column (of doubles) to normalize
+- `outputCol`: the name of the new output normalized vector column
+
+Invoke the fit method of `StandardScaler` on the input DataFrame to infer a `StandardScalerModel`. The returned model is a Transformer.
+
+Invoke the transform method of `StandardScalerModel` on the input DataFrame to create a new DataFrame that has a new column (`outputCol`): for each record, the value of the new column is the normalized version of the input vector column. It has also all the columns of the input DataFrame.
+
+:::{.callout-note collapse="true"}
+## Example
+Consider an input DataFrame with four columns: create a new DataFrame with a new column containing the normalized version of the vector column features. Set the name of the new column to scaledFeatures.
+
+**Original DataFrame**
+
+|colA|colB|colC|features|
+|-|-|-|-|-|
+|$1$|$4.5$|True|$[4.5,1.0]$|
+|$2$|$0.6$|True|$[0.6,1.0]$|
+|$3$|$1.5$|False|$[1.5,0.0]$|
+|$4$|$12.1$|True|$[12.1,1.0]$|
+|$5$|$0.0$|True|$[0.0,1.0]$|
+
+**Transformed DataFrame**
+
+|colA|colB|colC|features|scaledFeatures|
+|-|-|-|-|-|-|
+|$1$|$4.5$|True|$[4.5,1.0]$|$[0.903,2.236]$|
+|$2$|$0.6$|True|$[0.6,1.0]$|$[0.120,2.236]$|
+|$3$|$1.5$|False|$[1.5,0.0]$|$[0.301,0.0]$|
+|$4$|$12.1$|True|$[12.1,1.0]$|$[2.428,2.236]$|
+|$5$|$0.0$|True|$[0.0,1.0]$|$[0.0,2.236]$|
+
+```python
+from pyspark.mllib.linalg import Vectors
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.feature import StandardScaler
+# input and output folders
+inputPath = "data/exampleDataAssembler.csv“
+
+# Create a DataFrame from the input data
+inputDF = spark.read.load(
+    inputPath,
+    format="csv",
+    header=True,
+    inferSchema=True
+)
+
+# Create a VectorAssembler that combines columns colB and colC
+# The new vetor column is called features
+myVectorAssembler = VectorAssembler(
+    inputCols = ['colB', 'colC'],
+    outputCol = 'features'
+)
+
+# Apply myVectorAssembler on the input DataFrame
+transformedDF = myVectorAssembler.transform(inputDF)
+
+# Create a Standard Scaler to scale the content of features
+myScaler = StandardScaler(
+    inputCol="features",
+    outputCol="scaledFeatures"
+)
+
+# Compute summary statistics by fitting the StandardScaler
+# Before normalizing the content of the data we need to compute mean and
+# standard deviation of the analyzed data
+scalerModel = myScaler.fit(transformedDF)
+
+# Apply myScaler on the input column features
+scaledDF = scalerModel.transform(transformedDF)
+```
+
+:::
+
+## Categorical columns
+Frequently the input data are characterized by categorical attributes (i.e., string columns), and the class label of the classification problem is a categorical attribute. The Spark MLlib classification and regression algorithms work only with numerical values, so categorical columns must be mapped to double values.
