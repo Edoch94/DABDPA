@@ -1,0 +1,243 @@
+---
+title: "Classification algorithm"
+---
+
+Spark MLlib provides a (limited) set of classification algorithms
+
+- Logistic regression
+    - Binomial logistic regression
+    - Multinomial logistic regression
+- Decision tree classifier
+- Random forest classifier
+- Gradient-boosted tree classifier
+- Multilayer perceptron classifier
+- Linear Support Vector Machine
+
+All the available classification algorithms are based on two phases:
+
+1. Model generation based on a set of training data
+2. Prediction of the class label of new unlabeled data
+
+All the classification algorithms available in Spark work only on numerical attributes: categorical values must be mapped to integer values (one distinct value per class) before applying the MLlib classification algorithms.
+
+All the Spark classification algorithms are trained on top of an input DataFrame containing (at least) two columns
+
+- label: the class label, (i.e., the attribute to be predicted by the classification model); it is an integer value (casted to a double)
+- features: a vector of doubles containing the values of the predictive attributes of the input records/data points; the data type of this column is `pyspark.ml.linalg.Vector`, and both dense and sparse vectors can be used
+
+:::{.callout-note collapse="true"}
+## Example
+Consider the following classification problem: the goal is to predict if new customers are good customers or not based on their monthly income and number of children. 
+
+The predictive attributes are
+
+- Monthly income
+- Number of children
+
+The class label (target attribute) is "Customer type": 
+
+- "Good customer", mapped to 1
+- "Bad customer", mapped to 0
+
+**Example of input training data**
+
+The training data is the set of customers for which the value of the class label is known: they are used by the classification algorithm to infer/train a classification model.
+
+|CustomerType|MonthlyIncome|NumChildren|
+|-|-|-|
+|Good customer|$1400.0$|$2$|
+|Bad customer|$11105.5$|$0$|
+|Good customer|$2150.0$|$2$|
+
+**Example of input training DataFrame**
+
+The input training DataFrame that must be provided as input to train an MLlib classification algorithm must have the following structure
+
+|label|features|
+|-|-|
+|$1.0$|$[1400.0,2.0]$|
+|$0.0$|$[11105.5,0.0]$|
+|$1.0$|$[2150.0,2.0]$|
+
+Notice that
+
+- The categorical values of "CustomerType" (the class label column) must be mapped to integer data values (then casted to doubles).
+- The values of the predictive attributes are stored in vectors of doubles. One single vector for each input record. 
+- In the generated DataFrame the names of the predictive attributes are not preserved.
+
+:::
+
+# Structured data classification
+## Example of logistic regression and structured data
+The following paragraphs show how to
+
+- Create a classification model based on the logistic regression algorithm on structured data: the model is inferred by analyzing the training data, (i.e., the example records/data points for which the value of the class label is known).
+- Apply the model to new unlabeled data: the inferred model is applied to predict the value of the class label of new unlabeled records/data points.
+
+### Training data
+
+The input training data is stored in a text file that contains one record/data point per line. The records/data points are structured data with a fixed number of attributes (four)
+
+- One attribute is the class label: it assumed that the first column of each record contains the class label;
+- The other three attributes are the predictive attributes that are used to predict the value of the class label;
+
+The values are already doubles (no need to convert them), and the input file has the header line.
+
+Consider the following example input training data file
+
+```
+label,attr1,attr2,attr3
+1.0,0.0,1.1,0.1
+0.0,2.0,1.0,-1.0
+0.0,2.0,1.3,1.0
+1.0,0.0,1.2,-0.5
+```
+
+It contains four records/data points. This is a binary classification problem because the class label assumes only two values: 0 and 1.
+
+The first operation consists in transforming the content of the input training file into a DataFrame containing two columns
+
+- label: the double value that is used to specify the label of each training record;
+- features: it is a vector of doubles associated with the values of the predictive features.
+
+|label|features|
+|-|-|
+|$1.0$|$[0.0,1.1,0.1]$|
+|$0.0$|$[2.0,1.0,-1.0]$|
+|$0.0$|$[2.0,1.3,1.0]$|
+|$1.0$|$[0.0,1.2,-0.5]$|
+
+- Data type of "label" is double
+- Data type of "features" is `pyspark.ml.linalg.Vector`
+
+### Unlabeled data
+
+The file containing the unlabeled data has the same format of the training data file, however the first column is empty because the class label is unknown. The goal is to predict the class label value of each unlabeled data by applying the classification model that has been trained on the training data: the predicted class label value of the unlabeled data is stored in a new column, called "prediction", of the returned DataFrame.
+
+Consider the following input unlabeled data file
+
+```
+label,attr1,attr2,attr3
+,-1.0,1.5,1.3
+,3.0,2.0,-0.1
+,0.0,2.2,-1.5
+```
+
+It contains three unlabeled records/data points. Notice that the first column is empty (the content before the first comma is the empty string).
+
+Also the unlabeled data must be stored into a DataFrame containing two columns: "label" and "features". So, "label" column is required also for unlabeled data, but its value is set to null for all records.
+
+|label|features|
+|-|-|
+|null|$[-1.0,1.5,1.3]$|
+|null|$[3.0,2.0,-0.1]$|
+|null|$[0.0,2.2,-1.5]$|
+
+### Prediction column
+After the application of the classification model on the unlabeled data, Spark returns a new DataFrame containing
+
+- The same columns of the input DataFrame
+- A new column called prediction, that, for each input unlabeled record, contains the predicted class label value
+- Two columns, associated with the probabilities of the predictions (these columns are not considered in the example)
+
+|label|features|prediction|rawPrediction|probability|
+|-|-|-|-|-|
+|null|$[-1.0,1.5,1.3]$|$1.0$|...|...|
+|null|$[3.0,2.0,-0.1]$|$0.0$|...|...|
+|null|$[0.0,2.2,-1.5]$|$1.0$|...|...|
+
+The "prediction" column contains the predicted class label values.
+
+### Example code
+
+```python
+from pyspark.mllib.linalg import Vectors
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.classification import LogisticRegression
+
+# input and output folders
+trainingData = "ex_data/trainingData.csv"
+unlabeledData = "ex_data/unlabeledData.csv"
+outputPath = "predictionsLR/"
+
+# *************************
+# Training step
+# *************************
+
+# Create a DataFrame from trainingData.csv
+# Training data in raw format
+trainingData = spark.read.load(
+    trainingData,
+    format="csv",
+    header=True,
+    inferSchema=True
+)
+
+# Define an assembler to create a column (features) of type Vector
+# containing the double values associated with columns attr1, attr2, attr3
+assembler = VectorAssembler(
+    inputCols=["attr1","attr2","attr3"],
+    outputCol="features"
+)
+
+# Apply the assembler to create column features for the training data
+trainingDataDF = assembler.transform(trainingData)
+
+# Create a LogisticRegression object.
+# LogisticRegression is an Estimator that is used to
+# create a classification model based on logistic regression.
+lr = LogisticRegression()
+
+# It is possible to set the values of the parameters of the
+# Logistic Regression algorithm using the setter methods.
+# There is one set method for each parameter
+# For example, the number of maximum iterations is set to 10
+# and the regularization parameter is set to 0.01
+lr.setMaxIter(10)
+lr.setRegParam(0.01)
+
+# Train a logistic regression model on the training data
+classificationModel = lr.fit(trainingDataDF)
+
+# *************************
+# Prediction step
+# *************************
+
+# Create a DataFrame from unlabeledData.csv
+# Unlabeled data in raw format
+unlabeledData = spark.read.load(
+    unlabeledData,
+    format="csv",
+    header=True,
+    inferSchema=True
+)
+
+# Apply the same assembler we created before also on the unlabeled data
+# to create the features column
+unlabeledDataDF = assembler.transform(unlabeledData)
+
+# Make predictions on the unlabled data using the transform() method of the
+# trained classification model transform uses only the content of 'features'
+# to perform the predictions
+predictionsDF = classificationModel.transform(unlabeledDataDF)
+
+# The returned DataFrame has the following schema (attributes)
+# - attr1
+# - attr2
+# - attr3
+# - features: vector (values of the attributes)
+# - label: double (value of the class label)
+# - rawPrediction: vector (nullable = true)
+# - probability: vector (The i-th cell contains the probability that 
+# the current record belongs to the i-th class
+# - prediction: double (the predicted class label)
+
+# Select only the original features (i.e., the value of the original attributes
+# attr1, attr2, attr3) and the predicted class for each record
+predictions = predictionsDF.select("attr1", "attr2", "attr3", "prediction")
+
+# Save the result in an HDFS output folder
+predictions.write.csv(outputPath, header="true")
+```
+
+## Pipelines

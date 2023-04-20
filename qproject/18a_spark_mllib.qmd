@@ -346,6 +346,7 @@ Invoke the fit method of `StringIndexer` on the input DataFrame to infer a `Stri
 Invoke the transform method of `StringIndexerModel` on the input DataFrame to create a new DataFrame that has a new column (`outputCol`): for each record, the value of the new column is the integer (casted to a double) associated with the value of the input string column. It has also all the columns of the input DataFrame.
 
 :::{.callout-note collapse="true"}
+## Example
 Consider an input DataFrame with two columns: create a new DataFrame with a new column containing the integer version of the string column category. Set the name of the new column to "categoryIndex".
 
 **Original DataFrame**
@@ -406,6 +407,7 @@ Given `IndexToString(inputCol, outputCol, labels)`
 Invoke the transform method of `IndexToString` on the input DataFrame to create a new DataFrame that has a new column (`outputCol`): for each record, the value of the new column is the original string associated with the value of the input numerical column. It has also all the columns of the input DataFrame.
 
 :::{.callout-note collapse="true"}
+## Example
 Consider an input DataFrame with two columns: create a new DataFrame with a new column containing the integer version of the string column category and then map it back to the string version in a new column.
 
 **Original DataFrame**
@@ -485,6 +487,7 @@ Given `SQLTransformer(statement)`
 When the transform method of `SQLTransformer` is invoked on a DataFrame the returned DataFrame is the result of the executed statement query.
 
 :::{.callout-note collapse="true"}
+## Example
 Consider an input DataFrame with two columns: "text" and "id": create a new DataFrame with a new column, called "numWords", containing the number of words occurring in column "text".
 
 **Original DataFrame**
