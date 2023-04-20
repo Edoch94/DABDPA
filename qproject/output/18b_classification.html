@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Spark MLlib</title>
+<title>Classification algorithm</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -2617,35 +2617,16 @@ vertical-align: -.125em;
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#data-types" id="toc-data-types" class="nav-link active" data-scroll-target="#data-types"><span class="toc-section-number">1</span>  Data types</a>
+  <li><a href="#structured-data-classification" id="toc-structured-data-classification" class="nav-link active" data-scroll-target="#structured-data-classification"><span class="toc-section-number">1</span>  Structured data classification</a>
   <ul class="collapse">
-  <li><a href="#local-vectors" id="toc-local-vectors" class="nav-link" data-scroll-target="#local-vectors"><span class="toc-section-number">1.1</span>  Local vectors</a></li>
-  <li><a href="#local-matrices" id="toc-local-matrices" class="nav-link" data-scroll-target="#local-matrices"><span class="toc-section-number">1.2</span>  Local matrices</a></li>
+  <li><a href="#example-of-logistic-regression-and-structured-data" id="toc-example-of-logistic-regression-and-structured-data" class="nav-link" data-scroll-target="#example-of-logistic-regression-and-structured-data"><span class="toc-section-number">1.1</span>  Example of logistic regression and structured data</a>
+  <ul class="collapse">
+  <li><a href="#training-data" id="toc-training-data" class="nav-link" data-scroll-target="#training-data"><span class="toc-section-number">1.1.1</span>  Training data</a></li>
+  <li><a href="#unlabeled-data" id="toc-unlabeled-data" class="nav-link" data-scroll-target="#unlabeled-data"><span class="toc-section-number">1.1.2</span>  Unlabeled data</a></li>
+  <li><a href="#prediction-column" id="toc-prediction-column" class="nav-link" data-scroll-target="#prediction-column"><span class="toc-section-number">1.1.3</span>  Prediction column</a></li>
+  <li><a href="#example-code" id="toc-example-code" class="nav-link" data-scroll-target="#example-code"><span class="toc-section-number">1.1.4</span>  Example code</a></li>
   </ul></li>
-  <li><a href="#main-concepts" id="toc-main-concepts" class="nav-link" data-scroll-target="#main-concepts"><span class="toc-section-number">2</span>  Main concepts</a>
-  <ul class="collapse">
-  <li><a href="#transformer" id="toc-transformer" class="nav-link" data-scroll-target="#transformer"><span class="toc-section-number">2.1</span>  Transformer</a></li>
-  <li><a href="#estimator" id="toc-estimator" class="nav-link" data-scroll-target="#estimator"><span class="toc-section-number">2.2</span>  Estimator</a></li>
-  <li><a href="#pipeline" id="toc-pipeline" class="nav-link" data-scroll-target="#pipeline"><span class="toc-section-number">2.3</span>  Pipeline</a></li>
-  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters"><span class="toc-section-number">2.4</span>  Parameters</a></li>
-  </ul></li>
-  <li><a href="#data-preprocessing" id="toc-data-preprocessing" class="nav-link" data-scroll-target="#data-preprocessing"><span class="toc-section-number">3</span>  Data preprocessing</a>
-  <ul class="collapse">
-  <li><a href="#extracting-transformings-and-selecting-features" id="toc-extracting-transformings-and-selecting-features" class="nav-link" data-scroll-target="#extracting-transformings-and-selecting-features"><span class="toc-section-number">3.1</span>  Extracting, transformings, and selecting features</a></li>
-  </ul></li>
-  <li><a href="#feature-transformations" id="toc-feature-transformations" class="nav-link" data-scroll-target="#feature-transformations"><span class="toc-section-number">4</span>  Feature transformations</a>
-  <ul class="collapse">
-  <li><a href="#vectorassembler" id="toc-vectorassembler" class="nav-link" data-scroll-target="#vectorassembler"><span class="toc-section-number">4.1</span>  <code>VectorAssembler</code></a></li>
-  <li><a href="#data-normalization" id="toc-data-normalization" class="nav-link" data-scroll-target="#data-normalization"><span class="toc-section-number">4.2</span>  Data Normalization</a>
-  <ul class="collapse">
-  <li><a href="#standardscaler" id="toc-standardscaler" class="nav-link" data-scroll-target="#standardscaler"><span class="toc-section-number">4.2.1</span>  <code>StandardScaler</code></a></li>
-  </ul></li>
-  <li><a href="#categorical-columns" id="toc-categorical-columns" class="nav-link" data-scroll-target="#categorical-columns"><span class="toc-section-number">4.3</span>  Categorical columns</a>
-  <ul class="collapse">
-  <li><a href="#stringindexer" id="toc-stringindexer" class="nav-link" data-scroll-target="#stringindexer"><span class="toc-section-number">4.3.1</span>  <code>StringIndexer</code></a></li>
-  <li><a href="#indextostring" id="toc-indextostring" class="nav-link" data-scroll-target="#indextostring"><span class="toc-section-number">4.3.2</span>  <code>IndexToString</code></a></li>
-  <li><a href="#sqltransformer" id="toc-sqltransformer" class="nav-link" data-scroll-target="#sqltransformer"><span class="toc-section-number">4.3.3</span>  <code>SQLTransformer</code></a></li>
-  </ul></li>
+  <li><a href="#pipelines" id="toc-pipelines" class="nav-link" data-scroll-target="#pipelines"><span class="toc-section-number">1.2</span>  Pipelines</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -2654,7 +2635,7 @@ vertical-align: -.125em;
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Spark MLlib</h1>
+<h1 class="title">Classification algorithm</h1>
 </div>
 
 
@@ -2669,31 +2650,30 @@ vertical-align: -.125em;
 
 </header>
 
-<p>Spark MLlib is the Spark component providing the machine learning/data mining algorithms</p>
+<p>Spark MLlib provides a (limited) set of classification algorithms</p>
 <ul>
-<li>Pre-processing techniques</li>
-<li>Classification (supervised learning)</li>
-<li>Clustering (unsupervised learning)</li>
-<li>Itemset mining</li>
-</ul>
-<p>MLlib APIs are divided into two packages:</p>
+<li>Logistic regression
 <ul>
-<li><code>pyspark.mllib</code>: It contains the original APIs built on top of RDDs. This version of the APIs is in maintenance mode and will be probably deprecated in the next releases of Spark.</li>
-<li><code>pyspark.ml</code>: It provides higher-level API built on top of DataFrames (i.e, Dataset&lt;Row&gt;) for constructing ML pipelines. It is recommended because the DataFrame-based API is more versatile and flexible, also providing the pipeline concept. This is the one explained in this course.</li>
+<li>Binomial logistic regression</li>
+<li>Multinomial logistic regression</li>
+</ul></li>
+<li>Decision tree classifier</li>
+<li>Random forest classifier</li>
+<li>Gradient-boosted tree classifier</li>
+<li>Multilayer perceptron classifier</li>
+<li>Linear Support Vector Machine</li>
 </ul>
-<section id="data-types" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Data types</h1>
-<p>Spark MLlib is based on a set of basic local and distributed data types:</p>
+<p>All the available classification algorithms are based on two phases:</p>
+<ol type="1">
+<li>Model generation based on a set of training data</li>
+<li>Prediction of the class label of new unlabeled data</li>
+</ol>
+<p>All the classification algorithms available in Spark work only on numerical attributes: categorical values must be mapped to integer values (one distinct value per class) before applying the MLlib classification algorithms.</p>
+<p>All the Spark classification algorithms are trained on top of an input DataFrame containing (at least) two columns</p>
 <ul>
-<li>Local vector</li>
-<li>Local matrix</li>
-<li>Distributed matrix</li>
-<li>…</li>
+<li>label: the class label, (i.e., the attribute to be predicted by the classification model); it is an integer value (casted to a double)</li>
+<li>features: a vector of doubles containing the values of the predictive attributes of the input records/data points; the data type of this column is <code>pyspark.ml.linalg.Vector</code>, and both dense and sparse vectors can be used</li>
 </ul>
-<p>DataFrames for ML-based applications contain objects based on these basic data types.</p>
-<section id="local-vectors" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="local-vectors"><span class="header-section-number">1.1</span> Local vectors</h2>
-<p>Local <code>pyspark.ml.linalg.Vector</code> objects in MLlib are used to store vectors (in dense and sparse representations) of double values. The MLlib algorithms work on vectors of doubles, used to represent the input records/data (one vector for each input record). Non double attributes/values must be mapped to double values before applying MLlib algorithms.</p>
 <div class="callout-note callout callout-style-default callout-captioned">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -2706,962 +2686,308 @@ Example
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Consider the vector of doubles <code>[1.0, 0.0, 3.0]</code>. It can be represented</p>
+<p>Consider the following classification problem: the goal is to predict if new customers are good customers or not based on their monthly income and number of children.</p>
+<p>The predictive attributes are</p>
 <ul>
-<li>In dense format as <code>[1.0, 0.0, 3.0]</code></li>
-<li>In sparse format as <code>(3, [0, 2], [1.0, 3.0])</code>, where
-<ul>
-<li>3 is the size of the vector</li>
-<li>The array <code>[0, 2]</code> contains the indexes of the non-zero cells</li>
-<li>The array <code>[1.0, 3.0]</code> contains the values of the non-zero cells</li>
-</ul></li>
+<li>Monthly income</li>
+<li>Number of children</li>
 </ul>
-<p>The following code shows how dense and sparse vectors can be created in Spark</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">from</span> pyspark.ml.linalg <span class="im">import</span> Vectors</span>
-<span id="cb1-2"><a href="#cb1-2"></a></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="co"># Create a dense vector [1.0, 0.0, 3.0]</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a>dv <span class="op">=</span> Vectors.dense([<span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="fl">3.0</span>])</span>
-<span id="cb1-5"><a href="#cb1-5"></a></span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="co"># Create a sparse vector [1.0, 0.0, 3.0] by specifying</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="co"># its indices and values corresponding to non-zero entries</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="co"># by means of a dictionary</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a>sv <span class="op">=</span> Vectors.sparse(<span class="dv">3</span>, { <span class="dv">0</span>:<span class="fl">1.0</span>, <span class="dv">2</span>:<span class="fl">3.0</span> })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>In the sparse vector</p>
-<table class="table">
-<tbody>
-<tr class="odd">
-<td><code>3</code></td>
-<td>Size of the vector</td>
-</tr>
-<tr class="even">
-<td><code>2:3.0</code></td>
-<td>Index and value of a non-empty cell</td>
-</tr>
-<tr class="odd">
-<td><code>{ 0:1.0, 2:3.0 }</code></td>
-<td>Dictionary of <span class="math inline">\(index:value\)</span> pairs</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</section>
-<section id="local-matrices" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="local-matrices"><span class="header-section-number">1.2</span> Local matrices</h2>
-<p>Local <code>pyspark.ml.linalg.Matrix</code> objects in MLlib are used to store matrices (in dense and sparse representations) of double values. The column-major order is used to store the content of the matrix in a linear way.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p></p><figcaption class="figure-caption">Local matrices</figcaption><p></p>
-<p><img src="data:image/png;base64,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" class="img-fluid figure-img" style="width:80.0%"></p>
-</figure>
-</div>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Example
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>The following code shows how dense and sparse matrices can be created in Spark.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">from</span> pyspark.ml.linalg <span class="im">import</span> Matrices</span>
-<span id="cb2-2"><a href="#cb2-2"></a></span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="co"># Create a dense matrix with two rows and three columns</span></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># 3.0 0.0 0.0</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="co"># 1.0 1.5 2.0</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a>dm <span class="op">=</span>Matrices.dense(<span class="dv">2</span>,<span class="dv">3</span>,[<span class="fl">3.0</span>, <span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="fl">1.5</span>, <span class="fl">0.0</span>, <span class="fl">2.0</span>])</span>
-<span id="cb2-7"><a href="#cb2-7"></a></span>
-<span id="cb2-8"><a href="#cb2-8"></a><span class="co"># Create a sparse version of the same matrix</span></span>
-<span id="cb2-9"><a href="#cb2-9"></a>sm <span class="op">=</span> Matrices.sparse(<span class="dv">2</span>,<span class="dv">3</span>, [<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>] , [<span class="dv">3</span>, <span class="dv">1</span>, <span class="fl">1.5</span>, <span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>In the dense matrix vector</p>
-<table class="table">
-<tbody>
-<tr class="odd">
-<td><code>2</code></td>
-<td>Number of rows</td>
-</tr>
-<tr class="even">
-<td><code>3</code></td>
-<td>Number of columns</td>
-</tr>
-<tr class="odd">
-<td><code>[3.0, 1.0, 0.0, 1.5, 0.0, 2.0]</code></td>
-<td>Values in column/major order</td>
-</tr>
-</tbody>
-</table>
-<p>In the sparse matrix vector</p>
-<table class="table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 75%">
-</colgroup>
-<tbody>
-<tr class="odd">
-<td><code>2</code></td>
-<td>Number of rows</td>
-</tr>
-<tr class="even">
-<td><code>3</code></td>
-<td>Number of columns</td>
-</tr>
-<tr class="odd">
-<td><code>[0, 2, 3, 4]</code></td>
-<td>One element per column that encodes the offset in the array of non-zero values where the values of the given column start. The last element is the number of non-zero values.</td>
-</tr>
-<tr class="even">
-<td><code>[0, 1, 1, 1]</code></td>
-<td>Row index of each non-zero value</td>
-</tr>
-<tr class="odd">
-<td><code>[3, 1, 1.5, 2]</code></td>
-<td>Array of non-zero values of the represented matrix</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="main-concepts" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Main concepts</h1>
-<p>Spark MLlib uses DataFrames as input data: the input of the MLlib algorithms are structured data (i.e., tables), and all input data must be represented by means of tables before applying the MLlib algorithms; also document collections must be transformed in a tabular format before applying the MLlib algorithms.</p>
-<p>The DataFrames used and created by the MLlib algorithms are characterized by several columns, and each column is associated with a different role/meaning</p>
+<p>The class label (target attribute) is “Customer type”:</p>
 <ul>
-<li><strong>label</strong>: the target of a classification/regression analysis;</li>
-<li><strong>features</strong>: the vector containing the values of the attributes/features of the input record/data points;</li>
-<li><strong>text</strong>: the original text of a document before being transformed in a tabular format;</li>
-<li><strong>prediction</strong>: the predicted value of a classification/regression analysis.</li>
+<li>“Good customer”, mapped to 1</li>
+<li>“Bad customer”, mapped to 0</li>
 </ul>
-<section id="transformer" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="transformer"><span class="header-section-number">2.1</span> Transformer</h2>
-<p>A Transformer is an ML algorithm/procedure that transforms one DataFrame into another DataFrame by means of the method <code>transform(inputDataFrame)</code>.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Example 1
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>A feature transformer might take a DataFrame, read a column (e.g., text), map it into a new column (e.g., feature vectors), and output a new DataFrame with the mapped column appended.</p>
-</div>
-</div>
-</div>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Example 2
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>A classification model is a Transformer that can be applied on a DataFrame with features and transforms it into a DataFrame with also the prediction column.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="estimator" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="estimator"><span class="header-section-number">2.2</span> Estimator</h2>
-<p>An Estimator is an ML algorithm/procedure that is fit on an input (training) DataFrame to produce a Transformer: each Estimator implements a <code>fit()</code> method, which accepts a DataFrame and produces a Model of type <code>Transformer</code>.</p>
-<p>An Estimator abstracts the concept of a learning algorithm or any algorithm that fits/trains on an input dataset and returns a model</p>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Example
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>The Logistic Regression classification algorithm is an Estimator: calling <code>fit(input training DataFrame)</code> on it a Logistic Regression Model is built, which is a Model/a Transformer.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="pipeline" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="pipeline"><span class="header-section-number">2.3</span> Pipeline</h2>
-<p>A Pipeline chains multiple Transformers and Estimators together to specify a Machine learning/Data Mining workflow. In a pipeline, the output of a transformer/estimator is the input of the next one.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Example
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>A simple text document processing workflow aiming at building a classification model includes several steps</p>
-<ol type="1">
-<li>Split each document into a set of words;</li>
-<li>Convert each set of words into a numerical feature vector;</li>
-<li>Learn a prediction model using the feature vectors and the associated class labels.</li>
-</ol>
-</div>
-</div>
-</div>
-</section>
-<section id="parameters" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="parameters"><span class="header-section-number">2.4</span> Parameters</h2>
-<p>Transformers and Estimators share common APIs for specifying the values of their parameters.</p>
-<p>In the new APIs of Spark MLlib the use of the pipeline approach is preferred/recommended. This approach is based on the following steps</p>
-<ol type="1">
-<li>The set of Transformers and Estimators that are needed are instantiated;</li>
-<li>A pipeline object is created and the sequence of transformers and estimators associated with the pipeline are specified;</li>
-<li>The pipeline is executed and a model is trained;</li>
-<li>(optional) The model is applied on new data.</li>
-</ol>
-</section>
-</section>
-<section id="data-preprocessing" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Data preprocessing</h1>
-<p>Input data must be preprocessed before applying machine learning and data mining algorithms</p>
-<ul>
-<li>To organize data in a format consistent with the one expected by the applied algorithms;</li>
-<li>To define good (predictive) features;</li>
-<li>To remove bias (e.g., normalization);</li>
-<li>To remove noise and missing values.</li>
-</ul>
-<section id="extracting-transformings-and-selecting-features" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="extracting-transformings-and-selecting-features"><span class="header-section-number">3.1</span> Extracting, transformings, and selecting features</h2>
-<p>MLlib provides a set of transformers than can be used to extract, transform and select features from DataFrames</p>
-<ul>
-<li>Feature Extractors (e.g., TF-IDF, Word2Vec)</li>
-<li>Feature Transformers (e.g., Tokenizer, StopWordsRemover, StringIndexer, IndexToString, OneHotEncoderEstimator, Normalizer)</li>
-<li>Feature Selectors (e.g., VectorSlicer)</li>
-</ul>
-<p>See the up-to-date list <a href="https://spark.apache.org/docs/latest/ml-features.html">here</a>.</p>
-</section>
-</section>
-<section id="feature-transformations" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Feature transformations</h1>
-<p>Several algorithms are provided by MLlib to transform features. They are used to create new columns/features by combining or transforming other features It is possible to perform feature transformations and feature creations by using the standard methods for DataFrames and RDDs.</p>
-<section id="vectorassembler" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="vectorassembler"><span class="header-section-number">4.1</span> <code>VectorAssembler</code></h2>
-<p><code>VectorAssembler</code> (<code>pyspark.ml.feature.VectorAssembler</code>) is a transformer that combines a given list of columns into a single vector column. It is useful for combining features into a single feature vector before applying ML algorithms.</p>
-<p>Given <code>VectorAssembler(inputCols, outputCol)</code></p>
-<ul>
-<li><code>inputCols</code>: the list of original columns to include in the new column of type <code>Vector</code>. The following input column types are accepted
-<ul>
-<li>all numeric types, boolean type, and vector type</li>
-<li>Boolean values are mapped to 1 (True) and 0 (False)</li>
-</ul></li>
-<li><code>outputCol</code>: the name of the new output column</li>
-</ul>
-<p>When the transform method of VectorAssembler is invoked on a DataFrame the returned DataFrame has a new column (outputCol): for each record, the value of the new column is the concatenation of the values of the input columns. It has also all the columns of the input DataFrame.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Example
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Consider an input DataFrame with three columns: create a new DataFrame with a new column containing the concatenation of “colB” and “colC” in a new vector column. Set the name of the new column to “features”.</p>
-<p><strong>Original DataFrame</strong></p>
+<p><strong>Example of input training data</strong></p>
+<p>The training data is the set of customers for which the value of the class label is known: they are used by the classification algorithm to infer/train a classification model.</p>
 <table class="table">
 <thead>
 <tr class="header">
-<th>colA</th>
-<th>colB</th>
-<th>colC</th>
+<th>CustomerType</th>
+<th>MonthlyIncome</th>
+<th>NumChildren</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><span class="math inline">\(1\)</span></td>
-<td><span class="math inline">\(4.5\)</span></td>
-<td>True</td>
-</tr>
-<tr class="even">
+<td>Good customer</td>
+<td><span class="math inline">\(1400.0\)</span></td>
 <td><span class="math inline">\(2\)</span></td>
-<td><span class="math inline">\(0.6\)</span></td>
-<td>True</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(3\)</span></td>
-<td><span class="math inline">\(1.5\)</span></td>
-<td>False</td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(4\)</span></td>
-<td><span class="math inline">\(12.1\)</span></td>
-<td>True</td>
+<td>Bad customer</td>
+<td><span class="math inline">\(11105.5\)</span></td>
+<td><span class="math inline">\(0\)</span></td>
 </tr>
 <tr class="odd">
-<td><span class="math inline">\(5\)</span></td>
-<td><span class="math inline">\(0.0\)</span></td>
-<td>True</td>
+<td>Good customer</td>
+<td><span class="math inline">\(2150.0\)</span></td>
+<td><span class="math inline">\(2\)</span></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Transformed DataFrame</strong></p>
+<p><strong>Example of input training DataFrame</strong></p>
+<p>The input training DataFrame that must be provided as input to train an MLlib classification algorithm must have the following structure</p>
 <table class="table">
 <thead>
 <tr class="header">
-<th>colA</th>
-<th>colB</th>
-<th>colC</th>
+<th>label</th>
 <th>features</th>
-<th></th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><span class="math inline">\(1\)</span></td>
-<td><span class="math inline">\(4.5\)</span></td>
-<td>True</td>
-<td><span class="math inline">\([4.5,1.0]\)</span></td>
-<td></td>
+<td><span class="math inline">\(1.0\)</span></td>
+<td><span class="math inline">\([1400.0,2.0]\)</span></td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(2\)</span></td>
-<td><span class="math inline">\(0.6\)</span></td>
-<td>True</td>
-<td><span class="math inline">\([0.6,1.0]\)</span></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(3\)</span></td>
-<td><span class="math inline">\(1.5\)</span></td>
-<td>False</td>
-<td><span class="math inline">\([1.5,0.0]\)</span></td>
-<td></td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(4\)</span></td>
-<td><span class="math inline">\(12.1\)</span></td>
-<td>True</td>
-<td><span class="math inline">\([12.1,1.0]\)</span></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(5\)</span></td>
 <td><span class="math inline">\(0.0\)</span></td>
-<td>True</td>
-<td><span class="math inline">\([0.0,1.0]\)</span></td>
-<td></td>
+<td><span class="math inline">\([11105.5,0.0]\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(1.0\)</span></td>
+<td><span class="math inline">\([2150.0,2.0]\)</span></td>
 </tr>
 </tbody>
 </table>
-<p>Notice that columns of DataFrames can also be vectors.</p>
+<p>Notice that</p>
+<ul>
+<li>The categorical values of “CustomerType” (the class label column) must be mapped to integer data values (then casted to doubles).</li>
+<li>The values of the predictive attributes are stored in vectors of doubles. One single vector for each input record.</li>
+<li>In the generated DataFrame the names of the predictive attributes are not preserved.</li>
+</ul>
+</div>
+</div>
+</div>
+<section id="structured-data-classification" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Structured data classification</h1>
+<section id="example-of-logistic-regression-and-structured-data" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="example-of-logistic-regression-and-structured-data"><span class="header-section-number">1.1</span> Example of logistic regression and structured data</h2>
+<p>The following paragraphs show how to</p>
+<ul>
+<li>Create a classification model based on the logistic regression algorithm on structured data: the model is inferred by analyzing the training data, (i.e., the example records/data points for which the value of the class label is known).</li>
+<li>Apply the model to new unlabeled data: the inferred model is applied to predict the value of the class label of new unlabeled records/data points.</li>
+</ul>
+<section id="training-data" class="level3" data-number="1.1.1">
+<h3 data-number="1.1.1" class="anchored" data-anchor-id="training-data"><span class="header-section-number">1.1.1</span> Training data</h3>
+<p>The input training data is stored in a text file that contains one record/data point per line. The records/data points are structured data with a fixed number of attributes (four)</p>
+<ul>
+<li>One attribute is the class label: it assumed that the first column of each record contains the class label;</li>
+<li>The other three attributes are the predictive attributes that are used to predict the value of the class label;</li>
+</ul>
+<p>The values are already doubles (no need to convert them), and the input file has the header line.</p>
+<p>Consider the following example input training data file</p>
+<pre><code>label,attr1,attr2,attr3
+1.0,0.0,1.1,0.1
+0.0,2.0,1.0,-1.0
+0.0,2.0,1.3,1.0
+1.0,0.0,1.2,-0.5</code></pre>
+<p>It contains four records/data points. This is a binary classification problem because the class label assumes only two values: 0 and 1.</p>
+<p>The first operation consists in transforming the content of the input training file into a DataFrame containing two columns</p>
+<ul>
+<li>label: the double value that is used to specify the label of each training record;</li>
+<li>features: it is a vector of doubles associated with the values of the predictive features.</li>
+</ul>
+<table class="table">
+<thead>
+<tr class="header">
+<th>label</th>
+<th>features</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(1.0\)</span></td>
+<td><span class="math inline">\([0.0,1.1,0.1]\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(0.0\)</span></td>
+<td><span class="math inline">\([2.0,1.0,-1.0]\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(0.0\)</span></td>
+<td><span class="math inline">\([2.0,1.3,1.0]\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(1.0\)</span></td>
+<td><span class="math inline">\([0.0,1.2,-0.5]\)</span></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Data type of “label” is double</li>
+<li>Data type of “features” is <code>pyspark.ml.linalg.Vector</code></li>
+</ul>
+</section>
+<section id="unlabeled-data" class="level3" data-number="1.1.2">
+<h3 data-number="1.1.2" class="anchored" data-anchor-id="unlabeled-data"><span class="header-section-number">1.1.2</span> Unlabeled data</h3>
+<p>The file containing the unlabeled data has the same format of the training data file, however the first column is empty because the class label is unknown. The goal is to predict the class label value of each unlabeled data by applying the classification model that has been trained on the training data: the predicted class label value of the unlabeled data is stored in a new column, called “prediction”, of the returned DataFrame.</p>
+<p>Consider the following input unlabeled data file</p>
+<pre><code>label,attr1,attr2,attr3
+,-1.0,1.5,1.3
+,3.0,2.0,-0.1
+,0.0,2.2,-1.5</code></pre>
+<p>It contains three unlabeled records/data points. Notice that the first column is empty (the content before the first comma is the empty string).</p>
+<p>Also the unlabeled data must be stored into a DataFrame containing two columns: “label” and “features”. So, “label” column is required also for unlabeled data, but its value is set to null for all records.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>label</th>
+<th>features</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>null</td>
+<td><span class="math inline">\([-1.0,1.5,1.3]\)</span></td>
+</tr>
+<tr class="even">
+<td>null</td>
+<td><span class="math inline">\([3.0,2.0,-0.1]\)</span></td>
+</tr>
+<tr class="odd">
+<td>null</td>
+<td><span class="math inline">\([0.0,2.2,-1.5]\)</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="prediction-column" class="level3" data-number="1.1.3">
+<h3 data-number="1.1.3" class="anchored" data-anchor-id="prediction-column"><span class="header-section-number">1.1.3</span> Prediction column</h3>
+<p>After the application of the classification model on the unlabeled data, Spark returns a new DataFrame containing</p>
+<ul>
+<li>The same columns of the input DataFrame</li>
+<li>A new column called prediction, that, for each input unlabeled record, contains the predicted class label value</li>
+<li>Two columns, associated with the probabilities of the predictions (these columns are not considered in the example)</li>
+</ul>
+<table class="table">
+<thead>
+<tr class="header">
+<th>label</th>
+<th>features</th>
+<th>prediction</th>
+<th>rawPrediction</th>
+<th>probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>null</td>
+<td><span class="math inline">\([-1.0,1.5,1.3]\)</span></td>
+<td><span class="math inline">\(1.0\)</span></td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>null</td>
+<td><span class="math inline">\([3.0,2.0,-0.1]\)</span></td>
+<td><span class="math inline">\(0.0\)</span></td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>null</td>
+<td><span class="math inline">\([0.0,2.2,-1.5]\)</span></td>
+<td><span class="math inline">\(1.0\)</span></td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>The “prediction” column contains the predicted class label values.</p>
+</section>
+<section id="example-code" class="level3" data-number="1.1.4">
+<h3 data-number="1.1.4" class="anchored" data-anchor-id="example-code"><span class="header-section-number">1.1.4</span> Example code</h3>
 <div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="im">from</span> pyspark.mllib.linalg <span class="im">import</span> Vectors</span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> VectorAssembler</span>
-<span id="cb3-3"><a href="#cb3-3"></a></span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="co"># input and output folders</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a>inputPath <span class="op">=</span> <span class="st">&quot;data/exampleDataAssembler.csv“</span></span>
-<span id="cb3-6"><a href="#cb3-6"></a></span>
-<span id="cb3-7"><a href="#cb3-7"></a><span class="er"># Create a DataFrame from the input data</span></span>
-<span id="cb3-8"><a href="#cb3-8"></a><span class="er">inputDF = spark.read.load(</span></span>
-<span id="cb3-9"><a href="#cb3-9"></a><span class="er">    inputPath,</span></span>
-<span id="cb3-10"><a href="#cb3-10"></a><span class="er">    format=&quot;csv&quot;,</span></span>
-<span id="cb3-11"><a href="#cb3-11"></a><span class="er">    header=True,</span></span>
-<span id="cb3-12"><a href="#cb3-12"></a><span class="er">    inferSchema=True</span></span>
-<span id="cb3-13"><a href="#cb3-13"></a><span class="er">)</span></span>
-<span id="cb3-14"><a href="#cb3-14"></a></span>
-<span id="cb3-15"><a href="#cb3-15"></a><span class="er"># Create a VectorAssembler that combines columns colB and colC</span></span>
-<span id="cb3-16"><a href="#cb3-16"></a><span class="er"># The new vetor column is called features</span></span>
-<span id="cb3-17"><a href="#cb3-17"></a><span class="er">myVectorAssembler = VectorAssembler(</span></span>
-<span id="cb3-18"><a href="#cb3-18"></a><span class="er">    inputCols = [&#39;colB&#39;, &#39;colC&#39;],</span></span>
-<span id="cb3-19"><a href="#cb3-19"></a><span class="er">    outputCol = &#39;features&#39;</span></span>
-<span id="cb3-20"><a href="#cb3-20"></a><span class="er">)</span></span>
-<span id="cb3-21"><a href="#cb3-21"></a></span>
-<span id="cb3-22"><a href="#cb3-22"></a><span class="er"># Apply myVectorAssembler on the input DataFrame</span></span>
-<span id="cb3-23"><a href="#cb3-23"></a><span class="er">transformedDF = myVectorAssembler.transform(inputDF)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="data-normalization" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="data-normalization"><span class="header-section-number">4.2</span> Data Normalization</h2>
-<p>MLlib provides a set of normalization algorithms (called scalers)</p>
-<ul>
-<li>StandardScaler</li>
-<li>MinMaxScaler</li>
-<li>Normalizer</li>
-<li>MaxAbsScaler</li>
-</ul>
-<section id="standardscaler" class="level3" data-number="4.2.1">
-<h3 data-number="4.2.1" class="anchored" data-anchor-id="standardscaler"><span class="header-section-number">4.2.1</span> <code>StandardScaler</code></h3>
-<p><code>StandardScaler</code> (<code>pyspark.ml.feature.StandardScaler</code>) is an Estimator that returns a Transformer (<code>pyspark.ml.feature.StandardScalerModel</code>). <code>StandardScalerModel</code> transforms a vector column of an input DataFrame normalizing each feature of the input vector column to have unit standard deviation and/or zero mean.</p>
-<p>Given <code>StandardScaler(inputCol, outputCol)</code></p>
-<ul>
-<li><code>inputCol</code>: the name of the input vector column (of doubles) to normalize</li>
-<li><code>outputCol</code>: the name of the new output normalized vector column</li>
-</ul>
-<p>Invoke the fit method of <code>StandardScaler</code> on the input DataFrame to infer a <code>StandardScalerModel</code>. The returned model is a Transformer.</p>
-<p>Invoke the transform method of <code>StandardScalerModel</code> on the input DataFrame to create a new DataFrame that has a new column (<code>outputCol</code>): for each record, the value of the new column is the normalized version of the input vector column. It has also all the columns of the input DataFrame.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Example
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Consider an input DataFrame with four columns: create a new DataFrame with a new column containing the normalized version of the vector column features. Set the name of the new column to “scaledFeatures”.</p>
-<p><strong>Original DataFrame</strong></p>
-<table class="table">
-<thead>
-<tr class="header">
-<th>colA</th>
-<th>colB</th>
-<th>colC</th>
-<th>features</th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(1\)</span></td>
-<td><span class="math inline">\(4.5\)</span></td>
-<td>True</td>
-<td><span class="math inline">\([4.5,1.0]\)</span></td>
-<td></td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(2\)</span></td>
-<td><span class="math inline">\(0.6\)</span></td>
-<td>True</td>
-<td><span class="math inline">\([0.6,1.0]\)</span></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(3\)</span></td>
-<td><span class="math inline">\(1.5\)</span></td>
-<td>False</td>
-<td><span class="math inline">\([1.5,0.0]\)</span></td>
-<td></td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(4\)</span></td>
-<td><span class="math inline">\(12.1\)</span></td>
-<td>True</td>
-<td><span class="math inline">\([12.1,1.0]\)</span></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(5\)</span></td>
-<td><span class="math inline">\(0.0\)</span></td>
-<td>True</td>
-<td><span class="math inline">\([0.0,1.0]\)</span></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Transformed DataFrame</strong></p>
-<table class="table">
-<thead>
-<tr class="header">
-<th>colA</th>
-<th>colB</th>
-<th>colC</th>
-<th>features</th>
-<th>scaledFeatures</th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(1\)</span></td>
-<td><span class="math inline">\(4.5\)</span></td>
-<td>True</td>
-<td><span class="math inline">\([4.5,1.0]\)</span></td>
-<td><span class="math inline">\([0.903,2.236]\)</span></td>
-<td></td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(2\)</span></td>
-<td><span class="math inline">\(0.6\)</span></td>
-<td>True</td>
-<td><span class="math inline">\([0.6,1.0]\)</span></td>
-<td><span class="math inline">\([0.120,2.236]\)</span></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(3\)</span></td>
-<td><span class="math inline">\(1.5\)</span></td>
-<td>False</td>
-<td><span class="math inline">\([1.5,0.0]\)</span></td>
-<td><span class="math inline">\([0.301,0.0]\)</span></td>
-<td></td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(4\)</span></td>
-<td><span class="math inline">\(12.1\)</span></td>
-<td>True</td>
-<td><span class="math inline">\([12.1,1.0]\)</span></td>
-<td><span class="math inline">\([2.428,2.236]\)</span></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(5\)</span></td>
-<td><span class="math inline">\(0.0\)</span></td>
-<td>True</td>
-<td><span class="math inline">\([0.0,1.0]\)</span></td>
-<td><span class="math inline">\([0.0,2.236]\)</span></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">from</span> pyspark.mllib.linalg <span class="im">import</span> Vectors</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> VectorAssembler</span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> StandardScaler</span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="co"># input and output folders</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a>inputPath <span class="op">=</span> <span class="st">&quot;data/exampleDataAssembler.csv“</span></span>
-<span id="cb4-6"><a href="#cb4-6"></a></span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="er"># Create a DataFrame from the input data</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a><span class="er">inputDF = spark.read.load(</span></span>
-<span id="cb4-9"><a href="#cb4-9"></a><span class="er">    inputPath,</span></span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="er">    format=&quot;csv&quot;,</span></span>
-<span id="cb4-11"><a href="#cb4-11"></a><span class="er">    header=True,</span></span>
-<span id="cb4-12"><a href="#cb4-12"></a><span class="er">    inferSchema=True</span></span>
-<span id="cb4-13"><a href="#cb4-13"></a><span class="er">)</span></span>
-<span id="cb4-14"><a href="#cb4-14"></a></span>
-<span id="cb4-15"><a href="#cb4-15"></a><span class="er"># Create a VectorAssembler that combines columns colB and colC</span></span>
-<span id="cb4-16"><a href="#cb4-16"></a><span class="er"># The new vetor column is called features</span></span>
-<span id="cb4-17"><a href="#cb4-17"></a><span class="er">myVectorAssembler = VectorAssembler(</span></span>
-<span id="cb4-18"><a href="#cb4-18"></a><span class="er">    inputCols = [&#39;colB&#39;, &#39;colC&#39;],</span></span>
-<span id="cb4-19"><a href="#cb4-19"></a><span class="er">    outputCol = &#39;features&#39;</span></span>
-<span id="cb4-20"><a href="#cb4-20"></a><span class="er">)</span></span>
-<span id="cb4-21"><a href="#cb4-21"></a></span>
-<span id="cb4-22"><a href="#cb4-22"></a><span class="er"># Apply myVectorAssembler on the input DataFrame</span></span>
-<span id="cb4-23"><a href="#cb4-23"></a><span class="er">transformedDF = myVectorAssembler.transform(inputDF)</span></span>
-<span id="cb4-24"><a href="#cb4-24"></a></span>
-<span id="cb4-25"><a href="#cb4-25"></a><span class="er"># Create a Standard Scaler to scale the content of features</span></span>
-<span id="cb4-26"><a href="#cb4-26"></a><span class="er">myScaler = StandardScaler(</span></span>
-<span id="cb4-27"><a href="#cb4-27"></a><span class="er">    inputCol=&quot;features&quot;,</span></span>
-<span id="cb4-28"><a href="#cb4-28"></a><span class="er">    outputCol=&quot;scaledFeatures&quot;</span></span>
-<span id="cb4-29"><a href="#cb4-29"></a><span class="er">)</span></span>
-<span id="cb4-30"><a href="#cb4-30"></a></span>
-<span id="cb4-31"><a href="#cb4-31"></a><span class="er"># Compute summary statistics by fitting the StandardScaler</span></span>
-<span id="cb4-32"><a href="#cb4-32"></a><span class="er"># Before normalizing the content of the data we need to compute mean and</span></span>
-<span id="cb4-33"><a href="#cb4-33"></a><span class="er"># standard deviation of the analyzed data</span></span>
-<span id="cb4-34"><a href="#cb4-34"></a><span class="er">scalerModel = myScaler.fit(transformedDF)</span></span>
-<span id="cb4-35"><a href="#cb4-35"></a></span>
-<span id="cb4-36"><a href="#cb4-36"></a><span class="er"># Apply myScaler on the input column features</span></span>
-<span id="cb4-37"><a href="#cb4-37"></a><span class="er">scaledDF = scalerModel.transform(transformedDF)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</div>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="im">from</span> pyspark.ml.classification <span class="im">import</span> LogisticRegression</span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co"># input and output folders</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>trainingData <span class="op">=</span> <span class="st">&quot;ex_data/trainingData.csv&quot;</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>unlabeledData <span class="op">=</span> <span class="st">&quot;ex_data/unlabeledData.csv&quot;</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>outputPath <span class="op">=</span> <span class="st">&quot;predictionsLR/&quot;</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co"># *************************</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="co"># Training step</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="co"># *************************</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a></span>
+<span id="cb3-14"><a href="#cb3-14"></a><span class="co"># Create a DataFrame from trainingData.csv</span></span>
+<span id="cb3-15"><a href="#cb3-15"></a><span class="co"># Training data in raw format</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a>trainingData <span class="op">=</span> spark.read.load(</span>
+<span id="cb3-17"><a href="#cb3-17"></a>    trainingData,</span>
+<span id="cb3-18"><a href="#cb3-18"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>,</span>
+<span id="cb3-19"><a href="#cb3-19"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb3-20"><a href="#cb3-20"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb3-21"><a href="#cb3-21"></a>)</span>
+<span id="cb3-22"><a href="#cb3-22"></a></span>
+<span id="cb3-23"><a href="#cb3-23"></a><span class="co"># Define an assembler to create a column (features) of type Vector</span></span>
+<span id="cb3-24"><a href="#cb3-24"></a><span class="co"># containing the double values associated with columns attr1, attr2, attr3</span></span>
+<span id="cb3-25"><a href="#cb3-25"></a>assembler <span class="op">=</span> VectorAssembler(</span>
+<span id="cb3-26"><a href="#cb3-26"></a>    inputCols<span class="op">=</span>[<span class="st">&quot;attr1&quot;</span>,<span class="st">&quot;attr2&quot;</span>,<span class="st">&quot;attr3&quot;</span>],</span>
+<span id="cb3-27"><a href="#cb3-27"></a>    outputCol<span class="op">=</span><span class="st">&quot;features&quot;</span></span>
+<span id="cb3-28"><a href="#cb3-28"></a>)</span>
+<span id="cb3-29"><a href="#cb3-29"></a></span>
+<span id="cb3-30"><a href="#cb3-30"></a><span class="co"># Apply the assembler to create column features for the training data</span></span>
+<span id="cb3-31"><a href="#cb3-31"></a>trainingDataDF <span class="op">=</span> assembler.transform(trainingData)</span>
+<span id="cb3-32"><a href="#cb3-32"></a></span>
+<span id="cb3-33"><a href="#cb3-33"></a><span class="co"># Create a LogisticRegression object.</span></span>
+<span id="cb3-34"><a href="#cb3-34"></a><span class="co"># LogisticRegression is an Estimator that is used to</span></span>
+<span id="cb3-35"><a href="#cb3-35"></a><span class="co"># create a classification model based on logistic regression.</span></span>
+<span id="cb3-36"><a href="#cb3-36"></a>lr <span class="op">=</span> LogisticRegression()</span>
+<span id="cb3-37"><a href="#cb3-37"></a></span>
+<span id="cb3-38"><a href="#cb3-38"></a><span class="co"># It is possible to set the values of the parameters of the</span></span>
+<span id="cb3-39"><a href="#cb3-39"></a><span class="co"># Logistic Regression algorithm using the setter methods.</span></span>
+<span id="cb3-40"><a href="#cb3-40"></a><span class="co"># There is one set method for each parameter</span></span>
+<span id="cb3-41"><a href="#cb3-41"></a><span class="co"># For example, the number of maximum iterations is set to 10</span></span>
+<span id="cb3-42"><a href="#cb3-42"></a><span class="co"># and the regularization parameter is set to 0.01</span></span>
+<span id="cb3-43"><a href="#cb3-43"></a>lr.setMaxIter(<span class="dv">10</span>)</span>
+<span id="cb3-44"><a href="#cb3-44"></a>lr.setRegParam(<span class="fl">0.01</span>)</span>
+<span id="cb3-45"><a href="#cb3-45"></a></span>
+<span id="cb3-46"><a href="#cb3-46"></a><span class="co"># Train a logistic regression model on the training data</span></span>
+<span id="cb3-47"><a href="#cb3-47"></a>classificationModel <span class="op">=</span> lr.fit(trainingDataDF)</span>
+<span id="cb3-48"><a href="#cb3-48"></a></span>
+<span id="cb3-49"><a href="#cb3-49"></a><span class="co"># *************************</span></span>
+<span id="cb3-50"><a href="#cb3-50"></a><span class="co"># Prediction step</span></span>
+<span id="cb3-51"><a href="#cb3-51"></a><span class="co"># *************************</span></span>
+<span id="cb3-52"><a href="#cb3-52"></a></span>
+<span id="cb3-53"><a href="#cb3-53"></a><span class="co"># Create a DataFrame from unlabeledData.csv</span></span>
+<span id="cb3-54"><a href="#cb3-54"></a><span class="co"># Unlabeled data in raw format</span></span>
+<span id="cb3-55"><a href="#cb3-55"></a>unlabeledData <span class="op">=</span> spark.read.load(</span>
+<span id="cb3-56"><a href="#cb3-56"></a>    unlabeledData,</span>
+<span id="cb3-57"><a href="#cb3-57"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>,</span>
+<span id="cb3-58"><a href="#cb3-58"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb3-59"><a href="#cb3-59"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb3-60"><a href="#cb3-60"></a>)</span>
+<span id="cb3-61"><a href="#cb3-61"></a></span>
+<span id="cb3-62"><a href="#cb3-62"></a><span class="co"># Apply the same assembler we created before also on the unlabeled data</span></span>
+<span id="cb3-63"><a href="#cb3-63"></a><span class="co"># to create the features column</span></span>
+<span id="cb3-64"><a href="#cb3-64"></a>unlabeledDataDF <span class="op">=</span> assembler.transform(unlabeledData)</span>
+<span id="cb3-65"><a href="#cb3-65"></a></span>
+<span id="cb3-66"><a href="#cb3-66"></a><span class="co"># Make predictions on the unlabled data using the transform() method of the</span></span>
+<span id="cb3-67"><a href="#cb3-67"></a><span class="co"># trained classification model transform uses only the content of &#39;features&#39;</span></span>
+<span id="cb3-68"><a href="#cb3-68"></a><span class="co"># to perform the predictions</span></span>
+<span id="cb3-69"><a href="#cb3-69"></a>predictionsDF <span class="op">=</span> classificationModel.transform(unlabeledDataDF)</span>
+<span id="cb3-70"><a href="#cb3-70"></a></span>
+<span id="cb3-71"><a href="#cb3-71"></a><span class="co"># The returned DataFrame has the following schema (attributes)</span></span>
+<span id="cb3-72"><a href="#cb3-72"></a><span class="co"># - attr1</span></span>
+<span id="cb3-73"><a href="#cb3-73"></a><span class="co"># - attr2</span></span>
+<span id="cb3-74"><a href="#cb3-74"></a><span class="co"># - attr3</span></span>
+<span id="cb3-75"><a href="#cb3-75"></a><span class="co"># - features: vector (values of the attributes)</span></span>
+<span id="cb3-76"><a href="#cb3-76"></a><span class="co"># - label: double (value of the class label)</span></span>
+<span id="cb3-77"><a href="#cb3-77"></a><span class="co"># - rawPrediction: vector (nullable = true)</span></span>
+<span id="cb3-78"><a href="#cb3-78"></a><span class="co"># - probability: vector (The i-th cell contains the probability that </span></span>
+<span id="cb3-79"><a href="#cb3-79"></a><span class="co"># the current record belongs to the i-th class</span></span>
+<span id="cb3-80"><a href="#cb3-80"></a><span class="co"># - prediction: double (the predicted class label)</span></span>
+<span id="cb3-81"><a href="#cb3-81"></a></span>
+<span id="cb3-82"><a href="#cb3-82"></a><span class="co"># Select only the original features (i.e., the value of the original attributes</span></span>
+<span id="cb3-83"><a href="#cb3-83"></a><span class="co"># attr1, attr2, attr3) and the predicted class for each record</span></span>
+<span id="cb3-84"><a href="#cb3-84"></a>predictions <span class="op">=</span> predictionsDF.select(<span class="st">&quot;attr1&quot;</span>, <span class="st">&quot;attr2&quot;</span>, <span class="st">&quot;attr3&quot;</span>, <span class="st">&quot;prediction&quot;</span>)</span>
+<span id="cb3-85"><a href="#cb3-85"></a></span>
+<span id="cb3-86"><a href="#cb3-86"></a><span class="co"># Save the result in an HDFS output folder</span></span>
+<span id="cb3-87"><a href="#cb3-87"></a>predictions.write.csv(outputPath, header<span class="op">=</span><span class="st">&quot;true&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
-<section id="categorical-columns" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="categorical-columns"><span class="header-section-number">4.3</span> Categorical columns</h2>
-<p>Frequently the input data are characterized by categorical attributes (i.e., string columns), and the class label of the classification problem is a categorical attribute. The Spark MLlib classification and regression algorithms work only with numerical values, so categorical columns must be mapped to double values.</p>
-<section id="stringindexer" class="level3" data-number="4.3.1">
-<h3 data-number="4.3.1" class="anchored" data-anchor-id="stringindexer"><span class="header-section-number">4.3.1</span> <code>StringIndexer</code></h3>
-<p>A <code>StringIndexer</code> (<code>pyspark.ml.feature.StringIndexer</code>) is an Estimator that returns a Transformer of type <code>pyspark.ml.feature.StringIndexerModel</code>. <code>StringIndexerModel</code> encodes a string column of “labels” to a column of “label indices”: each distinct value of the input string column is mapped to an integer value in <span class="math inline">\([0, \textbf{number of distinct values})\)</span>.</p>
-<p><code>StringIndexer(inputCol, outputCol)</code></p>
-<ul>
-<li><code>inputCol</code>: the name of the input string column to map to a set of integers</li>
-<li><code>outputCol</code>: the name of the new output column</li>
-</ul>
-<p>Invoke the fit method of <code>StringIndexer</code> on the input DataFrame to infer a <code>StringIndexerModel</code>. The returned model is a Transformer.</p>
-<p>Invoke the transform method of <code>StringIndexerModel</code> on the input DataFrame to create a new DataFrame that has a new column (<code>outputCol</code>): for each record, the value of the new column is the integer (casted to a double) associated with the value of the input string column. It has also all the columns of the input DataFrame.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Example
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Consider an input DataFrame with two columns: create a new DataFrame with a new column containing the integer version of the string column category. Set the name of the new column to “categoryIndex”.</p>
-<p><strong>Original DataFrame</strong></p>
-<table class="table">
-<thead>
-<tr class="header">
-<th>id</th>
-<th>category</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(1\)</span></td>
-<td>a</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(2\)</span></td>
-<td>b</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(3\)</span></td>
-<td>c</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(4\)</span></td>
-<td>c</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(5\)</span></td>
-<td>a</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Transformed DataFrame</strong></p>
-<table class="table">
-<thead>
-<tr class="header">
-<th>id</th>
-<th>category</th>
-<th>categoryIndex</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(1\)</span></td>
-<td>a</td>
-<td><span class="math inline">\(0.0\)</span></td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(2\)</span></td>
-<td>b</td>
-<td><span class="math inline">\(2.0\)</span></td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(3\)</span></td>
-<td>c</td>
-<td><span class="math inline">\(1.0\)</span></td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(4\)</span></td>
-<td>c</td>
-<td><span class="math inline">\(1.0\)</span></td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(5\)</span></td>
-<td>a</td>
-<td><span class="math inline">\(0.0\)</span></td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">from</span> pyspark.mllib.linalg <span class="im">import</span> Vectors</span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> StringIndexer</span>
-<span id="cb5-3"><a href="#cb5-3"></a></span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="co"># input DataFrame</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a>df <span class="op">=</span> spark.createDataFrame(</span>
-<span id="cb5-6"><a href="#cb5-6"></a>    [(<span class="dv">1</span>,<span class="st">&quot;a&quot;</span>),(<span class="dv">2</span>,<span class="st">&quot;b&quot;</span>),(<span class="dv">3</span>,<span class="st">&quot;c&quot;</span>),(<span class="dv">4</span>,<span class="st">&quot;c&quot;</span>),(<span class="dv">5</span>,<span class="st">&quot;a&quot;</span>)],</span>
-<span id="cb5-7"><a href="#cb5-7"></a>    [<span class="st">&quot;id&quot;</span>,<span class="st">&quot;category&quot;</span>]</span>
-<span id="cb5-8"><a href="#cb5-8"></a>)</span>
-<span id="cb5-9"><a href="#cb5-9"></a></span>
-<span id="cb5-10"><a href="#cb5-10"></a><span class="co"># Create a StringIndexer to map the content of category</span></span>
-<span id="cb5-11"><a href="#cb5-11"></a><span class="co">#  to a set of &quot;integers&quot;</span></span>
-<span id="cb5-12"><a href="#cb5-12"></a>indexer <span class="op">=</span> StringIndexer(</span>
-<span id="cb5-13"><a href="#cb5-13"></a>    inputCol<span class="op">=</span><span class="st">&quot;category&quot;</span>, </span>
-<span id="cb5-14"><a href="#cb5-14"></a>    outputCol<span class="op">=</span><span class="st">&quot;categoryIndex&quot;</span></span>
-<span id="cb5-15"><a href="#cb5-15"></a>)</span>
-<span id="cb5-16"><a href="#cb5-16"></a></span>
-<span id="cb5-17"><a href="#cb5-17"></a><span class="co"># Analyze the input data to define the mapping string -&gt; integer</span></span>
-<span id="cb5-18"><a href="#cb5-18"></a>indexerModel <span class="op">=</span> indexer.fit(df)</span>
-<span id="cb5-19"><a href="#cb5-19"></a></span>
-<span id="cb5-20"><a href="#cb5-20"></a><span class="co"># Apply indexerModel on the input column category</span></span>
-<span id="cb5-21"><a href="#cb5-21"></a>indexedDF <span class="op">=</span> indexerModel.transform(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="indextostring" class="level3" data-number="4.3.2">
-<h3 data-number="4.3.2" class="anchored" data-anchor-id="indextostring"><span class="header-section-number">4.3.2</span> <code>IndexToString</code></h3>
-<p><code>IndexToString</code> (<code>pyspark.ml.feature.IndexToString</code>), which is symmetrical to <code>StringIndexer</code>, is a Transformer that maps a column of “label indices” back to a column containing the original “labels” as strings. Classification models return the integer version of the predicted label values. To obtain human readable results, remap those values to the original ones.</p>
-<p>Given <code>IndexToString(inputCol, outputCol, labels)</code></p>
-<ul>
-<li>inputCol: the name of the input numerical column to map to the original a set of string “labels”;</li>
-<li>outputCol: the name of the new output column;</li>
-<li>labels: the list of original “labels”/strings; the mapping with integer values is given by the positions of the strings inside labels.</li>
-</ul>
-<p>Invoke the transform method of <code>IndexToString</code> on the input DataFrame to create a new DataFrame that has a new column (<code>outputCol</code>): for each record, the value of the new column is the original string associated with the value of the input numerical column. It has also all the columns of the input DataFrame.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Example
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Consider an input DataFrame with two columns: create a new DataFrame with a new column containing the integer version of the string column category and then map it back to the string version in a new column.</p>
-<p><strong>Original DataFrame</strong></p>
-<table class="table">
-<thead>
-<tr class="header">
-<th>id</th>
-<th>category</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(1\)</span></td>
-<td>a</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(2\)</span></td>
-<td>b</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(3\)</span></td>
-<td>c</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(4\)</span></td>
-<td>c</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(5\)</span></td>
-<td>a</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Transformed DataFrame</strong></p>
-<table class="table">
-<thead>
-<tr class="header">
-<th>id</th>
-<th>category</th>
-<th>categoryIndex</th>
-<th>originalCategory</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(1\)</span></td>
-<td>a</td>
-<td><span class="math inline">\(0.0\)</span></td>
-<td>a</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(2\)</span></td>
-<td>b</td>
-<td><span class="math inline">\(2.0\)</span></td>
-<td>b</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(3\)</span></td>
-<td>c</td>
-<td><span class="math inline">\(1.0\)</span></td>
-<td>c</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(4\)</span></td>
-<td>c</td>
-<td><span class="math inline">\(1.0\)</span></td>
-<td>c</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(5\)</span></td>
-<td>a</td>
-<td><span class="math inline">\(0.0\)</span></td>
-<td>a</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">from</span> pyspark.mllib.linalg <span class="im">import</span> Vectors</span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> StringIndexer</span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> IndexToString</span>
-<span id="cb6-4"><a href="#cb6-4"></a></span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="co"># input DataFrame</span></span>
-<span id="cb6-6"><a href="#cb6-6"></a>df <span class="op">=</span> spark.createDataFrame(</span>
-<span id="cb6-7"><a href="#cb6-7"></a>    [(<span class="dv">1</span>,<span class="st">&quot;a&quot;</span>),(<span class="dv">2</span>,<span class="st">&quot;b&quot;</span>),(<span class="dv">3</span>,<span class="st">&quot;c&quot;</span>),(<span class="dv">4</span>,<span class="st">&quot;c&quot;</span>),(<span class="dv">5</span>,<span class="st">&quot;a&quot;</span>)],</span>
-<span id="cb6-8"><a href="#cb6-8"></a>    [<span class="st">&quot;id&quot;</span>,<span class="st">&quot;category&quot;</span>]</span>
-<span id="cb6-9"><a href="#cb6-9"></a>)</span>
-<span id="cb6-10"><a href="#cb6-10"></a></span>
-<span id="cb6-11"><a href="#cb6-11"></a><span class="co"># Create a StringIndexer to map the content of category </span></span>
-<span id="cb6-12"><a href="#cb6-12"></a><span class="co"># to a set of integers</span></span>
-<span id="cb6-13"><a href="#cb6-13"></a>indexer <span class="op">=</span> StringIndexer(</span>
-<span id="cb6-14"><a href="#cb6-14"></a>    inputCol<span class="op">=</span><span class="st">&quot;category&quot;</span>, </span>
-<span id="cb6-15"><a href="#cb6-15"></a>    outputCol<span class="op">=</span><span class="st">&quot;categoryIndex&quot;</span></span>
-<span id="cb6-16"><a href="#cb6-16"></a>)</span>
-<span id="cb6-17"><a href="#cb6-17"></a></span>
-<span id="cb6-18"><a href="#cb6-18"></a><span class="co"># Analyze the input data to define the mapping </span></span>
-<span id="cb6-19"><a href="#cb6-19"></a><span class="co"># string -&gt; integer</span></span>
-<span id="cb6-20"><a href="#cb6-20"></a>indexerModel <span class="op">=</span> indexer.fit(df)</span>
-<span id="cb6-21"><a href="#cb6-21"></a></span>
-<span id="cb6-22"><a href="#cb6-22"></a><span class="co"># Apply indexerModel on the input column category</span></span>
-<span id="cb6-23"><a href="#cb6-23"></a>indexedDF <span class="op">=</span> indexerModel.transform(df)</span>
-<span id="cb6-24"><a href="#cb6-24"></a></span>
-<span id="cb6-25"><a href="#cb6-25"></a><span class="co"># Create an IndexToString to map the content of numerical </span></span>
-<span id="cb6-26"><a href="#cb6-26"></a><span class="co"># attribute categoryIndex to the original string value</span></span>
-<span id="cb6-27"><a href="#cb6-27"></a>converter <span class="op">=</span> IndexToString(</span>
-<span id="cb6-28"><a href="#cb6-28"></a>    inputCol<span class="op">=</span><span class="st">&quot;categoryIndex&quot;</span>, </span>
-<span id="cb6-29"><a href="#cb6-29"></a>    outputCol<span class="op">=</span><span class="st">&quot;originalCategory&quot;</span>,</span>
-<span id="cb6-30"><a href="#cb6-30"></a>    labels<span class="op">=</span>indexerModel.labels</span>
-<span id="cb6-31"><a href="#cb6-31"></a>)</span>
-<span id="cb6-32"><a href="#cb6-32"></a></span>
-<span id="cb6-33"><a href="#cb6-33"></a><span class="co"># Apply converter on the input column categoryIndex</span></span>
-<span id="cb6-34"><a href="#cb6-34"></a>reconvertedDF <span class="op">=</span> converter.transform(indexedDF)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="sqltransformer" class="level3" data-number="4.3.3">
-<h3 data-number="4.3.3" class="anchored" data-anchor-id="sqltransformer"><span class="header-section-number">4.3.3</span> <code>SQLTransformer</code></h3>
-<p><code>SQLTransformer</code> (<code>pyspark.ml.feature.SQLTransformer</code>) is a transformer that implements the transformations which are defined by SQL queries. Currently, the syntax of the supported (simplified) SQL queries is</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">SELECT</span> <span class="kw">attributes</span>, <span class="kw">function</span>(<span class="kw">attributes</span>) <span class="kw">FROM</span> __THIS__</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Where <code>__THIS__</code> represents the DataFrame on which the <code>SQLTransformer</code> is invoked.</p>
-<p><code>SQLTransformer</code> executes an SQL query on the input DataFrame and returns a new DataFrame associated with the result of the query.</p>
-<p>Given <code>SQLTransformer(statement)</code></p>
-<ul>
-<li><code>statement</code>: the SQL query to execute.</li>
-</ul>
-<p>When the transform method of <code>SQLTransformer</code> is invoked on a DataFrame the returned DataFrame is the result of the executed statement query.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Example
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Consider an input DataFrame with two columns: “text” and “id”: create a new DataFrame with a new column, called “numWords”, containing the number of words occurring in column “text”.</p>
-<p><strong>Original DataFrame</strong></p>
-<table class="table">
-<thead>
-<tr class="header">
-<th>id</th>
-<th>text</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(1\)</span></td>
-<td>This is Spark</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(2\)</span></td>
-<td>Spark</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(3\)</span></td>
-<td>Another sample sentence of words</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(4\)</span></td>
-<td>Paolo Rossi</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(5\)</span></td>
-<td>Giovanni</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Transformed DataFrame</strong></p>
-<table class="table">
-<thead>
-<tr class="header">
-<th>id</th>
-<th>text</th>
-<th>numWords</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(1\)</span></td>
-<td>This is Spark</td>
-<td><span class="math inline">\(3\)</span></td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(2\)</span></td>
-<td>Spark</td>
-<td><span class="math inline">\(1\)</span></td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(3\)</span></td>
-<td>Another sample sentence of words</td>
-<td><span class="math inline">\(5\)</span></td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(4\)</span></td>
-<td>Paolo Rossi</td>
-<td><span class="math inline">\(2\)</span></td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(5\)</span></td>
-<td>Giovanni</td>
-<td><span class="math inline">\(1\)</span></td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="im">from</span> pyspark.sql.types <span class="im">import</span> <span class="op">*</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> SQLTransformer</span>
-<span id="cb8-3"><a href="#cb8-3"></a></span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="co">#Local Input data</span></span>
-<span id="cb8-5"><a href="#cb8-5"></a>inputList <span class="op">=</span> [</span>
-<span id="cb8-6"><a href="#cb8-6"></a>    (<span class="dv">1</span>,<span class="st">&quot;ThisisSpark&quot;</span>),</span>
-<span id="cb8-7"><a href="#cb8-7"></a>    (<span class="dv">2</span>,<span class="st">&quot;Spark&quot;</span>),</span>
-<span id="cb8-8"><a href="#cb8-8"></a>    (<span class="dv">3</span>,<span class="st">&quot;Anothersamplesentenceofwords&quot;</span>),</span>
-<span id="cb8-9"><a href="#cb8-9"></a>    (<span class="dv">4</span>,<span class="st">&quot;PaoloRossi&quot;</span>),</span>
-<span id="cb8-10"><a href="#cb8-10"></a>    (<span class="dv">5</span>,<span class="st">&quot;Giovanni&quot;</span>)</span>
-<span id="cb8-11"><a href="#cb8-11"></a>]</span>
-<span id="cb8-12"><a href="#cb8-12"></a></span>
-<span id="cb8-13"><a href="#cb8-13"></a><span class="co"># Create the initial DataFrame</span></span>
-<span id="cb8-14"><a href="#cb8-14"></a>dfInput <span class="op">=</span> spark.createDataFrame(</span>
-<span id="cb8-15"><a href="#cb8-15"></a>    inputList, </span>
-<span id="cb8-16"><a href="#cb8-16"></a>    [<span class="st">&quot;id&quot;</span>,<span class="st">&quot;text&quot;</span>]</span>
-<span id="cb8-17"><a href="#cb8-17"></a>)</span>
-<span id="cb8-18"><a href="#cb8-18"></a></span>
-<span id="cb8-19"><a href="#cb8-19"></a><span class="co"># Define a UDF function that that counts the number of words </span></span>
-<span id="cb8-20"><a href="#cb8-20"></a><span class="co"># in an input string</span></span>
-<span id="cb8-21"><a href="#cb8-21"></a>spark.udf.register(</span>
-<span id="cb8-22"><a href="#cb8-22"></a>    <span class="st">&quot;countWords&quot;</span>, </span>
-<span id="cb8-23"><a href="#cb8-23"></a>    <span class="kw">lambda</span> text: <span class="bu">len</span>(text.split(<span class="st">&quot; &quot;</span>)), </span>
-<span id="cb8-24"><a href="#cb8-24"></a>    IntegerType()</span>
-<span id="cb8-25"><a href="#cb8-25"></a>)</span>
-<span id="cb8-26"><a href="#cb8-26"></a></span>
-<span id="cb8-27"><a href="#cb8-27"></a><span class="co"># Define an SQLTranformer to create the columns we are </span></span>
-<span id="cb8-28"><a href="#cb8-28"></a><span class="co"># interested in</span></span>
-<span id="cb8-29"><a href="#cb8-29"></a>sqlTrans <span class="op">=</span> SQLTransformer(</span>
-<span id="cb8-30"><a href="#cb8-30"></a>    statement<span class="op">=</span><span class="st">&quot;&quot;&quot;</span></span>
-<span id="cb8-31"><a href="#cb8-31"></a><span class="st">    SELECT *, countWords(text) AS numLines </span></span>
-<span id="cb8-32"><a href="#cb8-32"></a><span class="st">    FROM __THIS__</span></span>
-<span id="cb8-33"><a href="#cb8-33"></a><span class="st">    &quot;&quot;&quot;</span></span>
-<span id="cb8-34"><a href="#cb8-34"></a>)</span>
-<span id="cb8-35"><a href="#cb8-35"></a></span>
-<span id="cb8-36"><a href="#cb8-36"></a><span class="co"># Create the new DataFrame by invoking the transform method of </span></span>
-<span id="cb8-37"><a href="#cb8-37"></a><span class="co"># the defined SQLTranformer</span></span>
-<span id="cb8-38"><a href="#cb8-38"></a>newDF <span class="op">=</span> sqlTrans.transform(dfInput)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</div>
-</section>
+<section id="pipelines" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="pipelines"><span class="header-section-number">1.2</span> Pipelines</h2>
 </section>
 </section>
 
