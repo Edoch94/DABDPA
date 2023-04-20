@@ -393,3 +393,159 @@ indexedDF = indexerModel.transform(df)
 ```
 
 :::
+
+### `IndexToString`
+`IndexToString` (`pyspark.ml.feature.IndexToString`), which is symmetrical to `StringIndexer`, is a Transformer that maps a column of "label indices" back to a column containing the original "labels" as strings. Classification models return the integer version of the predicted label values. To obtain human readable results, remap those values to the original ones.
+
+Given `IndexToString(inputCol, outputCol, labels)`
+
+- inputCol: the name of the input numerical column to map to the original a set of string "labels";
+- outputCol: the name of the new output column;
+- labels: the list of original "labels"/strings; the mapping with integer values is given by the positions of the strings inside labels.
+
+Invoke the transform method of `IndexToString` on the input DataFrame to create a new DataFrame that has a new column (`outputCol`): for each record, the value of the new column is the original string associated with the value of the input numerical column. It has also all the columns of the input DataFrame.
+
+:::{.callout-note collapse="true"}
+Consider an input DataFrame with two columns: create a new DataFrame with a new column containing the integer version of the string column category and then map it back to the string version in a new column.
+
+**Original DataFrame**
+
+|id|category|
+|-|-|
+|$1$|a|
+|$2$|b|
+|$3$|c|
+|$4$|c|
+|$5$|a|
+
+**Transformed DataFrame**
+
+|id|category|categoryIndex|originalCategory|
+|-|-|-|-|
+|$1$|a|$0.0$|a|
+|$2$|b|$2.0$|b|
+|$3$|c|$1.0$|c|
+|$4$|c|$1.0$|c|
+|$5$|a|$0.0$|a|
+
+```python
+from pyspark.mllib.linalg import Vectors
+from pyspark.ml.feature import StringIndexer
+from pyspark.ml.feature import IndexToString
+
+# input DataFrame
+df = spark.createDataFrame(
+    [(1,"a"),(2,"b"),(3,"c"),(4,"c"),(5,"a")],
+    ["id","category"]
+)
+
+# Create a StringIndexer to map the content of category 
+# to a set of integers
+indexer = StringIndexer(
+    inputCol="category", 
+    outputCol="categoryIndex"
+)
+
+# Analyze the input data to define the mapping 
+# string -> integer
+indexerModel = indexer.fit(df)
+
+# Apply indexerModel on the input column category
+indexedDF = indexerModel.transform(df)
+
+# Create an IndexToString to map the content of numerical 
+# attribute categoryIndex to the original string value
+converter = IndexToString(
+    inputCol="categoryIndex", 
+    outputCol="originalCategory",
+    labels=indexerModel.labels
+)
+
+# Apply converter on the input column categoryIndex
+reconvertedDF = converter.transform(indexedDF)
+```
+
+:::
+
+### `SQLTransformer`
+`SQLTransformer` (`pyspark.ml.feature.SQLTransformer`) is a transformer that implements the transformations which are defined by SQL queries. Currently, the syntax of the supported (simplified) SQL queries is
+
+```sql
+SELECT attributes, function(attributes) FROM __THIS__
+```
+
+Where `__THIS__` represents the DataFrame on which the `SQLTransformer` is invoked.
+
+`SQLTransformer` executes an SQL query on the input DataFrame and returns a new DataFrame associated with the result of the query.
+
+Given `SQLTransformer(statement)`
+
+- `statement`: the SQL query to execute.
+
+When the transform method of `SQLTransformer` is invoked on a DataFrame the returned DataFrame is the result of the executed statement query.
+
+:::{.callout-note collapse="true"}
+Consider an input DataFrame with two columns: "text" and "id": create a new DataFrame with a new column, called "numWords", containing the number of words occurring in column "text".
+
+**Original DataFrame**
+
+|id|text|
+|-|-|
+|$1$|This is Spark|
+|$2$|Spark|
+|$3$|Another sample sentence of words|
+|$4$|Paolo Rossi|
+|$5$|Giovanni|
+
+**Transformed DataFrame**
+
+|id|text|numWords|
+|-|-|-|
+|$1$|This is Spark|$3$|
+|$2$|Spark|$1$|
+|$3$|Another sample sentence of words|$5$|
+|$4$|Paolo Rossi|$2$|
+|$5$|Giovanni|$1$|
+
+```python
+from pyspark.sql.types import *
+from pyspark.ml.feature import SQLTransformer
+
+#Local Input data
+inputList = [
+    (1,"ThisisSpark"),
+    (2,"Spark"),
+    (3,"Anothersamplesentenceofwords"),
+    (4,"PaoloRossi"),
+    (5,"Giovanni")
+]
+
+# Create the initial DataFrame
+dfInput = spark.createDataFrame(
+    inputList, 
+    ["id","text"]
+)
+
+# Define a UDF function that that counts the number of words 
+# in an input string
+spark.udf.register(
+    "countWords", 
+    lambda text: len(text.split(" ")), 
+    IntegerType()
+)
+
+# Define an SQLTranformer to create the columns we are 
+# interested in
+sqlTrans = SQLTransformer(
+    statement="""
+    SELECT *, countWords(text) AS numLines 
+    FROM __THIS__
+    """
+)
+
+# Create the new DataFrame by invoking the transform method of 
+# the defined SQLTranformer
+newDF = sqlTrans.transform(dfInput)
+```
+
+:::
