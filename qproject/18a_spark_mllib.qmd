@@ -178,10 +178,10 @@ See the up-to-date list [here](https://spark.apache.org/docs/latest/ml-features.
 Several algorithms are provided by MLlib to transform features. They are used to create new columns/features by combining or transforming other features
 It is possible to perform feature transformations and feature creations by using the standard methods for DataFrames and RDDs.
 
-## Vector Assembler
-VectorAssembler (`pyspark.ml.feature.VectorAssembler`) is a transformer that combines a given list of columns into a single vector column. It is useful for combining features into a single feature vector before applying ML algorithms.
+## `VectorAssembler`
+`VectorAssembler` (`pyspark.ml.feature.VectorAssembler`) is a transformer that combines a given list of columns into a single vector column. It is useful for combining features into a single feature vector before applying ML algorithms.
 
-`VectorAssembler(inputCols, outputCol)`
+Given `VectorAssembler(inputCols, outputCol)`
 
 - `inputCols`: the list of original columns to include in the new column of type `Vector`. The following input column types are accepted
     - all numeric types, boolean type, and vector type
@@ -192,7 +192,7 @@ When the transform method of VectorAssembler is invoked on a DataFrame the retur
 
 :::{.callout-note collapse="true"}
 ## Example
-Consider an input DataFrame with three columns: create a new DataFrame with a new column containing the concatenation of colB and colC in a new vector column (the name of the new column is set to features).
+Consider an input DataFrame with three columns: create a new DataFrame with a new column containing the concatenation of "colB" and "colC" in a new vector column. Set the name of the new column to "features".
 
 **Original DataFrame**
 
@@ -252,10 +252,10 @@ MLlib provides a set of normalization algorithms (called scalers)
 - Normalizer
 - MaxAbsScaler
 
-### StandardScaler
-StandardScaler (`pyspark.ml.feature.StandardScaler`) is an Estimator that returns a Transformer (`pyspark.ml.feature.StandardScalerModel`). `StandardScalerModel` transforms a vector column of an input DataFrame normalizing each feature of the input vector column to have unit standard deviation and/or zero mean.
+### `StandardScaler`
+`StandardScaler` (`pyspark.ml.feature.StandardScaler`) is an Estimator that returns a Transformer (`pyspark.ml.feature.StandardScalerModel`). `StandardScalerModel` transforms a vector column of an input DataFrame normalizing each feature of the input vector column to have unit standard deviation and/or zero mean.
 
-`StandardScaler(inputCol, outputCol)`
+Given `StandardScaler(inputCol, outputCol)`
 
 - `inputCol`: the name of the input vector column (of doubles) to normalize
 - `outputCol`: the name of the new output normalized vector column
@@ -266,7 +266,7 @@ Invoke the transform method of `StandardScalerModel` on the input DataFrame to c
 
 :::{.callout-note collapse="true"}
 ## Example
-Consider an input DataFrame with four columns: create a new DataFrame with a new column containing the normalized version of the vector column features. Set the name of the new column to scaledFeatures.
+Consider an input DataFrame with four columns: create a new DataFrame with a new column containing the normalized version of the vector column features. Set the name of the new column to "scaledFeatures".
 
 **Original DataFrame**
 
@@ -332,3 +332,64 @@ scaledDF = scalerModel.transform(transformedDF)
 
 ## Categorical columns
 Frequently the input data are characterized by categorical attributes (i.e., string columns), and the class label of the classification problem is a categorical attribute. The Spark MLlib classification and regression algorithms work only with numerical values, so categorical columns must be mapped to double values.
+
+### `StringIndexer`
+A `StringIndexer` (`pyspark.ml.feature.StringIndexer`) is an Estimator that returns a Transformer of type `pyspark.ml.feature.StringIndexerModel`. `StringIndexerModel` encodes a string column of "labels" to a column of "label indices": each distinct value of the input string column is mapped to an integer value in $[0, \textbf{number of distinct values})$.
+
+`StringIndexer(inputCol, outputCol)`
+
+- `inputCol`: the name of the input string column to map to a set of integers
+- `outputCol`: the name of the new output column
+
+Invoke the fit method of `StringIndexer` on the input DataFrame to infer a `StringIndexerModel`. The returned model is a Transformer.
+
+Invoke the transform method of `StringIndexerModel` on the input DataFrame to create a new DataFrame that has a new column (`outputCol`): for each record, the value of the new column is the integer (casted to a double) associated with the value of the input string column. It has also all the columns of the input DataFrame.
+
+:::{.callout-note collapse="true"}
+Consider an input DataFrame with two columns: create a new DataFrame with a new column containing the integer version of the string column category. Set the name of the new column to "categoryIndex".
+
+**Original DataFrame**
+
+|id|category|
+|-|-|
+|$1$|a|
+|$2$|b|
+|$3$|c|
+|$4$|c|
+|$5$|a|
+
+**Transformed DataFrame**
+
+|id|category|categoryIndex|
+|-|-|-|
+|$1$|a|$0.0$|
+|$2$|b|$2.0$|
+|$3$|c|$1.0$|
+|$4$|c|$1.0$|
+|$5$|a|$0.0$|
+
+```python
+from pyspark.mllib.linalg import Vectors
+from pyspark.ml.feature import StringIndexer
+
+# input DataFrame
+df = spark.createDataFrame(
+    [(1,"a"),(2,"b"),(3,"c"),(4,"c"),(5,"a")],
+    ["id","category"]
+)
+
+# Create a StringIndexer to map the content of category
+#  to a set of "integers"
+indexer = StringIndexer(
+    inputCol="category", 
+    outputCol="categoryIndex"
+)
+
+# Analyze the input data to define the mapping string -> integer
+indexerModel = indexer.fit(df)
+
+# Apply indexerModel on the input column category
+indexedDF = indexerModel.transform(df)
+```
+
+:::
