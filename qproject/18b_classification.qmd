@@ -241,3 +241,312 @@ predictions.write.csv(outputPath, header="true")
 ```
 
 ## Pipelines
+In the previous solution the same preprocessing steps were applied on both training and unlabeled data (the same assembler on both input data). It is possible to use a pipeline to specify the common phases we apply on both input data sets.
+
+:::{.callout-note collapse="true"}
+## Example
+
+```python
+from pyspark.mllib.linalg import Vectors
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.classification import LogisticRegression
+from pyspark.ml import Pipeline
+from pyspark.ml import PipelineModel
+
+# input and output folders
+trainingData = "ex_data/trainingData.csv"
+unlabeledData = "ex_data/unlabeledData.csv"
+outputPath = "predictionsLR/"
+
+# *************************
+# Training step
+# *************************
+# Create a DataFrame from trainingData.csv
+# Training data in raw format
+trainingData = spark.read.load(
+    trainingData,
+    format="csv",
+    header=True,
+    inferSchema=True
+)
+
+# Define an assembler to create a column (features) of type Vector
+# containing the double values associated with columns attr1, attr2, attr3
+assembler = VectorAssembler(
+    inputCols=["attr1","attr2","attr3"],
+    outputCol="features"
+)
+
+# Create a LogisticRegression object
+# LogisticRegression is an Estimator that is used to
+# create a classification model based on logistic regression.
+lr = LogisticRegression()
+
+# Set the values of the parameters of the
+# Logistic Regression algorithm using the setter methods.
+# There is one set method for each parameter
+# For example, we are setting the number of maximum iterations to 10
+# and the regularization parameter. to 0.0.1
+lr.setMaxIter(10)
+lr.setRegParam(0.01)
+
+# Define a pipeline that is used to create the logistic regression
+# model on the training data. The pipeline includes also
+# the preprocessing step
+pipeline = Pipeline().setStages([assembler, lr]) # <1>
+
+# Execute the pipeline on the training data to build the
+# classification model
+classificationModel = pipeline.fit(trainingData)
+
+# Now, the classification model can be used to predict the class label
+# of new unlabeled data
+
+# *************************
+# Prediction step
+# *************************
+# Create a DataFrame from unlabeledData.csv
+# Unlabeled data in raw format
+unlabeledData = spark.read.load(
+    unlabeledData,
+    format="csv",
+    header=True,
+    inferSchema=True
+)
+
+# Make predictions on the unlabled data using the transform() 
+# method of the trained classification model transform uses only 
+# the content of 'features' to perform the predictions. The model 
+# is associated with the pipeline and hence also the assembler is executed
+predictions = classificationModel.transform(unlabeledData)
+
+# The returned DataFrame has the following schema (attributes)
+# - attr1
+# - attr2
+# - attr3
+# - features: vector (values of the attributes)
+# - label: double (value of the class label)
+# - rawPrediction: vector (nullable = true)
+# - probability: vector (The i-th cell contains the probability that the current
+# record belongs to the i-th class
+# - prediction: double (the predicted class label)
+# Select only the original features (i.e., the value of the original attributes
+# attr1, attr2, attr3) and the predicted class for each record
+predictions = predictionsDF.select("attr1","attr2","attr3","prediction")
+
+# Save the result in an HDFS output folder
+predictions.write.csv(outputPath, header="true")
+```
+1. `assembler`: the sequence of transformers and estimators to apply on the input data
+
+:::
+
+## Decision trees and structured data
+The following paragraphs show how to
+
+- Create a classification model based on the decision tree algorithm on structured data: the model is inferred by analyzing the training data, i.e., the example records/data points for which the value of the class label is known;
+- Apply the model to new unlabeled data: the inferred model is applied to predict the value of the class label of new unlabeled records/data points.
+
+The same example structured data already used in the running example related to the logistic regression algorithm are used also in this example related to the decision tree algorithm. The main steps are the same of the previous example, the only difference is the definition and configuration of the used classification algorithm.
+
+:::{.callout-note collapse="true"}
+## Example
+
+```python
+from pyspark.mllib.linalg import Vectors
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.classification import DecisionTreeClassifier
+from pyspark.ml import Pipeline
+from pyspark.ml import PipelineModel
+
+# input and output folders
+trainingData = "ex_data/trainingData.csv"
+unlabeledData = "ex_data/unlabeledData.csv"
+outputPath = "predictionsLR/"
+
+# *************************
+# Training step
+# *************************
+# Create a DataFrame from trainingData.csv
+# Training data in raw format
+trainingData = spark.read.load(
+    trainingData,
+    format="csv",
+    header=True,
+    inferSchema=True
+)
+
+# Define an assembler to create a column (features) of type Vector
+# containing the double values associated with columns attr1, attr2, attr3
+assembler = VectorAssembler(
+    inputCols=["attr1","attr2","attr3"],
+    outputCol="features"
+)
+
+# Create a DecisionTreeClassifier object.
+# DecisionTreeClassifier is an Estimator that is used to
+# create a classification model based on decision trees.
+dt = DecisionTreeClassifier()
+
+# We can set the values of the parameters of the Decision Tree
+# For example we can set the measure that is used to decide if a
+# node must be split. In this case we set gini index
+dt.setImpurity("gini")
+
+# Define a pipeline that is used to create the decision tree
+# model on the training data. The pipeline includes also
+# the preprocessing step
+pipeline = Pipeline().setStages([assembler, dt]) # <1>
+
+# Execute the pipeline on the training data to build the
+# classification model
+classificationModel = pipeline.fit(trainingData)
+
+# Now, the classification model can be used to predict the class label
+# of new unlabeled data
+
+# *************************
+# Prediction step
+# *************************
+# Create a DataFrame from unlabeledData.csv
+# Unlabeled data in raw format
+unlabeledData = spark.read.load(unlabeledData,\
+format="csv", header=True, inferSchema=True)
+
+# Make predictions on the unlabled data using the transform() method of the
+# trained classification model transform uses only the content of 'features'
+# to perform the predictions. The model is associated with the pipeline and hence
+# also the assembler is executed
+predictions = classificationModel.transform(unlabeledData)
+
+# The returned DataFrame has the following schema (attributes)
+# - attr1
+# - attr2
+# - attr3
+# - features: vector (values of the attributes)
+# - label: double (value of the class label)
+# - rawPrediction: vector (nullable = true)
+# - probability: vector (The i-th cell contains the probability that the current
+# record belongs to the i-th class
+# - prediction: double (the predicted class label)
+# Select only the original features (i.e., the value of the original attributes
+# attr1, attr2, attr3) and the predicted class for each record
+predictions = predictionsDF.select("attr1","attr2","attr3","prediction")
+
+# Save the result in an HDFS output folder
+predictions.write.csv(outputPath, header="true")
+```
+1. `assembler`: the sequence of transformers and estimators to apply on the input data. A decision tree algorithm is used in this case.
+
+:::
+
+# Categorical class labels
+Usually the class label is a categorical value (i.e., a string). However, as reported before, Spark MLlib works only with numerical values and hence categorical class label values must be mapped to integer (and then double) values: processing and postprocessing steps are used to manage this transformation.
+
+Consider the following input training data
+
+|categoricalLabel|Attr1|Attr2|Attr3|
+|--|-|-|-|
+|Positive|$0.0$|$1.1$|$0.1$|
+|Negative|$2.0$|$1.0$|$-1.0$|
+|Negative|$2.0$|$1.3$|$1.0$|
+
+A modified input DataFrame must be generated as input for the MLlib classification algorithms
+
+|label|features|
+|-|--|
+|$1.0$|$[0.0,1.1,0.1]$|
+|$1.0$|$[2.0,1.0,-1.0]$|
+|$0.0$|$[2.0,1.3,1.0]$|
+
+Notice that the categorical values of "categoricalLabel" (the class label column) must mapped to integer data values (finally casted to doubles).
+
+## `StringIndexer` and `IndexToString`
+The Estimator `StringIndexer` and the Transformer `IndexToString` support the transformation of categorical class label into numerical one and vice versa:
+
+- `StringIndexer` maps each categorical value of the class label to an integer (then casted to a double);
+- `IndexToString` is used to perform the opposite operation.
+
+All in all, these are the main steps
+
+1. Use `StringIndexer` to extend the input DataFrame with a new column, called "label", containing the numerical representation of the class label column;
+2. Create a column, called "features", of type vector containing the predictive features;
+3. Infer a classification model by using a classification algorithm (e.g., Decision Tree, Logistic regression);
+4. Apply the model on a set of unlabeled data to predict their numerical class label;
+5. Use `IndexToString` to convert the predicted numerical class label values to the original categorical values.
+
+Notice that the model is built by considering only the values of features and label. All the other columns are not considered by the classification algorithm during the generation of the prediction model.
+
+### Training data
+Given the following input training file
+
+```
+categoricalLabel,attr1,attr2,attr3
+Positive,0.0,1.1,0.1
+Negative,2.0,1.0,-1.0
+Negative,2.0,1.3,1.0
+```
+
+The initial training DataFrame will be
+
+|categoricalLabel|features|
+|-|-|
+|Positive|$[0.0,1.1,0.1]$|
+|Negative|$[2.0,1.0,-1.0]$|
+|Negative|$[2.0,1.3,1.0]$|
+
+- The type of "categoricalLabel" is String
+- The type of "features" is Vector
+
+After applying `StringIndexer`, the training DataFrame will be
+
+|categoricalLabel|features|label!
+|-|-|-|
+|Positive|$[0.0,1.1,0.1]$|$1.0$|
+|Negative|$[2.0,1.0,-1.0]$|$0.0$|
+|Negative|$[2.0,1.3,1.0]$|$0.0$|
+
+"label" contains the mapping generated by `StringIndexer`:
+
+- "Positive": $1.0$
+- "Negative": $0.0$
+
+### Unalabeled data
+Given the input unlabeled data file
+
+```
+categoricalLabel,attr1,attr2,attr3
+,-1.0,1.5,1.3
+,3.0,2.0,-0.1
+,0.0,2.2,-1.5
+```
+
+The initial unlabeled DataFrame will be
+
+|categoricalLabel|features|
+|-|-|
+|null|$[-1.0,1.5,1.3]$|
+|null|$[3.0,2.0,-0.1]$|
+|null|$[0.0,2.2,-1.5]$|
+
+After performing the prediction, and applying `IndexToString`, the output DataFrame will be
+
+|categoricalLabel|features|label|prediction|predictedLabel|...|
+|-|-|-|-|-|-|
+|...|$[-1.0,1.5,1.3]$|...|$1.0$|Positive||
+|...|$[3.0,2.0,-0.1]$|...|$0.0$|Negative||
+|...|$[0.0,2.2,-1.5]$|...|$1.0$|Negative||
+
+- "prediction" contains the predicted label, expressed as a number
+- "predictedLabel" contains the predicted label, expressed as a category (original name)
+
+:::{.callout-note collapse="true"}
+## Example
+In this example, the input training data is stored in a text file that contains one record/data point per line, and the records/data points are structured data with a fixed number of attributes (four)
+
+- One attribute is the class label (categoricalLabel): this is a categorical attribute that can assume two values, "Positive" or "Negative"
+- The other three attributes ("attr1", "attr2", "attr3") are the predictive attributes that are used to predict the value of the class label
+
+The input file has the header line
+
+:::
