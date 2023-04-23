@@ -1,5 +1,5 @@
 ---
-title: "Classification algorithm"
+title: "Classification algorithms"
 ---
 
 Spark MLlib provides a (limited) set of classification algorithms
