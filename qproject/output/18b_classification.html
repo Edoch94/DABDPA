@@ -2638,6 +2638,9 @@ vertical-align: -.125em;
   </ul></li>
   </ul></li>
   <li><a href="#textual-data-management-and-classification" id="toc-textual-data-management-and-classification" class="nav-link" data-scroll-target="#textual-data-management-and-classification"><span class="toc-section-number">3</span>  Textual data management and classification</a></li>
+  <li><a href="#performance-evaluation" id="toc-performance-evaluation" class="nav-link" data-scroll-target="#performance-evaluation"><span class="toc-section-number">4</span>  Performance evaluation</a></li>
+  <li><a href="#hyperparameter-tuning" id="toc-hyperparameter-tuning" class="nav-link" data-scroll-target="#hyperparameter-tuning"><span class="toc-section-number">5</span>  Hyperparameter tuning</a></li>
+  <li><a href="#sparse-labeled-data" id="toc-sparse-labeled-data" class="nav-link" data-scroll-target="#sparse-labeled-data"><span class="toc-section-number">6</span>  Sparse labeled data</a></li>
   </ul>
 </nav>
 </div>
@@ -3050,7 +3053,7 @@ Example
 <span id="cb4-37"><a href="#cb4-37"></a><span class="co"># Logistic Regression algorithm using the setter methods.</span></span>
 <span id="cb4-38"><a href="#cb4-38"></a><span class="co"># There is one set method for each parameter</span></span>
 <span id="cb4-39"><a href="#cb4-39"></a><span class="co"># For example, we are setting the number of maximum iterations to 10</span></span>
-<span id="cb4-40"><a href="#cb4-40"></a><span class="co"># and the regularization parameter. to 0.0.1</span></span>
+<span id="cb4-40"><a href="#cb4-40"></a><span class="co"># and the regularization parameter to 0.01</span></span>
 <span id="cb4-41"><a href="#cb4-41"></a>lr.setMaxIter(<span class="dv">10</span>)</span>
 <span id="cb4-42"><a href="#cb4-42"></a>lr.setRegParam(<span class="fl">0.01</span>)</span>
 <span id="cb4-43"><a href="#cb4-43"></a></span>
@@ -3445,7 +3448,7 @@ Example
 <div class="callout-body-container callout-body">
 <p>In this example, the input training data is stored in a text file that contains one record/data point per line, and the records/data points are structured data with a fixed number of attributes (four)</p>
 <ul>
-<li>One attribute is the class label (categoricalLabel): this is a categorical attribute that can assume two values, “Positive” or “Negative”;</li>
+<li>One attribute is the class label (“categoricalLabel”): this is a categorical attribute that can assume two values, “Positive” or “Negative”;</li>
 <li>The other three attributes (“attr1”, “attr2”, “attr3”) are the predictive attributes that are used to predict the value of the class label.</li>
 </ul>
 <p>The input file has the header line.</p>
@@ -3579,6 +3582,781 @@ Example
 </section>
 <section id="textual-data-management-and-classification" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Textual data management and classification</h1>
+<p>The following paragraphs show how to</p>
+<ul>
+<li>Create a classification model based on the logistic regression algorithm for textual documents: a set of specific preprocessing estimators and transformers are used to preprocess textual data.</li>
+<li>Apply the model to new textual documents</li>
+</ul>
+<p>The input training dataset represents a textual document collection, where each line contains one document and its class</p>
+<ul>
+<li>The class label</li>
+<li>A list of words (the text of the document)</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Given the following example training file</p>
+<pre><code>Label,Text
+1,The Spark system is based on scala
+1,Spark is a new distributed system
+0,Turin is a beautiful city
+0,Turin is in the north of Italy</code></pre>
+<p>It contains four textual documents, and each line contains two attributes, that are the class label (first attribute) and the text of the document (second attribute).</p>
+<p>The input data before preprocessing, represented as a DataFrame, is</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Label</th>
+<th>Text</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>The Spark system is based on scala</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>Spark is a new distributed system</td>
+</tr>
+<tr class="odd">
+<td>0</td>
+<td>Turin is a beautiful city</td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td>Turin is in the north of Italy</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>A set of preprocessing steps must be applied on the textual attribute before generating a classification model.</p>
+<ol type="1">
+<li>Since Spark ML algorithms work only on “Tables” and double values, the textual part of the input data must be translated in a set of attributes to represent the data as a table: usually a table with an attribute for each word is generated.</li>
+<li>Many words are useless (e.g., conjunctions): stopwords are usually removed. In general,
+<ul>
+<li>the words appearing in almost all documents are not characterizing the data, and so they are not very important for the classification problem;</li>
+<li>the words appearing in few documents allow to distinguish the content of those documents (and hence the class label) with respect to the others, and so they are very important for the classification problem.</li>
+</ul></li>
+<li>Traditionally a weight, based on the TF-IDF measure, is used to assign a difference importance to the words based on their frequency in the collection.</li>
+</ol>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Input data after the preprocessing transformations (tokenization, stopword removal, TF-IDF computation)</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Label</th>
+<th>Spark</th>
+<th>system</th>
+<th>scala</th>
+<th>…</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><span class="math inline">\(0.5\)</span></td>
+<td><span class="math inline">\(0.3\)</span></td>
+<td><span class="math inline">\(0.75\)</span></td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><span class="math inline">\(0.5\)</span></td>
+<td><span class="math inline">\(0.3\)</span></td>
+<td><span class="math inline">\(0\)</span></td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>0</td>
+<td><span class="math inline">\(0\)</span></td>
+<td><span class="math inline">\(0\)</span></td>
+<td><span class="math inline">\(0\)</span></td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td><span class="math inline">\(0\)</span></td>
+<td><span class="math inline">\(0\)</span></td>
+<td><span class="math inline">\(0\)</span></td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>The DataFrame associated with the input data after the preprocessing transformations must contain, as usual, the columns</p>
+<ul>
+<li>label: class label value</li>
+<li>features: the preprocessed version of the input text</li>
+</ul>
+<p>There are also some other intermediate columns, related to applied transformations, but they are not considered by the classification algorithm.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The DataFrame associated with the input data after the preprocessing transformations</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>label</th>
+<th>features</th>
+<th>text</th>
+<th>…</th>
+<th>…</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><span class="math inline">\([0.5,0.3,0.75,...]\)</span></td>
+<td>The Spark system is based on scala</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><span class="math inline">\([0.5,0.3,0,...]\)</span></td>
+<td>Spark is a new distributed system</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>0</td>
+<td><span class="math inline">\([0,0,0,...]\)</span></td>
+<td>Turin is a beautiful city</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td><span class="math inline">\([0,0,0,...]\)</span></td>
+<td>Turin is in the north of Italy</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>Only “label” and “features” are considered by the classification algorithm.</p>
+</div>
+</div>
+</div>
+<p>In the following solution we will use a set of new Transformers to prepare input data</p>
+<ul>
+<li><code>Tokenizer</code>: to split the input text in words;</li>
+<li><code>StopWordsRemover</code>: to remove stopwords;</li>
+<li><code>HashingTF</code>: to compute the (approximate) term frequency of each input term;</li>
+<li><code>IDF</code>: to compute the inverse document frequency of each input word.</li>
+</ul>
+<p>The input data (training and unlabeled data) are stored in input csv files. Each line contains two attributes:</p>
+<ul>
+<li>The class label (label)</li>
+<li>The text of the document (text)</li>
+</ul>
+<p>We infer a linear regression model on the training data and apply the model on the unlabeled data.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="im">from</span> pyspark.mllib.linalg <span class="im">import</span> Vectors</span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> VectorAssembler</span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> Tokenizer</span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> StopWordsRemover</span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> HashingTF</span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> IDF</span>
+<span id="cb10-7"><a href="#cb10-7"></a><span class="im">from</span> pyspark.ml.classification <span class="im">import</span> LogisticRegression</span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> Pipeline</span>
+<span id="cb10-9"><a href="#cb10-9"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> PipelineModel</span>
+<span id="cb10-10"><a href="#cb10-10"></a></span>
+<span id="cb10-11"><a href="#cb10-11"></a><span class="co"># input and output folders</span></span>
+<span id="cb10-12"><a href="#cb10-12"></a>trainingData <span class="op">=</span> <span class="st">&quot;ex_dataText/trainingData.csv&quot;</span></span>
+<span id="cb10-13"><a href="#cb10-13"></a>unlabeledData <span class="op">=</span> <span class="st">&quot;ex_dataText/unlabeledData.csv&quot;</span></span>
+<span id="cb10-14"><a href="#cb10-14"></a>outputPath <span class="op">=</span> <span class="st">&quot;predictionsLRPipelineText/&quot;</span></span>
+<span id="cb10-15"><a href="#cb10-15"></a></span>
+<span id="cb10-16"><a href="#cb10-16"></a><span class="co"># *************************</span></span>
+<span id="cb10-17"><a href="#cb10-17"></a><span class="co"># Training step</span></span>
+<span id="cb10-18"><a href="#cb10-18"></a><span class="co"># *************************</span></span>
+<span id="cb10-19"><a href="#cb10-19"></a><span class="co"># Create a DataFrame from trainingData.csv</span></span>
+<span id="cb10-20"><a href="#cb10-20"></a><span class="co"># Training data in raw format</span></span>
+<span id="cb10-21"><a href="#cb10-21"></a>trainingData <span class="op">=</span> spark.read.load(</span>
+<span id="cb10-22"><a href="#cb10-22"></a>    trainingData,</span>
+<span id="cb10-23"><a href="#cb10-23"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>,</span>
+<span id="cb10-24"><a href="#cb10-24"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-25"><a href="#cb10-25"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb10-26"><a href="#cb10-26"></a>)</span>
+<span id="cb10-27"><a href="#cb10-27"></a></span>
+<span id="cb10-28"><a href="#cb10-28"></a><span class="co"># Configure an ML pipeline, which consists of five stages:</span></span>
+<span id="cb10-29"><a href="#cb10-29"></a><span class="co"># tokenizer -&gt; split sentences in set of words</span></span>
+<span id="cb10-30"><a href="#cb10-30"></a><span class="co"># remover -&gt; remove stopwords</span></span>
+<span id="cb10-31"><a href="#cb10-31"></a><span class="co"># hashingTF -&gt; map set of words to a fixed-length feature vectors (each</span></span>
+<span id="cb10-32"><a href="#cb10-32"></a><span class="co"># word becomes a feature and the value of the feature is the frequency of</span></span>
+<span id="cb10-33"><a href="#cb10-33"></a><span class="co"># the word in the sentence)</span></span>
+<span id="cb10-34"><a href="#cb10-34"></a><span class="co"># idf -&gt; compute the idf component of the TF-IDF measure</span></span>
+<span id="cb10-35"><a href="#cb10-35"></a><span class="co"># lr -&gt; logistic regression classification algorithm</span></span>
+<span id="cb10-36"><a href="#cb10-36"></a><span class="co"># The Tokenizer splits each sentence in a set of words.</span></span>
+<span id="cb10-37"><a href="#cb10-37"></a><span class="co"># It analyzes the content of column &quot;text&quot; and adds the</span></span>
+<span id="cb10-38"><a href="#cb10-38"></a><span class="co"># new column &quot;words&quot; in the returned DataFrame</span></span>
+<span id="cb10-39"><a href="#cb10-39"></a>tokenizer <span class="op">=</span> Tokenizer() <span class="op">\</span></span>
+<span id="cb10-40"><a href="#cb10-40"></a>    .setInputCol(<span class="st">&quot;text&quot;</span>) <span class="op">\</span></span>
+<span id="cb10-41"><a href="#cb10-41"></a>    .setOutputCol(<span class="st">&quot;words&quot;</span>)</span>
+<span id="cb10-42"><a href="#cb10-42"></a></span>
+<span id="cb10-43"><a href="#cb10-43"></a><span class="co"># Remove stopwords.</span></span>
+<span id="cb10-44"><a href="#cb10-44"></a><span class="co"># The StopWordsRemover component returns a new DataFrame with</span></span>
+<span id="cb10-45"><a href="#cb10-45"></a><span class="co"># a new column called &quot;filteredWords&quot;. &quot;filteredWords&quot; is generated</span></span>
+<span id="cb10-46"><a href="#cb10-46"></a><span class="co"># by removing the stopwords from the content of column &quot;words&quot;</span></span>
+<span id="cb10-47"><a href="#cb10-47"></a>remover <span class="op">=</span> StopWordsRemover() <span class="op">\</span></span>
+<span id="cb10-48"><a href="#cb10-48"></a>    .setInputCol(<span class="st">&quot;words&quot;</span>) <span class="op">\</span></span>
+<span id="cb10-49"><a href="#cb10-49"></a>    .setOutputCol(<span class="st">&quot;filteredWords&quot;</span>)</span>
+<span id="cb10-50"><a href="#cb10-50"></a></span>
+<span id="cb10-51"><a href="#cb10-51"></a><span class="co"># Map words to a features</span></span>
+<span id="cb10-52"><a href="#cb10-52"></a><span class="co"># Each word in filteredWords must become a feature in a Vector object</span></span>
+<span id="cb10-53"><a href="#cb10-53"></a><span class="co"># The HashingTF Transformer can be used to perform this operation.</span></span>
+<span id="cb10-54"><a href="#cb10-54"></a><span class="co"># This operations is based on a hash function and can potentially</span></span>
+<span id="cb10-55"><a href="#cb10-55"></a><span class="co"># map two different words to the same &quot;feature&quot;. The number of conflicts</span></span>
+<span id="cb10-56"><a href="#cb10-56"></a><span class="co"># in influenced by the value of the numFeatures parameter.</span></span>
+<span id="cb10-57"><a href="#cb10-57"></a><span class="co"># The &quot;feature&quot; version of the words is stored in Column &quot;rawFeatures&quot;.</span></span>
+<span id="cb10-58"><a href="#cb10-58"></a><span class="co"># Each feature, for a document, contains the number of occurrences</span></span>
+<span id="cb10-59"><a href="#cb10-59"></a><span class="co"># of that feature in the document (TF component of the TF-IDF measure)</span></span>
+<span id="cb10-60"><a href="#cb10-60"></a>hashingTF <span class="op">=</span> HashingTF() <span class="op">\</span></span>
+<span id="cb10-61"><a href="#cb10-61"></a>    .setNumFeatures(<span class="dv">1000</span>) <span class="op">\</span></span>
+<span id="cb10-62"><a href="#cb10-62"></a>    .setInputCol(<span class="st">&quot;filteredWords&quot;</span>) <span class="op">\</span></span>
+<span id="cb10-63"><a href="#cb10-63"></a>    .setOutputCol(<span class="st">&quot;rawFeatures&quot;</span>)</span>
+<span id="cb10-64"><a href="#cb10-64"></a></span>
+<span id="cb10-65"><a href="#cb10-65"></a><span class="co"># Apply the IDF transformation/computation.</span></span>
+<span id="cb10-66"><a href="#cb10-66"></a><span class="co"># Update the weight associated with each feature by considering also the</span></span>
+<span id="cb10-67"><a href="#cb10-67"></a><span class="co"># inverse document frequency component. The returned new column</span></span>
+<span id="cb10-68"><a href="#cb10-68"></a><span class="co"># is called &quot;features&quot;, that is the standard name for the column that</span></span>
+<span id="cb10-69"><a href="#cb10-69"></a><span class="co"># contains the predictive features used to create a classification model</span></span>
+<span id="cb10-70"><a href="#cb10-70"></a>idf <span class="op">=</span> IDF() <span class="op">\</span></span>
+<span id="cb10-71"><a href="#cb10-71"></a>    .setInputCol(<span class="st">&quot;rawFeatures&quot;</span>) <span class="op">\</span></span>
+<span id="cb10-72"><a href="#cb10-72"></a>    .setOutputCol(<span class="st">&quot;features&quot;</span>)</span>
+<span id="cb10-73"><a href="#cb10-73"></a></span>
+<span id="cb10-74"><a href="#cb10-74"></a><span class="co"># Create a classification model based on the logistic regression algorithm</span></span>
+<span id="cb10-75"><a href="#cb10-75"></a><span class="co"># We can set the values of the parameters of the</span></span>
+<span id="cb10-76"><a href="#cb10-76"></a><span class="co"># Logistic Regression algorithm using the setter methods.</span></span>
+<span id="cb10-77"><a href="#cb10-77"></a>lr <span class="op">=</span> LogisticRegression() <span class="op">\</span></span>
+<span id="cb10-78"><a href="#cb10-78"></a>    .setMaxIter(<span class="dv">10</span>) <span class="op">\</span></span>
+<span id="cb10-79"><a href="#cb10-79"></a>    .setRegParam(<span class="fl">0.01</span>)</span>
+<span id="cb10-80"><a href="#cb10-80"></a></span>
+<span id="cb10-81"><a href="#cb10-81"></a><span class="co"># Define the pipeline that is used to create the logistic regression</span></span>
+<span id="cb10-82"><a href="#cb10-82"></a><span class="co"># model on the training data.</span></span>
+<span id="cb10-83"><a href="#cb10-83"></a><span class="co"># In this case the pipeline is composed of five steps</span></span>
+<span id="cb10-84"><a href="#cb10-84"></a><span class="co"># - text tokenizer</span></span>
+<span id="cb10-85"><a href="#cb10-85"></a><span class="co"># - stopword removal</span></span>
+<span id="cb10-86"><a href="#cb10-86"></a><span class="co"># - TF-IDF computation (performed in two steps)</span></span>
+<span id="cb10-87"><a href="#cb10-87"></a><span class="co"># - Logistic regression model generation</span></span>
+<span id="cb10-88"><a href="#cb10-88"></a>pipeline <span class="op">=</span> Pipeline()<span class="op">\</span></span>
+<span id="cb10-89"><a href="#cb10-89"></a>    .setStages([tokenizer, remover, hashingTF, idf, lr])</span>
+<span id="cb10-90"><a href="#cb10-90"></a></span>
+<span id="cb10-91"><a href="#cb10-91"></a><span class="co"># Execute the pipeline on the training data to build the</span></span>
+<span id="cb10-92"><a href="#cb10-92"></a><span class="co"># classification model</span></span>
+<span id="cb10-93"><a href="#cb10-93"></a>classificationModel <span class="op">=</span> pipeline.fit(trainingData)</span>
+<span id="cb10-94"><a href="#cb10-94"></a><span class="co"># Now, the classification model can be used to predict the class label</span></span>
+<span id="cb10-95"><a href="#cb10-95"></a><span class="co"># of new unlabeled data</span></span>
+<span id="cb10-96"><a href="#cb10-96"></a></span>
+<span id="cb10-97"><a href="#cb10-97"></a><span class="co"># *************************</span></span>
+<span id="cb10-98"><a href="#cb10-98"></a><span class="co"># Prediction step</span></span>
+<span id="cb10-99"><a href="#cb10-99"></a><span class="co"># *************************</span></span>
+<span id="cb10-100"><a href="#cb10-100"></a><span class="co"># Read unlabeled data</span></span>
+<span id="cb10-101"><a href="#cb10-101"></a><span class="co"># Create a DataFrame from unlabeledData.csv</span></span>
+<span id="cb10-102"><a href="#cb10-102"></a><span class="co"># Unlabeled data in raw format</span></span>
+<span id="cb10-103"><a href="#cb10-103"></a>unlabeledData <span class="op">=</span> spark.read.load(</span>
+<span id="cb10-104"><a href="#cb10-104"></a>    unlabeledData,</span>
+<span id="cb10-105"><a href="#cb10-105"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>,</span>
+<span id="cb10-106"><a href="#cb10-106"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-107"><a href="#cb10-107"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb10-108"><a href="#cb10-108"></a>)</span>
+<span id="cb10-109"><a href="#cb10-109"></a></span>
+<span id="cb10-110"><a href="#cb10-110"></a><span class="co"># Make predictions on unlabeled documents by using the</span></span>
+<span id="cb10-111"><a href="#cb10-111"></a><span class="co"># Transformer.transform() method.</span></span>
+<span id="cb10-112"><a href="#cb10-112"></a><span class="co"># The transform will only use the &#39;features&#39; columns</span></span>
+<span id="cb10-113"><a href="#cb10-113"></a>predictionsDF <span class="op">=</span> classificationModel.transform(unlabeledData)</span>
+<span id="cb10-114"><a href="#cb10-114"></a></span>
+<span id="cb10-115"><a href="#cb10-115"></a><span class="co"># The returned DataFrame has the following schema (attributes)</span></span>
+<span id="cb10-116"><a href="#cb10-116"></a><span class="co"># |-- label: string (nullable = true)</span></span>
+<span id="cb10-117"><a href="#cb10-117"></a><span class="co"># |-- text: string (nullable = true)</span></span>
+<span id="cb10-118"><a href="#cb10-118"></a><span class="co"># |-- words: array (nullable = true)</span></span>
+<span id="cb10-119"><a href="#cb10-119"></a><span class="co"># | |-- element: string (containsNull = true)</span></span>
+<span id="cb10-120"><a href="#cb10-120"></a><span class="co"># |-- filteredWords: array (nullable = true)</span></span>
+<span id="cb10-121"><a href="#cb10-121"></a><span class="co"># | |-- element: string (containsNull = true)</span></span>
+<span id="cb10-122"><a href="#cb10-122"></a><span class="co"># |-- rawFeatures: vector (nullable = true)</span></span>
+<span id="cb10-123"><a href="#cb10-123"></a><span class="co"># |-- features: vector (nullable = true)</span></span>
+<span id="cb10-124"><a href="#cb10-124"></a><span class="co"># |-- rawPrediction: vector (nullable = true)</span></span>
+<span id="cb10-125"><a href="#cb10-125"></a><span class="co"># |-- probability: vector (nullable = true)</span></span>
+<span id="cb10-126"><a href="#cb10-126"></a><span class="co"># |-- prediction: double (nullable = false)</span></span>
+<span id="cb10-127"><a href="#cb10-127"></a></span>
+<span id="cb10-128"><a href="#cb10-128"></a><span class="co"># Select only the original features (i.e., the value of the original text attribute) and</span></span>
+<span id="cb10-129"><a href="#cb10-129"></a><span class="co"># the predicted class for each record</span></span>
+<span id="cb10-130"><a href="#cb10-130"></a>predictions <span class="op">=</span> predictionsDF.select(<span class="st">&quot;text&quot;</span>, <span class="st">&quot;prediction&quot;</span>)</span>
+<span id="cb10-131"><a href="#cb10-131"></a></span>
+<span id="cb10-132"><a href="#cb10-132"></a><span class="co"># Save the result in an HDFS output folder</span></span>
+<span id="cb10-133"><a href="#cb10-133"></a>predictions.write.csv(outputPath, header<span class="op">=</span><span class="st">&quot;true&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="performance-evaluation" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Performance evaluation</h1>
+<p>In order to test the goodness of algorithms there are some evaluators. The Evaluator can be</p>
+<ul>
+<li>a <code>BinaryClassificationEvaluator</code> for binary data</li>
+<li>a <code>MulticlassClassificationEvaluator</code> for multiclass problems</li>
+</ul>
+<p>Provided metrics are:</p>
+<ul>
+<li>Accuracy</li>
+<li>Precision</li>
+<li>Recall</li>
+<li>F-measure</li>
+</ul>
+<p>Use the <code>MulticlassClassificationEvaluator</code> estimator from <code>pyspark.ml.evaluator</code> on a DataFrame. The instantiated estimator has the method <code>.evaluate()</code> that is applied on a DataFrame: it compares the predictions with the true label values, and the output is the double value of the computed performance metric.</p>
+<p>The parameters of <code>MulticlassClassificationEvaluator</code> are</p>
+<ul>
+<li><code>metricName</code>: type of metric to compute. It can assume the following values
+<ul>
+<li><code>&quot;accuracy&quot;</code></li>
+<li><code>&quot;f1&quot;</code></li>
+<li><code>&quot;weightedPrecision&quot;</code></li>
+<li><code>&quot;weightedRecall&quot;</code></li>
+</ul></li>
+<li><code>labelCol</code>: input column with the true label/class value</li>
+<li><code>predictionCol</code>: input column with the predicted class/label value</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In this example, the set of labeled data is read from a text file that contains one record/data point per line, and the records/data points are structured data with a fixed number of attributes (four)</p>
+<ul>
+<li>One attribute is the class label (“label”);</li>
+<li>The other three attributes (“attr1”, “attr2”, “attr3”) are the predictive attributes that are used to predict the value of the class label.</li>
+</ul>
+<p>All attributes are already double attributes, and the input file has the header line.</p>
+<p>Consider the following example input labeled data file</p>
+<pre><code>label,attr1,attr2,attr3
+1,0.0,1.1,0.1
+0,2.0,1.0,-1.0
+0,2.0,1.3,1.0
+1,0.0,1.2,-0.5</code></pre>
+<p>Follow these steps</p>
+<ol type="1">
+<li>Split the labeled data set in two subsets
+<ul>
+<li>Training set: <span class="math inline">\(75\%\)</span> of the labeled data</li>
+<li>Test set: <span class="math inline">\(25\%\)</span> of the labeled data</li>
+</ul></li>
+<li>Infer/train a logistic regression model on the training set</li>
+<li>Evaluate the prediction quality of the inferred model on both the test set and the training set</li>
+</ol>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="im">from</span> pyspark.mllib.linalg <span class="im">import</span> Vectors</span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> VectorAssembler</span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="im">from</span> pyspark.ml.classification <span class="im">import</span> LogisticRegression</span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="im">from</span> pyspark.ml.evaluation <span class="im">import</span> MulticlassClassificationEvaluator</span>
+<span id="cb12-5"><a href="#cb12-5"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> Pipeline</span>
+<span id="cb12-6"><a href="#cb12-6"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> PipelineModel</span>
+<span id="cb12-7"><a href="#cb12-7"></a></span>
+<span id="cb12-8"><a href="#cb12-8"></a><span class="co"># input and output folders</span></span>
+<span id="cb12-9"><a href="#cb12-9"></a>labeledData <span class="op">=</span> <span class="st">&quot;ex_dataValidation/labeledData.csv&quot;</span></span>
+<span id="cb12-10"><a href="#cb12-10"></a>outputPath <span class="op">=</span> <span class="st">&quot;predictionsLRPipelineValidation/&quot;</span></span>
+<span id="cb12-11"><a href="#cb12-11"></a></span>
+<span id="cb12-12"><a href="#cb12-12"></a><span class="co"># Create a DataFrame from labeledData.csv</span></span>
+<span id="cb12-13"><a href="#cb12-13"></a><span class="co"># Training data in raw format</span></span>
+<span id="cb12-14"><a href="#cb12-14"></a>labeledDataDF <span class="op">=</span> spark.read.load(</span>
+<span id="cb12-15"><a href="#cb12-15"></a>    labeledData,</span>
+<span id="cb12-16"><a href="#cb12-16"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>,</span>
+<span id="cb12-17"><a href="#cb12-17"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb12-18"><a href="#cb12-18"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb12-19"><a href="#cb12-19"></a>)</span>
+<span id="cb12-20"><a href="#cb12-20"></a></span>
+<span id="cb12-21"><a href="#cb12-21"></a><span class="co"># Split labeled data in training and test set</span></span>
+<span id="cb12-22"><a href="#cb12-22"></a><span class="co"># training data : 75%</span></span>
+<span id="cb12-23"><a href="#cb12-23"></a><span class="co"># test data: 25%</span></span>
+<span id="cb12-24"><a href="#cb12-24"></a>trainDF, testDF <span class="op">=</span> labeledDataDF.randomSplit([<span class="fl">0.75</span>, <span class="fl">0.25</span>], seed<span class="op">=</span><span class="dv">10</span>) <span class="co"># &lt;1&gt;</span></span>
+<span id="cb12-25"><a href="#cb12-25"></a></span>
+<span id="cb12-26"><a href="#cb12-26"></a><span class="co"># *************************</span></span>
+<span id="cb12-27"><a href="#cb12-27"></a><span class="co"># Training step</span></span>
+<span id="cb12-28"><a href="#cb12-28"></a><span class="co"># *************************</span></span>
+<span id="cb12-29"><a href="#cb12-29"></a><span class="co"># Define an assembler to create a column (features) of type Vector</span></span>
+<span id="cb12-30"><a href="#cb12-30"></a><span class="co"># containing the double values associated with columns attr1, attr2, attr3</span></span>
+<span id="cb12-31"><a href="#cb12-31"></a>assembler <span class="op">=</span> VectorAssembler(</span>
+<span id="cb12-32"><a href="#cb12-32"></a>    inputCols<span class="op">=</span>[<span class="st">&quot;attr1&quot;</span>, <span class="st">&quot;attr2&quot;</span>, <span class="st">&quot;attr3&quot;</span>],</span>
+<span id="cb12-33"><a href="#cb12-33"></a>    outputCol<span class="op">=</span><span class="st">&quot;features&quot;</span></span>
+<span id="cb12-34"><a href="#cb12-34"></a>)</span>
+<span id="cb12-35"><a href="#cb12-35"></a></span>
+<span id="cb12-36"><a href="#cb12-36"></a><span class="co"># Create a LogisticRegression object.</span></span>
+<span id="cb12-37"><a href="#cb12-37"></a><span class="co"># LogisticRegression is an Estimator that is used to</span></span>
+<span id="cb12-38"><a href="#cb12-38"></a><span class="co"># create a classification model based on logistic regression.</span></span>
+<span id="cb12-39"><a href="#cb12-39"></a>lr <span class="op">=</span> LogisticRegression()</span>
+<span id="cb12-40"><a href="#cb12-40"></a></span>
+<span id="cb12-41"><a href="#cb12-41"></a><span class="co"># Set the values of the parameters of the</span></span>
+<span id="cb12-42"><a href="#cb12-42"></a><span class="co"># Logistic Regression algorithm using the setter methods.</span></span>
+<span id="cb12-43"><a href="#cb12-43"></a><span class="co"># There is one set method for each parameter</span></span>
+<span id="cb12-44"><a href="#cb12-44"></a><span class="co"># For example, we are setting the number of maximum iterations to 10</span></span>
+<span id="cb12-45"><a href="#cb12-45"></a><span class="co"># and the regularization parameter to 0.01</span></span>
+<span id="cb12-46"><a href="#cb12-46"></a>lr.setMaxIter(<span class="dv">10</span>)</span>
+<span id="cb12-47"><a href="#cb12-47"></a>lr.setRegParam(<span class="fl">0.01</span>)</span>
+<span id="cb12-48"><a href="#cb12-48"></a></span>
+<span id="cb12-49"><a href="#cb12-49"></a><span class="co"># Define a pipeline that is used to create the logistic regression</span></span>
+<span id="cb12-50"><a href="#cb12-50"></a><span class="co"># model on the training data. The pipeline includes also</span></span>
+<span id="cb12-51"><a href="#cb12-51"></a><span class="co"># the preprocessing step</span></span>
+<span id="cb12-52"><a href="#cb12-52"></a>pipeline <span class="op">=</span> Pipeline().setStages([assembler, lr])</span>
+<span id="cb12-53"><a href="#cb12-53"></a></span>
+<span id="cb12-54"><a href="#cb12-54"></a><span class="co"># Execute the pipeline on the training data to build the</span></span>
+<span id="cb12-55"><a href="#cb12-55"></a><span class="co"># classification model</span></span>
+<span id="cb12-56"><a href="#cb12-56"></a>classificationModel <span class="op">=</span> pipeline.fit(trainDF)</span>
+<span id="cb12-57"><a href="#cb12-57"></a><span class="co"># Now, the classification model can be used to predict the class label</span></span>
+<span id="cb12-58"><a href="#cb12-58"></a><span class="co"># of new unlabeled data</span></span>
+<span id="cb12-59"><a href="#cb12-59"></a></span>
+<span id="cb12-60"><a href="#cb12-60"></a><span class="co"># Make predictions on the test data using the transform() method of the</span></span>
+<span id="cb12-61"><a href="#cb12-61"></a><span class="co"># trained classification model transform uses only the content of &#39;features&#39;</span></span>
+<span id="cb12-62"><a href="#cb12-62"></a><span class="co"># to perform the predictions. The model is associated with the pipeline and hence</span></span>
+<span id="cb12-63"><a href="#cb12-63"></a><span class="co"># also the assembler is executed</span></span>
+<span id="cb12-64"><a href="#cb12-64"></a>predictionsDF <span class="op">=</span> classificationModel.transform(testDF)</span>
+<span id="cb12-65"><a href="#cb12-65"></a></span>
+<span id="cb12-66"><a href="#cb12-66"></a><span class="co"># The predicted value is column prediction</span></span>
+<span id="cb12-67"><a href="#cb12-67"></a><span class="co"># The actual label is column label</span></span>
+<span id="cb12-68"><a href="#cb12-68"></a><span class="co"># Define a set of evaluators</span></span>
+<span id="cb12-69"><a href="#cb12-69"></a>myEvaluatorAcc <span class="op">=</span> MulticlassClassificationEvaluator(</span>
+<span id="cb12-70"><a href="#cb12-70"></a>    labelCol<span class="op">=</span><span class="st">&quot;label&quot;</span>,</span>
+<span id="cb12-71"><a href="#cb12-71"></a>    predictionCol<span class="op">=</span><span class="st">&quot;prediction&quot;</span>,</span>
+<span id="cb12-72"><a href="#cb12-72"></a>    metricName<span class="op">=</span><span class="st">&#39;accuracy&#39;</span></span>
+<span id="cb12-73"><a href="#cb12-73"></a>)</span>
+<span id="cb12-74"><a href="#cb12-74"></a></span>
+<span id="cb12-75"><a href="#cb12-75"></a>myEvaluatorF1 <span class="op">=</span> MulticlassClassificationEvaluator(</span>
+<span id="cb12-76"><a href="#cb12-76"></a>    labelCol<span class="op">=</span><span class="st">&quot;label&quot;</span>,</span>
+<span id="cb12-77"><a href="#cb12-77"></a>    predictionCol<span class="op">=</span><span class="st">&quot;prediction&quot;</span>,</span>
+<span id="cb12-78"><a href="#cb12-78"></a>    metricName<span class="op">=</span><span class="st">&#39;f1&#39;</span></span>
+<span id="cb12-79"><a href="#cb12-79"></a>)</span>
+<span id="cb12-80"><a href="#cb12-80"></a></span>
+<span id="cb12-81"><a href="#cb12-81"></a>myEvaluatorWeightedPrecision <span class="op">=</span> MulticlassClassificationEvaluator(</span>
+<span id="cb12-82"><a href="#cb12-82"></a>    labelCol<span class="op">=</span><span class="st">&quot;label&quot;</span>,</span>
+<span id="cb12-83"><a href="#cb12-83"></a>    predictionCol<span class="op">=</span><span class="st">&quot;prediction&quot;</span>,</span>
+<span id="cb12-84"><a href="#cb12-84"></a>    metricName<span class="op">=</span><span class="st">&#39;weightedPrecision&#39;</span></span>
+<span id="cb12-85"><a href="#cb12-85"></a>)</span>
+<span id="cb12-86"><a href="#cb12-86"></a></span>
+<span id="cb12-87"><a href="#cb12-87"></a>myEvaluatorWeightedRecall <span class="op">=</span> MulticlassClassificationEvaluator(</span>
+<span id="cb12-88"><a href="#cb12-88"></a>    labelCol<span class="op">=</span><span class="st">&quot;label&quot;</span>,</span>
+<span id="cb12-89"><a href="#cb12-89"></a>    predictionCol<span class="op">=</span><span class="st">&quot;prediction&quot;</span>,</span>
+<span id="cb12-90"><a href="#cb12-90"></a>    metricName<span class="op">=</span><span class="st">&#39;weightedRecall&#39;</span></span>
+<span id="cb12-91"><a href="#cb12-91"></a>)</span>
+<span id="cb12-92"><a href="#cb12-92"></a></span>
+<span id="cb12-93"><a href="#cb12-93"></a><span class="co"># Apply the evaluators on the predictions associated with the test data</span></span>
+<span id="cb12-94"><a href="#cb12-94"></a><span class="co"># Print the results on the standard output</span></span>
+<span id="cb12-95"><a href="#cb12-95"></a><span class="bu">print</span>(</span>
+<span id="cb12-96"><a href="#cb12-96"></a>    <span class="st">&quot;Accuracy on test data &quot;</span>, </span>
+<span id="cb12-97"><a href="#cb12-97"></a>    myEvaluatorAcc.evaluate(predictionsDF)</span>
+<span id="cb12-98"><a href="#cb12-98"></a>)</span>
+<span id="cb12-99"><a href="#cb12-99"></a></span>
+<span id="cb12-100"><a href="#cb12-100"></a><span class="bu">print</span>(</span>
+<span id="cb12-101"><a href="#cb12-101"></a>    <span class="st">&quot;F1 on test data &quot;</span>, </span>
+<span id="cb12-102"><a href="#cb12-102"></a>    myEvaluatorF1.evaluate(predictionsDF)</span>
+<span id="cb12-103"><a href="#cb12-103"></a>)</span>
+<span id="cb12-104"><a href="#cb12-104"></a></span>
+<span id="cb12-105"><a href="#cb12-105"></a><span class="bu">print</span>(</span>
+<span id="cb12-106"><a href="#cb12-106"></a>    <span class="st">&quot;Weighted recall on test data &quot;</span>,</span>
+<span id="cb12-107"><a href="#cb12-107"></a>    myEvaluatorWeightedRecall.evaluate(predictionsDF)</span>
+<span id="cb12-108"><a href="#cb12-108"></a>)</span>
+<span id="cb12-109"><a href="#cb12-109"></a></span>
+<span id="cb12-110"><a href="#cb12-110"></a><span class="bu">print</span>(</span>
+<span id="cb12-111"><a href="#cb12-111"></a>    <span class="st">&quot;Weighted precision on test data &quot;</span>,</span>
+<span id="cb12-112"><a href="#cb12-112"></a>    myEvaluatorWeightedPrecision.evaluate(predictionsDF)</span>
+<span id="cb12-113"><a href="#cb12-113"></a>)</span>
+<span id="cb12-114"><a href="#cb12-114"></a></span>
+<span id="cb12-115"><a href="#cb12-115"></a><span class="co"># Compute the prediction quality also for the training data.</span></span>
+<span id="cb12-116"><a href="#cb12-116"></a><span class="co"># To check if the model is overfitted on the training data</span></span>
+<span id="cb12-117"><a href="#cb12-117"></a></span>
+<span id="cb12-118"><a href="#cb12-118"></a><span class="co"># Make predictions on the training data using the transform() method of the</span></span>
+<span id="cb12-119"><a href="#cb12-119"></a><span class="co"># trained classification model transform uses only the content of &#39;features&#39;</span></span>
+<span id="cb12-120"><a href="#cb12-120"></a><span class="co"># to perform the predictions. The model is associated with the pipeline and hence</span></span>
+<span id="cb12-121"><a href="#cb12-121"></a><span class="co"># also the assembler is executed</span></span>
+<span id="cb12-122"><a href="#cb12-122"></a>predictionsTrainingDF <span class="op">=</span> classificationModel.transform(trainDF)</span>
+<span id="cb12-123"><a href="#cb12-123"></a></span>
+<span id="cb12-124"><a href="#cb12-124"></a><span class="co"># Apply the evaluators on the predictions associated with the test data</span></span>
+<span id="cb12-125"><a href="#cb12-125"></a><span class="co"># Print the results on the standard output</span></span>
+<span id="cb12-126"><a href="#cb12-126"></a></span>
+<span id="cb12-127"><a href="#cb12-127"></a><span class="bu">print</span>(</span>
+<span id="cb12-128"><a href="#cb12-128"></a>    <span class="st">&quot;Accuracy on training data &quot;</span>,</span>
+<span id="cb12-129"><a href="#cb12-129"></a>    myEvaluatorAcc.evaluate(predictionsTrainingDF)</span>
+<span id="cb12-130"><a href="#cb12-130"></a>)</span>
+<span id="cb12-131"><a href="#cb12-131"></a></span>
+<span id="cb12-132"><a href="#cb12-132"></a><span class="bu">print</span>(</span>
+<span id="cb12-133"><a href="#cb12-133"></a>    <span class="st">&quot;F1 on training data &quot;</span>,</span>
+<span id="cb12-134"><a href="#cb12-134"></a>    myEvaluatorF1.evaluate(predictionsTrainingDF)</span>
+<span id="cb12-135"><a href="#cb12-135"></a>)</span>
+<span id="cb12-136"><a href="#cb12-136"></a></span>
+<span id="cb12-137"><a href="#cb12-137"></a><span class="bu">print</span>(</span>
+<span id="cb12-138"><a href="#cb12-138"></a>    <span class="st">&quot;Weighted recall on training data &quot;</span>,</span>
+<span id="cb12-139"><a href="#cb12-139"></a>    myEvaluatorWeightedRecall.evaluate(predictionsTrainingDF)</span>
+<span id="cb12-140"><a href="#cb12-140"></a>)</span>
+<span id="cb12-141"><a href="#cb12-141"></a></span>
+<span id="cb12-142"><a href="#cb12-142"></a><span class="bu">print</span>(</span>
+<span id="cb12-143"><a href="#cb12-143"></a>    <span class="st">&quot;Weighted precision on training data &quot;</span>,</span>
+<span id="cb12-144"><a href="#cb12-144"></a>    myEvaluatorWeightedPrecision.evaluate(predictionsTrainingDF)</span>
+<span id="cb12-145"><a href="#cb12-145"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol type="1">
+<li><code>randomSplit</code> can be used to split the content of an input DataFrame in subsets</li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+<section id="hyperparameter-tuning" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Hyperparameter tuning</h1>
+<p>The setting of the parameters of an algorithm is always a difficult task. A brute force approach can be used to find the setting optimizing a quality index, by splitting the training data in two subsets:</p>
+<ul>
+<li>The first set is used to build a model</li>
+<li>The second one is used to evaluate the quality of the model</li>
+</ul>
+<p>The setting that maximizes a quality index (e.g., the prediction accuracy) is used to build the final model on the whole training dataset.</p>
+<p>Using one single split of the training set usually leads to biased results, so the cross-validation approach is normally used</p>
+<ul>
+<li>Create <span class="math inline">\(k\)</span> splits and <span class="math inline">\(k\)</span> models</li>
+<li>The parameter setting that achieves, on the average, the best result on the <span class="math inline">\(k\)</span> models is selected as final setting of the algorithm parameters</li>
+</ul>
+<p>Spark supports a brute-force grid-based approach to evaluate a set of possible parameter settings on a pipeline</p>
+<ul>
+<li>Input
+<ul>
+<li>An MLlib pipeline</li>
+<li>A set of values to be evaluated for each input parameter of the pipeline: all the possible combinations of the specified parameter values are considered and the related models are automatically generated and evaluated by Spark</li>
+<li>A quality evaluation metric to evaluate the result of the input pipeline</li>
+</ul></li>
+<li>Output: the model associated with the best parameter setting, in term of quality evaluation metric</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>This example shows how a grid-based approach can be used to tune a logistic regression classifier on a structured dataset: the pipeline that is repeated multiple times is based on the cross validation component. The input data set is the same structured dataset used for the example of the evaluators.</p>
+<p>The following parameters of the logistic regression algorithm are considered in the brute-force search/parameter tuning</p>
+<ul>
+<li>Maximum iteration: <span class="math inline">\([10, 100, 1000]\)</span></li>
+<li>Regulation parameter: <span class="math inline">\([0.1, 0.01]\)</span></li>
+</ul>
+<p>In total, 6 parameter configurations are evaluated (<span class="math inline">\(3*2\)</span>).</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="im">from</span> pyspark.mllib.linalg <span class="im">import</span> Vectors</span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> VectorAssembler</span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="im">from</span> pyspark.ml.classification <span class="im">import</span> LogisticRegression</span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="im">from</span> pyspark.ml.evaluation <span class="im">import</span> MulticlassClassificationEvaluator</span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="im">from</span> pyspark.ml.evaluation <span class="im">import</span> BinaryClassificationEvaluator</span>
+<span id="cb13-6"><a href="#cb13-6"></a><span class="im">from</span> pyspark.ml.tuning <span class="im">import</span> ParamGridBuilder</span>
+<span id="cb13-7"><a href="#cb13-7"></a><span class="im">from</span> pyspark.ml.tuning <span class="im">import</span> CrossValidator</span>
+<span id="cb13-8"><a href="#cb13-8"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> Pipeline</span>
+<span id="cb13-9"><a href="#cb13-9"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> PipelineModel</span>
+<span id="cb13-10"><a href="#cb13-10"></a></span>
+<span id="cb13-11"><a href="#cb13-11"></a><span class="co"># input and output folders</span></span>
+<span id="cb13-12"><a href="#cb13-12"></a>labeledData <span class="op">=</span> <span class="st">&quot;ex_dataValidation/labeledData.csv&quot;</span></span>
+<span id="cb13-13"><a href="#cb13-13"></a>unlabeledData <span class="op">=</span> <span class="st">&quot;ex_dataValidation/unlabeledData.csv&quot;</span></span>
+<span id="cb13-14"><a href="#cb13-14"></a>outputPath <span class="op">=</span> <span class="st">&quot;predictionsLRPipelineTuning/&quot;</span></span>
+<span id="cb13-15"><a href="#cb13-15"></a></span>
+<span id="cb13-16"><a href="#cb13-16"></a><span class="co"># Create a DataFrame from labeledData.csv</span></span>
+<span id="cb13-17"><a href="#cb13-17"></a><span class="co"># Training data in raw format</span></span>
+<span id="cb13-18"><a href="#cb13-18"></a>labeledDataDF <span class="op">=</span> spark.read.load(</span>
+<span id="cb13-19"><a href="#cb13-19"></a>    labeledData,</span>
+<span id="cb13-20"><a href="#cb13-20"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>,</span>
+<span id="cb13-21"><a href="#cb13-21"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb13-22"><a href="#cb13-22"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb13-23"><a href="#cb13-23"></a>)</span>
+<span id="cb13-24"><a href="#cb13-24"></a></span>
+<span id="cb13-25"><a href="#cb13-25"></a><span class="co"># *************************</span></span>
+<span id="cb13-26"><a href="#cb13-26"></a><span class="co"># Training step</span></span>
+<span id="cb13-27"><a href="#cb13-27"></a><span class="co"># *************************</span></span>
+<span id="cb13-28"><a href="#cb13-28"></a><span class="co"># Define an assembler to create a column (features) of type Vector</span></span>
+<span id="cb13-29"><a href="#cb13-29"></a><span class="co"># containing the double values associated with columns attr1, attr2, attr3</span></span>
+<span id="cb13-30"><a href="#cb13-30"></a>assembler <span class="op">=</span> VectorAssembler(</span>
+<span id="cb13-31"><a href="#cb13-31"></a>    inputCols<span class="op">=</span>[<span class="st">&quot;attr1&quot;</span>, <span class="st">&quot;attr2&quot;</span>, <span class="st">&quot;attr3&quot;</span>],</span>
+<span id="cb13-32"><a href="#cb13-32"></a>    outputCol<span class="op">=</span><span class="st">&quot;features&quot;</span></span>
+<span id="cb13-33"><a href="#cb13-33"></a>)</span>
+<span id="cb13-34"><a href="#cb13-34"></a></span>
+<span id="cb13-35"><a href="#cb13-35"></a><span class="co"># Create a LogisticRegression object.</span></span>
+<span id="cb13-36"><a href="#cb13-36"></a><span class="co"># LogisticRegression is an Estimator that is used to</span></span>
+<span id="cb13-37"><a href="#cb13-37"></a><span class="co"># create a classification model based on logistic regression.</span></span>
+<span id="cb13-38"><a href="#cb13-38"></a>lr <span class="op">=</span> LogisticRegression()</span>
+<span id="cb13-39"><a href="#cb13-39"></a></span>
+<span id="cb13-40"><a href="#cb13-40"></a><span class="co"># Define a pipeline that is used to create the logistic regression</span></span>
+<span id="cb13-41"><a href="#cb13-41"></a><span class="co"># model on the training data. The pipeline includes also the preprocessing step</span></span>
+<span id="cb13-42"><a href="#cb13-42"></a>pipeline <span class="op">=</span> Pipeline().setStages([assembler, lr])</span>
+<span id="cb13-43"><a href="#cb13-43"></a></span>
+<span id="cb13-44"><a href="#cb13-44"></a><span class="co"># We use a ParamGridBuilder to construct a grid of parameter values to</span></span>
+<span id="cb13-45"><a href="#cb13-45"></a><span class="co"># search over.</span></span>
+<span id="cb13-46"><a href="#cb13-46"></a><span class="co"># We set 3 values for lr.setMaxIter and 2 values for lr.regParam.</span></span>
+<span id="cb13-47"><a href="#cb13-47"></a><span class="co"># This grid will evaluate 3 x 2 = 6 parameter settings for</span></span>
+<span id="cb13-48"><a href="#cb13-48"></a><span class="co"># the input pipeline.</span></span>
+<span id="cb13-49"><a href="#cb13-49"></a>paramGrid <span class="op">=</span> ParamGridBuilder() <span class="op">\</span></span>
+<span id="cb13-50"><a href="#cb13-50"></a>    .addGrid(lr.maxIter, [<span class="dv">10</span>,<span class="dv">100</span>,<span class="dv">1000</span>]) <span class="op">\</span></span>
+<span id="cb13-51"><a href="#cb13-51"></a>    .addGrid(lr.regParam, [<span class="fl">0.1</span>,<span class="fl">0.01</span>]) <span class="op">\</span></span>
+<span id="cb13-52"><a href="#cb13-52"></a>    .build() <span class="co"># &lt;1&gt;</span></span>
+<span id="cb13-53"><a href="#cb13-53"></a></span>
+<span id="cb13-54"><a href="#cb13-54"></a><span class="co"># We now treat the Pipeline as an Estimator, wrapping it in a</span></span>
+<span id="cb13-55"><a href="#cb13-55"></a><span class="co"># CrossValidator instance. This allows us to jointly choose parameters</span></span>
+<span id="cb13-56"><a href="#cb13-56"></a><span class="co"># for all Pipeline stages.</span></span>
+<span id="cb13-57"><a href="#cb13-57"></a><span class="co"># CrossValidator requires</span></span>
+<span id="cb13-58"><a href="#cb13-58"></a><span class="co"># - an Estimator</span></span>
+<span id="cb13-59"><a href="#cb13-59"></a><span class="co"># - a set of Estimator ParamMaps</span></span>
+<span id="cb13-60"><a href="#cb13-60"></a><span class="co"># - an Evaluator.</span></span>
+<span id="cb13-61"><a href="#cb13-61"></a>cv <span class="op">=</span> CrossValidator() <span class="op">\</span></span>
+<span id="cb13-62"><a href="#cb13-62"></a>    .setEstimator(pipeline) <span class="op">\</span></span>
+<span id="cb13-63"><a href="#cb13-63"></a>    .setEstimatorParamMaps(paramGrid) <span class="op">\</span></span>
+<span id="cb13-64"><a href="#cb13-64"></a>    .setEvaluator(BinaryClassificationEvaluator()) <span class="op">\</span></span>
+<span id="cb13-65"><a href="#cb13-65"></a>    .setNumFolds(<span class="dv">3</span>) <span class="co"># &lt;2&gt;</span></span>
+<span id="cb13-66"><a href="#cb13-66"></a></span>
+<span id="cb13-67"><a href="#cb13-67"></a><span class="co"># Run cross-validation. The result is the logistic regression model</span></span>
+<span id="cb13-68"><a href="#cb13-68"></a><span class="co"># based on the best set of parameters (based on the results of the</span></span>
+<span id="cb13-69"><a href="#cb13-69"></a><span class="co"># cross-validation operation).</span></span>
+<span id="cb13-70"><a href="#cb13-70"></a>tunedLRmodel <span class="op">=</span> cv.fit(labeledDataDF) <span class="co"># &lt;3&gt;</span></span>
+<span id="cb13-71"><a href="#cb13-71"></a></span>
+<span id="cb13-72"><a href="#cb13-72"></a><span class="co"># Now, the tuned classification model can be used to predict the class label</span></span>
+<span id="cb13-73"><a href="#cb13-73"></a><span class="co"># of new unlabeled data</span></span>
+<span id="cb13-74"><a href="#cb13-74"></a></span>
+<span id="cb13-75"><a href="#cb13-75"></a><span class="co"># *************************</span></span>
+<span id="cb13-76"><a href="#cb13-76"></a><span class="co"># Prediction step</span></span>
+<span id="cb13-77"><a href="#cb13-77"></a><span class="co"># *************************</span></span>
+<span id="cb13-78"><a href="#cb13-78"></a><span class="co"># Create a DataFrame from unlabeledData.csv</span></span>
+<span id="cb13-79"><a href="#cb13-79"></a><span class="co"># Unlabeled data in raw format</span></span>
+<span id="cb13-80"><a href="#cb13-80"></a>unlabeledData <span class="op">=</span> spark.read.load(</span>
+<span id="cb13-81"><a href="#cb13-81"></a>    unlabeledData,</span>
+<span id="cb13-82"><a href="#cb13-82"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>,</span>
+<span id="cb13-83"><a href="#cb13-83"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb13-84"><a href="#cb13-84"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb13-85"><a href="#cb13-85"></a>)</span>
+<span id="cb13-86"><a href="#cb13-86"></a></span>
+<span id="cb13-87"><a href="#cb13-87"></a><span class="co"># Make predictions on the unlabled data using the transform() method of the</span></span>
+<span id="cb13-88"><a href="#cb13-88"></a><span class="co"># trained tuned classification model transform uses only the content of &#39;features&#39;</span></span>
+<span id="cb13-89"><a href="#cb13-89"></a><span class="co"># to perform the predictions. The model is associated with the pipeline and hence</span></span>
+<span id="cb13-90"><a href="#cb13-90"></a><span class="co"># also the assembler is executed</span></span>
+<span id="cb13-91"><a href="#cb13-91"></a>predictionsDF <span class="op">=</span> tunedLRmodel.transform(unlabeledData)</span>
+<span id="cb13-92"><a href="#cb13-92"></a></span>
+<span id="cb13-93"><a href="#cb13-93"></a><span class="co"># The returned DataFrame has the following schema (attributes)</span></span>
+<span id="cb13-94"><a href="#cb13-94"></a><span class="co"># - features: vector (values of the attributes)</span></span>
+<span id="cb13-95"><a href="#cb13-95"></a><span class="co"># - label: double (value of the class label)</span></span>
+<span id="cb13-96"><a href="#cb13-96"></a><span class="co"># - rawPrediction: vector (nullable = true)</span></span>
+<span id="cb13-97"><a href="#cb13-97"></a><span class="co"># - probability: vector (The i-th cell contains the probability that the current</span></span>
+<span id="cb13-98"><a href="#cb13-98"></a><span class="co"># record belongs to the i-th class</span></span>
+<span id="cb13-99"><a href="#cb13-99"></a><span class="co"># - prediction: double (the predicted class label)</span></span>
+<span id="cb13-100"><a href="#cb13-100"></a><span class="co"># Select only the original features (i.e., the value of the original attributes</span></span>
+<span id="cb13-101"><a href="#cb13-101"></a><span class="co"># attr1, attr2, attr3) and the predicted class for each record</span></span>
+<span id="cb13-102"><a href="#cb13-102"></a>predictions <span class="op">=</span> predictionsDF.select(<span class="st">&quot;attr1&quot;</span>, <span class="st">&quot;attr2&quot;</span>, <span class="st">&quot;attr3&quot;</span>, <span class="st">&quot;prediction&quot;</span>)</span>
+<span id="cb13-103"><a href="#cb13-103"></a></span>
+<span id="cb13-104"><a href="#cb13-104"></a><span class="co"># Save the result in an HDFS output folder</span></span>
+<span id="cb13-105"><a href="#cb13-105"></a>predictions.write.csv(outputPath, header<span class="op">=</span><span class="st">&quot;true&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol type="1">
+<li>There is one call to the addGrid method for each parameter that we want to set: each call to the addGrid method is characterized by the parameter we want to consider, and the list of values to test/to consider.</li>
+<li>Here the characteristics of the cross validation are set: the pipeline to be evaluated, the set of parameters to be considered, the evaluator (i.e., the object that is used to evaluate the quality of the model), and the number of folds to consider (i.e., the number of repetitions).</li>
+<li>The returned model is the one associated with the best parameter setting, based on the result of the cross-validation test</li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+<section id="sparse-labeled-data" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Sparse labeled data</h1>
+<p>Frequently the training data are sparse (e.g., textual data are sparse: each document contains only a subset of the possible words), so sparse vectors are frequently used. MLlib supports reading training examples stored in the LIBSVM format: this is a commonly used textual format that is used to represent sparse documents/data points.</p>
+<p>The LIBSVM format is a textual format in which each line represents an input record/data point by using a sparse feature vector: each line has the format</p>
+<pre><code>label index1:value1 index2:value2 ...</code></pre>
+<p>where</p>
+<ul>
+<li><code>label</code> is an integer associated with the class label. It is the first value of each line.</li>
+<li><code>index#</code> are integer values representing the features</li>
+<li><code>value#</code> are the (double) values of the features</li>
+</ul>
+<p>Consider the following two records/data points characterized by 4 predictive features and a class label</p>
+<table class="table">
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\textbf{Features} = [5.8, 1.7, 0 , 0 ]\)</span></td>
+<td><span class="math inline">\(\textbf{Label} = 1\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\textbf{Features} = [4.1, 0 , 2.5, 1.2]\)</span></td>
+<td><span class="math inline">\(\textbf{Label} = 0\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Their LIBSVM format-based representation is the following</p>
+<pre><code>1 1:5.8 2:1.7
+0 1:4.1 3:2.5 4:1.2</code></pre>
+<p>LIBSVM files can be loaded into DataFrames by combining the following methods</p>
+<ul>
+<li><code>read()</code></li>
+<li><code>format(&quot;libsvm&quot;)</code></li>
+<li><code>load(inputpath)</code></li>
+</ul>
+<p>The returned DataFrame has two columns:</p>
+<ul>
+<li>label: the double value associated with the label</li>
+<li>features: the sparse vector associated with the predictive features</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>spark.read.<span class="bu">format</span>(<span class="st">&quot;libsvm&quot;</span>).load(<span class="st">&quot;sample_libsvm_data.txt&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
 </section>
 
 </main>
