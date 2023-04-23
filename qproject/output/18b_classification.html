@@ -2627,7 +2627,17 @@ vertical-align: -.125em;
   <li><a href="#example-code" id="toc-example-code" class="nav-link" data-scroll-target="#example-code"><span class="toc-section-number">1.1.4</span>  Example code</a></li>
   </ul></li>
   <li><a href="#pipelines" id="toc-pipelines" class="nav-link" data-scroll-target="#pipelines"><span class="toc-section-number">1.2</span>  Pipelines</a></li>
+  <li><a href="#decision-trees-and-structured-data" id="toc-decision-trees-and-structured-data" class="nav-link" data-scroll-target="#decision-trees-and-structured-data"><span class="toc-section-number">1.3</span>  Decision trees and structured data</a></li>
   </ul></li>
+  <li><a href="#categorical-class-labels" id="toc-categorical-class-labels" class="nav-link" data-scroll-target="#categorical-class-labels"><span class="toc-section-number">2</span>  Categorical class labels</a>
+  <ul class="collapse">
+  <li><a href="#stringindexer-and-indextostring" id="toc-stringindexer-and-indextostring" class="nav-link" data-scroll-target="#stringindexer-and-indextostring"><span class="toc-section-number">2.1</span>  <code>StringIndexer</code> and <code>IndexToString</code></a>
+  <ul class="collapse">
+  <li><a href="#training-data-1" id="toc-training-data-1" class="nav-link" data-scroll-target="#training-data-1"><span class="toc-section-number">2.1.1</span>  Training data</a></li>
+  <li><a href="#unalabeled-data" id="toc-unalabeled-data" class="nav-link" data-scroll-target="#unalabeled-data"><span class="toc-section-number">2.1.2</span>  Unalabeled data</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#textual-data-management-and-classification" id="toc-textual-data-management-and-classification" class="nav-link" data-scroll-target="#textual-data-management-and-classification"><span class="toc-section-number">3</span>  Textual data management and classification</a></li>
   </ul>
 </nav>
 </div>
@@ -2988,7 +2998,587 @@ Example
 </section>
 <section id="pipelines" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="pipelines"><span class="header-section-number">1.2</span> Pipelines</h2>
+<p>In the previous solution the same preprocessing steps were applied on both training and unlabeled data (the same assembler on both input data). It is possible to use a pipeline to specify the common phases we apply on both input data sets.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">from</span> pyspark.mllib.linalg <span class="im">import</span> Vectors</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> VectorAssembler</span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="im">from</span> pyspark.ml.classification <span class="im">import</span> LogisticRegression</span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> Pipeline</span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> PipelineModel</span>
+<span id="cb4-6"><a href="#cb4-6"></a></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="co"># input and output folders</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a>trainingData <span class="op">=</span> <span class="st">&quot;ex_data/trainingData.csv&quot;</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a>unlabeledData <span class="op">=</span> <span class="st">&quot;ex_data/unlabeledData.csv&quot;</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a>outputPath <span class="op">=</span> <span class="st">&quot;predictionsLR/&quot;</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="co"># *************************</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="co"># Training step</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="co"># *************************</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="co"># Create a DataFrame from trainingData.csv</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="co"># Training data in raw format</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a>trainingData <span class="op">=</span> spark.read.load(</span>
+<span id="cb4-18"><a href="#cb4-18"></a>    trainingData,</span>
+<span id="cb4-19"><a href="#cb4-19"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>,</span>
+<span id="cb4-20"><a href="#cb4-20"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-21"><a href="#cb4-21"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb4-22"><a href="#cb4-22"></a>)</span>
+<span id="cb4-23"><a href="#cb4-23"></a></span>
+<span id="cb4-24"><a href="#cb4-24"></a><span class="co"># Define an assembler to create a column (features) of type Vector</span></span>
+<span id="cb4-25"><a href="#cb4-25"></a><span class="co"># containing the double values associated with columns attr1, attr2, attr3</span></span>
+<span id="cb4-26"><a href="#cb4-26"></a>assembler <span class="op">=</span> VectorAssembler(</span>
+<span id="cb4-27"><a href="#cb4-27"></a>    inputCols<span class="op">=</span>[<span class="st">&quot;attr1&quot;</span>,<span class="st">&quot;attr2&quot;</span>,<span class="st">&quot;attr3&quot;</span>],</span>
+<span id="cb4-28"><a href="#cb4-28"></a>    outputCol<span class="op">=</span><span class="st">&quot;features&quot;</span></span>
+<span id="cb4-29"><a href="#cb4-29"></a>)</span>
+<span id="cb4-30"><a href="#cb4-30"></a></span>
+<span id="cb4-31"><a href="#cb4-31"></a><span class="co"># Create a LogisticRegression object</span></span>
+<span id="cb4-32"><a href="#cb4-32"></a><span class="co"># LogisticRegression is an Estimator that is used to</span></span>
+<span id="cb4-33"><a href="#cb4-33"></a><span class="co"># create a classification model based on logistic regression.</span></span>
+<span id="cb4-34"><a href="#cb4-34"></a>lr <span class="op">=</span> LogisticRegression()</span>
+<span id="cb4-35"><a href="#cb4-35"></a></span>
+<span id="cb4-36"><a href="#cb4-36"></a><span class="co"># Set the values of the parameters of the</span></span>
+<span id="cb4-37"><a href="#cb4-37"></a><span class="co"># Logistic Regression algorithm using the setter methods.</span></span>
+<span id="cb4-38"><a href="#cb4-38"></a><span class="co"># There is one set method for each parameter</span></span>
+<span id="cb4-39"><a href="#cb4-39"></a><span class="co"># For example, we are setting the number of maximum iterations to 10</span></span>
+<span id="cb4-40"><a href="#cb4-40"></a><span class="co"># and the regularization parameter. to 0.0.1</span></span>
+<span id="cb4-41"><a href="#cb4-41"></a>lr.setMaxIter(<span class="dv">10</span>)</span>
+<span id="cb4-42"><a href="#cb4-42"></a>lr.setRegParam(<span class="fl">0.01</span>)</span>
+<span id="cb4-43"><a href="#cb4-43"></a></span>
+<span id="cb4-44"><a href="#cb4-44"></a><span class="co"># Define a pipeline that is used to create the logistic regression</span></span>
+<span id="cb4-45"><a href="#cb4-45"></a><span class="co"># model on the training data. The pipeline includes also</span></span>
+<span id="cb4-46"><a href="#cb4-46"></a><span class="co"># the preprocessing step</span></span>
+<span id="cb4-47"><a href="#cb4-47"></a>pipeline <span class="op">=</span> Pipeline().setStages([assembler, lr]) <span class="co"># &lt;1&gt;</span></span>
+<span id="cb4-48"><a href="#cb4-48"></a></span>
+<span id="cb4-49"><a href="#cb4-49"></a><span class="co"># Execute the pipeline on the training data to build the</span></span>
+<span id="cb4-50"><a href="#cb4-50"></a><span class="co"># classification model</span></span>
+<span id="cb4-51"><a href="#cb4-51"></a>classificationModel <span class="op">=</span> pipeline.fit(trainingData)</span>
+<span id="cb4-52"><a href="#cb4-52"></a></span>
+<span id="cb4-53"><a href="#cb4-53"></a><span class="co"># Now, the classification model can be used to predict the class label</span></span>
+<span id="cb4-54"><a href="#cb4-54"></a><span class="co"># of new unlabeled data</span></span>
+<span id="cb4-55"><a href="#cb4-55"></a></span>
+<span id="cb4-56"><a href="#cb4-56"></a><span class="co"># *************************</span></span>
+<span id="cb4-57"><a href="#cb4-57"></a><span class="co"># Prediction step</span></span>
+<span id="cb4-58"><a href="#cb4-58"></a><span class="co"># *************************</span></span>
+<span id="cb4-59"><a href="#cb4-59"></a><span class="co"># Create a DataFrame from unlabeledData.csv</span></span>
+<span id="cb4-60"><a href="#cb4-60"></a><span class="co"># Unlabeled data in raw format</span></span>
+<span id="cb4-61"><a href="#cb4-61"></a>unlabeledData <span class="op">=</span> spark.read.load(</span>
+<span id="cb4-62"><a href="#cb4-62"></a>    unlabeledData,</span>
+<span id="cb4-63"><a href="#cb4-63"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>,</span>
+<span id="cb4-64"><a href="#cb4-64"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-65"><a href="#cb4-65"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb4-66"><a href="#cb4-66"></a>)</span>
+<span id="cb4-67"><a href="#cb4-67"></a></span>
+<span id="cb4-68"><a href="#cb4-68"></a><span class="co"># Make predictions on the unlabled data using the transform() </span></span>
+<span id="cb4-69"><a href="#cb4-69"></a><span class="co"># method of the trained classification model transform uses only </span></span>
+<span id="cb4-70"><a href="#cb4-70"></a><span class="co"># the content of &#39;features&#39; to perform the predictions. The model </span></span>
+<span id="cb4-71"><a href="#cb4-71"></a><span class="co"># is associated with the pipeline and hence also the assembler is executed</span></span>
+<span id="cb4-72"><a href="#cb4-72"></a>predictions <span class="op">=</span> classificationModel.transform(unlabeledData)</span>
+<span id="cb4-73"><a href="#cb4-73"></a></span>
+<span id="cb4-74"><a href="#cb4-74"></a><span class="co"># The returned DataFrame has the following schema (attributes)</span></span>
+<span id="cb4-75"><a href="#cb4-75"></a><span class="co"># - attr1</span></span>
+<span id="cb4-76"><a href="#cb4-76"></a><span class="co"># - attr2</span></span>
+<span id="cb4-77"><a href="#cb4-77"></a><span class="co"># - attr3</span></span>
+<span id="cb4-78"><a href="#cb4-78"></a><span class="co"># - features: vector (values of the attributes)</span></span>
+<span id="cb4-79"><a href="#cb4-79"></a><span class="co"># - label: double (value of the class label)</span></span>
+<span id="cb4-80"><a href="#cb4-80"></a><span class="co"># - rawPrediction: vector (nullable = true)</span></span>
+<span id="cb4-81"><a href="#cb4-81"></a><span class="co"># - probability: vector (The i-th cell contains the probability that the current</span></span>
+<span id="cb4-82"><a href="#cb4-82"></a><span class="co"># record belongs to the i-th class</span></span>
+<span id="cb4-83"><a href="#cb4-83"></a><span class="co"># - prediction: double (the predicted class label)</span></span>
+<span id="cb4-84"><a href="#cb4-84"></a><span class="co"># Select only the original features (i.e., the value of the original attributes</span></span>
+<span id="cb4-85"><a href="#cb4-85"></a><span class="co"># attr1, attr2, attr3) and the predicted class for each record</span></span>
+<span id="cb4-86"><a href="#cb4-86"></a>predictions <span class="op">=</span> predictionsDF.select(<span class="st">&quot;attr1&quot;</span>,<span class="st">&quot;attr2&quot;</span>,<span class="st">&quot;attr3&quot;</span>,<span class="st">&quot;prediction&quot;</span>)</span>
+<span id="cb4-87"><a href="#cb4-87"></a></span>
+<span id="cb4-88"><a href="#cb4-88"></a><span class="co"># Save the result in an HDFS output folder</span></span>
+<span id="cb4-89"><a href="#cb4-89"></a>predictions.write.csv(outputPath, header<span class="op">=</span><span class="st">&quot;true&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol type="1">
+<li><code>assembler</code>: the sequence of transformers and estimators to apply on the input data</li>
+</ol>
+</div>
+</div>
+</div>
 </section>
+<section id="decision-trees-and-structured-data" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="decision-trees-and-structured-data"><span class="header-section-number">1.3</span> Decision trees and structured data</h2>
+<p>The following paragraphs show how to</p>
+<ul>
+<li>Create a classification model based on the decision tree algorithm on structured data: the model is inferred by analyzing the training data, i.e., the example records/data points for which the value of the class label is known;</li>
+<li>Apply the model to new unlabeled data: the inferred model is applied to predict the value of the class label of new unlabeled records/data points.</li>
+</ul>
+<p>The same example structured data already used in the running example related to the logistic regression algorithm are used also in this example related to the decision tree algorithm. The main steps are the same of the previous example, the only difference is the definition and configuration of the used classification algorithm.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">from</span> pyspark.mllib.linalg <span class="im">import</span> Vectors</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> VectorAssembler</span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="im">from</span> pyspark.ml.classification <span class="im">import</span> DecisionTreeClassifier</span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> Pipeline</span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> PipelineModel</span>
+<span id="cb5-6"><a href="#cb5-6"></a></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="co"># input and output folders</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a>trainingData <span class="op">=</span> <span class="st">&quot;ex_data/trainingData.csv&quot;</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a>unlabeledData <span class="op">=</span> <span class="st">&quot;ex_data/unlabeledData.csv&quot;</span></span>
+<span id="cb5-10"><a href="#cb5-10"></a>outputPath <span class="op">=</span> <span class="st">&quot;predictionsLR/&quot;</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a></span>
+<span id="cb5-12"><a href="#cb5-12"></a><span class="co"># *************************</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a><span class="co"># Training step</span></span>
+<span id="cb5-14"><a href="#cb5-14"></a><span class="co"># *************************</span></span>
+<span id="cb5-15"><a href="#cb5-15"></a><span class="co"># Create a DataFrame from trainingData.csv</span></span>
+<span id="cb5-16"><a href="#cb5-16"></a><span class="co"># Training data in raw format</span></span>
+<span id="cb5-17"><a href="#cb5-17"></a>trainingData <span class="op">=</span> spark.read.load(</span>
+<span id="cb5-18"><a href="#cb5-18"></a>    trainingData,</span>
+<span id="cb5-19"><a href="#cb5-19"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>,</span>
+<span id="cb5-20"><a href="#cb5-20"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb5-21"><a href="#cb5-21"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb5-22"><a href="#cb5-22"></a>)</span>
+<span id="cb5-23"><a href="#cb5-23"></a></span>
+<span id="cb5-24"><a href="#cb5-24"></a><span class="co"># Define an assembler to create a column (features) of type Vector</span></span>
+<span id="cb5-25"><a href="#cb5-25"></a><span class="co"># containing the double values associated with columns attr1, attr2, attr3</span></span>
+<span id="cb5-26"><a href="#cb5-26"></a>assembler <span class="op">=</span> VectorAssembler(</span>
+<span id="cb5-27"><a href="#cb5-27"></a>    inputCols<span class="op">=</span>[<span class="st">&quot;attr1&quot;</span>,<span class="st">&quot;attr2&quot;</span>,<span class="st">&quot;attr3&quot;</span>],</span>
+<span id="cb5-28"><a href="#cb5-28"></a>    outputCol<span class="op">=</span><span class="st">&quot;features&quot;</span></span>
+<span id="cb5-29"><a href="#cb5-29"></a>)</span>
+<span id="cb5-30"><a href="#cb5-30"></a></span>
+<span id="cb5-31"><a href="#cb5-31"></a><span class="co"># Create a DecisionTreeClassifier object.</span></span>
+<span id="cb5-32"><a href="#cb5-32"></a><span class="co"># DecisionTreeClassifier is an Estimator that is used to</span></span>
+<span id="cb5-33"><a href="#cb5-33"></a><span class="co"># create a classification model based on decision trees.</span></span>
+<span id="cb5-34"><a href="#cb5-34"></a>dt <span class="op">=</span> DecisionTreeClassifier()</span>
+<span id="cb5-35"><a href="#cb5-35"></a></span>
+<span id="cb5-36"><a href="#cb5-36"></a><span class="co"># We can set the values of the parameters of the Decision Tree</span></span>
+<span id="cb5-37"><a href="#cb5-37"></a><span class="co"># For example we can set the measure that is used to decide if a</span></span>
+<span id="cb5-38"><a href="#cb5-38"></a><span class="co"># node must be split. In this case we set gini index</span></span>
+<span id="cb5-39"><a href="#cb5-39"></a>dt.setImpurity(<span class="st">&quot;gini&quot;</span>)</span>
+<span id="cb5-40"><a href="#cb5-40"></a></span>
+<span id="cb5-41"><a href="#cb5-41"></a><span class="co"># Define a pipeline that is used to create the decision tree</span></span>
+<span id="cb5-42"><a href="#cb5-42"></a><span class="co"># model on the training data. The pipeline includes also</span></span>
+<span id="cb5-43"><a href="#cb5-43"></a><span class="co"># the preprocessing step</span></span>
+<span id="cb5-44"><a href="#cb5-44"></a>pipeline <span class="op">=</span> Pipeline().setStages([assembler, dt]) <span class="co"># &lt;1&gt;</span></span>
+<span id="cb5-45"><a href="#cb5-45"></a></span>
+<span id="cb5-46"><a href="#cb5-46"></a><span class="co"># Execute the pipeline on the training data to build the</span></span>
+<span id="cb5-47"><a href="#cb5-47"></a><span class="co"># classification model</span></span>
+<span id="cb5-48"><a href="#cb5-48"></a>classificationModel <span class="op">=</span> pipeline.fit(trainingData)</span>
+<span id="cb5-49"><a href="#cb5-49"></a></span>
+<span id="cb5-50"><a href="#cb5-50"></a><span class="co"># Now, the classification model can be used to predict the class label</span></span>
+<span id="cb5-51"><a href="#cb5-51"></a><span class="co"># of new unlabeled data</span></span>
+<span id="cb5-52"><a href="#cb5-52"></a></span>
+<span id="cb5-53"><a href="#cb5-53"></a><span class="co"># *************************</span></span>
+<span id="cb5-54"><a href="#cb5-54"></a><span class="co"># Prediction step</span></span>
+<span id="cb5-55"><a href="#cb5-55"></a><span class="co"># *************************</span></span>
+<span id="cb5-56"><a href="#cb5-56"></a><span class="co"># Create a DataFrame from unlabeledData.csv</span></span>
+<span id="cb5-57"><a href="#cb5-57"></a><span class="co"># Unlabeled data in raw format</span></span>
+<span id="cb5-58"><a href="#cb5-58"></a>unlabeledData <span class="op">=</span> spark.read.load(unlabeledData,<span class="op">\</span></span>
+<span id="cb5-59"><a href="#cb5-59"></a><span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>, header<span class="op">=</span><span class="va">True</span>, inferSchema<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-60"><a href="#cb5-60"></a></span>
+<span id="cb5-61"><a href="#cb5-61"></a><span class="co"># Make predictions on the unlabled data using the transform() method of the</span></span>
+<span id="cb5-62"><a href="#cb5-62"></a><span class="co"># trained classification model transform uses only the content of &#39;features&#39;</span></span>
+<span id="cb5-63"><a href="#cb5-63"></a><span class="co"># to perform the predictions. The model is associated with the pipeline and hence</span></span>
+<span id="cb5-64"><a href="#cb5-64"></a><span class="co"># also the assembler is executed</span></span>
+<span id="cb5-65"><a href="#cb5-65"></a>predictions <span class="op">=</span> classificationModel.transform(unlabeledData)</span>
+<span id="cb5-66"><a href="#cb5-66"></a></span>
+<span id="cb5-67"><a href="#cb5-67"></a><span class="co"># The returned DataFrame has the following schema (attributes)</span></span>
+<span id="cb5-68"><a href="#cb5-68"></a><span class="co"># - attr1</span></span>
+<span id="cb5-69"><a href="#cb5-69"></a><span class="co"># - attr2</span></span>
+<span id="cb5-70"><a href="#cb5-70"></a><span class="co"># - attr3</span></span>
+<span id="cb5-71"><a href="#cb5-71"></a><span class="co"># - features: vector (values of the attributes)</span></span>
+<span id="cb5-72"><a href="#cb5-72"></a><span class="co"># - label: double (value of the class label)</span></span>
+<span id="cb5-73"><a href="#cb5-73"></a><span class="co"># - rawPrediction: vector (nullable = true)</span></span>
+<span id="cb5-74"><a href="#cb5-74"></a><span class="co"># - probability: vector (The i-th cell contains the probability that the current</span></span>
+<span id="cb5-75"><a href="#cb5-75"></a><span class="co"># record belongs to the i-th class</span></span>
+<span id="cb5-76"><a href="#cb5-76"></a><span class="co"># - prediction: double (the predicted class label)</span></span>
+<span id="cb5-77"><a href="#cb5-77"></a><span class="co"># Select only the original features (i.e., the value of the original attributes</span></span>
+<span id="cb5-78"><a href="#cb5-78"></a><span class="co"># attr1, attr2, attr3) and the predicted class for each record</span></span>
+<span id="cb5-79"><a href="#cb5-79"></a>predictions <span class="op">=</span> predictionsDF.select(<span class="st">&quot;attr1&quot;</span>,<span class="st">&quot;attr2&quot;</span>,<span class="st">&quot;attr3&quot;</span>,<span class="st">&quot;prediction&quot;</span>)</span>
+<span id="cb5-80"><a href="#cb5-80"></a></span>
+<span id="cb5-81"><a href="#cb5-81"></a><span class="co"># Save the result in an HDFS output folder</span></span>
+<span id="cb5-82"><a href="#cb5-82"></a>predictions.write.csv(outputPath, header<span class="op">=</span><span class="st">&quot;true&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol type="1">
+<li><code>assembler</code>: the sequence of transformers and estimators to apply on the input data. A decision tree algorithm is used in this case.</li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="categorical-class-labels" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Categorical class labels</h1>
+<p>Usually the class label is a categorical value (i.e., a string). However, as reported before, Spark MLlib works only with numerical values and hence categorical class label values must be mapped to integer (and then double) values: processing and postprocessing steps are used to manage this transformation.</p>
+<p>Consider the following input training data</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>categoricalLabel</th>
+<th>Attr1</th>
+<th>Attr2</th>
+<th>Attr3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Positive</td>
+<td><span class="math inline">\(0.0\)</span></td>
+<td><span class="math inline">\(1.1\)</span></td>
+<td><span class="math inline">\(0.1\)</span></td>
+</tr>
+<tr class="even">
+<td>Negative</td>
+<td><span class="math inline">\(2.0\)</span></td>
+<td><span class="math inline">\(1.0\)</span></td>
+<td><span class="math inline">\(-1.0\)</span></td>
+</tr>
+<tr class="odd">
+<td>Negative</td>
+<td><span class="math inline">\(2.0\)</span></td>
+<td><span class="math inline">\(1.3\)</span></td>
+<td><span class="math inline">\(1.0\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>A modified input DataFrame must be generated as input for the MLlib classification algorithms</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>label</th>
+<th>features</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(1.0\)</span></td>
+<td><span class="math inline">\([0.0,1.1,0.1]\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(1.0\)</span></td>
+<td><span class="math inline">\([2.0,1.0,-1.0]\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(0.0\)</span></td>
+<td><span class="math inline">\([2.0,1.3,1.0]\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Notice that the categorical values of “categoricalLabel” (the class label column) must mapped to integer data values (finally casted to doubles).</p>
+<section id="stringindexer-and-indextostring" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="stringindexer-and-indextostring"><span class="header-section-number">2.1</span> <code>StringIndexer</code> and <code>IndexToString</code></h2>
+<p>The Estimator <code>StringIndexer</code> and the Transformer <code>IndexToString</code> support the transformation of categorical class label into numerical one and vice versa:</p>
+<ul>
+<li><code>StringIndexer</code> maps each categorical value of the class label to an integer (then casted to a double);</li>
+<li><code>IndexToString</code> is used to perform the opposite operation.</li>
+</ul>
+<p>All in all, these are the main steps</p>
+<ol type="1">
+<li>Use <code>StringIndexer</code> to extend the input DataFrame with a new column, called “label”, containing the numerical representation of the class label column;</li>
+<li>Create a column, called “features”, of type vector containing the predictive features;</li>
+<li>Infer a classification model by using a classification algorithm (e.g., Decision Tree, Logistic regression);</li>
+<li>Apply the model on a set of unlabeled data to predict their numerical class label;</li>
+<li>Use <code>IndexToString</code> to convert the predicted numerical class label values to the original categorical values.</li>
+</ol>
+<p>Notice that the model is built by considering only the values of features and label. All the other columns are not considered by the classification algorithm during the generation of the prediction model.</p>
+<section id="training-data-1" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="training-data-1"><span class="header-section-number">2.1.1</span> Training data</h3>
+<p>Given the following input training file</p>
+<pre><code>categoricalLabel,attr1,attr2,attr3
+Positive,0.0,1.1,0.1
+Negative,2.0,1.0,-1.0
+Negative,2.0,1.3,1.0</code></pre>
+<p>The initial training DataFrame will be</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>categoricalLabel</th>
+<th>features</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Positive</td>
+<td><span class="math inline">\([0.0,1.1,0.1]\)</span></td>
+</tr>
+<tr class="even">
+<td>Negative</td>
+<td><span class="math inline">\([2.0,1.0,-1.0]\)</span></td>
+</tr>
+<tr class="odd">
+<td>Negative</td>
+<td><span class="math inline">\([2.0,1.3,1.0]\)</span></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>The type of “categoricalLabel” is String</li>
+<li>The type of “features” is Vector</li>
+</ul>
+<p>After applying <code>StringIndexer</code>, the training DataFrame will be</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>categoricalLabel</th>
+<th>features</th>
+<th>label!</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Positive</td>
+<td><span class="math inline">\([0.0,1.1,0.1]\)</span></td>
+<td><span class="math inline">\(1.0\)</span></td>
+</tr>
+<tr class="even">
+<td>Negative</td>
+<td><span class="math inline">\([2.0,1.0,-1.0]\)</span></td>
+<td><span class="math inline">\(0.0\)</span></td>
+</tr>
+<tr class="odd">
+<td>Negative</td>
+<td><span class="math inline">\([2.0,1.3,1.0]\)</span></td>
+<td><span class="math inline">\(0.0\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>“label” contains the mapping generated by <code>StringIndexer</code>:</p>
+<ul>
+<li>“Positive”: <span class="math inline">\(1.0\)</span></li>
+<li>“Negative”: <span class="math inline">\(0.0\)</span></li>
+</ul>
+</section>
+<section id="unalabeled-data" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="unalabeled-data"><span class="header-section-number">2.1.2</span> Unalabeled data</h3>
+<p>Given the input unlabeled data file</p>
+<pre><code>categoricalLabel,attr1,attr2,attr3
+,-1.0,1.5,1.3
+,3.0,2.0,-0.1
+,0.0,2.2,-1.5</code></pre>
+<p>The initial unlabeled DataFrame will be</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>categoricalLabel</th>
+<th>features</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>null</td>
+<td><span class="math inline">\([-1.0,1.5,1.3]\)</span></td>
+</tr>
+<tr class="even">
+<td>null</td>
+<td><span class="math inline">\([3.0,2.0,-0.1]\)</span></td>
+</tr>
+<tr class="odd">
+<td>null</td>
+<td><span class="math inline">\([0.0,2.2,-1.5]\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>After performing the prediction, and applying <code>IndexToString</code>, the output DataFrame will be</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>categoricalLabel</th>
+<th>features</th>
+<th>label</th>
+<th>prediction</th>
+<th>predictedLabel</th>
+<th>…</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>…</td>
+<td><span class="math inline">\([-1.0,1.5,1.3]\)</span></td>
+<td>…</td>
+<td><span class="math inline">\(1.0\)</span></td>
+<td>Positive</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td><span class="math inline">\([3.0,2.0,-0.1]\)</span></td>
+<td>…</td>
+<td><span class="math inline">\(0.0\)</span></td>
+<td>Negative</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td><span class="math inline">\([0.0,2.2,-1.5]\)</span></td>
+<td>…</td>
+<td><span class="math inline">\(1.0\)</span></td>
+<td>Negative</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>“prediction” contains the predicted label, expressed as a number</li>
+<li>“predictedLabel” contains the predicted label, expressed as a category (original name)</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In this example, the input training data is stored in a text file that contains one record/data point per line, and the records/data points are structured data with a fixed number of attributes (four)</p>
+<ul>
+<li>One attribute is the class label (categoricalLabel): this is a categorical attribute that can assume two values, “Positive” or “Negative”;</li>
+<li>The other three attributes (“attr1”, “attr2”, “attr3”) are the predictive attributes that are used to predict the value of the class label.</li>
+</ul>
+<p>The input file has the header line.</p>
+<p>The file containing the unlabeled data has the same format of the training data file, however the first column is empty because the class label is unknown.</p>
+<p>The goal is to predict the class label value of each unlabeled data by applying the classification model that has been inferred on the training data.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="im">from</span> pyspark.mllib.linalg <span class="im">import</span> Vectors</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> VectorAssembler</span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> StringIndexer</span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> IndexToString</span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="im">from</span> pyspark.ml.classification <span class="im">import</span> DecisionTreeClassifier</span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> Pipeline</span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> PipelineModel</span>
+<span id="cb8-8"><a href="#cb8-8"></a></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="co"># input and output folders</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a>trainingData <span class="op">=</span> <span class="st">&quot;ex_dataCategorical/trainingData.csv&quot;</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a>unlabeledData <span class="op">=</span> <span class="st">&quot;ex_dataCategorical/unlabeledData.csv&quot;</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a>outputPath <span class="op">=</span> <span class="st">&quot;predictionsDTCategoricalPipeline/&quot;</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a></span>
+<span id="cb8-14"><a href="#cb8-14"></a><span class="co"># *************************</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a><span class="co"># Training step</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a><span class="co"># *************************</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a></span>
+<span id="cb8-18"><a href="#cb8-18"></a><span class="co"># Create a DataFrame from trainingData.csv</span></span>
+<span id="cb8-19"><a href="#cb8-19"></a><span class="co"># Training data in raw format</span></span>
+<span id="cb8-20"><a href="#cb8-20"></a>trainingData <span class="op">=</span> spark.read.load(trainingData,<span class="op">\</span></span>
+<span id="cb8-21"><a href="#cb8-21"></a><span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>, header<span class="op">=</span><span class="va">True</span>, inferSchema<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-22"><a href="#cb8-22"></a></span>
+<span id="cb8-23"><a href="#cb8-23"></a><span class="co"># Define an assembler to create a column (features) of type Vector</span></span>
+<span id="cb8-24"><a href="#cb8-24"></a><span class="co"># containing the double values associated with columns attr1, attr2, attr3</span></span>
+<span id="cb8-25"><a href="#cb8-25"></a>assembler <span class="op">=</span> VectorAssembler(</span>
+<span id="cb8-26"><a href="#cb8-26"></a>    inputCols<span class="op">=</span>[<span class="st">&quot;attr1&quot;</span>,<span class="st">&quot;attr2&quot;</span>,<span class="st">&quot;attr3&quot;</span>],</span>
+<span id="cb8-27"><a href="#cb8-27"></a>    outputCol<span class="op">=</span><span class="st">&quot;features&quot;</span></span>
+<span id="cb8-28"><a href="#cb8-28"></a>)</span>
+<span id="cb8-29"><a href="#cb8-29"></a></span>
+<span id="cb8-30"><a href="#cb8-30"></a><span class="co"># The StringIndexer Estimator is used to map each class label</span></span>
+<span id="cb8-31"><a href="#cb8-31"></a><span class="co"># value to an integer value (casted to a double).</span></span>
+<span id="cb8-32"><a href="#cb8-32"></a><span class="co"># A new attribute called label is generated by applying</span></span>
+<span id="cb8-33"><a href="#cb8-33"></a><span class="co"># transforming the content of the categoricalLabel attribute.</span></span>
+<span id="cb8-34"><a href="#cb8-34"></a>labelIndexer <span class="op">=</span> StringIndexer( <span class="co"># &lt;1&gt;</span></span>
+<span id="cb8-35"><a href="#cb8-35"></a>    inputCol<span class="op">=</span><span class="st">&quot;categoricalLabel&quot;</span></span>
+<span id="cb8-36"><a href="#cb8-36"></a>    outputCol<span class="op">=</span><span class="st">&quot;label&quot;</span>,</span>
+<span id="cb8-37"><a href="#cb8-37"></a>    handleInvalid<span class="op">=</span><span class="st">&quot;keep&quot;</span></span>
+<span id="cb8-38"><a href="#cb8-38"></a>).fit(trainingData) </span>
+<span id="cb8-39"><a href="#cb8-39"></a></span>
+<span id="cb8-40"><a href="#cb8-40"></a><span class="co"># Create a DecisionTreeClassifier object.</span></span>
+<span id="cb8-41"><a href="#cb8-41"></a><span class="co"># DecisionTreeClassifier is an Estimator that is used to</span></span>
+<span id="cb8-42"><a href="#cb8-42"></a><span class="co"># create a classification model based on decision trees.</span></span>
+<span id="cb8-43"><a href="#cb8-43"></a>dt <span class="op">=</span> DecisionTreeClassifier()</span>
+<span id="cb8-44"><a href="#cb8-44"></a></span>
+<span id="cb8-45"><a href="#cb8-45"></a><span class="co"># Set the values of the parameters of the Decision Tree</span></span>
+<span id="cb8-46"><a href="#cb8-46"></a><span class="co"># For example set the measure that is used to decide if a</span></span>
+<span id="cb8-47"><a href="#cb8-47"></a><span class="co"># node must be split.</span></span>
+<span id="cb8-48"><a href="#cb8-48"></a><span class="co"># In this case we set gini index</span></span>
+<span id="cb8-49"><a href="#cb8-49"></a>dt.setImpurity(<span class="st">&quot;gini&quot;</span>)</span>
+<span id="cb8-50"><a href="#cb8-50"></a></span>
+<span id="cb8-51"><a href="#cb8-51"></a><span class="co"># At the end of the pipeline we must convert indexed labels back</span></span>
+<span id="cb8-52"><a href="#cb8-52"></a><span class="co"># to original labels (from numerical to string).</span></span>
+<span id="cb8-53"><a href="#cb8-53"></a><span class="co"># The content of the prediction attribute is the index of the predicted class</span></span>
+<span id="cb8-54"><a href="#cb8-54"></a><span class="co"># The original name of the predicted class is stored in the predictedLabel</span></span>
+<span id="cb8-55"><a href="#cb8-55"></a><span class="co"># attribute.</span></span>
+<span id="cb8-56"><a href="#cb8-56"></a><span class="co"># IndexToString creates a new column (called predictedLabel in</span></span>
+<span id="cb8-57"><a href="#cb8-57"></a><span class="co"># this example) that is based on the content of the prediction column.</span></span>
+<span id="cb8-58"><a href="#cb8-58"></a><span class="co"># prediction is a double while predictedLabel is a string</span></span>
+<span id="cb8-59"><a href="#cb8-59"></a>labelConverter <span class="op">=</span> IndexToString( <span class="co"># &lt;2&gt;</span></span>
+<span id="cb8-60"><a href="#cb8-60"></a>    inputCol<span class="op">=</span><span class="st">&quot;prediction&quot;</span>,</span>
+<span id="cb8-61"><a href="#cb8-61"></a>    outputCol<span class="op">=</span><span class="st">&quot;predictedLabel&quot;</span>,</span>
+<span id="cb8-62"><a href="#cb8-62"></a>    labels<span class="op">=</span>labelIndexer.labels</span>
+<span id="cb8-63"><a href="#cb8-63"></a>)</span>
+<span id="cb8-64"><a href="#cb8-64"></a></span>
+<span id="cb8-65"><a href="#cb8-65"></a><span class="co"># Define a pipeline that is used to create the decision tree</span></span>
+<span id="cb8-66"><a href="#cb8-66"></a><span class="co"># model on the training data. The pipeline includes also</span></span>
+<span id="cb8-67"><a href="#cb8-67"></a><span class="co"># the preprocessing and postprocessing steps</span></span>
+<span id="cb8-68"><a href="#cb8-68"></a>pipeline <span class="op">=</span> Pipeline() \ </span>
+<span id="cb8-69"><a href="#cb8-69"></a>    .setStages([assembler, labelIndexer, dt, labelConverter]) <span class="co"># &lt;3&gt;</span></span>
+<span id="cb8-70"><a href="#cb8-70"></a></span>
+<span id="cb8-71"><a href="#cb8-71"></a><span class="co"># Execute the pipeline on the training data to build the</span></span>
+<span id="cb8-72"><a href="#cb8-72"></a><span class="co"># classification model</span></span>
+<span id="cb8-73"><a href="#cb8-73"></a>classificationModel <span class="op">=</span> pipeline.fit(trainingData)</span>
+<span id="cb8-74"><a href="#cb8-74"></a></span>
+<span id="cb8-75"><a href="#cb8-75"></a><span class="co"># Now, the classification model can be used to predict the class label</span></span>
+<span id="cb8-76"><a href="#cb8-76"></a><span class="co"># of new unlabeled data</span></span>
+<span id="cb8-77"><a href="#cb8-77"></a></span>
+<span id="cb8-78"><a href="#cb8-78"></a><span class="co"># *************************</span></span>
+<span id="cb8-79"><a href="#cb8-79"></a><span class="co"># Prediction step</span></span>
+<span id="cb8-80"><a href="#cb8-80"></a><span class="co"># *************************</span></span>
+<span id="cb8-81"><a href="#cb8-81"></a><span class="co"># Create a DataFrame from unlabeledData.csv</span></span>
+<span id="cb8-82"><a href="#cb8-82"></a><span class="co"># Unlabeled data in raw format</span></span>
+<span id="cb8-83"><a href="#cb8-83"></a>unlabeledData <span class="op">=</span> spark.read.load(</span>
+<span id="cb8-84"><a href="#cb8-84"></a>    unlabeledData,</span>
+<span id="cb8-85"><a href="#cb8-85"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>,</span>
+<span id="cb8-86"><a href="#cb8-86"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb8-87"><a href="#cb8-87"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb8-88"><a href="#cb8-88"></a>)</span>
+<span id="cb8-89"><a href="#cb8-89"></a></span>
+<span id="cb8-90"><a href="#cb8-90"></a><span class="co"># Make predictions on the unlabled data using the transform() method of the</span></span>
+<span id="cb8-91"><a href="#cb8-91"></a><span class="co"># trained classification model transform uses only the content of &#39;features&#39;</span></span>
+<span id="cb8-92"><a href="#cb8-92"></a><span class="co"># to perform the predictions. The model is associated with the pipeline and hence</span></span>
+<span id="cb8-93"><a href="#cb8-93"></a><span class="co"># also the assembler is executed</span></span>
+<span id="cb8-94"><a href="#cb8-94"></a>predictions <span class="op">=</span> classificationModel.transform(unlabeledData)</span>
+<span id="cb8-95"><a href="#cb8-95"></a></span>
+<span id="cb8-96"><a href="#cb8-96"></a><span class="co"># The returned DataFrame has the following schema (attributes)</span></span>
+<span id="cb8-97"><a href="#cb8-97"></a><span class="co"># - attr1: double (nullable = true)</span></span>
+<span id="cb8-98"><a href="#cb8-98"></a><span class="co"># - attr2: double (nullable = true)</span></span>
+<span id="cb8-99"><a href="#cb8-99"></a><span class="co"># - attr3: double (nullable = true)</span></span>
+<span id="cb8-100"><a href="#cb8-100"></a><span class="co"># - features: vector (values of the attributes)</span></span>
+<span id="cb8-101"><a href="#cb8-101"></a><span class="co"># - label: double (value of the class label)</span></span>
+<span id="cb8-102"><a href="#cb8-102"></a><span class="co"># - rawPrediction: vector (nullable = true)</span></span>
+<span id="cb8-103"><a href="#cb8-103"></a><span class="co"># - probability: vector (The i-th cell contains the probability that the</span></span>
+<span id="cb8-104"><a href="#cb8-104"></a><span class="co">#   current record belongs to the i-th class</span></span>
+<span id="cb8-105"><a href="#cb8-105"></a><span class="co"># - prediction: double (the predicted class label)</span></span>
+<span id="cb8-106"><a href="#cb8-106"></a><span class="co"># - predictedLabel: string (nullable = true)</span></span>
+<span id="cb8-107"><a href="#cb8-107"></a></span>
+<span id="cb8-108"><a href="#cb8-108"></a><span class="co"># Select only the original features (i.e., the value of the original attributes</span></span>
+<span id="cb8-109"><a href="#cb8-109"></a><span class="co"># attr1, attr2, attr3) and the predicted class for each record</span></span>
+<span id="cb8-110"><a href="#cb8-110"></a>predictions <span class="op">=</span> predictionsDF <span class="op">\</span></span>
+<span id="cb8-111"><a href="#cb8-111"></a>    .select(<span class="st">&quot;attr1&quot;</span>, <span class="st">&quot;attr2&quot;</span>, <span class="st">&quot;attr3&quot;</span>, <span class="st">&quot;predictedLabel&quot;</span>) <span class="co"># &lt;4&gt;</span></span>
+<span id="cb8-112"><a href="#cb8-112"></a></span>
+<span id="cb8-113"><a href="#cb8-113"></a><span class="co"># Save the result in an HDFS output folder</span></span>
+<span id="cb8-114"><a href="#cb8-114"></a>predictions.write.csv(outputPath, header<span class="op">=</span><span class="st">&quot;true&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol type="1">
+<li>This <code>StringIndexer</code> estimator is used to infer a transformer that maps the categorical values of column “categoricalLabel” to a set of integer values stored in the new column called “label”. The list of valid label values are extracted from the training data.</li>
+<li>This <code>IndexToString</code> component is used to remap the numerical predictions available in the “prediction” column to the original categorical values that are stored in the new column called “predictedLabel”. The mapping of integer to original string value is the one of “labelIndexer”.</li>
+<li>This <code>Pipeline</code> is composed of four steps.</li>
+<li>The “predictedLabel” field is the column containing the predicted categorical class label for the unlabeled data.</li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="textual-data-management-and-classification" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Textual data management and classification</h1>
 </section>
 
 </main>
