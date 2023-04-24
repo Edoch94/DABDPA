@@ -1,0 +1,52 @@
+---
+title: "Graph analytics in Spark"
+---
+
+# Introduction
+Graphs are data structures composed of nodes and edges
+
+- nodes/vertexes are denoted as $V=\{v_1,v_2,...,v_n\}$
+- edges are denoted as $E=\{e_1,e_2,...,e_n\}$
+
+Graph analytics is the process of analyzing relationships between vertexes and edges.
+
+![Example of graph](images/19_graph_analytics/graph_example.png){width=80%}
+
+Graphs are called **undirected** if edges do not have a direction, otherwise they are called **directed** graphs. Vertexes and edges can have data associated with them
+
+- weights are associated to edges (e.g., they may represent the strength of the relationship);
+- labels are associated to vertexes (e.g., they may be the string associated with the name of the vertex).
+
+![Graph with labels and weights](images/19_graph_analytics/labels_weights_example.png){width=80%}
+
+:::{.callout-tip}
+## Why graph analytics?
+Graphs are natural way of describing relationships. Some practical example of analytics over graphs
+
+- Ranking web pages (Google PageRank)
+
+![Pages in the web](images/19_graph_analytics/rank_pages_example.png){width=80%}
+
+- Detecting group of friends
+
+![Social networks](images/19_graph_analytics/social_network_example.png){width=80%}
+
+![Movies watched by users](images/19_graph_analytics/movies_watched_example.png){width=80%}
+
+- Determine importance of infrastructure in electrical networks
+- ...
+
+:::
+
+# Spark GraphX and GraphFrames
+## GraphX
+GraphX is the Spark RDD-based library for performing graph processing. It is a core part of Spark.
+
+![Spark core libraries](images/19_graph_analytics/spark_core.png){width=80%}
+
+GraphX
+
+- is low level interface with RDD
+- is very powerful: many application and libraries built on top of it
+- is not easy to use or optimize
+- has no Python version of the APIs
