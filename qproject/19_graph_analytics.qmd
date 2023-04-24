@@ -39,7 +39,6 @@ Graphs are natural way of describing relationships. Some practical example of an
 :::
 
 # Spark GraphX and GraphFrames
-## GraphX
 GraphX is the Spark RDD-based library for performing graph processing. It is a core part of Spark.
 
 ![Spark core libraries](images/19_graph_analytics/spark_core.png){width=80%}
@@ -50,3 +49,99 @@ GraphX
 - is very powerful: many application and libraries built on top of it
 - is not easy to use or optimize
 - has no Python version of the APIs
+
+[GraphFrames](https://graphframes.github.io/graphframes/docs/_site/index.html) is a library DataFrame-based for performing graph processing. It is a Spark external package built on top of GraphX.
+
+![GraphFrame structure](images/19_graph_analytics/graphframes_structure.png){width=80%}
+
+# Building and querying graphs with GraphFrames
+## Building a Graph
+Define vertexes and edges of the graph: vertexes and edges are represented by means of records inside DataFrames with specifically named columns
+
+- One DataFrame for the definition of the vertexes of the graph. The DataFrames that are used to represent nodes/vertexes
+    - Contain one record per vertex
+    - Must contain a column named "id" that stores unique vertex IDs
+    - Can contain other columns that are used to characterize vertexes
+- One DataFrame for the definition of the edges of the graph. The DataFrames that are used to represent edges
+    - Contain one record per edge
+    - Must contain two columns "src" and "dst" storing source vertex IDs and destination vertex IDs of edges
+    - Can contain other columns that are used to characterize edges
+
+Create a graph of type `graphframes.graphframe.GraphFrame` by invoking the constructor `GraphFrame(v,e)`
+
+- `v`: the DataFrame containing the definition of the vertexes
+- `e`: the DataFrame containing the definition of the edges
+
+Graphs in graphframes are directed graphs.
+
+![Building a graph example](images/19_graph_analytics/building_graph_example.png){width=80%}
+
+:::{.callout-note collapse="true"}
+## Example
+
+Given this Vertex DataFrame
+
+|id|name|age|
+|-|-|-|
+|u1|Alice|34|
+|u2|Bob|36|
+|u3|Charlie|30|
+|u4|David|29|
+|u5|Esther|32|
+|u6|Fanny|36|
+|u7|Gabby|60|
+
+And this Edge DataFrame
+
+
+|src|dst|relationship|
+|-|-|-|
+|u1|u2|friend|
+|u2|u3|follow|
+|u3|u2|follow|
+|u6|u3|follow|
+|u5|u6|follow|
+|u5|u4|friend|
+|u4|u1|friend|
+|u1|u5|friend|
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+```
+
+:::
+
+## Directed vs undirected edges
+In undirected graphs the edges indicate a two-way relationship (each edge can be traversed in both directions). In GraphX it is possible to use `to_undirected()` to create an undirected copy of the Graph. Unfortunately GraphFrames does not support it: it is possible to convert a graph by applying a flatMap function over the edges of the directed graph that creates symmetric edges and then create a new GraphFrame.
