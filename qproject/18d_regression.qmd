@@ -31,6 +31,7 @@ The input dataset is a structured dataset with a fixed number of attributes
 - The others are predictive attributes that are used to predict the value of the target attribute.
 
 :::{.callout-note collapse="true"}
+## Example
 Consider the following example file
 
 ```
