@@ -3038,71 +3038,74 @@ Example
 <span id="cb4-22"><a href="#cb4-22"></a>)</span>
 <span id="cb4-23"><a href="#cb4-23"></a></span>
 <span id="cb4-24"><a href="#cb4-24"></a><span class="co"># Define an assembler to create a column (features) of type Vector</span></span>
-<span id="cb4-25"><a href="#cb4-25"></a><span class="co"># containing the double values associated with columns attr1, attr2, attr3</span></span>
-<span id="cb4-26"><a href="#cb4-26"></a>assembler <span class="op">=</span> VectorAssembler(</span>
-<span id="cb4-27"><a href="#cb4-27"></a>    inputCols<span class="op">=</span>[<span class="st">&quot;attr1&quot;</span>,<span class="st">&quot;attr2&quot;</span>,<span class="st">&quot;attr3&quot;</span>],</span>
-<span id="cb4-28"><a href="#cb4-28"></a>    outputCol<span class="op">=</span><span class="st">&quot;features&quot;</span></span>
-<span id="cb4-29"><a href="#cb4-29"></a>)</span>
-<span id="cb4-30"><a href="#cb4-30"></a></span>
-<span id="cb4-31"><a href="#cb4-31"></a><span class="co"># Create a LogisticRegression object</span></span>
-<span id="cb4-32"><a href="#cb4-32"></a><span class="co"># LogisticRegression is an Estimator that is used to</span></span>
-<span id="cb4-33"><a href="#cb4-33"></a><span class="co"># create a classification model based on logistic regression.</span></span>
-<span id="cb4-34"><a href="#cb4-34"></a>lr <span class="op">=</span> LogisticRegression()</span>
-<span id="cb4-35"><a href="#cb4-35"></a></span>
-<span id="cb4-36"><a href="#cb4-36"></a><span class="co"># Set the values of the parameters of the</span></span>
-<span id="cb4-37"><a href="#cb4-37"></a><span class="co"># Logistic Regression algorithm using the setter methods.</span></span>
-<span id="cb4-38"><a href="#cb4-38"></a><span class="co"># There is one set method for each parameter</span></span>
-<span id="cb4-39"><a href="#cb4-39"></a><span class="co"># For example, we are setting the number of maximum iterations to 10</span></span>
-<span id="cb4-40"><a href="#cb4-40"></a><span class="co"># and the regularization parameter to 0.01</span></span>
-<span id="cb4-41"><a href="#cb4-41"></a>lr.setMaxIter(<span class="dv">10</span>)</span>
-<span id="cb4-42"><a href="#cb4-42"></a>lr.setRegParam(<span class="fl">0.01</span>)</span>
-<span id="cb4-43"><a href="#cb4-43"></a></span>
-<span id="cb4-44"><a href="#cb4-44"></a><span class="co"># Define a pipeline that is used to create the logistic regression</span></span>
-<span id="cb4-45"><a href="#cb4-45"></a><span class="co"># model on the training data. The pipeline includes also</span></span>
-<span id="cb4-46"><a href="#cb4-46"></a><span class="co"># the preprocessing step</span></span>
-<span id="cb4-47"><a href="#cb4-47"></a>pipeline <span class="op">=</span> Pipeline().setStages([assembler, lr]) <span class="co"># &lt;1&gt;</span></span>
-<span id="cb4-48"><a href="#cb4-48"></a></span>
-<span id="cb4-49"><a href="#cb4-49"></a><span class="co"># Execute the pipeline on the training data to build the</span></span>
-<span id="cb4-50"><a href="#cb4-50"></a><span class="co"># classification model</span></span>
-<span id="cb4-51"><a href="#cb4-51"></a>classificationModel <span class="op">=</span> pipeline.fit(trainingData)</span>
-<span id="cb4-52"><a href="#cb4-52"></a></span>
-<span id="cb4-53"><a href="#cb4-53"></a><span class="co"># Now, the classification model can be used to predict the class label</span></span>
-<span id="cb4-54"><a href="#cb4-54"></a><span class="co"># of new unlabeled data</span></span>
-<span id="cb4-55"><a href="#cb4-55"></a></span>
-<span id="cb4-56"><a href="#cb4-56"></a><span class="co"># *************************</span></span>
-<span id="cb4-57"><a href="#cb4-57"></a><span class="co"># Prediction step</span></span>
-<span id="cb4-58"><a href="#cb4-58"></a><span class="co"># *************************</span></span>
-<span id="cb4-59"><a href="#cb4-59"></a><span class="co"># Create a DataFrame from unlabeledData.csv</span></span>
-<span id="cb4-60"><a href="#cb4-60"></a><span class="co"># Unlabeled data in raw format</span></span>
-<span id="cb4-61"><a href="#cb4-61"></a>unlabeledData <span class="op">=</span> spark.read.load(</span>
-<span id="cb4-62"><a href="#cb4-62"></a>    unlabeledData,</span>
-<span id="cb4-63"><a href="#cb4-63"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>,</span>
-<span id="cb4-64"><a href="#cb4-64"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb4-65"><a href="#cb4-65"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
-<span id="cb4-66"><a href="#cb4-66"></a>)</span>
-<span id="cb4-67"><a href="#cb4-67"></a></span>
-<span id="cb4-68"><a href="#cb4-68"></a><span class="co"># Make predictions on the unlabled data using the transform() </span></span>
-<span id="cb4-69"><a href="#cb4-69"></a><span class="co"># method of the trained classification model transform uses only </span></span>
-<span id="cb4-70"><a href="#cb4-70"></a><span class="co"># the content of &#39;features&#39; to perform the predictions. The model </span></span>
-<span id="cb4-71"><a href="#cb4-71"></a><span class="co"># is associated with the pipeline and hence also the assembler is executed</span></span>
-<span id="cb4-72"><a href="#cb4-72"></a>predictions <span class="op">=</span> classificationModel.transform(unlabeledData)</span>
-<span id="cb4-73"><a href="#cb4-73"></a></span>
-<span id="cb4-74"><a href="#cb4-74"></a><span class="co"># The returned DataFrame has the following schema (attributes)</span></span>
-<span id="cb4-75"><a href="#cb4-75"></a><span class="co"># - attr1</span></span>
-<span id="cb4-76"><a href="#cb4-76"></a><span class="co"># - attr2</span></span>
-<span id="cb4-77"><a href="#cb4-77"></a><span class="co"># - attr3</span></span>
-<span id="cb4-78"><a href="#cb4-78"></a><span class="co"># - features: vector (values of the attributes)</span></span>
-<span id="cb4-79"><a href="#cb4-79"></a><span class="co"># - label: double (value of the class label)</span></span>
-<span id="cb4-80"><a href="#cb4-80"></a><span class="co"># - rawPrediction: vector (nullable = true)</span></span>
-<span id="cb4-81"><a href="#cb4-81"></a><span class="co"># - probability: vector (The i-th cell contains the probability that the current</span></span>
-<span id="cb4-82"><a href="#cb4-82"></a><span class="co"># record belongs to the i-th class</span></span>
-<span id="cb4-83"><a href="#cb4-83"></a><span class="co"># - prediction: double (the predicted class label)</span></span>
-<span id="cb4-84"><a href="#cb4-84"></a><span class="co"># Select only the original features (i.e., the value of the original attributes</span></span>
-<span id="cb4-85"><a href="#cb4-85"></a><span class="co"># attr1, attr2, attr3) and the predicted class for each record</span></span>
-<span id="cb4-86"><a href="#cb4-86"></a>predictions <span class="op">=</span> predictionsDF.select(<span class="st">&quot;attr1&quot;</span>,<span class="st">&quot;attr2&quot;</span>,<span class="st">&quot;attr3&quot;</span>,<span class="st">&quot;prediction&quot;</span>)</span>
-<span id="cb4-87"><a href="#cb4-87"></a></span>
-<span id="cb4-88"><a href="#cb4-88"></a><span class="co"># Save the result in an HDFS output folder</span></span>
-<span id="cb4-89"><a href="#cb4-89"></a>predictions.write.csv(outputPath, header<span class="op">=</span><span class="st">&quot;true&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-25"><a href="#cb4-25"></a><span class="co"># containing the double values associated with columns </span></span>
+<span id="cb4-26"><a href="#cb4-26"></a><span class="co"># attr1, attr2, attr3</span></span>
+<span id="cb4-27"><a href="#cb4-27"></a>assembler <span class="op">=</span> VectorAssembler(</span>
+<span id="cb4-28"><a href="#cb4-28"></a>    inputCols<span class="op">=</span>[<span class="st">&quot;attr1&quot;</span>,<span class="st">&quot;attr2&quot;</span>,<span class="st">&quot;attr3&quot;</span>],</span>
+<span id="cb4-29"><a href="#cb4-29"></a>    outputCol<span class="op">=</span><span class="st">&quot;features&quot;</span></span>
+<span id="cb4-30"><a href="#cb4-30"></a>)</span>
+<span id="cb4-31"><a href="#cb4-31"></a></span>
+<span id="cb4-32"><a href="#cb4-32"></a><span class="co"># Create a LogisticRegression object</span></span>
+<span id="cb4-33"><a href="#cb4-33"></a><span class="co"># LogisticRegression is an Estimator that is used to</span></span>
+<span id="cb4-34"><a href="#cb4-34"></a><span class="co"># create a classification model based on logistic regression.</span></span>
+<span id="cb4-35"><a href="#cb4-35"></a>lr <span class="op">=</span> LogisticRegression()</span>
+<span id="cb4-36"><a href="#cb4-36"></a></span>
+<span id="cb4-37"><a href="#cb4-37"></a><span class="co"># Set the values of the parameters of the</span></span>
+<span id="cb4-38"><a href="#cb4-38"></a><span class="co"># Logistic Regression algorithm using the setter methods.</span></span>
+<span id="cb4-39"><a href="#cb4-39"></a><span class="co"># There is one set method for each parameter</span></span>
+<span id="cb4-40"><a href="#cb4-40"></a><span class="co"># For example, we are setting the number of maximum iterations to 10</span></span>
+<span id="cb4-41"><a href="#cb4-41"></a><span class="co"># and the regularization parameter to 0.01</span></span>
+<span id="cb4-42"><a href="#cb4-42"></a>lr.setMaxIter(<span class="dv">10</span>)</span>
+<span id="cb4-43"><a href="#cb4-43"></a>lr.setRegParam(<span class="fl">0.01</span>)</span>
+<span id="cb4-44"><a href="#cb4-44"></a></span>
+<span id="cb4-45"><a href="#cb4-45"></a><span class="co"># Define a pipeline that is used to create the logistic regression</span></span>
+<span id="cb4-46"><a href="#cb4-46"></a><span class="co"># model on the training data. The pipeline includes also</span></span>
+<span id="cb4-47"><a href="#cb4-47"></a><span class="co"># the preprocessing step</span></span>
+<span id="cb4-48"><a href="#cb4-48"></a>pipeline <span class="op">=</span> Pipeline().setStages([assembler, lr]) <span class="co"># &lt;1&gt;</span></span>
+<span id="cb4-49"><a href="#cb4-49"></a></span>
+<span id="cb4-50"><a href="#cb4-50"></a><span class="co"># Execute the pipeline on the training data to build the</span></span>
+<span id="cb4-51"><a href="#cb4-51"></a><span class="co"># classification model</span></span>
+<span id="cb4-52"><a href="#cb4-52"></a>classificationModel <span class="op">=</span> pipeline.fit(trainingData)</span>
+<span id="cb4-53"><a href="#cb4-53"></a></span>
+<span id="cb4-54"><a href="#cb4-54"></a><span class="co"># Now, the classification model can be used to predict the class label</span></span>
+<span id="cb4-55"><a href="#cb4-55"></a><span class="co"># of new unlabeled data</span></span>
+<span id="cb4-56"><a href="#cb4-56"></a></span>
+<span id="cb4-57"><a href="#cb4-57"></a><span class="co"># *************************</span></span>
+<span id="cb4-58"><a href="#cb4-58"></a><span class="co"># Prediction step</span></span>
+<span id="cb4-59"><a href="#cb4-59"></a><span class="co"># *************************</span></span>
+<span id="cb4-60"><a href="#cb4-60"></a><span class="co"># Create a DataFrame from unlabeledData.csv</span></span>
+<span id="cb4-61"><a href="#cb4-61"></a><span class="co"># Unlabeled data in raw format</span></span>
+<span id="cb4-62"><a href="#cb4-62"></a>unlabeledData <span class="op">=</span> spark.read.load(</span>
+<span id="cb4-63"><a href="#cb4-63"></a>    unlabeledData,</span>
+<span id="cb4-64"><a href="#cb4-64"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csv&quot;</span>,</span>
+<span id="cb4-65"><a href="#cb4-65"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-66"><a href="#cb4-66"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb4-67"><a href="#cb4-67"></a>)</span>
+<span id="cb4-68"><a href="#cb4-68"></a></span>
+<span id="cb4-69"><a href="#cb4-69"></a><span class="co"># Make predictions on the unlabled data using the transform() </span></span>
+<span id="cb4-70"><a href="#cb4-70"></a><span class="co"># method of the trained classification model transform uses only </span></span>
+<span id="cb4-71"><a href="#cb4-71"></a><span class="co"># the content of &#39;features&#39; to perform the predictions. The model </span></span>
+<span id="cb4-72"><a href="#cb4-72"></a><span class="co"># is associated with the pipeline and hence also the assembler </span></span>
+<span id="cb4-73"><a href="#cb4-73"></a><span class="co"># is executed</span></span>
+<span id="cb4-74"><a href="#cb4-74"></a>predictions <span class="op">=</span> classificationModel.transform(unlabeledData)</span>
+<span id="cb4-75"><a href="#cb4-75"></a></span>
+<span id="cb4-76"><a href="#cb4-76"></a><span class="co"># The returned DataFrame has the following schema (attributes)</span></span>
+<span id="cb4-77"><a href="#cb4-77"></a><span class="co"># - attr1</span></span>
+<span id="cb4-78"><a href="#cb4-78"></a><span class="co"># - attr2</span></span>
+<span id="cb4-79"><a href="#cb4-79"></a><span class="co"># - attr3</span></span>
+<span id="cb4-80"><a href="#cb4-80"></a><span class="co"># - features: vector (values of the attributes)</span></span>
+<span id="cb4-81"><a href="#cb4-81"></a><span class="co"># - label: double (value of the class label)</span></span>
+<span id="cb4-82"><a href="#cb4-82"></a><span class="co"># - rawPrediction: vector (nullable = true)</span></span>
+<span id="cb4-83"><a href="#cb4-83"></a><span class="co"># - probability: vector (The i-th cell contains the probability </span></span>
+<span id="cb4-84"><a href="#cb4-84"></a><span class="co">#   that the current record belongs to the i-th class</span></span>
+<span id="cb4-85"><a href="#cb4-85"></a><span class="co"># - prediction: double (the predicted class label)</span></span>
+<span id="cb4-86"><a href="#cb4-86"></a><span class="co"># Select only the original features (i.e., the value of the </span></span>
+<span id="cb4-87"><a href="#cb4-87"></a><span class="co"># original attributes attr1, attr2, attr3) and the predicted </span></span>
+<span id="cb4-88"><a href="#cb4-88"></a><span class="co"># class for each record</span></span>
+<span id="cb4-89"><a href="#cb4-89"></a>predictions <span class="op">=</span> predictionsDF.select(<span class="st">&quot;attr1&quot;</span>,<span class="st">&quot;attr2&quot;</span>,<span class="st">&quot;attr3&quot;</span>,<span class="st">&quot;prediction&quot;</span>)</span>
+<span id="cb4-90"><a href="#cb4-90"></a></span>
+<span id="cb4-91"><a href="#cb4-91"></a><span class="co"># Save the result in an HDFS output folder</span></span>
+<span id="cb4-92"><a href="#cb4-92"></a>predictions.write.csv(outputPath, header<span class="op">=</span><span class="st">&quot;true&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ol type="1">
 <li><code>assembler</code>: the sequence of transformers and estimators to apply on the input data</li>
 </ol>
@@ -3454,6 +3457,9 @@ Example
 <p>The input file has the header line.</p>
 <p>The file containing the unlabeled data has the same format of the training data file, however the first column is empty because the class label is unknown.</p>
 <p>The goal is to predict the class label value of each unlabeled data by applying the classification model that has been inferred on the training data.</p>
+</div>
+</div>
+</div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="im">from</span> pyspark.mllib.linalg <span class="im">import</span> Vectors</span>
 <span id="cb8-2"><a href="#cb8-2"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> VectorAssembler</span>
 <span id="cb8-3"><a href="#cb8-3"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> StringIndexer</span>
@@ -3574,9 +3580,6 @@ Example
 <li>This <code>Pipeline</code> is composed of four steps.</li>
 <li>The “predictedLabel” field is the column containing the predicted categorical class label for the unlabeled data.</li>
 </ol>
-</div>
-</div>
-</div>
 </section>
 </section>
 </section>

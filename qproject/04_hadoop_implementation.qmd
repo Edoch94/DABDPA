@@ -259,6 +259,9 @@ public class MapReduceAppDriver extends Configured implements Tool { // # <2>
         inputPath = new Path(args[1]); // Can be the path to a folder or to a file. If this is a folder path, the application will read all the files in it
         outputDir = new Path(args[2]); // This is always the path to a folder
 
+        // **********************
+        //     JOB
+        // **********************
         // Define and configure a new job 
         Configuration conf = this.getConf(); // Create a configuration object to design in it the application configuration
         Job job = Job.getInstance(conf); // Creation of the job, that is the application instance
@@ -280,9 +283,15 @@ public class MapReduceAppDriver extends Configured implements Tool { // # <2>
         // Set job output format
         job.setOutputFormatClass(TextOutputFormat.class); // # <5>
 
+        // **********************
+        //   DRIVER
+        // **********************
         // Specify the class of the Driver for this job
         job.setJarByClass(MapReduceAppDriver.class); // # <6>
 
+        // **********************
+        //   MAPPER
+        // **********************
         // Set mapper class
         job.setMapperClass(MyMapperClass.class); // # <7>
         
@@ -290,6 +299,9 @@ public class MapReduceAppDriver extends Configured implements Tool { // # <2>
         job.setMapOutputKeyClass(output key type.class); // where type changes depending on the type (e.g., text, IntWritable) // # <8>
         job.setMapOutputValueClass(output value type.class); // # <9>
 
+        // **********************
+        //   REDUCER
+        // **********************
         // Set reduce class
         job.setReducerClass(MyReducerClass.class); // # <10>
 
@@ -300,6 +312,9 @@ public class MapReduceAppDriver extends Configured implements Tool { // # <2>
         // Set number of reducers
         job.setNumReduceTasks(numberOfReducers);
 
+        // **********************
+        //   OTHER
+        // **********************
         // Execute the job and wait for completion
         if (job.waitForCompletion(true)==true) // with this method the application is run
             exitCode=0;
@@ -866,7 +881,7 @@ The global/final value of each counter, which is available at the end of the job
 
 User-defined counters can be also defined on the fly by using the method `incrCounter("group name", "counter name", value)`. Dynamic counters are useful when the set of counters is unknown at design time.
 
-## Example: use the counters 
+### Example
 In the driver, add
 
 ```java
