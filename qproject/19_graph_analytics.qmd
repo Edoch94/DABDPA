@@ -144,4 +144,197 @@ g = GraphFrame(v, e)
 :::
 
 ## Directed vs undirected edges
-In undirected graphs the edges indicate a two-way relationship (each edge can be traversed in both directions). In GraphX it is possible to use `to_undirected()` to create an undirected copy of the Graph. Unfortunately GraphFrames does not support it: it is possible to convert a graph by applying a flatMap function over the edges of the directed graph that creates symmetric edges and then create a new GraphFrame.
+In undirected graphs the edges indicate a two-way relationship (each edge can be traversed in both directions). In GraphX it is possible to use `to_undirected()` to create an undirected copy of the Graph. Unfortunately GraphFrames does not support it, but it is possible to convert a graph by applying a flatMap function over the edges of the directed graph that creates symmetric edges and then create a new GraphFrame.
+
+## Cache graphs
+As with RDD and DataFrame, it is possible to cache graphs in GraphFrame: it is convenient if the same (complex) graph result of (multiple) transformations is used multiple times in the same application. To do it, simply invoke `cache()` on the GraphFrame to cache, so that it persists the DataFrame-based representation of vertexes and edges of the graph.
+
+## Querying the graph
+Some specific methods are provided to execute queries on graphs
+
+- `filterVertices(condition)`
+- `filterEdges(condition)`
+- `dropIsolatedVertices()`
+
+The returned result is the filtered version of the input graph.
+
+### `filterVertices(condition)`
+`filterVertices(condition)` selects only the vertexes for which the specified condition is satisfied and returns a new graph with only the subset of selected vertexes.
+
+`condition` contains an SQL-like condition on the values of the attributes of the vertexes (e.g., "age>35").
+
+### `filterEdges(condition)`
+`filterEdges(condition)` selects only the edges for which the specified condition is satisfied and returns a new graph with only the subset of selected edges.
+
+`condition` contains an SQL-like condition on the values of the attributes of the edges (e.g., "relationship='friend'").
+
+### `dropIsolatedVertices()`
+`dropIsolatedVertices()` drops the vertexes that are not connected with any other node and returns a new graph without the dropped nodes.
+
+:::{.callout-note collapse="true"}
+## Example
+Given the input graph, create a new subgraph
+
+![Input graph](images/19_graph_analytics/vertex_filtering_example_1.png){width=80%}
+
+1. Include only the vertexes associated with users characterized by age between 29 and 50
+
+![Filter vertexes](images/19_graph_analytics/vertex_filtering_example_2.png){width=80%}
+
+2. Include only the edges representing the friend relationship
+
+![Filter edges](images/19_graph_analytics/vertex_filtering_example_3.png){width=80%}
+
+3. Drop isolated vertexes
+
+![Drop isolated vertices](images/19_graph_analytics/vertex_filtering_example_4.png){width=80%}
+
+
+![Output graph](images/19_graph_analytics/vertex_filtering_example_5.png){width=80%}
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+selectedUsersandFriendRelGraph = g \
+    .filterVertices("age>=29 AND age<=50") \
+    .filterEdges("relationship='friend'") \
+    .dropIsolatedVertices()
+```
+
+:::
+
+Given a GraphFrame, it is possible to access its vertexes and edges
+
+- `g.vertices` returns the DataFrame associated with the vertexes of the input graph
+- `g.edges` returns the DataFrame associated with the edges of the input graph
+
+All the standard DataFrame transformations/actions are available also for the DataFrames that are used to store vertexes and edges. For example, the number of vertexes and the number of edges can be computed by invoking the `count()` action on the DataFrames vertices and edges, respectively.
+
+:::{.callout-note collapse="true"}
+## Example
+Given the input graph
+
+1. Count how many vertexes and edges has the graph
+2. Find the smallest value of age (i.e., the age of the youngest user in the graph)
+3. Count the number of edges of type "follow" in the graph
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+# Count how many vertexes and edges has the graph
+print("Number of vertexes: ",g.vertices.count())
+print("Number of edges: ",g.edges.count())
+
+# Print on the standard output the smallest value of age
+# (i.e., the age of the youngest user in the graph)
+g.vertices.agg({"age":"min"}).show()
+
+# Print on the standard output
+# the number of "follow" edges in the graph.
+numFollows = g.edges.filter("relationship = 'follow' ").count()
+
+print(numFollows)
+```
+
+:::
+
+## Motif finding
+Motif finding refers to searching for structural patterns in graphs. A simple Domain-Specific Language (DSL) is used to specify the structure of the interesting patterns: the paths/subgraphs in the graph matching the specified structural pattern are selected.
+
+### DSL for Motif finding
+The basic unit of a pattern is a connection between vertexes
+
+$$
+(v1) – [e1] \rightarrow (v2)
+$$
+
+means: an arbitrary edge [e1] from an arbitrary vertex (v1) to another arbitrary vertex (v2)
+
+- Edges are denoted by square brackets: $[e1]$
+- Vertexes are expressed by round brackets: $(v1)$, $(v2)$
+
+![Basic unit](images/19_graph_analytics/motif_basic_unit.png){width=80%}
+
+Patterns are chains of basic units
+
+$$
+(v1) – [e1] \rightarrow (v2); (v2) – [e2] \rightarrow (v3)
+$$
+
+means: an arbitrary edge from an arbitrary vertex $v1$ to another arbitrary vertex $v2$ and another arbitrary edge from $v2$ to another arbitrary vertex $v3$. Notice that $v3$ and $v1$ can be the same vertex.
+
+![Basic unit chaining](images/19_graph_analytics/motif_basic_unit_chaining.png){width=80%}
+
+The same vertex name is used in a pattern to have a reference to the same vertex
+
+$$
+(v1) – [e1] \rightarrow (v2); (v2) – [e2] \rightarrow (v1)
+$$
+
+means: an arbitrary edge from an arbitrary vertex $v1$ to another arbitrary vertex $v2$ and vice-versa.
+
+![Basic unit self-chaining](images/19_graph_analytics/motif_basic_unit_chaining.png){width=80%}
