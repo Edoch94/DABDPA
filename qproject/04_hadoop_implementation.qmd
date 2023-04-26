@@ -762,13 +762,14 @@ Personalized Data Types are useful when the **value** of a key-value pair is a *
 - `public void readFields(DataInput in)`
 - `public void write(DataOutput out)`
 
-To properly format the output of the job usually also the following method is "redefined"
+To properly format the output of the job (i.e., the output of the reducer) usually also the following method is "redefined"
 
 - `public String toString()`
 
-Suppose to be interested in complex values composed of two parts, such as a counter (int) and a sum (float). In this case, an ad-hoc Data Type can be used to implement this complex data type in Hadoop.
+If also a constructor is defined, remember to define also an empty constructor, otherwise the system will raise an error at runtime.
 
 ## Example
+Suppose to be interested in complex values composed of two parts, such as a counter (int) and a sum (float). In this case, an ad-hoc Data Type can be used to implement this complex data type in Hadoop.
 
 ```java
 /* Set package */
@@ -777,6 +778,7 @@ package it.polito.bigdata.hadoop.combinerexample;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+
 public class SumAndCountWritable implements 
 org.apache.hadoop.io.Writable {
     /* Private variables */
@@ -810,7 +812,7 @@ org.apache.hadoop.io.Writable {
 
     @Override /* Deserialize the fields of this object from in */
     public void readFields(DataInput in) throws IOException {
-        sum=in.readFloat();
+        sum=in.readFloat(); // <1>
         count=in.readInt();
     }
 
@@ -826,12 +828,36 @@ org.apache.hadoop.io.Writable {
     }
 }
 ```
+1. Notice that the order of the read must be coherent with the order of the write.
 
 ## Complex keys
 Personalized Data Types can be used also to manage complex **keys**. In that case the Personalized Data Type must implement the `org.apache.hadoop.io.WritableComparable` interface, since keys must be 
 
-- compared/sorted: it is possible by implementing the `compareTo()` method
-- split in groups: it is possible by implementing the `hashCode()` method
+- Compared/sorted: it is possible by implementing the `compareTo()` method; it is used by the Combiner locally.
+
+:::{.callout-note collapse="true"}
+## Example
+
+```java
+@Override
+public int compareTo(IntPair ip) {
+    int cmp = compare(first, ip.first);
+    if (cmp != 0) {
+        return cmp;
+    }
+    return compare(second, ip.second);
+}
+/**
+* Convenience method for comparing two ints.
+*/
+public static int compare(int a, int b) {
+    return (a < b ? -1 : (a == b ? 0 : 1));
+}
+```
+
+:::
+
+- Split in groups: it is possible by implementing the `hashCode()` method; it is used by the Reducer on the networks. 
 
 # Sharing parameters among Driver, Mappers, and Reducers
 The configuration object is used to share the (basic) configuration of the Hadoop environment across the driver, the mappers and the reducers of the application/job. It stores a list of `(property-name, property-value)` pairs. 

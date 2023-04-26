@@ -322,7 +322,7 @@ means: an arbitrary edge [e1] from an arbitrary vertex (v1) to another arbitrary
 Patterns are chains of basic units
 
 $$
-(v1) – [e1] \rightarrow (v2); (v2) – [e2] \rightarrow (v3)
+(v1) – [e1] \rightarrow (v2);\quad (v2) – [e2] \rightarrow (v3)
 $$
 
 means: an arbitrary edge from an arbitrary vertex $v1$ to another arbitrary vertex $v2$ and another arbitrary edge from $v2$ to another arbitrary vertex $v3$. Notice that $v3$ and $v1$ can be the same vertex.
@@ -332,9 +332,315 @@ means: an arbitrary edge from an arbitrary vertex $v1$ to another arbitrary vert
 The same vertex name is used in a pattern to have a reference to the same vertex
 
 $$
-(v1) – [e1] \rightarrow (v2); (v2) – [e2] \rightarrow (v1)
+(v1) – [e1] \rightarrow (v2);\quad (v2) – [e2] \rightarrow (v1)
 $$
 
 means: an arbitrary edge from an arbitrary vertex $v1$ to another arbitrary vertex $v2$ and vice-versa.
 
 ![Basic unit self-chaining](images/19_graph_analytics/motif_basic_unit_chaining.png){width=80%}
+
+It is acceptable to omit names for vertices or edges in patterns when not needed
+
+$$
+(v1)-[\quad]\rightarrow(v2)
+$$
+
+means: an arbitrary edge between two arbitrary vertexes $v1$, $v2$, but does not assign a name to the edge. These are called **anonymous** vertexes and edges.
+
+![Anonymous vertexes and edges](images/19_graph_analytics/motif_anonyomous_vertexes.png){width=80%}
+
+A basic unit (an edge between two vertexes) can be negated to indicate that the edge should not be present in the graph
+
+$$
+(v1)-[\quad]\rightarrow(v2);\quad !(v2)-[\quad]\rightarrow(v1)
+$$
+
+means: edges from $v1$ to $v2$ but no edges from $v2$ to $v1$.
+
+![Negating edges](images/19_graph_analytics/motif_negating_edges.png){width=80%}
+
+The `find(motif)` method of GraphFrame is used to select motifs
+
+- `motif` is a DSL representation of the structural pattern
+
+`find()` returns a DataFrame of all the paths matching the structural motif/pattern, one path per record. The returned DataFrame will have a column for each of the named elements (vertexes and edges) in the structural pattern/motif: Each column is a struct, and the fields of each struct are the labels/features of the associated vertex or edge. It can return duplicate rows/records, if there are many paths connecting the same nodes.
+
+More complex queries on the structure and content of the patterns can be expressed by applying filters to the result DataFrame (i.e., more complex queries can be applied by combing `find()` and `filter()`).
+
+:::{.callout-note collapse="true"}
+## Example 1
+Given the following graph
+
+![Example graph](images/19_graph_analytics/motif_finding_example_1.png){width=80%}
+
+Find the paths/subgraphs matching the pattern
+
+$$
+(v1) – [e1] \rightarrow (v2);\quad (v2) – [e2] \rightarrow (v1)
+$$
+
+Store the result in a DataFrame
+
+![Result](images/19_graph_analytics/motif_finding_example_2.png){width=80%}
+
+Pay attention that two paths are returned:
+
+- $u2 \rightarrow \text{follow} \rightarrow u3 \rightarrow \text{follow} \rightarrow u2$
+- $u3 \rightarrow \text{follow} \rightarrow u2 \rightarrow \text{follow} \rightarrow u3$
+
+The content of the returned Dataframe is the following
+
+| $v1$ | $e1$ | $v2$ | $e2$ |
+|-|-|-|-|
+| $[u2, \text{Bob}, 36]$ | $[u2, u3, \text{follow}]$ | $[u3, \text[Charlie], 30]$ | $[u3, u2, \text{follow}]$ |
+| $[u3, \text[Charlie], 30]$ | $[u3, u2, \text{follow}]$ | $[u2, \text{Bob}, 36]$ | $[u2, u3, \text{follow}]$ |
+
+- There is one column for each (distinct) named vertex and edge of the structural pattern;
+- The records are associated with the vertexes and edges of the selected paths;
+- All columns are associated with the data type "struct". Each struct has the same "schema/features" of the associated vertex or edge.
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+# Retrieve the motifs associated with the pattern
+# vertex -> edge -> vertex -> edge ->vertex
+motifs = g.find("(v1)-[e1]->(v2); (v2)-[e2]->(v1)")
+```
+
+:::
+
+:::{.callout-note collapse="true"}
+## Example 2
+Given the following graph
+
+![Example graph](images/19_graph_analytics/motif_finding_example_1.png){width=80%}
+
+Find the paths/subgraphs matching the pattern
+
+$$
+(v1) - [\text{friend}] \rightarrow (v2);\quad (v2) - [\text{follow}] \rightarrow (v3)
+$$
+
+Store the result in a DataFrame
+
+![First selected path](images/19_graph_analytics/motif_finding_example_3.png){width=80%}
+
+![Second selected path](images/19_graph_analytics/motif_finding_example_4.png){width=80%}
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+# Retrieve the motifs associated with the pattern
+# vertex -> edge -> vertex -> edge ->vertex
+motifs = g.find("(v1)-[friend]->(v2); (v2)-[follow]->(v3)")
+
+# Filter the motifs (the content of the motifs DataFrame)
+# Select only the ones matching the pattern
+# vertex -> friend-> vertex -> follow ->vertex
+motifsFriendFollow = motifs \
+    .filter("friend.relationship='friend' AND follow.relationship='follow' ") # <1>
+```
+1. Columns friend and follow are structs with three fields/attributes: "src", "dst", "relationship". To access a field of a struct column use the syntax `columnName.field` (e.g., `friend.relationship`)
+
+:::
+
+# Basic statistics
+Some specific properties are provided to compute basic statistics on the degrees of the vertexes
+
+- `degrees`
+- `inDegrees`
+- `outDegrees`
+
+The returned result of each of this property is a DataFrame with id and (in/out)Degree value.
+
+## `degrees`
+`degrees` returns the degree of each vertex (i.e., the number of edges associated with each vertex). The result is stored in a DataFrame with Columns (vertex) "id" and "degree", with one record per vertex. Only the vertexes with $\text{degree} \geq 1$ are stored in the returned DataFrame.
+
+## `inDegrees`
+`inDegrees` returns the in-degree of each vertex (i.e., the number of in-edges associated with each vertex). The result is stored in a DataFrame with Columns (vertex) "id" and "inDegree", with one record per vertex. Only the vertexes with $\text{in-degree} \geq 1$ are stored in the returned DataFrame.
+
+## `outDegrees`
+`outDegrees` returns the out-degree of each vertex (i.e., the number of out-edges associated with each vertex). The result is stored in a DataFrame with Columns (vertex) "id" and "outDegree", with one record per vertex. Only the vertexes with $\text{out-degree} \geq 1$ are stored in the returned DataFrame.
+
+:::{.callout-note collapse="true"}
+## Example 1
+Given the input graph, compute
+
+- Degree of each vertex
+- inDegree of each vertex
+- outDegree of each vertex
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+# Retrieve the DataFrame with the information about the degree of
+# each vertex
+vertexesDegreesDF = g.degrees
+
+# Retrieve the DataFrame with the information about the in-degree of
+# each vertex
+vertexesInDegreesDF = g.inDegrees
+
+# Retrieve the DataFrame with the information about the out-degree of
+# each vertex
+vertexesOutDegreesDF = g.outDegrees
+```
+
+:::
+
+:::{.callout-note collapse="true"}
+Given the input graph, select only the ids of the vertexes with at least 2 in-edges.
+
+![Example graph](images/19_graph_analytics/motif_finding_example_1.png){width=80%}
+
+![First selected vertex](images/19_graph_analytics/motif_finding_example_5.png){width=80%}
+
+![Second selected vertex](images/19_graph_analytics/motif_finding_example_6.png){width=80%}
+
+![Resulting vertexes](images/19_graph_analytics/motif_finding_example_7.png){width=80%}
+
+The selected IDs are $u2$ and $u3$
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+# Retrieve the DataFrame with the information about the in-degree of
+# each vertex
+vertexesInDegreesDF = g.inDegrees
+
+# Select only the vertexes with and in-degree value >=2
+selectedVertexesDF = vertexesInDegreesDF.filter("inDegree>=2")
+
+# Select only the content of Column id
+selectedVertexesIDsDF = selectedVertexesDF.select("id")
+```
+
+:::
