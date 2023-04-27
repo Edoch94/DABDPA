@@ -10,14 +10,14 @@ Graphs are data structures composed of nodes and edges
 
 Graph analytics is the process of analyzing relationships between vertexes and edges.
 
-![Example of graph](images/19_graph_analytics/graph_example.png){width=80%}
+![Example of graph](images/19_graph_analytics_1_1/graph_example.png){width=80%}
 
 Graphs are called **undirected** if edges do not have a direction, otherwise they are called **directed** graphs. Vertexes and edges can have data associated with them
 
 - weights are associated to edges (e.g., they may represent the strength of the relationship);
 - labels are associated to vertexes (e.g., they may be the string associated with the name of the vertex).
 
-![Graph with labels and weights](images/19_graph_analytics/labels_weights_example.png){width=80%}
+![Graph with labels and weights](images/19_graph_analytics_1/labels_weights_example.png){width=80%}
 
 :::{.callout-tip}
 ## Why graph analytics?
@@ -25,13 +25,13 @@ Graphs are natural way of describing relationships. Some practical example of an
 
 - Ranking web pages (Google PageRank)
 
-![Pages in the web](images/19_graph_analytics/rank_pages_example.png){width=80%}
+![Pages in the web](images/19_graph_analytics_1/rank_pages_example.png){width=80%}
 
 - Detecting group of friends
 
-![Social networks](images/19_graph_analytics/social_network_example.png){width=80%}
+![Social networks](images/19_graph_analytics_1/social_network_example.png){width=80%}
 
-![Movies watched by users](images/19_graph_analytics/movies_watched_example.png){width=80%}
+![Movies watched by users](images/19_graph_analytics_1/movies_watched_example.png){width=80%}
 
 - Determine importance of infrastructure in electrical networks
 - ...
@@ -41,7 +41,7 @@ Graphs are natural way of describing relationships. Some practical example of an
 # Spark GraphX and GraphFrames
 GraphX is the Spark RDD-based library for performing graph processing. It is a core part of Spark.
 
-![Spark core libraries](images/19_graph_analytics/spark_core.png){width=80%}
+![Spark core libraries](images/19_graph_analytics_1/spark_core.png){width=80%}
 
 GraphX
 
@@ -52,7 +52,7 @@ GraphX
 
 [GraphFrames](https://graphframes.github.io/graphframes/docs/_site/index.html) is a library DataFrame-based for performing graph processing. It is a Spark external package built on top of GraphX.
 
-![GraphFrame structure](images/19_graph_analytics/graphframes_structure.png){width=80%}
+![GraphFrame structure](images/19_graph_analytics_1/graphframes_structure.png){width=80%}
 
 # Building and querying graphs with GraphFrames
 ## Building a Graph
@@ -74,7 +74,7 @@ Create a graph of type `graphframes.graphframe.GraphFrame` by invoking the const
 
 Graphs in graphframes are directed graphs.
 
-![Building a graph example](images/19_graph_analytics/building_graph_example.png){width=80%}
+![Building a graph example](images/19_graph_analytics_1/building_graph_example.png){width=80%}
 
 :::{.callout-note collapse="true"}
 ## Example
@@ -175,22 +175,22 @@ The returned result is the filtered version of the input graph.
 ## Example
 Given the input graph, create a new subgraph
 
-![Input graph](images/19_graph_analytics/vertex_filtering_example_1.png){width=80%}
+![Input graph](images/19_graph_analytics_1/vertex_filtering_example_1.png){width=80%}
 
 1. Include only the vertexes associated with users characterized by age between 29 and 50
 
-![Filter vertexes](images/19_graph_analytics/vertex_filtering_example_2.png){width=80%}
+![Filter vertexes](images/19_graph_analytics_1/vertex_filtering_example_2.png){width=80%}
 
 2. Include only the edges representing the friend relationship
 
-![Filter edges](images/19_graph_analytics/vertex_filtering_example_3.png){width=80%}
+![Filter edges](images/19_graph_analytics_1/vertex_filtering_example_3.png){width=80%}
 
 3. Drop isolated vertexes
 
-![Drop isolated vertices](images/19_graph_analytics/vertex_filtering_example_4.png){width=80%}
+![Drop isolated vertices](images/19_graph_analytics_1/vertex_filtering_example_4.png){width=80%}
 
 
-![Output graph](images/19_graph_analytics/vertex_filtering_example_5.png){width=80%}
+![Output graph](images/19_graph_analytics_1/vertex_filtering_example_5.png){width=80%}
 
 ```python
 from graphframes import GraphFrame
@@ -317,7 +317,7 @@ means: an arbitrary edge [e1] from an arbitrary vertex (v1) to another arbitrary
 - Edges are denoted by square brackets: $[e1]$
 - Vertexes are expressed by round brackets: $(v1)$, $(v2)$
 
-![Basic unit](images/19_graph_analytics/motif_basic_unit.png){width=80%}
+![Basic unit](images/19_graph_analytics_1/motif_basic_unit.png){width=80%}
 
 Patterns are chains of basic units
 
@@ -327,7 +327,7 @@ $$
 
 means: an arbitrary edge from an arbitrary vertex $v1$ to another arbitrary vertex $v2$ and another arbitrary edge from $v2$ to another arbitrary vertex $v3$. Notice that $v3$ and $v1$ can be the same vertex.
 
-![Basic unit chaining](images/19_graph_analytics/motif_basic_unit_chaining.png){width=80%}
+![Basic unit chaining](images/19_graph_analytics_1/motif_basic_unit_chaining.png){width=80%}
 
 The same vertex name is used in a pattern to have a reference to the same vertex
 
@@ -337,7 +337,7 @@ $$
 
 means: an arbitrary edge from an arbitrary vertex $v1$ to another arbitrary vertex $v2$ and vice-versa.
 
-![Basic unit self-chaining](images/19_graph_analytics/motif_basic_unit_chaining.png){width=80%}
+![Basic unit self-chaining](images/19_graph_analytics_1/motif_basic_unit_chaining.png){width=80%}
 
 It is acceptable to omit names for vertices or edges in patterns when not needed
 
@@ -347,7 +347,7 @@ $$
 
 means: an arbitrary edge between two arbitrary vertexes $v1$, $v2$, but does not assign a name to the edge. These are called **anonymous** vertexes and edges.
 
-![Anonymous vertexes and edges](images/19_graph_analytics/motif_anonyomous_vertexes.png){width=80%}
+![Anonymous vertexes and edges](images/19_graph_analytics_1/motif_anonyomous_vertexes.png){width=80%}
 
 A basic unit (an edge between two vertexes) can be negated to indicate that the edge should not be present in the graph
 
@@ -357,7 +357,7 @@ $$
 
 means: edges from $v1$ to $v2$ but no edges from $v2$ to $v1$.
 
-![Negating edges](images/19_graph_analytics/motif_negating_edges.png){width=80%}
+![Negating edges](images/19_graph_analytics_1/motif_negating_edges.png){width=80%}
 
 The `find(motif)` method of GraphFrame is used to select motifs
 
@@ -371,7 +371,7 @@ More complex queries on the structure and content of the patterns can be express
 ## Example 1
 Given the following graph
 
-![Example graph](images/19_graph_analytics/motif_finding_example_1.png){width=80%}
+![Example graph](images/19_graph_analytics_1/motif_finding_example_1.png){width=80%}
 
 Find the paths/subgraphs matching the pattern
 
@@ -381,7 +381,7 @@ $$
 
 Store the result in a DataFrame
 
-![Result](images/19_graph_analytics/motif_finding_example_2.png){width=80%}
+![Result](images/19_graph_analytics_1/motif_finding_example_2.png){width=80%}
 
 Pay attention that two paths are returned:
 
@@ -445,7 +445,7 @@ motifs = g.find("(v1)-[e1]->(v2); (v2)-[e2]->(v1)")
 ## Example 2
 Given the following graph
 
-![Example graph](images/19_graph_analytics/motif_finding_example_1.png){width=80%}
+![Example graph](images/19_graph_analytics_1/motif_finding_example_1.png){width=80%}
 
 Find the paths/subgraphs matching the pattern
 
@@ -455,9 +455,9 @@ $$
 
 Store the result in a DataFrame
 
-![First selected path](images/19_graph_analytics/motif_finding_example_3.png){width=80%}
+![First selected path](images/19_graph_analytics_1/motif_finding_example_3.png){width=80%}
 
-![Second selected path](images/19_graph_analytics/motif_finding_example_4.png){width=80%}
+![Second selected path](images/19_graph_analytics_1/motif_finding_example_4.png){width=80%}
 
 ```python
 from graphframes import GraphFrame
@@ -587,13 +587,13 @@ vertexesOutDegreesDF = g.outDegrees
 :::{.callout-note collapse="true"}
 Given the input graph, select only the ids of the vertexes with at least 2 in-edges.
 
-![Example graph](images/19_graph_analytics/motif_finding_example_1.png){width=80%}
+![Example graph](images/19_graph_analytics_1/motif_finding_example_1.png){width=80%}
 
-![First selected vertex](images/19_graph_analytics/motif_finding_example_5.png){width=80%}
+![First selected vertex](images/19_graph_analytics_1/motif_finding_example_5.png){width=80%}
 
-![Second selected vertex](images/19_graph_analytics/motif_finding_example_6.png){width=80%}
+![Second selected vertex](images/19_graph_analytics_1/motif_finding_example_6.png){width=80%}
 
-![Resulting vertexes](images/19_graph_analytics/motif_finding_example_7.png){width=80%}
+![Resulting vertexes](images/19_graph_analytics_1/motif_finding_example_7.png){width=80%}
 
 The selected IDs are $u2$ and $u3$
 

@@ -1,0 +1,710 @@
+---
+title: "Graph Analytics in Spark"
+---
+
+# Algorithms over graphs
+GraphFrame provides the parallel implementation of a set of state of the art algorithms for graph analytics
+
+- Breadth first search
+- Shortest paths
+- Connected components
+- Strongly connected component
+- Label propagation
+- PageRank
+- ...
+
+Also custom algorithms can be designed and implemented.
+
+## Checkpoint directory
+To run some expensive algorithms, set a checkpoint directory that will store the state of the job at every iteration. This allows to continue where left off if the job crashes. Create such a folder to set the checkpoint directory with:
+
+```python
+sc.setCheckpointDir(graphframes_ckpts_dir)
+```
+
+- `graphframes_ckpts_dir` is the new checkpoint folder directory
+- `sc` is the SparkContext object (retrieve it from a SparkSession by using `spark.sparkContext`)
+
+## Breadth first search
+Breadth-first search (BFS) is an algorithm for traversing/searching graph data structures: it finds the shortest path(s) from one vertex (or a set of vertexes)to another vertex (or a set of vertexes). It is used in many other algorithms
+
+- Length of shortest paths
+- Connected components
+- ...
+
+### Implementation
+
+```python
+bfs(fromExpr, toExpr, edgeFilter=None maxPathLength=10)
+``` 
+
+The `bfs()` method of the GraphFrame class returns the shortest path(s) from the vertexes matching expression `fromExpr` expression to vertexes matching expression `toExpr`. If there are many vertexes matching `fromExpr` and `toExpr`, only the couple(s) with the shortest length is returned.
+
+- `fromExpr`: Spark SQL expression specifying valid starting vertexes for the execution of the BFS algorithm (e.g., to start from a specific vertex: "id = [start vertex id]");
+- `toExpr`: Spark SQL expression specifying valid target vertexes for the BFS algorithm;
+- `maxPathLength`: Limit on the length of paths (default = 10);
+- `edgeFilter`: Spark SQL expression specifying edges that may be used in the search (default None).
+
+`bfs()` returns a DataFrame containing the selected shortest path(s). Notice that ff multiple paths are valid and their length is equal to the shortest length, the returned DataFrame will contain one Row for each path. The number of columns of the returned DataFrame is equal to $(\text{length of the shortest path}*2).+1$.
+
+:::{.callout-note collapse="true"}
+## Example 1
+1. Find the shortest path from Esther to Charlie
+2. Store the result in a DataFrame
+
+![Example graph](images/20_graph_analytics_2/bfs_example_1.png){width=80%}
+
+![Resulting graph](images/20_graph_analytics_2/bfs_example_2.png){width=80%}
+
+The content of the returned DataFrame is the following
+
+|from|$e0$|$v1$|$e1$|to|
+|-|-|-|-|-|
+| $[u5, \text{Esther}, 32]$ | $[u5, u6, \text{follow}]$ | $[u6, \text{Fanny}, 36]$ | $[u6, u3, \text{follow}]$ | $[u3, \text{Charlie}, 30]$ |
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+# Search from vertex with name = "Esther" to vertex with name = "Charlie"
+shortestPaths = g.bfs("name = 'Esther' ", "name = 'Charlie' ")
+```
+
+:::
+
+:::{.callout-note collapse="true"}
+## Example 2
+1. Find the shortest path from Alice to a user who is 30 years old
+2. Store the result in a DataFrame
+
+![Example graph](images/20_graph_analytics_2/bfs_example_1.png){width=80%}
+
+![Resulting graph](images/20_graph_analytics_2/bfs_example_3.png){width=80%}
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+# Find the shortest path from Alice to a user who is 30 years old
+shortestPaths = g.bfs("name = 'Alice' ", "age= 30")
+```
+
+:::
+
+:::{.callout-note collapse="true"}
+## Example 3
+1. Find the shortest path from any user who is less than 31 years old to any user who is more than 30 years old
+2. Store the result in a DataFrame
+
+![Example graph](images/20_graph_analytics_2/bfs_example_1.png){width=80%}
+
+![Resulting graph](images/20_graph_analytics_2/bfs_example_4.png){width=80%}
+
+Notice that two paths are selected in this case
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+# Find the shortest path from any user who is less than 31 years old
+# to any user who is more than 30 years old
+shortestPaths = g.bfs("age<31", "age>30")
+```
+
+:::
+
+
+:::{.callout-note collapse="true"}
+## Example 4
+1. Find the shortest path from Alice to any user who is less than 31 years old without using follow edges
+2. Store the result in a DataFrame
+
+![Example graph](images/20_graph_analytics_2/bfs_example_1.png){width=80%}
+
+![Resulting graph](images/20_graph_analytics_2/bfs_example_5.png){width=80%}
+
+Notice that two paths are selected in this case
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+# Find the shortest path from Alice to any user who is less
+# than 31 years old without using “follow” edges
+shortestPaths = g.bfs("name = 'Alice' ", "age<31", "relationship<> 'follow' ")
+```
+
+:::
+
+## Shortest path
+The shortest path method selects the length of the shortest path(s) from each vertex to a given set of landmark vertexes. It uses the BFS algorithm for computing the shortest paths.
+
+### Implementation
+
+```python
+shortestPaths(landmarks)
+```
+
+The `shortestPaths(landmarks)` method of the GraphFrame class returns the length of the shortest path(s) from each vertex to a given set of landmarks vertexes. For each vertex, one shortest path for each landmark vertex is computed and its length is returned. 
+
+- `landmarks`: list of IDs of landmark vertexes (e.g., $[u1, u4]$)
+
+`shortestPaths()` returns a DataFrame that contains one record/row for each distinct vertex of the input graph (also for the non-connected ones). This method is characterized by the following columns
+
+- one column for each attribute of the vertexes
+- distances (type map): for each landmark lm it contains one pair (ID lm: length shortest path from the vertex of the current record to lm)
+
+:::{.callout-note collapse="true"}
+## Example 1
+1. Find for each user the length of the shortest path to user $u1$ (i.e., Alice)
+2. Store the result in a DataFrame
+
+![Example graph](images/20_graph_analytics_2/bfs_example_1.png){width=80%}
+
+|Vertex|Distance to $u1$|
+|-|-|
+|$u1$|0|
+|$u2$|-|
+|$u3$|-|
+|$u4$|1|
+|$u5$|2|
+|$u6$|-|
+|$u7$|-|
+
+The content of the returned DataFrame is the following
+
+| id | name | age | distances |
+|-|-|-|-|
+| $u1$ | Alice | 34 | $[u1 \rightarrow 0]$ |
+| $u2$ | Bob | 36 | $[\quad]$ |
+| $u3$ |Charlie | 30 | $[\quad]$ |
+| $u4$ | David | 29 | $[u1 \rightarrow 1]$ |
+| $u5$ | Esther | 32 | $[u1 \rightarrow 2]$ |
+| $u6$ | Fanny | 36 | $[\quad]$ |
+| $u7$ | Gabby | 60 | $[\quad]$ |
+
+- $[u1 \rightarrow 0]$: data type is map. It stores a set of pairs (Key: Value)
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+# Find for each user the length of the shortest path to user u1
+shortestPaths = g.shortestPaths(["u1"])
+```
+
+:::
+
+:::{.callout-note collapse="true"}
+## Example 2
+1. Find for each user the length of the shortest path to users $u1$ (Alice) and $u4$ (David)
+2. Store the result in a DataFrame
+
+![Example graph](images/20_graph_analytics_2/bfs_example_1.png){width=80%}
+
+|Vertex|Distance to $u1$|Distance to $u1$|
+|-|-|-|
+|$u1$|0|2|
+|$u2$|-|-|
+|$u3$|-|-|
+|$u4$|1|0|
+|$u5$|2|1|
+|$u6$|-|-|
+|$u7$|-|-|
+
+The content of the returned DataFrame is the following
+
+| id | name | age | distances |
+|-|-|-|-|
+| $u1$ | Alice | 34 | $[u1 \rightarrow 0, u4 \rightarrow 2]$ |
+| $u2$ | Bob | 36 | $[\quad]$ |
+| $u3$ |Charlie | 30 | $[\quad]$ |
+| $u4$ | David | 29 | $[u1 \rightarrow 1, u4 \rightarrow 0]$ |
+| $u5$ | Esther | 32 | $[u1 \rightarrow 2, u4 \rightarrow 1]$ |
+| $u6$ | Fanny | 36 | $[\quad]$ |
+| $u7$ | Gabby | 60 | $[\quad]$ |
+
+- $[u1 \rightarrow 0]$: data type is map. It stores a set of pairs (Key: Value)
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+# Find for each user the length of the shortest paths to users u1 and u4
+shortestPaths = g.shortestPaths(["u1", "u4"])
+```
+
+:::
+
+## Connected components
+A connected component of a graph is a subgraph $sg$ such that
+
+- Any two vertexes in $sg$ are connected to each other by at least one path
+- The set of vertexes in $sg$ is not connected to any additional vertexes in the original graph
+
+The direction of edges is not considered.
+
+![Two connected components](images/20_graph_analytics_2/two_connected_components.png){width=80%}
+
+![Three connected components](images/20_graph_analytics_2/three_connected_components.png){width=80%}
+
+The `connectedComponents()` method of the GraphFrame class returns the connected components of the input graph. This is an expensive algorithm, and requires setting a Spark checkpoint directory.
+
+### Implementation
+
+```python
+connectedComponents()
+```
+
+The `connectedComponents()` method returns a DataFrame that contains one record/row for each distinct vertex of the input graph. It is characterized by the following columns
+
+- one column for each attribute of the vertexes
+- component (type long). It is the identifier of the connected component to which the current vertex has been assigned.
+
+:::{.callout-note collapse="true"}
+## Example
+Print on the stdout the number of connected components of the following graph
+
+![Example graph](images/20_graph_analytics_2/bfs_example_1.png){width=80%}
+
+![Result](images/20_graph_analytics_2/connected_components_example.png){width=80%}
+
+Notice that The are two connected components on this graph.
+
+This is the content of the DataFrame used to store the two identified connected components
+
+| id | name |age | component |
+|-|-|-|-|
+| $u6$ | Fanny | 36 | 146028888064 |
+| $u1$ | Alice | 34 | 146028888064 |
+| $u3$ |Charlie | 30 | 146028888064 |
+| $u5$ | Esther | 32 | 146028888064 |
+| $u2$ | Bob | 36 | 146028888064 |
+| $u4$ | David | 29 | 146028888064 |
+| $u7$ | Gabby | 60 | 1546188226560 |
+
+Notice the "component" field
+
+- "146028888064": vertexes of the first component
+- "1546188226560": vertexes of the second component
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+# Set checkpoint folder
+sc.setCheckpointDir("tmp_ckpts")
+
+# Run the algorithm
+connComp=g.connectedComponents()
+
+# Count the number of components
+nComp=connComp.select("component").distinct().count()
+
+print("Number of connected components: ", nComp)
+```
+
+::: 
+
+## Strongly connected components
+A directed subgraph $sg$ is called strongly connected if every vertex in $sg$ is reachable from every other vertex in $sg$. For undirected graph, connected and strongly connected components are the same.
+
+![Three strongly connected subgraphs/components](images/20_graph_analytics_2/three_strongly_connected_components.png){width=80%}
+
+### Implementation
+
+```python
+stronglyConnectedComponents()
+```
+
+The `stronglyConnectedComponents()` method of the GraphFrame class returns the strongly connected components of the input graph. It is an expensive algorithm (better to run it on a cluster with yarn scheduler even with small graphs), and it requires setting a Spark checkpoint directory.
+
+`stronglyConnectedComponents()` returns a DataFrame that contains one record/row for each distinct vertex of the input graph. It is characterized by the following columns
+
+- one column for each attribute of the vertexes
+- component (type long). It is the identifier of the strongly connected component to which the current vertex has been assigned.
+
+:::{.callout-note collapse="true"}
+## Example
+Print on the stdout the number of strongly connected components of the input graph.
+
+![Example graph](images/20_graph_analytics_2/bfs_example_1.png){width=80%}
+
+![Resulting graph](images/20_graph_analytics_2/strongly_connected_components_example.png){width=80%}
+
+Notice that there are four connected components on this graph.
+
+This is the content of the DataFrame used to store the identified strongly connected components
+
+| id | name |age | component |
+|-|-|-|-|
+| $u3$ | Charlie | 30 | 146028888064 |
+| $u2$ | Bob | 36 | 146028888064 |
+| $u1$ | Alice | 34 | 498216206336 |
+| $u5$ | Esther | 32 | 498216206336 |
+| $u4$ | David | 29 | 498216206336 |
+| $u6$ | Fanny | 36 | 1090921693184|
+| $u7$ | Gabby | 60 | 1546188226560|
+
+Notice the "component" field
+
+- "146028888064": vertexes of the first strongly connected component
+- "498216206336": vertexes of the second strongly connected component
+- "1090921693184": vertexes of the third strongly connected component
+- "1546188226560": vertexes of the fourth strongly connected component
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+# Set checkpoint folder
+sc.setCheckpointDir("tmp_ckpts")
+
+# Run the algorithm
+strongConnComp = g.stronglyConnectedComponents(maxIter=10)
+
+# Count the number of strongly connected components
+nComp=strongConnComp.select("component").distinct().count()
+
+print("Number of strongly connected components: ", nComp)
+```
+
+:::
+
+## Label propagation
+Label Propagation is an algorithm for detecting communities in graphs. It is similar to clustering, but exploits connectivity. Convergence is not guaranteed, and also it is possible to end up with trivial solutions.
+
+### The Label Propagation algorithm
+Each vertex in the network is initially assigned to its own community: at every step, vertexes send their community affiliation to all neighbors and update their state to the mode community affiliation of incoming messages.
+
+### Implementation
+
+```python
+labelPropagation(maxIter)
+```
+
+The `labelPropagation(maxIter)` method of the GraphFrame class runs and returns the result of the label propagation algorithm.
+
+- `maxIter`: number of iterations to run
+
+`labelPropagation()` returns a DataFrame that contains one record/Row for each distinct vertex of the input graph. It is characterized by the following columns
+
+- one column for each attribute of the vertexes
+- label (type long). It is the identifier of the community to which the current vertex has been assigned.
+
+:::{.callout-note collapse="true"}
+## Example
+Split in groups the vertexes of the graph by using the label propagation algorithm.
+
+![Example graph](images/20_graph_analytics_2/bfs_example_1.png){width=80%}
+
+Notice that the result returned by one run of the algorithm. Pay attention that convergence is not guarantee, and different results may come out from different runs.
+
+![Results](images/20_graph_analytics_2/label_propagation_example.png){width=80%}
+
+This is the content of the DataFrame used to store the identified communities
+
+| id | name |age | label |
+|-|-|-|-|
+| $u3$ |Charlie | 30| 146028888064 |
+| $u4$ | David | 29 | 498216206336 |
+| $u1$ | Alice | 34 | 498216206336 |
+| $u5$ | Esther | 32 | 498216206337 |
+| $u7$ | Gabby | 60 |1546188226560|
+| $u2$ | Bob | 36 |1606317768704 |
+| $u6$ | Fanny | 36 |1606317768704 |
+
+- "146028888064": vertexes of the first community
+- "498216206336": vertexes of the second community
+- "1546188226560": vertexes of the third community
+- "1606317768704": vertexes of the fourth community
+
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+# Run the label propagation algorithm
+labelComm = g.labelPropagation(10)
+```
+
+:::
