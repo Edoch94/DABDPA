@@ -708,3 +708,208 @@ labelComm = g.labelPropagation(10)
 ```
 
 :::
+
+## PageRank
+PageRank is the original famous algorithm used by the Google Search engine to rank vertexes (web pages) in a graph by order of importance. For the Google search engine vertexes are web pages in the World Wide Web, and edges are hyperlinks among web pages. This algorithm assigns a numerical weighting (importance) to each node. 
+
+It computes a likelihood that a person randomly clicking on links will arrive at any particular web page. For having a high PageRank, it is important to
+
+- Have many in-links
+- Be liked by relevant pages (pages characterized by a high PageRank)
+
+The basic idea is that each link vote is proportional to the importance of its source page $p$: if page $p$ with importance $\text{PageRank}(p)$ has $n$ out-links, each out-link gets $\frac{\text{PageRank}(p)}{n}$ votes; the importance of page $p$ is the sum of the votes on its in-links.
+
+### Simple recursive formulation
+- Initialize each page rank to $1.0$: for each $p$ in pages set $\textbf{PageRank}(p)$ to $1.0$
+- Iterate for $max$ iterations
+    1. Page $p$ sends a contribution $\frac{\textbf{PageRank}(p)}{\textbf{numOutLinks}(p)}$ to its neighbors (the pages it links);
+    2. Update each page rank $\textbf{PageRank}(p)$ with the sum of the received contributions.
+
+### Random jumps formulation
+The PageRank algorithm simulates the "random walk" of a user on the web. Indeed, at each step of the random walk, the random surfer has two options:
+
+- with probability $1-\alpha$, follow a link at random among the ones in the current page;
+- with probability $\alpha$, jump to a random page.
+
+- Initialize each page rank to $1.0$: for each $p$ in pages set $\textbf{PageRank}(p)$ to $1.0$
+- Iterate for max iterations
+    1. Page $p$ sends a contribution $\frac{\textbf{PageRank}(p)}{\textbf{numOutLinks}(p)}$ to its neighbors (the pages it links);
+    2. Update each page rank $\textbf{PageRank}(p)$ to $\alpha + (1 - \alpha)$ **times** the sum of the received contributions.
+
+::::{.callout-note collapse="true"}
+## Example
+- $\alpha=0.15$
+- Initialization: $\forall{p}, \textbf{PageRank}(p) = 1.0$
+
+![Initialization](images/15b_pagerank/pagerank_example_0.png){width=50%}
+
+::: {#fig-Example layout-ncol=2 layout-nrow=3}
+
+![Iteration #1](images/15b_pagerank/pagerank_example_1.png){width=50%}
+
+![Iteration #2](images/15b_pagerank/pagerank_example_2.png){width=50%}
+
+![Iteration #3](images/15b_pagerank/pagerank_example_3.png){width=50%}
+
+![Iteration #4](images/15b_pagerank/pagerank_example_4.png){width=50%}
+
+![Iteration #5](images/15b_pagerank/pagerank_example_5.png){width=50%}
+
+![Iteration #50](images/15b_pagerank/pagerank_example_50.png){width=50%}
+
+Iterations
+:::
+
+::::
+
+### Implementation 
+
+```python
+pageRank(resetProbability, maxIter, tol, sourceId)
+```
+
+The `pageRank()` method of the GraphFrame class runs the PageRank algorithm on the input graph.
+
+- `resetProbability`: probability of resetting to a random vertex (probability $\alpha$ associated with random jumps);
+- `maxIter`: if set, the algorithm is run for a fixed number of iterations; this may not be set if the tol parameter is set;
+- `tol`: if set, the algorithm is run until the given tolerance; this may not be set if the numIter parameter is set;
+- `sourceId`: the source vertex for a personalized PageRank (optional parameter).
+
+`pageRank()` returns a new GraphFrame that contains the same vertexes and edges of the input graph
+
+- the vertexes of the new graph are characterized by one new attribute, called "pagerank", that stores the PageRank of the vertexes;
+- the edges of the new graph are characterized by one new attribute, called "weight", that stores the weight (PageRank contribution) propagated through that edge.
+
+:::{.callout-note collapse="true"}
+## Example
+Apply the PageRank algorithm on the following graph and select the user associated with the highest PageRank value.
+
+![Example graph](images/20_graph_analytics_2/bfs_example_1.png){width=80%}
+
+![Resulting graph](images/20_graph_analytics_2/pagerank_example.png){width=80%}
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+# Run the PageRank algorithm
+pageRanks = g.pageRank(maxIter=30)
+
+# Select the maximum value of PageRank
+maxPageRank = pageRanks.vertices \
+    .agg({"pagerank":"max"}) \
+    .first()["max(pagerank)"]
+
+# Select the user with the maximum PageRank
+pageRanks.vertices \
+    .filter(pageRanks.vertices.pagerank==maxPageRank) \
+    .show()
+```
+
+:::
+
+## Custom graph algorithms
+GraphFrames provides primitives for developing yourself other graph algorithms. It is based on message passing approach: the two key components are:
+
+- `aggregateMessages`: it sends messages between vertexes, and aggregate messages for each vertex
+- joins: it joins message aggregates with the original graph
+
+:::{.callout-note collapse="true"}
+For each user, compute the sum of the ages of adjacent users (count many times the same adjacent user if there are many links).
+
+The resulting table is 
+
+| Vertex | SumAges |
+|-|-|
+|$u1$|97|
+|$u2$|94|
+|$u3$|108|
+|$u4$|66|
+|$u5$|99|
+|$u6$|62|
+
+```python
+from graphframes import GraphFrame
+
+# Vertex DataFrame
+v = spark.createDataFrame(
+    [
+        ("u1", "Alice", 34),
+        ("u2", "Bob", 36),
+        ("u3", "Charlie", 30),
+        ("u4", "David", 29),
+        ("u5", "Esther", 32),
+        ("u6", "Fanny", 36),
+        ("u7", "Gabby", 60)
+    ],
+    ["id", "name", "age"]
+)
+
+# Edge DataFrame
+e = spark.createDataFrame(
+    [
+        ("u1", "u2", "friend"),
+        ("u2", "u3", "follow"),
+        ("u3", "u2", "follow"),
+        ("u6", "u3", "follow"),
+        ("u5", "u6", "follow"),
+        ("u5", "u4", "friend"),
+        ("u4", "u1", "friend"),
+        ("u1", "u5", "friend")
+    ],
+    ["src", "dst", "relationship"]
+)
+
+# Create the graph
+g = GraphFrame(v, e)
+
+# For each user, sum the ages of the adjacent users
+# Send the age of each destination of an edge to its source
+msgToSrc = AggregateMessages.dst["age"]
+
+# Send the age of each source of an edge to its destination
+msgToDst = AggregateMessages.src["age"]
+
+# Aggregate messages
+aggAge = g.aggregateMessages(
+    sum(AggregateMessages.msg),
+    sendToSrc=msgToSrc,
+    sendToDst=msgToDst
+)
+
+#Show result
+aggAge.show()
+```
+
+:::

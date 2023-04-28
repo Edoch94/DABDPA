@@ -10,7 +10,7 @@ Graphs are data structures composed of nodes and edges
 
 Graph analytics is the process of analyzing relationships between vertexes and edges.
 
-![Example of graph](images/19_graph_analytics_1_1/graph_example.png){width=80%}
+![Example of graph](images/19_graph_analytics_1/graph_example.png){width=80%}
 
 Graphs are called **undirected** if edges do not have a direction, otherwise they are called **directed** graphs. Vertexes and edges can have data associated with them
 
