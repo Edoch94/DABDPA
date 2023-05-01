@@ -2,7 +2,8 @@
 title: "Streaming data analytics frameworks"
 ---
 
-# What is streaming processing?
+# Introduction
+## What is streaming processing?
 Streaming processing is the act of continuously incorporating new data to compute a result. Input data is unbounded (i.e., it has no beginning and no end). Series of events that arrive at the stream processing system, and the application will output multiple versions of the results as it runs or put them in a storage.
 
 Many important applications must process large streams of live data and provide results in near-real-time
@@ -12,3 +13,123 @@ Many important applications must process large streams of live data and provide 
 - Intrusion detection systems
 - ...
 
+The main advantages of stream processing are:
+
+- Vastly higher throughput in data processing
+- Low latency: application respond quickly (e.g., in seconds). It can keep states in memory
+- More efficient in updating a result than repeated batch jobs, because it automatically incrementalizes the computation
+
+Some requirements and challenges are:
+
+- Scalable to large clusters
+- Responding to events at low latency
+- Simple programming model
+- Processing each event exactly once despite machine failures - Efficient fault-tolerance in stateful computations
+- Processing out-of-order data based on application timestamps (also called event time)
+- Maintaining large amounts of state
+- Handling load imbalance and stragglers
+- Updating your application’s business logic at runtime
+
+## Stream processing frameworks for big streaming data analytics
+Several frameworks have been proposed to process in real-time or in near real-time data streams
+
+- Apache Spark (Streaming component)
+- Apache Storm
+- Apache Flink
+- Apache Samza
+- Apache Apex
+- Apache Flume
+- Amazon Kinesis Streams
+- ...
+
+All these frameworks use a cluster of servers to scale horizontally with respect to the (big) amount of data to be analyzed.
+
+### Main solutions
+There are two main solutions
+
+- **Continuous computation of data streams**. In this case, data are processed as soon as they arrive: every time a new record arrives from the input stream, it is immediately processed and a result is emitted as soon as possible. This is real-time processing.
+- **Micro-batch stream processing**. Input data are collected in micro-batches, where each micro-batch contains all the data received in a time window (typically less than a few seconds of data). One micro-batch a time is processed: every time a micro-batch of data is ready, its entire content is processed and a result is emitted. This is near real-time processing.
+
+![Continuous computation: one record at a time](images/21_streaming_analytics/continuous_computation.png){width=80%}
+
+![Micro-batch computation: one micro-batch at a time](images/21_streaming_analytics/microbatch_computation.png){width=80%}
+
+## Input data processing and result guarantees
+- At-most-once
+    - Every input element of a stream is processed once or less
+    - It is also called no guarantee
+    - The result can be wrong/approximated
+- At-least-once
+    - Every input element of a stream is processed once or more
+    - Input elements are replayed when there are failures
+    - The result can be wrong/approximated
+- Exactly-once
+    - Every input element of a stream is processed exactly once
+    - Input elements are replayed when there are failures
+    - If elements have been already processed they are not reprocessed
+    - The result is always correct
+    - Slower than the other processing approaches
+
+# Spark Streaming
+## What is Spark Streaming
+Spark Streaming is a framework for large scale stream processing
+
+- Scales to 100s of nodes
+- Can achieve second scale latencies
+- Provides a simple batch-like API for implementing complex algorithm
+- Micro-batch streaming processing
+- Exactly-once guarantees
+- Can absorb live data streams from Kafka, Flume, ZeroMQ, Twitter, ...
+
+![Spark Streaming components](images/21_streaming_analytics/spark_streaming_components.png){width=80%}
+
+Many important applications must process large streams of live data and provide results in near-real-time
+
+- Social network trends
+- Website statistics
+- Intrusion detection systems
+- ...
+
+The requirements are 
+
+- Scalable to large clusters
+- Second-scale latencies
+- Simple programming model
+- Efficient fault-tolerance in stateful computations
+
+## Spark discretized stream processing
+Spark streaming runs a streaming computation as a series of very small, deterministic batch jobs. It splits each input stream in portions and processes one portion at a time (in the incoming order): the same computation is applied on each portion (called **batch**) of the stream.
+
+So, Spark streaming 
+
+- Splits the live stream into batches of X seconds
+- Treats each batch of data as RDDs and processes them using RDD operations
+- Finally, the processed results of the RDD operations are returned in batches
+
+![Discretization in batches](images/21_streaming_analytics/discretization.png){width=80%}
+
+:::{.callout-note collapse="true"}
+## Example
+Word count implementation using Spark streaming. Problem specification:
+
+- The input is a stream of sentences
+- Split the input stream in batches of 10 seconds each and print on the standard output, for each batch, the occurrences of each word appearing in the batch (i.e., execute the word count application one time for each batch of 10 seconds)
+
+![Input and output](images/21_streaming_analytics/wordcount_input_output.png){width=80%}
+
+:::
+
+:::{.callout-tip}
+## Key concepts
+
+- DSream
+    - Sequence of RDDs representing a discretized version of the input stream of data (Twitter, HDFS, Kafka, Flume, ZeroMQ, Akka Actor, TCP sockets, ...)
+    - One RDD for each batch of the input stream
+- Transformations
+    - Modify data from one DStream to another
+    - Standard RDD operations (map, countByValue, reduce, join, ...)
+    - Window and Stateful operations (window, countByValueAndWindow, ...)
+- Output Operations/Actions
+    - Send data to external entity (saveAsHadoopFiles, saveAsTextFile, ...)
+
+:::
