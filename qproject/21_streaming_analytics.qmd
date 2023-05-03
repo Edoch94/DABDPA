@@ -133,3 +133,177 @@ Word count implementation using Spark streaming. Problem specification:
     - Send data to external entity (saveAsHadoopFiles, saveAsTextFile, ...)
 
 :::
+
+## Word count using DStreams
+A DStream is represented by a continuous series of RDDs. Each RDD in a DStream contains data from a certain batch/interval.
+
+![RDDs composing a DStreams](images/21_streaming_analytics/wordcount_dstreams.png){width=80%}
+
+Any operation applied on a DStream translates to operations on the underlying RDDs. These underlying RDD transformations are computed by the Spark engine. 
+
+![Operations in a DStreams](images/21_streaming_analytics/wordcount_dstreams_operations.png){width=80%}
+
+## Fault-tolerance
+DStreams remember the sequence of operations that created them from the original fault-tolerant input data. Batches of input data are replicated in memory of multiple worker nodes, therefore fault-tolerant: data lost due to worker failure, can be recomputed from input data.
+
+# Spark streaming programs
+## Basic structure of a Spark streaming program
+1. Define a Spark Streaming Context object. Define the size of the batches (in seconds) associated with the Streaming context.
+2. Specify the input stream and define a DStream based on it
+3. Specify the operations to execute for each batch of data
+4. Use transformations and actions similar to the ones available for standard RDDs
+5. Invoke the start method, to start processing the input stream
+6. Wait until the application is killed or the timeout specified in the application expires: if the timeout is not set and the application is not killed the application will run forever
+
+## Spark streaming context
+The Spark Streaming Context is defined by using the `StreamingContext(SparkConf sparkC, Duration batchDuration)` constructor of the class `pyspark.streaming.StreamingContext`.
+The `batchDuration` parameter specifies the size of the batches in seconds
+
+:::{.callout-note collapse="true"}
+## Example
+
+```python
+from pyspark.streaming import StreamingContext
+ssc = StreamingContext(sc, 10)
+```
+
+The input streams associated with this context will be split in batches of 10 seconds.
+:::
+
+After a context is defined, the next steps are
+
+- Define the input sources by creating input Dstreams
+- Define the streaming computations by applying transformation and output operations to DStreams
+
+## Input streams
+The input Streams can be generated from different sources
+
+- TCP socket, Kafka, Flume, Kinesis, Twitter.
+- Also a HDFS folder can be used as input stream. This option is usually used during the application development to perform a set of initial tests.
+
+### Input: TCP socket
+A DStream can be associated with the content emitted by a TCP socket: `socketTextStream(String hostname, int port_number)` is used to create a DStream based on the textual content emitted by a TCP socket. 
+
+:::{.callout-note collapse="true"}
+## Example
+
+```python
+lines = ssc.socketTextStream("localhost", 9999)
+```
+
+It stores the content emitted by localhost:9999 in the lines DStream.
+:::
+
+### Input: (HDFS) folder
+A DStream can be associated with the content of an input (HDFS) folder: every time a new file is inserted in the folder, the content of the file is stored in the associated DStream and processed. Pay attention that updating the content of a file does not trigger/change the content of the DStream. `textFileStream(String folder)` is used to create a DStream based on the content of the input folder.
+
+:::{.callout-note collapse="true"}
+## Example
+
+```python
+lines = textFileStream(inputFolder)
+```
+
+Store the content of the files inserted in the input folder in the lines Dstream: every time new files are inserted in the folder their content is stored in the current batch of the stream.
+:::
+
+### Input: other sources
+Usually DStream objects are defined on top of streams emitted by specific applications that emit real-time streaming data (e.g., Apache Kafka, Apache Flume, Kinesis, Twitter). It is also possible to write custom applications for generating streams of data, however Kafka, Flume and similar tools are usually a more reliable and effective solutions for generating streaming data. 
+
+## Transformations
+Analogously to standard RDDs, also DStreams are characterized by a set of transformations that, when applied to DStream objects, return a new DStream Object. The transformation is applied on one batch (RDD) of the input DStream at a time and returns a batch (RDD) of the new DStream (i.e., each batch (RDD) of the input DStream is associated with exactly one batch (RDD) of the returned DStream). Many of the available transformations are the same transformations available for standard RDDs.
+
+### Basic transformations
+
+| Transformation | Effect |
+|-|--|
+| `map(func)` | It returns a new DStream by passing each element of the source DStream through a function func. |
+| `flatMap(func)` | each input item can be mapped to 0 or more output items. Returns a new DStream. |
+| `filter(func)` | It returns a new DStream by selecting only the records of the source DStream on which func returns true. |
+| `reduce(func)` | It returns a new DStream of single-element RDDs by aggregating the elements in each RDD of the source DStream using a function func. The function must be associative and commutative so that it can be computed in parallel. Note that the `reduce` method of DStreams is a transformation. |
+| `reduceByKey(func)` | When called on a DStream of $(K, V)$ pairs, returns a new DStream of $(K, V)$ pairs where the values for each key are aggregated using the given reduce function. |
+| `combineByKey(createCombiner, mergeValue, mergeCombiners)` | when called on a DStream of $(K, V)$ pairs, returns a new DStream of $(K, W)$ pairs where the values for each key are aggregated using the given combine functions. |
+| `groupByKey()` | when called on a DStream of $(K, V)$ pairs, returns a new DStream of $(K, \text{Iterable<V>})$ pairs where the values for each key is the concatenation of all the values associated with key $K$ (i.e., It returns a new DStream by applying groupByKey on one batch (one RDD) of the input stream at a time). |
+| `countByValue()` | when called on a DStream of elements of type $K$, returns a new DStream of $(K, \text{Long})$ pairs where the value of each key is its frequency in each batch of the source Dstream. Note that the `countByValue` method of DStreams is a transformation. |
+| `count()` | It returns a new DStream of single-element RDDs by counting the number of elements in each batch (RDD) of the source Dstream (i.e., it counts the number of elements in each input batch (RDD)). Note that the `count` method of DStreams is a transformation. |
+| `union(otherStream)` | It returns a new DStream that contains the union of the elements in the source DStream and otherDStream. |
+| `join(otherStream)` | when called on two DStreams of $(K, V)$ and $(K, W)$ pairs, return a new DStream of $(K, (V, W))$ pairs with all pairs of elements for each key. |
+| `cogroup(otherStream)` | when called on a DStream of $(K, V)$ and $(K, W)$ pairs, return a new DStream of $(K, \text{Seq}[V], \text{Seq}[W])$ tuples. |
+
+### Basic actions
+
+| Action | Effect |
+| `pprint()` | It prints the first 10 elements of every batch of data in a DStream on the standard output of the driver node running the streaming application. It is useful for development and debugging |
+| `saveAsTextFiles(prefix, [suffix])` | It saves the content of the DStream on which it is invoked as text files: one folder for each batch, and the folder name at each batch interval is generated based on prefix, time of the batch (and suffix): "prefix-TIME_IN_MS[.suffix]" (e.g., `Counts.saveAsTextFiles(outputPathPrefix, "")`). |
+
+## Start and run the computations
+The `streamingContext.start()` method is used to start the application on the input stream(s). The `awaitTerminationOrTimeout(long millisecons)` method is used to specify how long the application will run.
+
+The `awaitTermination()` method is used to run the application forever
+
+- Until the application is explicitly killed
+- The processing can be manually stopped using `streamingContext.stop()`
+
+### Points to remember
+- Once a context has been started, no new streaming computations can be set up or added to it
+- Once a context has been stopped, it cannot be restarted
+- Only one StreamingContext per application can be active at the same time
+- `stop()` on StreamingContext also stops the SparkContext. To stop only the `StreamingContext`, set the optional parameter of `stop()` called `stopSparkContext` to False
+
+:::{.callout-note collapse="true"}
+## Example: Spark Streaming version of word count
+Problem specification
+
+- Input: a stream of sentences retrieved from localhost:9999
+- Task: 
+    - Split the input stream in batches of 5 seconds each and print on the standard output, for each batch, the occurrences of each word appearing in the batch (i.e., execute the word count problem for each batch of 5 seconds)
+    - Store the results also in an HDFS folder
+
+```python
+from pyspark.streaming import StreamingContext
+
+# Set prefix of the output folders
+outputPathPrefix="resSparkStreamingExamples"
+
+#Create a configuration object and#set the name of the applicationconf
+SparkConf().setAppName("Streaming word count")
+
+# Create a Spark Context object
+sc = SparkContext(conf=conf)
+
+# Create a Spark Streaming Context object
+ssc = StreamingContext(sc, 5)
+
+# Create a (Receiver) DStream that will connect to localhost:9999
+lines = ssc.socketTextStream("localhost", 9999)
+
+# Apply a chain of transformations to perform the word count task
+# The returned RDDs are DStream RDDs
+words = lines.flatMap(lambda line: line.split(" "))
+wordsOnes = words.map(lambda word: (word, 1))
+wordsCounts = wordsOnes.reduceByKey(lambda v1, v2: v1+v2)
+
+# Print the result on the standard output
+wordsCounts.pprint()
+
+# Store the result in HDFS
+wordsCounts.saveAsTextFiles(outputPathPrefix, "")
+
+#Start the computation
+ssc.start()
+
+# Run this application for 90 seconds
+ssc.awaitTerminationOrTimeout(90)
+ssc.stop(stopSparkContext=False)
+```
+
+:::
+
+# Windowed computation
+Spark Streaming also provides windowed computations, allowing to apply transformations over a sliding window of data: each window contains a set of batches of the inputstream, and windows can be overlapped (i.e., the same batch can be included in many consecutive windows).
+
+Every time the window slides over a source DStream, the source RDDs that fall within the window are combined and operated upon to produce the RDDs of the windowed DStream.
+
+![Graphical example](images/21_streaming_analytics/windows_graphical_example.png){width=80%}
+
+In the example, the operationis applied over the last 3 time units of data (i.e., the last 3 batches of the input DStream), and each window contains the data of 3 batches. It slides by 2 time units.
