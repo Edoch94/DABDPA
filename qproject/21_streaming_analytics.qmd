@@ -216,13 +216,13 @@ Analogously to standard RDDs, also DStreams are characterized by a set of transf
 ### Basic transformations
 
 | Transformation | Effect |
-|-|--|
+|-|---|
 | `map(func)` | It returns a new DStream by passing each element of the source DStream through a function func. |
 | `flatMap(func)` | each input item can be mapped to 0 or more output items. Returns a new DStream. |
 | `filter(func)` | It returns a new DStream by selecting only the records of the source DStream on which func returns true. |
 | `reduce(func)` | It returns a new DStream of single-element RDDs by aggregating the elements in each RDD of the source DStream using a function func. The function must be associative and commutative so that it can be computed in parallel. Note that the `reduce` method of DStreams is a transformation. |
 | `reduceByKey(func)` | When called on a DStream of $(K, V)$ pairs, returns a new DStream of $(K, V)$ pairs where the values for each key are aggregated using the given reduce function. |
-| `combineByKey(createCombiner, mergeValue, mergeCombiners)` | when called on a DStream of $(K, V)$ pairs, returns a new DStream of $(K, W)$ pairs where the values for each key are aggregated using the given combine functions. |
+| `combineByKey(...)` | when called on a DStream of $(K, V)$ pairs, returns a new DStream of $(K, W)$ pairs where the values for each key are aggregated using the given combine functions. The parameters are: `createCombiner`, `mergeValue`, and `mergeCombiners`|
 | `groupByKey()` | when called on a DStream of $(K, V)$ pairs, returns a new DStream of $(K, \text{Iterable<V>})$ pairs where the values for each key is the concatenation of all the values associated with key $K$ (i.e., It returns a new DStream by applying groupByKey on one batch (one RDD) of the input stream at a time). |
 | `countByValue()` | when called on a DStream of elements of type $K$, returns a new DStream of $(K, \text{Long})$ pairs where the value of each key is its frequency in each batch of the source Dstream. Note that the `countByValue` method of DStreams is a transformation. |
 | `count()` | It returns a new DStream of single-element RDDs by counting the number of elements in each batch (RDD) of the source Dstream (i.e., it counts the number of elements in each input batch (RDD)). Note that the `count` method of DStreams is a transformation. |
@@ -307,3 +307,323 @@ Every time the window slides over a source DStream, the source RDDs that fall wi
 ![Graphical example](images/21_streaming_analytics/windows_graphical_example.png){width=80%}
 
 In the example, the operationis applied over the last 3 time units of data (i.e., the last 3 batches of the input DStream), and each window contains the data of 3 batches. It slides by 2 time units.
+
+## Parameters
+Any window operation needs to specify two parameters
+
+- Window length: the duration of the window (3 in the example)
+- Sliding interval: the interval at which the window operation is performed (2 in the example)
+
+These two parameters must be multiples of the batch interval of the source DStream.
+
+::::{.callout-note collapse="true" }
+## Example: word count and window
+Problem specification
+
+- Input: a stream of sentences
+- Split the input stream in batches of 10 seconds
+- Define widows with the following characteristics
+    - Window length: 20 seconds (i.e., 2 batches)
+    - Sliding interval: 10 seconds (i.e., 1 batch)
+- Print on the standard output, for each window, the occurrences of each word appearing in the window (i.e., execute the word count problem for each window)
+
+::: {layout-ncol=1}
+![Step one](images/21_streaming_analytics/wordcount_window_1.png){width=80%}
+
+![Step two](images/21_streaming_analytics/wordcount_window_2.png){width=80%}
+
+Word count and windows
+:::
+::::
+
+## Basic window transformations
+
+::::{.content-visible when-format="html"}
+:::{.column-screen-inset}
+
+|Window transformation|Effect|
+|-|---|
+|`window(windowLength, slideInterval)`|It returns a new DStream which is computed based on windowed batches of the source DStream.|
+`countByWindow(windowLength, slideInterval)`|It returns a new single-element stream containing the number of elements of each window. The returned object is a Dstream of Long objects. However, it contains only one value for each window (the number of elements of the last analyzed window).|
+|`reduceByWindow(reduceFunc, invReduceFunc, windowDuration, slideDuration)`|It returns a new single-element stream, created by aggregating elements in the stream over a sliding interval using `func`. The function must be associative and commutative so that it can be computed correctly in parallel. If `invReduceFunc` is not None, the reduction is done incrementally using the old window's reduced value.|
+|`countByValueAndWindow(windowDuration , slideDuration)`|When called on a DStream of elements of type $K$, it returns a new DStream of $(K, \text{Long})$ pairs where the value of each key $K$ is its frequency in each window of the source DStream.|
+|`reduceByKeyAndWindow(func, invFunc, windowDuration, slideDuration=None, numPartitions=None)`|When called on a DStream of $(K, V)$ pairs, it returns a new DStream of $(K, V)$ pairs where the values for each key are aggregated using the given reduce function func over batches in a sliding window. The window duration (length) is specified as a parameter of this invocation (`windowDuration`). Notice that, if `slideDuration` is None, the `batchDuration` of the StreamingContext object is used (i.e., 1 batch sliding window); if `invFunc` is provideved (is not None), the reduction is done incrementally using the old window's reduced values (i.e., `invFunc` is used to apply an inverse reduce operation by considering the old values that left the window, e.g., subtracting old counts).|
+
+:::
+::::
+
+:::{.content-visible when-format="pdf"}
+
+\newpage
+
+\blandscape
+
+|Window transformation|Effect|
+|-|---|
+|`window(windowLength, slideInterval)`|It returns a new DStream which is computed based on windowed batches of the source DStream.|
+`countByWindow(windowLength, slideInterval)`|It returns a new single-element stream containing the number of elements of each window. The returned object is a Dstream of Long objects. However, it contains only one value for each window (the number of elements of the last analyzed window).|
+|`reduceByWindow(reduceFunc, invReduceFunc, windowDuration, slideDuration)`|It returns a new single-element stream, created by aggregating elements in the stream over a sliding interval using `func`. The function must be associative and commutative so that it can be computed correctly in parallel. If `invReduceFunc` is not None, the reduction is done incrementally using the old window's reduced value.|
+|`countByValueAndWindow(windowDuration , slideDuration)`|When called on a DStream of elements of type $K$, it returns a new DStream of $(K, \text{Long})$ pairs where the value of each key $K$ is its frequency in each window of the source DStream.|
+|`reduceByKeyAndWindow(func, invFunc, windowDuration, slideDuration=None, numPartitions=None)`|When called on a DStream of $(K, V)$ pairs, it returns a new DStream of $(K, V)$ pairs where the values for each key are aggregated using the given reduce function func over batches in a sliding window. The window duration (length) is specified as a parameter of this invocation (`windowDuration`). Notice that, if `slideDuration` is None, the `batchDuration` of the StreamingContext object is used (i.e., 1 batch sliding window); if `invFunc` is provideved (is not None), the reduction is done incrementally using the old window's reduced values (i.e., `invFunc` is used to apply an inverse reduce operation by considering the old values that left the window, e.g., subtracting old counts).|
+
+\elandscape
+
+:::
+
+## Checkpoint
+A streaming application must operate 24/7 and hence must be resilient to failures unrelated to the application logic (e.g., system failures, JVM crashes, etc.). For this to be possible, Spark Streaming needs to checkpoint enough information to a fault- tolerant storage system such that it can recover from failures, and this result is achieved by means of checkpoints, which are operations that store the data and metadata needed to restart the computation if failures happen. Checkpointing is necessary even for some window transformations and stateful transformations.
+
+Checkpointing is enabled by using the `checkpoint(String folder)` method of `SparkStreamingContext`: the parameter is the folder that is used to store temporary data. This is similar as for processing graphs with GraphFrames library, however, with GraphFrames, the checkpoint was the one of SparkContext.
+
+:::{.callout-note collapse="true"}
+## Example: word count and windows
+Problem specification
+
+- Input: a stream of sentences retrieved from localhost:9999
+- Split the input stream in batches of 5 seconds
+- Define widows with the following characteristics
+    - Window length: 15 seconds (i.e., 3 batches)
+    - Sliding interval: 5 seconds (i.e., 1 batch)
+- Print on the standard output, for each window, the occurrences of each word appearing in the window (i.e., execute the word count problem for each window)
+- Store the results also in an HDFS folder
+
+**First solution**
+
+```python
+from pyspark.streaming import StreamingContext
+
+# Set prefix of the output folders
+outputPathPrefix="resSparkStreamingExamples"
+
+#Create a configuration object and#set the name of the applicationconf
+SparkConf().setAppName("Streaming word count")
+
+# Create a Spark Context object
+sc = SparkContext(conf=conf)
+
+# Create a Spark Streaming Context object
+ssc = StreamingContext(sc, 5)
+
+# Set the checkpoint folder (it is needed by some window transformations)
+ssc.checkpoint("checkpointfolder")
+
+# Create a (Receiver) DStream that will connect to localhost:9999
+lines = ssc.socketTextStream("localhost", 9999)
+
+# Apply a chain of transformations to perform the word count task
+# The returned RDDs are DStream RDDs
+words = lines.flatMap(lambda line: line.split(" "))
+wordsOnes = words.map(lambda word: (word, 1))
+
+# reduceByKeyAndWindow is used instead of reduceByKey
+# The durantion of the window is also specified
+wordsCounts = wordsOnes \
+    .reduceByKeyAndWindow(lambda v1, v2: v1+v2, None, 15)
+
+# Print the num. of occurrences of each word of the current window
+# (only 10 of them)
+wordsCounts.pprint()
+
+# Store the output of the computation in the folders with prefix
+# outputPathPrefix
+wordsCounts.saveAsTextFiles(outputPathPrefix, "")
+
+#Start the computation
+ssc.start()
+ssc.awaitTermination ()
+```
+
+**Second solution**
+
+```python
+from pyspark.streaming import StreamingContext
+
+# Set prefix of the output folders
+outputPathPrefix="resSparkStreamingExamples"
+
+#Create a configuration object and#set the name of the applicationconf
+SparkConf().setAppName("Streaming word count")
+
+# Create a Spark Context object
+sc = SparkContext(conf=conf)
+
+# Create a Spark Streaming Context object
+ssc = StreamingContext(sc, 5)
+
+# Set the checkpoint folder (it is needed by some window transformations)
+ssc.checkpoint("checkpointfolder")
+
+# Create a (Receiver) DStream that will connect to localhost:9999
+lines = ssc.socketTextStream("localhost", 9999)
+
+# Apply a chain of transformations to perform the word count task
+# The returned RDDs are DStream RDDs
+words = lines.flatMap(lambda line: line.split(" "))
+wordsOnes = words.map(lambda word: (word, 1))
+
+# reduceByKeyAndWindow is used instead of reduceByKey
+# The durantion of the window is also specified
+wordsCounts = wordsOnes \
+    .reduceByKeyAndWindow(
+        lambda v1, v2: v1+v2, 
+        lambda vnow, # <1>
+        vold: vnow-vold, 15
+    )
+
+# Print the num. of occurrences of each word of the current window
+# (only 10 of them)
+wordsCounts.pprint()
+
+# Store the output of the computation in the folders with prefix
+# outputPathPrefix
+wordsCounts.saveAsTextFiles(outputPathPrefix, "")
+
+#Start the computation
+ssc.start()
+
+# Run this application for 90 seconds
+ssc.awaitTerminationOrTimeout(90)
+ssc.stop(stopSparkContext=False)
+```
+1. In this solution the inverse function is also specified in order to compute the result incrementally
+:::
+
+# Stateful computation
+## `updateStateByKey` transformation
+The `updateStateByKey` transformation allows maintaining a state for each key. The value of the state of each key is continuously updated every time a new batch is analyzed.
+
+The use of `updateStateByKey` is based on two steps
+
+- Define the state: the data type of the state associated with the keys can be an arbitrary data type
+- Define the state update function: specify with a function how to update the state of a key using the previous state and the new values from an input stream associated with that key
+
+In every batch, Spark will apply the state update function for all existing keys. For each key, the update function is used to update the value associated with a key by combining the former value and the new values associated with that key; in other words, for each key, the call method of the function is invoked on the list of new values and the former state value and returns the new aggregated value for the considered key.
+
+:::{.callout-note collapse="true"}
+## Example: word count and `updateStateByKey` transformation
+By using the `updateStateByKey`, the application can continuously update the number of occurrences of each word. The number of occurrences stored in the DStream returned by this transformation is computed over the union of all the batches (from the first one to the current one). For efficiency reasons, the new value for each key is computed by combining the last value for that key with the values of the current batch for the same key.
+
+Problem specification:
+
+- Input: a stream of sentences retrieved from localhost:9999
+- Split the input stream in batches of 5 seconds
+- Print on the standard output, every 5 seconds, the occurrences of each word appearing in the stream (from time 0 to the current time) (i.e., execute the word count problem from the beginning of the stream to current time)
+- Store the results also in an HDFS folder
+
+```python
+from pyspark.streaming import StreamingContext
+
+# Set prefix of the output folders
+outputPathPrefix="resSparkStreamingExamples"
+
+#Create a configuration object and#set the name of the applicationconf
+SparkConf().setAppName("Streaming word count")
+
+# Create a Spark Context object
+sc = SparkContext(conf=conf)
+
+# Create a Spark Streaming Context object
+ssc = StreamingContext(sc, 5)
+
+# Set the checkpoint folder (it is needed by some window transformations)
+ssc.checkpoint("checkpointfolder")
+
+# Create a (Receiver) DStream that will connect to localhost:9999
+lines = ssc.socketTextStream("localhost", 9999)
+
+# Apply a chain of transformations to perform the word count task
+# The returned RDDs are DStream RDDs
+words = lines.flatMap(lambda line: line.split(" "))
+wordsOnes = words.map(lambda word: (word, 1))
+
+# Define the function that is used to update the state of a key at a time
+def updateFunction(newValues, currentCount): # <1>
+    if currentCount is None:
+        currentCount = 0
+
+    # Sum the new values to the previous state for the current key
+    return sum(newValues, currentCount) # <2>
+
+# DStream made of cumulative counts for each key that get updated 
+# in every batch
+totalWordsCounts = wordsOnes.updateStateByKey(updateFunction) # <3>
+
+# Print the num. of occurrences of each word of the current window
+# (only 10 of them)
+totalWordsCounts.pprint()
+
+# Store the output of the computation in the folders with prefix
+# outputPathPrefix
+totalWordsCounts.saveAsTextFiles(outputPathPrefix, "")
+
+#Start the computation
+ssc.start()
+
+# Run this application for 90 seconds
+ssc.awaitTerminationOrTimeout(90)
+ssc.stop(stopSparkContext=False)
+```
+1. `currentCount`: current state/value for the current key
+1. `newValues`: list of new integer values for the current key
+2. `sum(newValues, currentCount)`: Combine current state and new values
+3. `updateFunction`: this function is invoked one time for each key
+
+:::
+
+# Transform transformation
+Some types of transformations are not available for DStreams (e.g., `sortBy()`, `sortByKey()`, `distinct()`), moreover, sometimes it is needed to combine DStreams and RDDs. For example, the functionality of joining every batch in a data stream with another dataset (a standard RDD) is not directly exposed in the DStream API. The `transform()` transformation can be used in these situations.
+
+|Transformation|Effect|
+|-|---|
+|`transform(func)`|It is a specific transformation of DStreams that returns a new DStream by applying an RDD-to-RDD function to every RDD of the source Dstream. This can be used to apply arbitrary RDD operations on the DStream|
+
+:::{.callout-note collapse="true"}
+Problem specification
+
+- Input: a stream of sentences retrieved from localhost:9999
+- Split the input stream in batches of 5 seconds each and print on the standard output, for each batch, the occurrences of each word appearing in the batch. The pairs must be returned/displayed sorted by decreasing number of occurrences (per batch)
+- Store the results also in an HDFS folder
+
+```python
+from pyspark.streaming import StreamingContext
+
+# Set prefix of the output folders
+outputPathPrefix="resSparkStreamingExamples"
+
+#Create a configuration object and#set the name of the applicationconf
+SparkConf().setAppName("Streaming word count")
+
+# Create a Spark Context object
+sc = SparkContext(conf=conf)
+
+# Create a Spark Streaming Context object
+ssc = StreamingContext(sc, 5)
+
+# Create a (Receiver) DStream that will connect to localhost:9999
+lines = ssc.socketTextStream("localhost", 9999)
+
+# Apply a chain of transformations to perform the word count task
+# The returned RDDs are DStream RDDs
+words = lines.flatMap(lambda line: line.split(" "))
+wordsOnes = words.map(lambda word: (word, 1))
+wordsCounts = wordsOnes.reduceByKey(lambda v1, v2: v1+v2)
+
+# Sort the content/the pairs by decreasing value (# of occurrences)
+wordsCountsSortByKey = wordsCounts \
+    .transform(lambda batchRDD: batchRDD.sortBy(lambda pair: -1*pair[1]))
+
+# Print the result on the standard output
+wordsCountsSortByKey.pprint()
+
+# Store the result in HDFS
+wordsCountsSortByKey.saveAsTextFiles(outputPathPrefix, "")
+
+#Start the computation
+ssc.start()
+
+# Run this application for 90 seconds
+ssc.awaitTerminationOrTimeout(90)
+ssc.stop(stopSparkContext=False)
+```
+
+:::
