@@ -1,0 +1,125 @@
+---
+title: "Spark structured streaming"
+---
+
+# What is Spark structured streaming?
+Structured Streaming is a scalable and fault-tolerant stream processing engine that is built on the Spark SQL engine, and input data are represented by means of (streaming) DataFrames. Structured Streaming uses the existing Spark SQL APIs to query data streams (the same methods used for analyzing static DataFrames).
+
+A set of specific methods are used to define
+
+- Input and output streams
+- Windows
+
+## Input data model
+Each input data stream is modeled as a table that is being continuously appended: every time new data arrive they are appended at the end of the table (i.e., each data stream is considered an unbounded input table).
+
+New input data in the stream are new rows appended to an unbounded table
+
+![Input stream](images/22_structured_streaming/input_data_model.png){width=80%}
+
+## Queries
+The expressed queries are incremental queries that are run incrementally on the unbounded input tables. 
+
+- The arrive of new data triggers the execution of the incremental queries
+- The result of a query at a specific timestamp is the one obtained by running the query on all the data arrived until that timestamp (i.e., stateful queries are executed). 
+- Aggregation queries combine new data with the previous results to optimize the computation of the new results.
+
+The queries can be executed
+
+- As micro-batch queries with a fixed batch interval: this is the standard behavior, with exactly-once fault-tolerance guarantees
+- As continuous queries: this is experimental behavior, with at-least-once fault-tolerance guarantees
+
+In this example the (micro-batch) query is executed every 1 second
+
+![Query execution](images/22_structured_streaming/query_execution.png){width=80%}
+
+Note that every time the query is executed, all data received so far are considered.
+
+:::{.callout-note collapse="true"}
+## Example
+- Input
+    - A stream of records retrieved from localhost:9999
+    - Each input record is a reading about the status of a station of a bike sharing system in a specific timestamp
+    - Each input reading has the format `stationId,# free slots,#used slots,timestamp`
+- For each stationId, print on the standard output the total number of received input readings with a number of free slots equal to 0
+    - Print the requested information when new data are received by using the micro-batch processing mode
+    - Suppose the batch-duration is set to 2 seconds
+
+![Example execution](images/22_structured_streaming/stream_example.png){width=80%}
+
+:::
+
+# Key concepts
+- Input sources
+- Transformations
+- Outputs
+    - External destinations/sinks
+    - Output Modes
+- Query run/execution
+- Triggers
+
+## Input sources
+- File source
+    - Reads files written in a directory as a stream of data
+    - Each line of the input file is an input record
+    - Supported file formats are text, csv, json, orc, parquet, ...
+- Kafka source
+    - Reads data from Kafka
+    - Each Kafka message is one input record
+- Socket source (for debugging purposes)
+    - Reads UTF8 text data from a socket connection
+    - This type of source does not provide end-to-end fault-tolerance guarantees
+- Rate source (for debugging purposes)
+    - Generates data at the specified number of rows per second
+    - Each generated row contains a timestamp and value of type long
+
+The `readStream` property of the `SparkSession` class is used to create `DataStreamReaders`: the methods `format()` and `option()` of the `DataStreamReader` class are used to specify the input streams (e.g., type, location). The method `load()` of the `DataStreamReader` class is used to return DataFrames associated with the input data streams.
+
+:::{.callout-note collapse="true"}
+In this example the (streaming) DataFrame recordsDF is created and associated with the input stream of type socket
+
+- Address: localhost
+- Input port: 9999
+
+```python
+recordsDF = spark.readStream \
+    .format("socket") \
+    .option("host", "localhost") \
+    .option("port", 9999) \
+    .load()
+```
+
+:::
+
+## Transformations
+Transformations are the same of DataFrames, however there are restrictions on some types of queries/transformations that cannot be executed incrementally.
+
+Unsupported operations:
+
+- Multiple streaming aggregations (i.e. a chain of aggregations on a streaming DataFrame)
+- Limit and take first N rows
+- Distinct operations
+- Sorting operations are supported on streaming DataFrames only after an aggregation and in complete output mode
+- Few types of outer joins on streaming DataFrames are not supported
+
+## Outputs
+- Sinks: they are instances of the class DataStreamWriter and are used to specify the external destinations and store the results in the external destinations
+- File sink: it stores the output to a directory; supported file formats are text, csv, json, orc, parquet, ...
+- Kafka sink: it stores the output to one or more topics in Kafka
+- Foreach sink: it runs arbitrary computation on the output records
+- Console sink (for debugging purposes): it prints the computed output to the console every time a new batch of records has been analyzed; this should be used for debugging purposes on low data volumes as the entire output is collected and stored in the driver’s memory after each computation
+- Memory sink (for debugging purposes): the output is stored in memory as an in-memory table; this should be used for debugging purposes on low data volumes as the entire output is collected and stored in the driver’s memory
+
+### Output mods
+We must define how we want Spark to write output data in the external destinations. The supported output modes depend on the query type, and the possible output mods are the following
+
+#### Append
+This is the default mode. Only the new rows added to the computed result since the last trigger (computation) will be outputted. This mode is supported for only those queries where rows added to the result is never going to change: this mode guarantees that each row will be output only once. So, the supported queries are only select, filter, map, flatMap, filter, join, etc.
+
+#### Complete
+The whole computed result will be outputted to the sink after every trigger (computation). This mode is supported for aggregation queries.
+
+#### Update
+Only the rows in the computed result that were updated since the last trigger (computation) will be outputted.
+
+The complete list of supported output modes for each query type is available in the [Apache Spark documentation](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html).
