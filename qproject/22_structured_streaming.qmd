@@ -123,3 +123,189 @@ The whole computed result will be outputted to the sink after every trigger (com
 Only the rows in the computed result that were updated since the last trigger (computation) will be outputted.
 
 The complete list of supported output modes for each query type is available in the [Apache Spark documentation](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html).
+
+### Code
+The `writeStream` property of the `SparkSession` class is used to create `DataStreamWriters`. The methods `outputMode()`, `format()`, and `option()` of the `DataStreamWriter` class are used to specify the output destination (data format, location, output mode, etc.).
+
+:::{.callout-note collapse="true"}
+Example
+The `DataStreamWriter` "streamWriterRes" is created and associated with the console. The output mode is set to append.
+
+```python
+streamWriterRes = stationIdTimestampDF \
+    .writeStream \
+    .outputMode("append") \
+    .format("console")
+```
+
+:::
+
+## Query run/execution
+To start executing the defined queries/structured streaming applications you must explicitly invoke the `start()` action on the defined sinks (`DataStreamWriter` objects associated with the external destinations in which the results will be stored). It is possible to start several queries in the same application, and structured streaming queries run forever (they must be explicitly stop/kill).
+
+## Triggers
+For each Spark structured streaming query it is possible to specify when new input data must be processed, and whether the query is going to be executed as a micro-batch query with a fixed batch interval or as a continuous processing query (experimental). The trigger type for each query is specified by means of the `trigger()` method of the `DataStreamWriter` class.
+
+### Trigger types
+No trigger type is explicitly specified, by default the query will be executed in micro-batch mode, where each micro-batch is generated and processed as soon as the previous micro-batch has been processed.
+
+#### Fixed interval micro-batches
+The query will be executed in micro-batch mode. Micro-batches will be processed at the user-specified intervals: the parameter `processingTime` of the trigger `method()` is used to specify the micro-batch size, and, if the previous micro-batch completes within its interval, then the engine will wait until the interval is over before processing the next micro-batch; if the previous micro-batch takes longer than the interval to complete (i.e. if an interval boundary is missed), then the next micro-batch will start as soon as the previous one completes.
+
+#### One-time micro-batch
+The query will be executed in micro-batch mode, but the query will be executed only one time on one single micro-batch containing all the available data of the input stream; after the single execution the query stops on its own. This trigger type is useful when the goal is to periodically spin up a cluster, process everything that is available since the last period, and then shutdown the cluster. In some case, this may lead to significant cost savings.
+
+#### Continuous with fixed checkpoint interval (experimental)
+The query will be executed in the new low-latency, continuous processing mode. It offers at-least-once fault-tolerance guarantees.
+
+## Spark structured streaming examples
+### Example 1
+- Input
+    - A stream of records retrieved from localhost:9999
+    - Each input record is a reading about the status of a station of a bike sharing system in a specific timestamp
+    - Each input reading has the format: "stationId", "# free slots", "#used slots", "timestamp"
+- Output
+    - For each input reading with a number of free slots equal to 0 print on the standard output the value of stationId and timestamp
+    - Use the standard micro-batch processing mode
+
+```python
+from pyspark.sql.types import *
+from pyspark.sql.functions import split
+
+# Create a "receiver" DataFrame that will connect to localhost:9999
+recordsDF = spark.readStream \
+    .format("socket") \
+    .option("host", "localhost") \
+    .option("port", 9999) \
+    .load()
+
+# The input records are characterized by one single column called value
+# of type string
+# Example of an input record: s1,0,3,2016-03-11 09:00:04
+# Define four more columns by splitting the input column value
+# New columns:
+# - stationId
+# - freeslots
+# - usedslots
+# - timestamp
+readingsDF = recordsDF \
+    .withColumn("stationId", split(recordsDF.value, ',')[0].cast("string")) \ 
+    .withColumn("freeslots", split(recordsDF.value, ',')[1].cast("integer")) \
+    .withColumn("usedslots", split(recordsDF.value, ',')[2].cast("integer")) \
+    .withColumn("timestamp", split(recordsDF.value, ',')[3].cast("timestamp")) # <1>
+
+# Filter data
+# Use the standard filter transformation
+fullReadingsDF = readingsDF.filter("freeslots=0") # <2>
+
+# Select stationid and timestamp
+# Use the standard select transformation
+stationIdTimestampDF = fullReadingsDF.select("stationId", "timestamp") # <2>
+
+# The result of the structured streaming query will be stored/printed on
+# the console "sink“.
+# append output mode
+queryFilterStreamWriter = stationIdTimestampDF \
+    .writeStream \
+    .outputMode("append") \
+    .format("console")
+
+# Start the execution of the query (it will be executed until it is explicitly stopped)
+queryFilter = queryFilterStreamWriter.start()
+```
+1. `withColumn()` is used to add new columns (it is a standard DataFrame method). It returns a DataFrame with the same columns of the input DataFrame and the new defined column. For each new column it is possible to specify name (e.g. "stationId") and the SQL function that is used to define its value in each record. The `cast()` method is used to specify the data type of each defined column.
+2. `filter` and `select` are standard DataFrame transformations
+
+### Example 2
+- Input
+    - A stream of records retrieved from localhost:9999
+    - Each input record is a reading about the status of a station of
+    - bike sharing system in a specific timestamp
+    - Each input reading has the format: "stationId", "# free slots", "#used slots", "timestamp"
+- Output
+    - For each stationId, print on the standard output the total number of received input readings with a number of free slots equal to 0
+    - Print the requested information when new data are received by using the standard micro-batch processing mode
+
+```python
+from pyspark.sql.types import *
+from pyspark.sql.functions import split
+
+# Create a "receiver" DataFrame that will connect to localhost:9999
+recordsDF = spark.readStream \
+    .format("socket") \
+    .option("host", "localhost") \
+    .option("port", 9999) \
+    .load()
+
+# The input records are characterized by one single column called value
+# of type string
+# Example of an input record: s1,0,3,2016-03-11 09:00:04
+# Define four more columns by splitting the input column value
+# New columns:
+# - stationId
+# - freeslots
+# - usedslots
+# - timestamp
+readingsDF = recordsDF \
+    .withColumn("stationId", split(recordsDF.value, ',')[0].cast("string")) \
+    .withColumn("freeslots", split(recordsDF.value, ',')[1].cast("integer")) \
+    .withColumn("usedslots", split(recordsDF.value, ',')[2].cast("integer")) \
+    .withColumn("timestamp", split(recordsDF.value, ',')[3].cast("timestamp"))
+
+# Filter data
+# Use the standard filter transformation
+fullReadingsDF = readingsDF.filter("freeslots=0")
+
+# Count the number of readings with a number of free slots equal to 0
+# for each stationId
+# The standard groupBy method is used
+countsDF = fullReadingsDF \
+    .groupBy("stationId") \
+    .agg({"*":"count"}) # <1>
+
+# The result of the structured streaming query will be stored/printed on
+# the console "sink"
+# complete output mode
+# (append mode cannot be used for aggregation queries)
+queryCountStreamWriter = countsDF \
+    .writeStream \
+    .outputMode("complete") \
+    .format("console")
+
+# Start the execution of the query (it will be executed until it is explicitly stopped)
+queryCount = queryCountStreamWriter.start()
+```
+1. `groupBy` and `agg` are standard DataFrame transformations
+
+# Event time and window operations
+Input streaming records are usually characterized by a time information: it is usually called event-time, and it is the time when the data was generated. For many applications, you want to operate by taking into consideration the event-time and windows containing data associated with the same event-time range.
+
+:::{.callout-note collapse="true"}
+## Example
+Compute the number of events generated by each monitored IoT device every minute based on the event-time. For each window associated with one distinct minute, consider only the data with an event-time inside that minute/window and compute the number of events for each IoT device: one computation for each minute/window. You want to use the time when the data was generated (i.e., the event-time) rather than the time Spark receives them.
+:::
+
+Spark allows defining windows based on the time-event input column, and then apply aggregation functions over each window.
+
+For each structured streaming query on which you want to apply a window computation you must specify
+
+- the name of the time-event column in the input (streaming) DataFrame
+- the characteristics of the (sliding) windows
+    - `windowDuration`
+    - `slideDuration`
+
+Do not set it if you want non-overlapped windows, (i.e., if you want to a `slideDuration` equal to `windowDuration`). You can set different window characteristics for each query of your application.
+
+The `window(timeColumn, windowDuration, slideDuration=None)` function is used inside the standard `groupBy()` one to specify the characteristics of the windows. Notice that windows can be used only with queries that are applying aggregation functions.
+
+## Event time and window operations examples
+- Input
+    - A stream of records retrieved from localhost:9999
+    - Each input record is a reading about the status of a station of a bike sharing system in a specific timestamp
+    - Each input reading has the format: "stationId", "# free slots", "#used slots", "timestamp"
+    - timestamp is the event-time column
+- Output
+    - For each stationId, print on the standard output the total number of received input readings with a number of free slots equal to 0 in each window
+    - The query is executed for each window
+    - Set `windowDuration` to 2 seconds and no `slideDuration` (i.e., non-overlapped windows)
+
