@@ -298,7 +298,7 @@ Do not set it if you want non-overlapped windows, (i.e., if you want to a `slide
 
 The `window(timeColumn, windowDuration, slideDuration=None)` function is used inside the standard `groupBy()` one to specify the characteristics of the windows. Notice that windows can be used only with queries that are applying aggregation functions.
 
-## Event time and window operations examples
+## Event time and window operations: example 1
 - Input
     - A stream of records retrieved from localhost:9999
     - Each input record is a reading about the status of a station of a bike sharing system in a specific timestamp
@@ -309,3 +309,206 @@ The `window(timeColumn, windowDuration, slideDuration=None)` function is used in
     - The query is executed for each window
     - Set `windowDuration` to 2 seconds and no `slideDuration` (i.e., non-overlapped windows)
 
+![Step 1](images/22_structured_streaming/example_3_1.png){width=80%}
+
+The returned result has a column called window. It contains the time slot associated with the window $[\text{from timestamp}, \text{to timestamp})$
+
+![Step 2](images/22_structured_streaming/example_3_2.png){width=80%}
+
+![Step 3](images/22_structured_streaming/example_3_3.png){width=80%}
+
+```python
+from pyspark.sql.types import *
+from pyspark.sql.functions import split
+from pyspark.sql.functions import window
+
+# Create a "receiver" DataFrame that will connect to localhost:9999
+recordsDF = spark.readStream \
+    .format("socket") \
+    .option("host", "localhost") \
+    .option("port", 9999) \
+    .load()
+
+# The input records are characterized by one single column called value
+# of type string
+# Example of an input record: s1,0,3,2016-03-11 09:00:04
+# Define four more columns by splitting the input column value
+# New columns:
+# - stationId
+# - freeslots
+# - usedslots
+# - timestamp
+readingsDF = recordsDF \
+    .withColumn("stationId", split(recordsDF.value, ',')[0].cast("string")) \
+    .withColumn("freeslots", split(recordsDF.value, ',')[1].cast("integer")) \
+    .withColumn("usedslots", split(recordsDF.value, ',')[2].cast("integer")) \
+    .withColumn("timestamp", split(recordsDF.value, ',')[3].cast("timestamp"))
+
+# Filter data
+# Use the standard filter transformation
+fullReadingsDF = readingsDF.filter("freeslots=0")
+
+# Count the number of readings with a number of free slots equal to 0
+# for each stationId in each window.
+# windowDuration = 2 seconds
+# no overlapping windows
+countsDF = fullReadingsDF \
+    .groupBy(window(fullReadingsDF.timestamp, "2 seconds"), "stationId") \
+    .agg({"*":"count"}) \
+    .sort("window")
+
+# The result of the structured streaming query will be stored/printed on
+# the console "sink"
+# complete output mode
+# (append mode cannot be used for aggregation queries)
+queryCountWindowStreamWriter = countsDF \
+    .writeStream \
+    .outputMode("complete") \
+    .format("console") \
+    .option("truncate", "false")
+
+# Start the execution of the query (it will be executed until it is explicitly stopped)
+queryCountWindow = queryCountWindowStreamWriter.start()
+
+```
+
+## Late data
+Sparks handles data that have arrived later than expected based on its event-time; these are called late data. Spark has full control over updating old aggregates when there are late data: every time new data are processed the result is computed by combining old aggregate values and the new data by considering the event-time column instead of the time Spark receives the data.
+
+### Late data example
+- Input
+    - A stream of records retrieved from localhost:9999
+    - Each input record is a reading about the status of a station of a bike sharing system in a specific timestamp
+    - Each input reading has the format: "stationId", "# free slots", "#used slots", "timestamp"
+    - timestamp is the event-time column
+- Output
+    - For each stationId, print on the standard output the total number of received input readings with a number of free slots equal to 0 in each window
+    - The query is executed for each window
+    - Set `windowDuration` to 2 seconds and no `slideDuration` (i.e., non-overlapped windows)
+
+![Step 1](images/22_structured_streaming/late_data_example_1.png){width=80%}
+
+![Step 2](images/22_structured_streaming/late_data_example_2.png){width=80%}
+
+![Step 3](images/22_structured_streaming/late_data_example_3.png){width=80%}
+
+Notice that late data that was generated at ***2016-03-11 09:00:06***, but arrived at ***2016-03-11 09:00:08***: the result consider also late data and assign them to the right window by considering the event-time information.
+
+The code is the same of the previous example (Event time and window operations: example 1): late data are automatically handled by Spark.
+
+## Event time and window operations: example 2
+- Input
+    - A stream of records retrieved from localhost:9999
+    - Each input record is a reading about the status of a station of a bike sharing system in a specific timestamp
+    - Each input reading has the format: "stationId", "# free slots", "#used slots", "timestamp"
+    - timestamp is the event-time column
+- Output
+    - For each window, print on the standard output the total number of received input readings with a number of free slots equal to 0
+    - The query is executed for each window
+    - Set windowDuration to 2 seconds and no slideDuration (i.e., non-overlapped windows)
+
+![Step 1](images/22_structured_streaming/example_4_1.png){width=80%}
+
+![Step 2](images/22_structured_streaming/example_4_2.png){width=80%}
+
+![Step 3](images/22_structured_streaming/example_4_3.png){width=80%}
+
+```python
+from pyspark.sql.types import *
+from pyspark.sql.functions import split
+from pyspark.sql.functions import window
+
+# Create a "receiver" DataFrame that will connect to localhost:9999
+recordsDF = spark.readStream \
+    .format("socket") \
+    .option("host", "localhost") \
+    .option("port", 9999) \
+    .load()
+
+# The input records are characterized by one single column called value
+# of type string
+# Example of an input record: s1,0,3,2016-03-11 09:00:04
+# Define four more columns by splitting the input column value
+# New columns:
+# - stationId
+# - freeslots
+# - usedslots
+# - timestamp
+readingsDF = recordsDF \
+    .withColumn("stationId", split(recordsDF.value, ',')[0].cast("string")) \
+    .withColumn("freeslots", split(recordsDF.value, ',')[1].cast("integer")) \
+    .withColumn("usedslots", split(recordsDF.value, ',')[2].cast("integer")) \
+    .withColumn("timestamp", split(recordsDF.value, ',')[3].cast("timestamp"))
+
+# Filter data
+# Use the standard filter transformation
+fullReadingsDF = readingsDF.filter("freeslots=0")
+
+# Count the number of readings with a number of free slots equal to 0
+# for in each window.
+# windowDuration = 2 seconds
+# no overlapping windows
+countsDF = fullReadingsDF \
+    .groupBy(window(fullReadingsDF.timestamp, "2 seconds")) \
+    .agg({"*":"count"}) \
+    .sort("window")
+
+# The result of the structured streaming query will be stored/printed on
+# the console "sink"
+# complete output mode
+# (append mode cannot be used for aggregation queries)
+queryCountWindowStreamWriter = countsDF \
+    .writeStream \
+    .outputMode("complete") \
+    .format("console") \
+    .option("truncate", "false")
+
+# Start the execution of the query (it will be executed until it is 
+# explicitly stopped)
+queryCountWindow = queryCountWindowStreamWriter.start()
+
+```
+
+## Watermarking
+Watermarking is a feature of Spark that allows the user to specify the threshold of late data, and allows the engine to accordingly clean up old state. Results related to old event-times are not needed in many real streaming applications: they can be dropped to improve the efficiency of the application, since keeping the state of old results is resource expensive; in this way every time new data are processed only recent records are considered.
+
+Specifically, to run windowed queries for days, it is necessary for the system to bound the amount of intermediate in-memory state it accumulates. This means the system needs to know when an old aggregate can be dropped from the in-memory state because the application is not going to receive late data for that aggregate any more; to enable this, in Spark 2.1, watermarking has been introduced.
+
+Watermarking lets the Spark Structured Streaming engine automatically track the current event time in the data and attempt to clean up old state accordingly. It allows to define the watermark of a query by specifying the event time column and the threshold on how late the data is expected to be in terms of event time: for a specific window ending at time $T$, the engine will maintain state and allow late data to update the state/the result until max event time seen by the engine $< T + \text{late threshold}$. In other words, late data within the threshold will be aggregated, but data later than ${T + \text{threshold}}$ will be dropped.
+
+# Join operations
+Spark Structured Streaming manages also join operations
+
+- Between two streaming DataFrames
+- Between a streaming DataFrame and a static DataFrame
+
+The result of the streaming join is generated incrementally.
+
+When joining between two streaming DataFrames, for both input streams, past input streaming data must be buffered/recorded in order to be able to match every future input record with past input data and accordingly generate joined results. Too many resources are needed for storing all the input data, hence, old data must be discarded. Watermark thresholds must be defined on both input streams such that the engine knows how delayed the input can be and drop old data.
+
+The methods `join()` and `withWatermark()` are used to join streaming DataFrames: the join method is similar to the one available for static DataFrame.
+
+```python
+from pyspark.sql.functions import expr
+impressions = spark.readStream. ...
+clicks = spark.readStream. ...
+
+# Apply watermarks on event-time columns
+impressionsWithWatermark = impressions \
+    .withWatermark("impressionTime", "2 hours")
+    
+clicksWithWatermark = clicks \
+    .withWatermark("clickTime", "3 hours")
+
+# Join with event-time constraints
+impressionsWithWatermark.join(
+    clicksWithWatermark,
+    expr(
+        """
+        clickAdId = impressionAdId AND 
+        clickTime >= impressionTime AND
+        clickTime <= impressionTime + interval 1 hour"""
+    ) 
+)
+
+```
