@@ -1,0 +1,77 @@
+---
+title: "Streaming data analytics frameworks"
+---
+
+# Stream processing frameworks for (big) streaming data analytics
+Several frameworks have been proposed to process in real-time or in near real-time data streams:
+
+- Apache Spark (Streaming component)
+- Apache Storm
+- Apache Flink
+- Apache Samza
+- Apache Apex
+- Apache Flume
+- Amazon Kinesis Streams
+- ...
+
+All these frameworks use a cluster of servers to scale horizontally with respect to the (big) amount of data to be analyzed.
+
+## Comparison among state of the art streaming frameworks
+**Apache Spark Streaming**
+
+- Micro-batch applications
+- Processes each record exactly once
+
+**Apache Storm**
+
+- Continuous/real-time computation: very low latency
+- Processes each record at least once in real-time: each record could be processed multiple times, hence may update mutable state twice
+- Apache Storm Trident API: it is a running modality of Apache Storm that processes each record exactly once (micro-batch); slower than the Apache Storm version
+
+**Apache Flink**
+
+- Continuous/real-time stateful computations over data streams: low latency
+- Processes each record exactly once
+
+# Introduction to Apache Storm
+Apache Storm™ is a distributed framework that is used for real-time processing of data streams (e.g., Tweets analysis, Log processing). Currently, it is an [open source project](http://storm.apache.org/) of the Apache Software Foundation. It is implemented in Clojure and Java (12 core committers, plus about 70 contributors).
+
+Storm was first developed by Nathan Marz at BackType, a company that provided social search applications. Later (2011), BackType was acquired by Twitter, and now it is a critical part of their infrastructure. Currently, Storm is a project of the Apache Software Foundation (since 2013).
+
+## Data processing
+- Continuous computation: Storm can do continuous computation on data streams in real time; it can process each message as it comes (an example of continuous computation is streaming trending topics detection on Twitter)
+- Real-time analytics: Storm can analyze and extract insights or complex knowledge from data that come from several real-time data streams
+
+## Features of Storm
+Storm is
+
+- Distributed: Storm is a distributed system than can run on a cluster of commodity servers.
+- Horizontally scalable: Storm allows adding more servers (nodes) to your Storm cluster and increase the processing capacity of your application. It is linearly scalable with respect to the number of nodes, which means that you can double the processing capacity by doubling the nodes.
+- Fast: Storm has been reported to process up to 1 million tuples per second per node.
+- Fault tolerant: Units of work are executed by worker processes in a Storm cluster. When a worker dies, Storm will restart that worker (on the same node or on to another node).
+- Reliable - Guaranteed data processing: Storm provides guarantees that each message (tuple) will be processed at least once; in case of failures, Storm will replay the lost tuples, and it can be configured to process each tuple only once.
+- Easy to operate: Storm is simple to deploy and manage. Once the cluster is deployed, it requires little maintenance.
+- Programming language agnostic: Even though the Storm platform runs on Java Virtual Machine, the applications that run over it can be written in any programming language that can read and write to standard input and output streams.
+
+# Storm core concepts
+Storm can be considered a distributed Function Programming-like processing of data streams. It applies a set of functions, in a specific order, on the elements of the input data streams and emits new data streams, however, each function can store its state by means of variables, and so it is not pure functional programming.
+
+## Main concepts
+- Tuple
+- Data Stream
+- Spout
+- Bolt
+- Topology
+
+## Data model
+The basic unit of data that can be processed by a Storm application is called a tuple: each tuple is a predefined list of fields. The data type of each field can be common data types, (e.g., byte, char, string, integer), or your own data types, which can be serialized as fields in a tuple. Each field of a tuple has a name.
+
+A tuple is dynamically typed, that is, you just need to define the names of the fields in a tuple and not their data type.
+
+Storm processes streams of tuples. Each stream 
+
+- is an unbounded sequence of tuples
+- has a name
+- is composed of homogenous tuples (i.e., tuples with the same structure)
+
+However, each applications can process multiple, heterogonous, data streams.
