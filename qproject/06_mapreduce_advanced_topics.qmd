@@ -6,8 +6,8 @@ In some applications data are read from two or more datasets, also having differ
 
 Hadoop allows reading data from multiple inputs (multiple datasets) with different formats by specifying one mapper for each input dataset. However, the key-value pairs emitted by the mappers must be consistent in terms of data types.
 
-:::{.callout-note collapse="true"}
-## Example of a use case
+:::{.callout-tip}
+## Use case
 The input data is collected from different sensors: all sensors measure the same "measure", but sensors developed by different vendors use a different data format to store the gathered data/measurements.
 :::
 
@@ -17,30 +17,26 @@ In the driver use the `addInputPath` method of the `MultipleInputs` class multip
 - Specify the input format class for each input path
 - Specify the Mapper class associated with each input path
 
-:::{.callout-note collapse="true"}
-
-## Multiple inputs example
+### Example: multiple inputs
 ```java
 MultipleInputs.addInputPath(
     job, 
-    new Path(args[1]), 
-    TextInputFormat.class, 
-    Mapper1.class
+    new Path(args[1]), // <1>
+    TextInputFormat.class, // <2>
+    Mapper1.class // <3>
 );
 
 MultipleInputs.addInputPath(
     job, 
-    new Path(args[2]), 
-    TextInputFormat.class, 
-    Mapper2.class
+    new Path(args[2]), // <1>
+    TextInputFormat.class, // <2>
+    Mapper2.class // <4>
 );
 ```
-
-- Specify two input paths (`args[1]` and `args[2]`)
-- The data of both paths are read by using the `TextInputFormat` class
-- `Mapper1` is the class used to manage the input key-value pairs associated with the first path
-- `Mapper2` is the class used to manage the input key-value pairs associated with the second path
-:::
+1. Specify two input paths (`args[1]` and `args[2]`)
+2. The data of both paths are read by using the `TextInputFormat` class
+3. `Mapper1` is the class used to manage the input key-value pairs associated with the first path
+4. `Mapper2` is the class used to manage the input key-value pairs associated with the second path
 
 # Multiple outputs
 In some applications it could be useful to store the output key-value pairs of a MapReduce application in different files. Each file contains a specific subset of the emitted key-value pairs, based on some rules (usually this approach is useful for splitting and filtering operations), and each file name has a prefix that is used to specify the "content" of the file.
@@ -65,8 +61,8 @@ Use the method `MultipleOutputs.addNamedOutput` multiple times in the Driver to 
 
 Call this method one time for each "output file type"
 
-:::{.callout-note collapse="true"}
-## Multiple outputs example
+### Example: multiple outputs
+
 ```java
 MultipleOutputs.addNamedOutput(
     job, 
@@ -89,39 +85,41 @@ This example defines two types of output files
 
 - The first type of output files while have the prefix `"hightemp"`
 - The second type of output files while have the prefix `"normaltemp"`
-:::
 
 ## Map-only
 Define a private `MultipleOutputs` variable in the mapper if the job is a map-only job (in the reducer otherwise)
+
 ```java
 private MultipleOutputs<Text, NullWritable> mos = null;
 ```
+
 Create an instance of the `MultipleOutputs` class in the setup method of the mapper (or in the reducer)
+
 ```java
 mos = new MultipleOutputs<Text, NullWritable>(context);
 ```
+
 Use the write method of the `MultipleOutputs` object in the map method (or in the reduce method) to write the key-value pairs in the file of interest 
 
-:::{.callout-note collapse="true"}
-## Example
+## Example: map-only
+
 ```java
 mos.write("hightemp", key, value);
 ```
+
 This example writes the current key-value pair in a file with the prefix `"hightemp-"`
+
 ```java
 mos.write("normaltemp", key, value);
 ```
+
 This example writes the current key-value pair in a file with the prefix `"normaltemp-"`
-:::
 
 Close the `MultipleOutputs` object in the cleanup method of the mapper (or of the reducer)
 
-:::{.callout-note collapse="true"}
-## Example
 ```java
 mos.close();
 ```
-:::
 
 # Distributed cache
 Some applications need to share and cache (small) read-only files to perform efficiently their task. These files should be accessible by all nodes of the cluster in an efficient way, hence a copy of the shared/cached (HDFS) files should be available locally in all nodes used to run the application.
@@ -139,8 +137,9 @@ The efficiency of the distributed cache depends on the number of multiple mapper
 
 Without the distributed cache, each mapper (reducer) should read, in the setup method, the shared HDFS file, hence, more time is needed because reading data from HDFS is more inefficient than reading data from the local file system of the node running the mappers (reducers).
 
-## Example
+## Example: distributed cache
 ### Driver
+
 ```java
 public int run(String[] args) throws Exception {
     //...
@@ -154,6 +153,7 @@ public int run(String[] args) throws Exception {
 ```
 
 ### Mapper/Reducer
+
 ```java
 protected void setup(Context context) throws IOException, InterruptedException{
 

@@ -31,6 +31,7 @@ Notice that the mapping between the local linux user and the user of the cluster
 
 - A Kerberos ticket if Kerberos is active
 - Otherwise the local linux user is considered 
+
 :::
 
 ### Content of a file
@@ -87,6 +88,7 @@ The Hadoop programs are executed (submitted to the cluster) by using the hadoop 
 
 ## Example
 The following command executes/submits a MapReduce application 
+
 ```bash
 hadoop jar MyApplication.jar \
 it.polito.bigdata.hadoop.DriverMyApplication \

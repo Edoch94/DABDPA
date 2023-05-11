@@ -69,8 +69,7 @@ There are two mapper classes, that is one mapper class for each table. Mappers e
 - Key is the value of the common attribute(s)
 - Value is the concatenation of the name of the table of the current record and the content of the current record
 
-:::{.callout-tip}
-## Example
+## Example: join pattern
 Suppose join the following tables have to be joined
 
 - ***Users*** with schema *userid*, *name*, *surname*
@@ -87,11 +86,9 @@ The values `userid=u1`, `movieGenre=horror` of the ***Likes*** table will genera
 ```
 (userid=u1, "Likes:movieGenre=horror")
 ```
-:::
 
 The reducers iterate over the values associated with each key (value of the common attributes) and compute the "local natural join" for the current key. So, they generate a copy for each pair of values such that one record is a record of the first table and the other is the record of the other table.
 
-:::{.callout-tip}
 ## Example
 The `(key, [list of values])` pair
 
@@ -106,7 +103,6 @@ will generate the following output `(key,value)` pairs
 
 (userid=u1, "name=Paolo, surname=Garza, genre=adventure")
 ```
-:::
 
 ![Reduce side natural join structure](images/07_mapreduce_patterns_2/reducesidenaturaljoin_structure.png){width=80%}
 

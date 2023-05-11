@@ -11,7 +11,7 @@ title: "Introduction to Hadoop and MapReduce"
 - To analyze them, systems that scale with respect to the data volume are needed
 
 ::: {.callout-note collapse="true"}
-### Example: Google
+## Example: Google
 Consider this situation: you have to analyze 10 billion web pages, and the average size of a webpage is 20KB. So
 
 - The total size of the collection: 10 billion x 20KBs = 200TB
@@ -34,7 +34,7 @@ The main sources of failures
 - Unavailability of a resource due to overload
 
 ::: {.callout-note collapse="true"}
-### Examples
+## Examples
 LALN data [DSN 2006]
 
 - Data for 5000 machines, for 9 years

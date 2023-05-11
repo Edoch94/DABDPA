@@ -2607,15 +2607,22 @@ vertical-align: -.125em;
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#multiple-inputs" id="toc-multiple-inputs" class="nav-link active" data-scroll-target="#multiple-inputs"><span class="toc-section-number">1</span>  Multiple inputs</a></li>
+  <li><a href="#multiple-inputs" id="toc-multiple-inputs" class="nav-link active" data-scroll-target="#multiple-inputs"><span class="toc-section-number">1</span>  Multiple inputs</a>
+  <ul class="collapse">
+  <li><a href="#example-multiple-inputs" id="toc-example-multiple-inputs" class="nav-link" data-scroll-target="#example-multiple-inputs"><span class="toc-section-number">1.0.1</span>  Example: multiple inputs</a></li>
+  </ul></li>
   <li><a href="#multiple-outputs" id="toc-multiple-outputs" class="nav-link" data-scroll-target="#multiple-outputs"><span class="toc-section-number">2</span>  Multiple outputs</a>
   <ul class="collapse">
-  <li><a href="#driver" id="toc-driver" class="nav-link" data-scroll-target="#driver"><span class="toc-section-number">2.1</span>  Driver</a></li>
+  <li><a href="#driver" id="toc-driver" class="nav-link" data-scroll-target="#driver"><span class="toc-section-number">2.1</span>  Driver</a>
+  <ul class="collapse">
+  <li><a href="#example-multiple-outputs" id="toc-example-multiple-outputs" class="nav-link" data-scroll-target="#example-multiple-outputs"><span class="toc-section-number">2.1.1</span>  Example: multiple outputs</a></li>
+  </ul></li>
   <li><a href="#map-only" id="toc-map-only" class="nav-link" data-scroll-target="#map-only"><span class="toc-section-number">2.2</span>  Map-only</a></li>
+  <li><a href="#example-map-only" id="toc-example-map-only" class="nav-link" data-scroll-target="#example-map-only"><span class="toc-section-number">2.3</span>  Example: map-only</a></li>
   </ul></li>
   <li><a href="#distributed-cache" id="toc-distributed-cache" class="nav-link" data-scroll-target="#distributed-cache"><span class="toc-section-number">3</span>  Distributed cache</a>
   <ul class="collapse">
-  <li><a href="#example-2" id="toc-example-2" class="nav-link" data-scroll-target="#example-2"><span class="toc-section-number">3.1</span>  Example</a>
+  <li><a href="#example-distributed-cache" id="toc-example-distributed-cache" class="nav-link" data-scroll-target="#example-distributed-cache"><span class="toc-section-number">3.1</span>  Example: distributed cache</a>
   <ul class="collapse">
   <li><a href="#driver-1" id="toc-driver-1" class="nav-link" data-scroll-target="#driver-1"><span class="toc-section-number">3.1.1</span>  Driver</a></li>
   <li><a href="#mapperreducer" id="toc-mapperreducer" class="nav-link" data-scroll-target="#mapperreducer"><span class="toc-section-number">3.1.2</span>  Mapper/Reducer</a></li>
@@ -2647,20 +2654,17 @@ vertical-align: -.125em;
 <h1 data-number="1"><span class="header-section-number">1</span> Multiple inputs</h1>
 <p>In some applications data are read from two or more datasets, also having different formats.</p>
 <p>Hadoop allows reading data from multiple inputs (multiple datasets) with different formats by specifying one mapper for each input dataset. However, the key-value pairs emitted by the mappers must be consistent in terms of data types.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-caption-container flex-fill">
-Example of a use case
+Use case
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>The input data is collected from different sensors: all sensors measure the same “measure”, but sensors developed by different vendors use a different data format to store the gathered data/measurements.</p>
-</div>
 </div>
 </div>
 <p>In the driver use the <code>addInputPath</code> method of the <code>MultipleInputs</code> class multiple times to</p>
@@ -2669,40 +2673,28 @@ Example of a use case
 <li>Specify the input format class for each input path</li>
 <li>Specify the Mapper class associated with each input path</li>
 </ul>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Multiple inputs example
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+<section id="example-multiple-inputs" class="level3" data-number="1.0.1">
+<h3 data-number="1.0.1" class="anchored" data-anchor-id="example-multiple-inputs"><span class="header-section-number">1.0.1</span> Example: multiple inputs</h3>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1"></a>MultipleInputs<span class="op">.</span><span class="fu">addInputPath</span><span class="op">(</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a>    job<span class="op">,</span> </span>
-<span id="cb1-3"><a href="#cb1-3"></a>    <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>args<span class="op">[</span><span class="dv">1</span><span class="op">]),</span> </span>
-<span id="cb1-4"><a href="#cb1-4"></a>    TextInputFormat<span class="op">.</span><span class="fu">class</span><span class="op">,</span> </span>
-<span id="cb1-5"><a href="#cb1-5"></a>    Mapper1<span class="op">.</span><span class="fu">class</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a>    <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>args<span class="op">[</span><span class="dv">1</span><span class="op">]),</span> <span class="co">// &lt;1&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>    TextInputFormat<span class="op">.</span><span class="fu">class</span><span class="op">,</span> <span class="co">// &lt;2&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>    Mapper1<span class="op">.</span><span class="fu">class</span> <span class="co">// &lt;3&gt;</span></span>
 <span id="cb1-6"><a href="#cb1-6"></a><span class="op">);</span></span>
 <span id="cb1-7"><a href="#cb1-7"></a></span>
 <span id="cb1-8"><a href="#cb1-8"></a>MultipleInputs<span class="op">.</span><span class="fu">addInputPath</span><span class="op">(</span></span>
 <span id="cb1-9"><a href="#cb1-9"></a>    job<span class="op">,</span> </span>
-<span id="cb1-10"><a href="#cb1-10"></a>    <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>args<span class="op">[</span><span class="dv">2</span><span class="op">]),</span> </span>
-<span id="cb1-11"><a href="#cb1-11"></a>    TextInputFormat<span class="op">.</span><span class="fu">class</span><span class="op">,</span> </span>
-<span id="cb1-12"><a href="#cb1-12"></a>    Mapper2<span class="op">.</span><span class="fu">class</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>    <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>args<span class="op">[</span><span class="dv">2</span><span class="op">]),</span> <span class="co">// &lt;1&gt;</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a>    TextInputFormat<span class="op">.</span><span class="fu">class</span><span class="op">,</span> <span class="co">// &lt;2&gt;</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a>    Mapper2<span class="op">.</span><span class="fu">class</span> <span class="co">// &lt;4&gt;</span></span>
 <span id="cb1-13"><a href="#cb1-13"></a><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ul>
+<ol type="1">
 <li>Specify two input paths (<code>args[1]</code> and <code>args[2]</code>)</li>
 <li>The data of both paths are read by using the <code>TextInputFormat</code> class</li>
 <li><code>Mapper1</code> is the class used to manage the input key-value pairs associated with the first path</li>
 <li><code>Mapper2</code> is the class used to manage the input key-value pairs associated with the second path</li>
-</ul>
-</div>
-</div>
-</div>
+</ol>
+</section>
 </section>
 <section id="multiple-outputs" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Multiple outputs</h1>
@@ -2725,18 +2717,8 @@ Multiple inputs example
 <li>The value output data type class</li>
 </ul>
 <p>Call this method one time for each “output file type”</p>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Multiple outputs example
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+<section id="example-multiple-outputs" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="example-multiple-outputs"><span class="header-section-number">2.1.1</span> Example: multiple outputs</h3>
 <div class="sourceCode" id="cb2"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1"></a>MultipleOutputs<span class="op">.</span><span class="fu">addNamedOutput</span><span class="op">(</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a>    job<span class="op">,</span> </span>
 <span id="cb2-3"><a href="#cb2-3"></a>    <span class="st">&quot;hightemp&quot;</span><span class="op">,</span> </span>
@@ -2757,9 +2739,7 @@ Multiple outputs example
 <li>The first type of output files while have the prefix <code>&quot;hightemp&quot;</code></li>
 <li>The second type of output files while have the prefix <code>&quot;normaltemp&quot;</code></li>
 </ul>
-</div>
-</div>
-</div>
+</section>
 </section>
 <section id="map-only" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="map-only"><span class="header-section-number">2.2</span> Map-only</h2>
@@ -2768,42 +2748,15 @@ Multiple outputs example
 <p>Create an instance of the <code>MultipleOutputs</code> class in the setup method of the mapper (or in the reducer)</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb4-1"><a href="#cb4-1"></a>mos <span class="op">=</span> <span class="kw">new</span> MultipleOutputs<span class="op">&lt;</span><span class="bu">Text</span><span class="op">,</span> NullWritable<span class="op">&gt;(</span>context<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Use the write method of the <code>MultipleOutputs</code> object in the map method (or in the reduce method) to write the key-value pairs in the file of interest</p>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Example
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+</section>
+<section id="example-map-only" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="example-map-only"><span class="header-section-number">2.3</span> Example: map-only</h2>
 <div class="sourceCode" id="cb5"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb5-1"><a href="#cb5-1"></a>mos<span class="op">.</span><span class="fu">write</span><span class="op">(</span><span class="st">&quot;hightemp&quot;</span><span class="op">,</span> key<span class="op">,</span> value<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This example writes the current key-value pair in a file with the prefix <code>&quot;hightemp-&quot;</code></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb6-1"><a href="#cb6-1"></a>mos<span class="op">.</span><span class="fu">write</span><span class="op">(</span><span class="st">&quot;normaltemp&quot;</span><span class="op">,</span> key<span class="op">,</span> value<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This example writes the current key-value pair in a file with the prefix <code>&quot;normaltemp-&quot;</code></p>
-</div>
-</div>
-</div>
 <p>Close the <code>MultipleOutputs</code> object in the cleanup method of the mapper (or of the reducer)</p>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Example
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
 <div class="sourceCode" id="cb7"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb7-1"><a href="#cb7-1"></a>mos<span class="op">.</span><span class="fu">close</span><span class="op">();</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</div>
 </section>
 </section>
 <section id="distributed-cache" class="level1" data-number="3">
@@ -2820,8 +2773,8 @@ Example
 <p>In the Driver of the application, the set of shared/cached files are specifiedby using the <code>job.addCacheFile(path)</code> method. During the initialization of the job, Hadoop creates a “local copy” of the shared/cached files in all nodes that are used to execute some tasks (mappers or reducers) of the job (i.e., of the running application). The shared/cache file is read by the mapper (or the reducer), usually in its setup method, since the shared/cached file is available locally in the used nodes/servers, its content can be read efficiently.</p>
 <p>The efficiency of the distributed cache depends on the number of multiple mappers (or reducers) running on the same node/server: for each node a local copy of the file is copied during the initialization of the job, and the local copy of the file is used by all mappers (reducers) running on the same node/server.</p>
 <p>Without the distributed cache, each mapper (reducer) should read, in the setup method, the shared HDFS file, hence, more time is needed because reading data from HDFS is more inefficient than reading data from the local file system of the node running the mappers (reducers).</p>
-<section id="example-2" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="example-2"><span class="header-section-number">3.1</span> Example</h2>
+<section id="example-distributed-cache" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="example-distributed-cache"><span class="header-section-number">3.1</span> Example: distributed cache</h2>
 <section id="driver-1" class="level3" data-number="3.1.1">
 <h3 data-number="3.1.1" class="anchored" data-anchor-id="driver-1"><span class="header-section-number">3.1.1</span> Driver</h3>
 <div class="sourceCode" id="cb8"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">public</span> <span class="dt">int</span> <span class="fu">run</span><span class="op">(</span><span class="bu">String</span><span class="op">[]</span> args<span class="op">)</span> <span class="kw">throws</span> <span class="bu">Exception</span> <span class="op">{</span></span>

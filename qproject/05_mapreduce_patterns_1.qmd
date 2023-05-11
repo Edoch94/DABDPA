@@ -20,12 +20,14 @@ Combiners can be used to speed up performances, if the computed statistic has sp
 
 ![Numerical summarization structure](images/05_mapreduce_patterns_1/numerical_summarization_structure.png){width=80%}
 
-Use cases are
-
+:::{.callout-tip}
+## Use cases
 - Word count
 - Record count (per group)
 - Min/Max/Count (per group)
 - Average/Median/Standard deviation (per group)
+
+:::
 
 ## Inverted index summarization
 The goal is to build an index from the input data to support faster searches or data enrichment: it maps terms to a list of identifiers to improve search efficiency.
@@ -51,11 +53,13 @@ The goal is to compute count summarizations of data sets to provide a top-level 
 
 ![Numerical summarization structure](images/05_mapreduce_patterns_1/counting_counters_structure.png){width=80%}
 
-Use cases
-
+:::{.callout-tip}
+## Use cases
 - Count number of records
 - Count a small number of unique instances
 - Summarizations
+
+:::
 
 # Filtering patterns
 Are used to select the subset of input records of interest
@@ -82,12 +86,14 @@ Reducers are useless in this pattern, since a map-only job is executed (number o
 
 ![Numerical summarization structure](images/05_mapreduce_patterns_1/filtering_structure.png){width=80%}
 
-Use cases
-
+:::{.callout-tip}
+## Use cases
 - Record filtering 
 - Tracking events 
 - Distributed grep 
 - Data cleaning
+
+:::
 
 ## Top K
 The goal is to select a small set of top K records according to a ranking function to focus on the most important records of the input data set: frequently the interesting records are those ranking first according to a ranking function (i.e., most profitable items, outliers).
@@ -109,10 +115,12 @@ A single reducer must be instantiated (i.e., one single instance of the reducer 
 
 ![Numerical summarization structure](images/05_mapreduce_patterns_1/topk_structure.png){width=80%}
 
-Use cases
-
+:::{.callout-tip}
+## Use cases
 - Outlier analysis (based on a ranking function)
 - Select interesting data (based on a ranking function)
+
+:::
 
 ## Distinct
 The goal is to find a unique set of values/records, since in some applications duplicate records are useless (actually duplicated records are frequently useless).
@@ -126,7 +134,9 @@ The goal is to find a unique set of values/records, since in some applications d
 
 ![Numerical summarization structure](images/05_mapreduce_patterns_1/distinct_structure.png){width=80%}
 
-Use cases
-
+:::{.callout-tip}
+## Use cases
 - Duplicate data removal
 - Distinct value selection
+
+:::

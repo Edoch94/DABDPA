@@ -36,7 +36,7 @@ Each part is "implemented" by means of a specific class.
 :::
 
 ## Driver (instance)
-The Driver is characterized by the `main()` method, which accepts arguments from the command line (i.e., it is the entry point of the application). Also, it has a run() method
+The Driver is characterized by the `main()` method, which accepts arguments from the command line (i.e., it is the entry point of the application). Also, it has a `run()` method
 
 - It configures the job
 - It submits the job to the Hadoop Cluster
@@ -102,9 +102,11 @@ The `run()` method configures the job, defining
 
 ## Mapper class
 The Mapper class extends the 
+
 ```java
 org.apache.hadoop.mapreduce.Mapper
 ``` 
+
 class which is a generic type/generic class with four type parameters: 
 
 - input key type
@@ -194,9 +196,11 @@ A set of predefined classes extending the `InputFormat` abstract class are avail
 
 ### `KeyValueTextInputFormat`
 `KeyValueTextInputFormat` is an `InputFormat` for plain text files, where each line must have the format 
+
 ```java
 key<separator>value
 ```
+
 and the default separator is tab (`\t`).
 
 Files are broken into lines, and either linefeed or carriage-return are used to signal end of line, and each line is split into key and value parts by considering the separator symbol/character.

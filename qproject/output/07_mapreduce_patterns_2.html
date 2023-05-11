@@ -2631,11 +2631,13 @@ vertical-align: -.125em;
   <ul class="collapse">
   <li><a href="#structure-3" id="toc-structure-3" class="nav-link" data-scroll-target="#structure-3"><span class="toc-section-number">3.1.1</span>  Structure</a></li>
   </ul></li>
-  <li><a href="#map-side-natural-join" id="toc-map-side-natural-join" class="nav-link" data-scroll-target="#map-side-natural-join"><span class="toc-section-number">3.2</span>  Map side natural join</a>
+  <li><a href="#example-join-pattern" id="toc-example-join-pattern" class="nav-link" data-scroll-target="#example-join-pattern"><span class="toc-section-number">3.2</span>  Example: join pattern</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example"><span class="toc-section-number">3.3</span>  Example</a></li>
+  <li><a href="#map-side-natural-join" id="toc-map-side-natural-join" class="nav-link" data-scroll-target="#map-side-natural-join"><span class="toc-section-number">3.4</span>  Map side natural join</a>
   <ul class="collapse">
-  <li><a href="#structure-4" id="toc-structure-4" class="nav-link" data-scroll-target="#structure-4"><span class="toc-section-number">3.2.1</span>  Structure</a></li>
+  <li><a href="#structure-4" id="toc-structure-4" class="nav-link" data-scroll-target="#structure-4"><span class="toc-section-number">3.4.1</span>  Structure</a></li>
   </ul></li>
-  <li><a href="#other-join-patterns" id="toc-other-join-patterns" class="nav-link" data-scroll-target="#other-join-patterns"><span class="toc-section-number">3.3</span>  Other join patterns</a></li>
+  <li><a href="#other-join-patterns" id="toc-other-join-patterns" class="nav-link" data-scroll-target="#other-join-patterns"><span class="toc-section-number">3.5</span>  Other join patterns</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -2756,16 +2758,10 @@ vertical-align: -.125em;
 <li>Key is the value of the common attribute(s)</li>
 <li>Value is the concatenation of the name of the table of the current record and the content of the current record</li>
 </ul>
-<div class="callout-tip callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Example
-</div>
-</div>
-<div class="callout-body-container callout-body">
+</section>
+</section>
+<section id="example-join-pattern" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="example-join-pattern"><span class="header-section-number">3.2</span> Example: join pattern</h2>
 <p>Suppose join the following tables have to be joined</p>
 <ul>
 <li><strong><em>Users</em></strong> with schema <em>userid</em>, <em>name</em>, <em>surname</em></li>
@@ -2775,27 +2771,16 @@ Example
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1"></a><span class="op">(</span>userid<span class="op">=</span>u1<span class="op">,</span> <span class="st">&quot;Users:name=Paolo, surname=Garza&quot;</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The values <code>userid=u1</code>, <code>movieGenre=horror</code> of the <strong><em>Likes</em></strong> table will generate the pair</p>
 <pre><code>(userid=u1, &quot;Likes:movieGenre=horror&quot;)</code></pre>
-</div>
-</div>
 <p>The reducers iterate over the values associated with each key (value of the common attributes) and compute the “local natural join” for the current key. So, they generate a copy for each pair of values such that one record is a record of the first table and the other is the record of the other table.</p>
-<div class="callout-tip callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Example
-</div>
-</div>
-<div class="callout-body-container callout-body">
+</section>
+<section id="example" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="example"><span class="header-section-number">3.3</span> Example</h2>
 <p>The <code>(key, [list of values])</code> pair</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb3-1"><a href="#cb3-1"></a><span class="op">(</span>userid<span class="op">=</span>u1<span class="op">,</span> <span class="op">[</span><span class="st">&quot;User:name=Paolo, surname=Garza&quot;</span><span class="op">,</span> <span class="st">&quot;Likes:movieGenre=horror&quot;</span><span class="op">,</span> <span class="st">&quot;Likes:movieGenre=adventure&quot;</span><span class="op">])</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>will generate the following output <code>(key,value)</code> pairs</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb4-1"><a href="#cb4-1"></a><span class="op">(</span>userid<span class="op">=</span>u1<span class="op">,</span> <span class="st">&quot;name=Paolo, surname=Garza, genre=horror&quot;</span><span class="op">)</span></span>
 <span id="cb4-2"><a href="#cb4-2"></a></span>
 <span id="cb4-3"><a href="#cb4-3"></a><span class="op">(</span>userid<span class="op">=</span>u1<span class="op">,</span> <span class="st">&quot;name=Paolo, surname=Garza, genre=adventure&quot;</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p></p><figcaption class="figure-caption">Reduce side natural join structure</figcaption><p></p>
@@ -2803,12 +2788,11 @@ Example
 </figure>
 </div>
 </section>
-</section>
-<section id="map-side-natural-join" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="map-side-natural-join"><span class="header-section-number">3.2</span> Map side natural join</h2>
+<section id="map-side-natural-join" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="map-side-natural-join"><span class="header-section-number">3.4</span> Map side natural join</h2>
 <p>The goal is to join the content of two relations (i.e., relational tables) when one table is large, while the other is small enough to be completely loaded in main memory (frequently one of the two tables is small).</p>
-<section id="structure-4" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="structure-4"><span class="header-section-number">3.2.1</span> Structure</h3>
+<section id="structure-4" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="structure-4"><span class="header-section-number">3.4.1</span> Structure</h3>
 <p>This is a Map-only job</p>
 <ul>
 <li>Mapper class processes the content of the large table: it receives one input <code>(key,value)</code> pair for each record of the large table, and joins it with the “small” table.</li>
@@ -2823,8 +2807,8 @@ Example
 </div>
 </section>
 </section>
-<section id="other-join-patterns" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="other-join-patterns"><span class="header-section-number">3.3</span> Other join patterns</h2>
+<section id="other-join-patterns" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="other-join-patterns"><span class="header-section-number">3.5</span> Other join patterns</h2>
 <p>The SQL language is characterized by many types of joins</p>
 <ul>
 <li>Theta-join</li>
