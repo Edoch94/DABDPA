@@ -75,3 +75,106 @@ Storm processes streams of tuples. Each stream
 - is composed of homogenous tuples (i.e., tuples with the same structure)
 
 However, each applications can process multiple, heterogonous, data streams.
+
+:::{.callout-note collapse="true"}
+## Example
+Tuple
+
+```
+(1.1.1.1,"foo.com")
+```
+
+Stream of tuples
+
+```
+(1.1.1.1,"foo.com")
+(2.2.2.2,"bar.net")
+(3.3.3.3,"foo.com")
+...
+```
+
+:::
+
+## Spout
+Spout is the component generating/handling the input data stream. Spouts read or listen to data from external sources and publish them (emit in Storm terminology) into streams.
+
+:::{.callout-note collapse="true"}
+## Examples
+- A spout can be used to connect to the Twitter API and emit a stream of tweets
+- A spout can be used to read a log file and emit a stream of composed of the its lines
+
+:::
+
+Each spout can emit multiple streams, with different schemas; for example, it is possible to implement a spout that reads 10-field records from a log file and emits them as two different streams of 7-tuples and 4-tuples, respectively. 
+
+Spouts can be
+
+- unreliable (fire-and-forget)
+- reliable (can replay failed tuples)
+
+## Bolt
+Bolt is the component that is used to apply a function over each tuple of a stream. Bolts consume one or more streams, emitted by spouts or other bolts, and potentially produce new streams.
+
+Bolts can be used to 
+
+- filter or transform the content of the input streams and emit new data streams that will be processed by other bolts
+- process the data streams and store/persist the result of the computation in some of “storage” (files, Databases, ..)
+
+Each bolt can emit multiple streams, with different schemas.
+
+:::{.callout-note collapse="true"}
+## Examples
+- A bolt can be used to extract one field from each tuple of its input stream
+- A bolt can be used to join two streams, based on a common field
+- A bolt can be used to count the occurrences of a set of URLs
+
+:::
+
+The input streams of a Storm cluster are handled by spouts
+
+- Each spout passes the data streams to bolts, which transform them in some way
+- Each bolt either persists the data in some sort of storage or passes it to some other bolts
+
+A Storm program is a chain of bolts making some computations/transformations on the data exposed by spouts and bolts.
+
+## Topology
+A Storm topology is an abstraction that defines the graph of the computation: it specifies which spouts and bolts are used and how they are connected. A topology can be represented by a direct acyclic graph (DAG), where each node does some kind of processing and eventually forwards it to the next node(s) in the flow (i.e., a topology in Storm wires data and functions via a DAG).
+
+![Topology example](images/23_streaming_frameworks/topology_example.png){width=80%}
+
+![Functional programming](images/23_streaming_frameworks/functional_programming.png){width=80%}
+
+![Topology example](images/23_streaming_frameworks/topology_example_2.png){width=80%}
+
+- Notice that there are two input data streams in this topology
+- There are also two output data streams
+
+### Topology execution
+The topology is executed on the servers of the cluster running Storm. The system automatically decides which parts of the topology are executed by each server of the cluster
+
+- Each topology runs until its is explicitly killed
+- Each cluster can runs multiple topologies at the same time
+
+#### Worker processes
+- Each node in the cluster can run one or more JVMs called worker processes that are responsible for processing a part of the topology.
+- Each topology executes across one or more worker processes
+- Each worker process is bound to one of the topologies and can execute multiple components (spouts and/or bolts) of that topology; hence, even if multiple topologies are run at the same time, none of them will share any of the workers
+
+#### Executor
+- Within each worker process, there can be multiple threads that execute parts of the topology. Each of these threads is called an executor
+- An executor can execute only one of the components of the topology, that is, any one spout or bolt in the topology, but it may run one or more tasks for the same component
+- Each spout or bolt can be associated with many executors and hence executed in parallel
+
+#### Tasks
+A task is the most granular unit of task execution in Storm: each task is an instance of a spout or bolt, and it performs the actual data processing
+
+- Each spout or bolt that you implement in your code executes as many tasks across the cluster
+- Each task can be executed alone or with another task of the same type (in the same executor)
+
+The number of tasks for a component is always the same throughout the lifetime of a topology (it is set when the topology is submitted), but the number of executors (threads) for a component can change over time (i.e., it is possible to add/remove executors for each component).
+
+The parallelism of the topology is given by the number of executors (i.e., number of threads). For each spout/bolt the application can specify
+
+- The number of executors: this value can be changed at runtime
+- The number of tasks: this value is set before submitting the topology and cannot be change at runtime
+
