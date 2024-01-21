@@ -1,6 +1,7 @@
 ---
 title: "Relational Algebra Operations and MapReduce"
 ---
+
 The relational algebra and the SQL language have many useful operators
 
 - Selection
@@ -17,7 +18,7 @@ Relations/Tables (also the big ones) can be stored in the HDFS distributed file 
 
 Notice that in relational algebra, relations/tables do not contain duplicate records by definition, and this constraint must be satisfied by both the input and the output relations/tables.
 
-# Selection
+## Selection
 $$
 \sigma_C(R)
 $$
@@ -27,7 +28,7 @@ Selection applies predicate (condition) $C$ to each record of table $R$, and pro
 The selection operator can be implemented by using the filtering pattern.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Given the table *Courses*
 
 | CCode | CName | Semester | ProfID |
@@ -53,7 +54,7 @@ The resulting table is
 
 Selection is a map-only job, where each mapper analyzes one record at a time of its split and, if the record satisfies $C$ then it emits a `(key,value)` pair with `key=record` and `value=null`, otherwise, it discards the record.
 
-# Projection
+## Projection
 $$
 \pi_S(R)
 $$
@@ -61,7 +62,7 @@ $$
 Projection, for each record of table $R$, keeps only the attributes in $S$. It produces a relation with a schema equal to $S$ (i.e., a relation containing only the attributes in $S$), an it removes duplicates, if any.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Given the table *Professors*
 
 | ProfId | PSurname | Department |
@@ -91,7 +92,7 @@ In a projection
 - Each mapper analyzes one record at a time of its split, and, for each record $r$ in $R$, it selects the values of the attributes in $S$ and constructs a new record $r'$, and emits a `(key,value)` pair with `key=r'` and `value=null`. 
 - Each reducer emits one `(key, value)` pair for each input `(key, [list of values])` pair with `key=r'` and `value=null`.
 
-# Union
+## Union
 $$
 R \cup S
 $$
@@ -99,7 +100,7 @@ $$
 Given that $R$ and $S$ have the same schema, an union produces a relation with the same schema of $R$ and $S$. There is a record $t$ in the output of the union operator for each record $t$ appearing in $R$ or $S$. Duplicated records are removed.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Given the tables *DegreeCourseProf*
 
 | ProfId | PSurname | Department |
@@ -138,7 +139,7 @@ In a union
 
 - Reducers emit one `(key, value)` pair for each input `(key, [list of values])` pair with `key=t` and `value=null` (i.e., one single copy of each input record is emitted).
 
-# Intersection
+## Intersection
 $$
 R \cap S
 $$
@@ -146,7 +147,7 @@ $$
 Given that $R$ and $S$ have the same schema, an intersection produces a relation with the same schema of $R$ and $S$. There is a record $t$ in the output of the intersection operator if and only if $t$ appears in both relations ($R$ and $S$).
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Given the tables *DegreeCourseProf*
 
 | ProfId | PSurname | Department |
@@ -181,7 +182,7 @@ In an intersection
 - Mappers, for each input record $t$ in $R$, emit one `(key, value)` pair with `key=t` and `value="R"`, and For each input record $t$ in $S$, emit one `(key, value)` pair with `key=t` and `value="S"`.
 - Reducers emit one `(key, value)` pair with `key=t` and `value=null` for each input `(key, [list of values])` pair with `[list of values]` containing two values. Notice that it happens if and only if both $R$ and $S$ contain $t$.
 
-# Difference
+## Difference
 $$
 R-S
 $$
@@ -189,7 +190,7 @@ $$
 Given that $R$ and $S$ have the same schema, a difference produces a relation with the same schema of $R$ and $S$. There is a record $t$ in the output of the difference operator if and only if $t$ appears in $R$ but not in $S$.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Given the tables *DegreeCourseProf*
 
 | ProfId | PSurname | Department |
@@ -225,10 +226,10 @@ In a difference
 - Mappers, for each input record $t$ in $R$, emit one `(key, value)` pair with `key=t` and `value=name` of the relation (i.e., $R$). For each input record $t$ in $S$, emit one `(key, value)` pair with `key=t` and `value=name` of the relation (i.e., $S$). Notice that two mapper classes are needed: one for each relation.
 - Reducers emit one `(key, value)` pair with `key=t` and `value=null` for each input `(key, [list of values])` pair with `[list of values]` containing only the value $R$. Notice that it happens if and only if $t$ appears in $R$ but not in $S$.
 
-# Join
+## Join
 
 The join operators can be implemented by using the Join pattern, using the reduce side or the map side pattern depending on the size of the input relations/tables.
 
-# Aggregations and Group by
+## Aggregations and Group by
 
 Aggregations and Group by are implemented by using the Summarization pattern.

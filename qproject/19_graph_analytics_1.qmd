@@ -2,7 +2,7 @@
 title: "Graph analytics in Spark"
 ---
 
-# Introduction
+## Introduction
 Graphs are data structures composed of nodes and edges
 
 - nodes/vertexes are denoted as $V=\{v_1,v_2,...,v_n\}$
@@ -20,7 +20,7 @@ Graphs are called **undirected** if edges do not have a direction, otherwise the
 ![Graph with labels and weights](images/19_graph_analytics_1/labels_weights_example.png){width=80%}
 
 :::{.callout-tip}
-## Why graph analytics?
+### Why graph analytics?
 Graphs are natural way of describing relationships. Some practical example of analytics over graphs
 
 - Ranking web pages (Google PageRank)
@@ -38,7 +38,7 @@ Graphs are natural way of describing relationships. Some practical example of an
 
 :::
 
-# Spark GraphX and GraphFrames
+## Spark GraphX and GraphFrames
 GraphX is the Spark RDD-based library for performing graph processing. It is a core part of Spark.
 
 ![Spark core libraries](images/19_graph_analytics_1/spark_core.png){width=80%}
@@ -54,8 +54,8 @@ GraphX
 
 ![GraphFrame structure](images/19_graph_analytics_1/graphframes_structure.png){width=80%}
 
-# Building and querying graphs with GraphFrames
-## Building a Graph
+## Building and querying graphs with GraphFrames
+### Building a Graph
 Define vertexes and edges of the graph: vertexes and edges are represented by means of records inside DataFrames with specifically named columns
 
 - One DataFrame for the definition of the vertexes of the graph. The DataFrames that are used to represent nodes/vertexes
@@ -77,7 +77,7 @@ Graphs in graphframes are directed graphs.
 ![Building a graph example](images/19_graph_analytics_1/building_graph_example.png){width=80%}
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 
 Given this Vertex DataFrame
 
@@ -108,7 +108,7 @@ And this Edge DataFrame
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -122,7 +122,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -137,19 +137,19 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 ```
 
 :::
 
-## Directed vs undirected edges
+### Directed vs undirected edges
 In undirected graphs the edges indicate a two-way relationship (each edge can be traversed in both directions). In GraphX it is possible to use `to_undirected()` to create an undirected copy of the Graph. Unfortunately GraphFrames does not support it, but it is possible to convert a graph by applying a flatMap function over the edges of the directed graph that creates symmetric edges and then create a new GraphFrame.
 
-## Cache graphs
+### Cache graphs
 As with RDD and DataFrame, it is possible to cache graphs in GraphFrame: it is convenient if the same (complex) graph result of (multiple) transformations is used multiple times in the same application. To do it, simply invoke `cache()` on the GraphFrame to cache, so that it persists the DataFrame-based representation of vertexes and edges of the graph.
 
-## Querying the graph
+### Querying the graph
 Some specific methods are provided to execute queries on graphs
 
 - `filterVertices(condition)`
@@ -158,21 +158,21 @@ Some specific methods are provided to execute queries on graphs
 
 The returned result is the filtered version of the input graph.
 
-### `filterVertices(condition)`
+#### `filterVertices(condition)`
 `filterVertices(condition)` selects only the vertexes for which the specified condition is satisfied and returns a new graph with only the subset of selected vertexes.
 
 `condition` contains an SQL-like condition on the values of the attributes of the vertexes (e.g., "age>35").
 
-### `filterEdges(condition)`
+#### `filterEdges(condition)`
 `filterEdges(condition)` selects only the edges for which the specified condition is satisfied and returns a new graph with only the subset of selected edges.
 
 `condition` contains an SQL-like condition on the values of the attributes of the edges (e.g., "relationship='friend'").
 
-### `dropIsolatedVertices()`
+#### `dropIsolatedVertices()`
 `dropIsolatedVertices()` drops the vertexes that are not connected with any other node and returns a new graph without the dropped nodes.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Given the input graph, create a new subgraph
 
 ![Input graph](images/19_graph_analytics_1/vertex_filtering_example_1.png){width=80%}
@@ -195,7 +195,7 @@ Given the input graph, create a new subgraph
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -209,7 +209,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -224,7 +224,7 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
 selectedUsersandFriendRelGraph = g \
@@ -243,7 +243,7 @@ Given a GraphFrame, it is possible to access its vertexes and edges
 All the standard DataFrame transformations/actions are available also for the DataFrames that are used to store vertexes and edges. For example, the number of vertexes and the number of edges can be computed by invoking the `count()` action on the DataFrames vertices and edges, respectively.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Given the input graph
 
 1. Count how many vertexes and edges has the graph
@@ -253,7 +253,7 @@ Given the input graph
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -267,7 +267,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -282,19 +282,19 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
-# Count how many vertexes and edges has the graph
+## Count how many vertexes and edges has the graph
 print("Number of vertexes: ",g.vertices.count())
 print("Number of edges: ",g.edges.count())
 
-# Print on the standard output the smallest value of age
-# (i.e., the age of the youngest user in the graph)
+## Print on the standard output the smallest value of age
+## (i.e., the age of the youngest user in the graph)
 g.vertices.agg({"age":"min"}).show()
 
-# Print on the standard output
-# the number of "follow" edges in the graph.
+## Print on the standard output
+## the number of "follow" edges in the graph.
 numFollows = g.edges.filter("relationship = 'follow' ").count()
 
 print(numFollows)
@@ -302,10 +302,10 @@ print(numFollows)
 
 :::
 
-## Motif finding
+### Motif finding
 Motif finding refers to searching for structural patterns in graphs. A simple Domain-Specific Language (DSL) is used to specify the structure of the interesting patterns: the paths/subgraphs in the graph matching the specified structural pattern are selected.
 
-### DSL for Motif finding
+#### DSL for Motif finding
 The basic unit of a pattern is a connection between vertexes
 
 $$
@@ -368,7 +368,7 @@ The `find(motif)` method of GraphFrame is used to select motifs
 More complex queries on the structure and content of the patterns can be expressed by applying filters to the result DataFrame (i.e., more complex queries can be applied by combing `find()` and `filter()`).
 
 :::{.callout-note collapse="true"}
-## Example 1
+### Example 1
 Given the following graph
 
 ![Example graph](images/19_graph_analytics_1/motif_finding_example_1.png){width=80%}
@@ -402,7 +402,7 @@ The content of the returned Dataframe is the following
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -416,7 +416,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -431,18 +431,18 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
-# Retrieve the motifs associated with the pattern
-# vertex -> edge -> vertex -> edge ->vertex
+## Retrieve the motifs associated with the pattern
+## vertex -> edge -> vertex -> edge ->vertex
 motifs = g.find("(v1)-[e1]->(v2); (v2)-[e2]->(v1)")
 ```
 
 :::
 
 :::{.callout-note collapse="true"}
-## Example 2
+### Example 2
 Given the following graph
 
 ![Example graph](images/19_graph_analytics_1/motif_finding_example_1.png){width=80%}
@@ -462,7 +462,7 @@ Store the result in a DataFrame
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -476,7 +476,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -491,24 +491,24 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
-# Retrieve the motifs associated with the pattern
-# vertex -> edge -> vertex -> edge ->vertex
+## Retrieve the motifs associated with the pattern
+## vertex -> edge -> vertex -> edge ->vertex
 motifs = g.find("(v1)-[friend]->(v2); (v2)-[follow]->(v3)")
 
-# Filter the motifs (the content of the motifs DataFrame)
-# Select only the ones matching the pattern
-# vertex -> friend-> vertex -> follow ->vertex
+## Filter the motifs (the content of the motifs DataFrame)
+## Select only the ones matching the pattern
+## vertex -> friend-> vertex -> follow ->vertex
 motifsFriendFollow = motifs \
-    .filter("friend.relationship='friend' AND follow.relationship='follow' ") # <1>
+    #.filter("friend.relationship='friend' AND follow.relationship='follow' ") # <1>
 ```
 1. Columns friend and follow are structs with three fields/attributes: "src", "dst", "relationship". To access a field of a struct column use the syntax `columnName.field` (e.g., `friend.relationship`)
 
 :::
 
-# Basic statistics
+## Basic statistics
 Some specific properties are provided to compute basic statistics on the degrees of the vertexes
 
 - `degrees`
@@ -517,17 +517,17 @@ Some specific properties are provided to compute basic statistics on the degrees
 
 The returned result of each of this property is a DataFrame with id and (in/out)Degree value.
 
-## `degrees`
+### `degrees`
 `degrees` returns the degree of each vertex (i.e., the number of edges associated with each vertex). The result is stored in a DataFrame with Columns (vertex) "id" and "degree", with one record per vertex. Only the vertexes with $\text{degree} \geq 1$ are stored in the returned DataFrame.
 
-## `inDegrees`
+### `inDegrees`
 `inDegrees` returns the in-degree of each vertex (i.e., the number of in-edges associated with each vertex). The result is stored in a DataFrame with Columns (vertex) "id" and "inDegree", with one record per vertex. Only the vertexes with $\text{in-degree} \geq 1$ are stored in the returned DataFrame.
 
-## `outDegrees`
+### `outDegrees`
 `outDegrees` returns the out-degree of each vertex (i.e., the number of out-edges associated with each vertex). The result is stored in a DataFrame with Columns (vertex) "id" and "outDegree", with one record per vertex. Only the vertexes with $\text{out-degree} \geq 1$ are stored in the returned DataFrame.
 
 :::{.callout-note collapse="true"}
-## Example 1
+### Example 1
 Given the input graph, compute
 
 - Degree of each vertex
@@ -537,7 +537,7 @@ Given the input graph, compute
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -551,7 +551,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -566,19 +566,19 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
-# Retrieve the DataFrame with the information about the degree of
-# each vertex
+## Retrieve the DataFrame with the information about the degree of
+## each vertex
 vertexesDegreesDF = g.degrees
 
-# Retrieve the DataFrame with the information about the in-degree of
-# each vertex
+## Retrieve the DataFrame with the information about the in-degree of
+## each vertex
 vertexesInDegreesDF = g.inDegrees
 
-# Retrieve the DataFrame with the information about the out-degree of
-# each vertex
+## Retrieve the DataFrame with the information about the out-degree of
+## each vertex
 vertexesOutDegreesDF = g.outDegrees
 ```
 
@@ -600,7 +600,7 @@ The selected IDs are $u2$ and $u3$
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -614,7 +614,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -629,17 +629,17 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
-# Retrieve the DataFrame with the information about the in-degree of
-# each vertex
+## Retrieve the DataFrame with the information about the in-degree of
+## each vertex
 vertexesInDegreesDF = g.inDegrees
 
-# Select only the vertexes with and in-degree value >=2
+## Select only the vertexes with and in-degree value >=2
 selectedVertexesDF = vertexesInDegreesDF.filter("inDegree>=2")
 
-# Select only the content of Column id
+## Select only the content of Column id
 selectedVertexesIDsDF = selectedVertexesDF.select("id")
 ```
 

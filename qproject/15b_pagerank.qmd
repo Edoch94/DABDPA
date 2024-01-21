@@ -9,20 +9,20 @@ In other words, it computes a likelihood that a person randomly clicking on link
 ![PageRank basic idea](images/15b_pagerank/high_level_example.png){width=80%}
 
 :::{.callout-tip}
-## Basic idea
+### Basic idea
 - The vote of each link is proportional to the importance of its source page $p$;
 - If page $p$ with importance $\textbf{PageRank}(p)$ has $n$ out-links, each out-link gets $\frac{\textbf{PageRank}(p)}{n}$ votes;
 - Page $p$ importance is the sum of the votes on its in-links.
 :::
 
-# PageRank formulations
-## Simple recursive formulation
+## PageRank formulations
+### Simple recursive formulation
 - Initialize each page rank to $1.0$: for each $p$ in pages set $\textbf{PageRank}(p)$ to $1.0$
 - Iterate for $max$ iterations
     1. Page $p$ sends a contribution $\frac{\textbf{PageRank}(p)}{\textbf{numOutLinks}(p)}$ to its neighbors (the pages it links);
     2. Update each page rank $\textbf{PageRank}(p)$ with the sum of the received contributions.
 
-## Random jumps formulation
+### Random jumps formulation
 The PageRank algorithm simulates the "random walk" of a user on the web. Indeed, at each step of the random walk, the random surfer has two options:
 
 - with probability $1-\alpha$, follow a link at random among the ones in the current page;
@@ -34,7 +34,7 @@ The PageRank algorithm simulates the "random walk" of a user on the web. Indeed,
     2. Update each page rank $\textbf{PageRank}(p)$ to $\alpha + (1 - \alpha)$ **times** the sum of the received contributions.
 
 ::::{.callout-note collapse="true"}
-## Example
+### Example
 - $\alpha=0.15$
 - Initialization: $\forall{p}, \textbf{PageRank}(p) = 1.0$
 

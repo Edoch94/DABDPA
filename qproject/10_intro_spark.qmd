@@ -10,15 +10,15 @@ Apache Spark<sup>TM</sup> is a fast and general-purpose engine for large-scale d
 - Simplicity: often comes from generality
 
 :::{.callout-tip collapse="true"}
-## History
+### History
 Originally developed at the University of California - Berkeley's AMPLab
 
 ![Spark history](images/10_intro_spark/spark_history.png){width=80%}
 
 :::
 
-# Motivations
-## MapReduce and Spark iterative jobs and data I/O
+## Motivations
+### MapReduce and Spark iterative jobs and data I/O
 Iterative jobs, with MapReduce, involve a lot of disk I/O for each iteration and stage, and disk I/O is very slow (even if it is local I/O)
 
 ![Iterative jobs](images/10_intro_spark/iterative_jobs.png){width=80%}
@@ -47,7 +47,7 @@ Instead, in Spark the data have to be loaded only once in the main memory
 
 In other words, data are read only once from HDFS and stored in main memory, splitting of the data across the main memory of each server.
 
-## Resilient distributed data sets (RDDs)
+### Resilient distributed data sets (RDDs)
 In Spark, data are represented as Resilient Distributed Datasets (RDDs), which are Partitioned/Distributed collections of objects spread across the nodes of a cluster, and are stored in main memory (when it is possible) or on local disk. 
 
 Spark programs are written in terms of operations on resilient distributed data sets.
@@ -59,7 +59,7 @@ The Spark computing framework provides a programming abstraction (based on RDDs)
 - It hides complexities of fault-tolerance and slow machines
 - It manages scheduling and synchronization of the jobs
 
-## MapReduce vs Spark
+### MapReduce vs Spark
 | | Hadoop MapReduce | Spark |
 |---|---|---|
 | Storage | Disk only | In-memory or on disk |
@@ -73,13 +73,13 @@ In-memory RDDs can make a big difference in performance
 
 ![Perfomance comparison](images/10_intro_spark/iterative_ML_algorithms_performance.png){width=80%}
 
-# Main components
+## Main components
 
 ![Spark main components](images/10_intro_spark/spark_main_components.png){width=80%}
 
 Spark is based on a basic component (the Spark Core component) that is exploited by all the high-level data analytics components: this solution provides a more uniform and efficient solution with respect to Hadoop where many non-integrated tools are available. In this way, when the efficiency of the core component is increased also the efficiency of the other high-level components increases.
 
-### Spark Core
+#### Spark Core
 Spark Core contains the basic functionalities of Spark exploited by all components
 
 - Task scheduling
@@ -89,15 +89,15 @@ Spark Core contains the basic functionalities of Spark exploited by all componen
 
 It provides the APIs that are used to create RDDs and applies transformations and actions on them.
 
-### Spark SQL
+#### Spark SQL
 Spark SQL for structured data is used to interact with structured datasets by means of the SQL language or specific querying APIs (based on Datasets). 
 
 It exploits a query optimizer engine, and supports also Hive Query Language (HQL). It interacts with many data sources (e.g., Hive Tables, Parquet, Json).
 
-### Spark Streaming
+#### Spark Streaming
 Spark Streaming for real-time data is used to process live streams of data in real-time. The APIs of the Streaming real-time components operated on RDDs and are similar to the ones used to process standard RDDs associated with "static" data sources.
 
-### MLlib
+#### MLlib
 MLlib is a machine learning/data mining library that can be used to apply the parallel versions of some machine learning/data mining algorithms
 
 - Data preprocessing and dimensional reduction
@@ -106,28 +106,28 @@ MLlib is a machine learning/data mining library that can be used to apply the pa
 - Itemset mining
 - ...
 
-### GraphX and GraphFrames
+#### GraphX and GraphFrames
 
 GraphX is a graph processing library that provides algorithms for manipulating graphs (e.g., subgraph searching, PageRank). Notice that the Python version is not available.
 
 GraphFrames is a graph library based on DataFrames and Python.
 
-### Spark schedulers
+#### Spark schedulers
 Spark can exploit many schedulers to execute its applications
 
 - Hadoop YARN: it is the standard scheduler of Hadoop
 - Mesos cluster: another popular scheduler
 - Standalone Spark Scheduler: a simple cluster scheduler included in Spark
 
-# Basic concepts
-## Resilient Distributed Data sets (RDDs)
+## Basic concepts
+### Resilient Distributed Data sets (RDDs)
 RDDs are the primary abstraction in Spark: they are distributed collections of objects spread across the nodes of a clusters, which means that they are split in partitions, and each node of the cluster that is running an application contains at least one partition of the RDD(s) that is (are) defined in the application.
 
 RDDs are stored in the main memory of the executors running in the nodes of the cluster (when it is possible) or in the local disk of the nodes if there is
 not enough main memory. This allows to execute in parallel the code invoked on eah node: each executor of a worker node runs the specified code on its partition of the RDD.
 
 :::{.callout-note collapse="true"}
-## Example of an RDD split in 3 partitions
+### Example of an RDD split in 3 partitions
 
 ![Example of RDD splits](images/10_intro_spark/example_rdd_split.png){width=80%}
 
@@ -154,8 +154,8 @@ To summarize, in the Spark framework
 - Spark manages the split of RDDs in partitions and allocates RDDs partitions in the nodes of the cluster
 - Spark hides complexities of fault-tolerance and slow machines (RDDs are automatically rebuilt in case of machine failures)
 
-# Spark Programs
-## Supported languages
+## Spark Programs
+### Supported languages
 Spark supports many programming languages
 
 - Scala: this is the language used to develop the Spark framework and all its components (Spark Core, Spark SQL, Spark Streaming, MLlib, GraphX)
@@ -163,10 +163,10 @@ Spark supports many programming languages
 - Python
 - R
 
-## Structure of Spark programs
+### Structure of Spark programs
 
 :::{.callout-tip}
-## Spark official terminology
+### Spark official terminology
 | Term | Definition |
 | --- | --- |
 | Application | User program built on Spark, consisting of a driver program and executors on the cluster. |
@@ -208,13 +208,13 @@ The worker nodes of the cluster are used to run your application by means of exe
 
 RDDs are distributed across executors (each RDD is split in partitions that are spread across the available executors).
 
-## Local execution of Spark
+### Local execution of Spark
 Spark programs can also be executed locally: local threads are used to parallelize the execution of the application on RDDs on a single PC. Local threads can be seen are "pseudo-worker" nodes, and a local scheduler is launched to run Spark programs locally. It is useful to develop and test the applications before deploying them on the cluster.
 
 ![Distributed execution of Spark](images/10_intro_spark/spark_local_execution.png){width=80%}
 
-# Spark program examples
-## Count line program
+## Spark program examples
+### Count line program
 The steps of this program are 
 
 - count the number of lines of the input file, whose name is set to "myfile.txt"
@@ -225,28 +225,28 @@ from pyspark import SparkConf, SparkContext
 
 if __name__ == "__main__":
 
-    # Create a configuration object and
-    # set the name of the application
-    conf = SparkConf().setAppName("Spark Line Count") # <1>
+    ## Create a configuration object and
+    ## set the name of the application
+    #conf = SparkConf().setAppName("Spark Line Count") # <1>
 
-    # Create a Spark Context object
-    sc = SparkContext(conf=conf) # <1>
+    ## Create a Spark Context object
+    #sc = SparkContext(conf=conf) # <1>
 
-    # Store the path of the input file in inputfile
-    inputFile= "myfile.txt" # <1>
+    ## Store the path of the input file in inputfile
+    #inputFile= "myfile.txt" # <1>
 
-    # Build an RDD of Strings from the input textual file
-    # Each element of the RDD is a line of the input file
-    linesRDD = sc.textFile(inputFile) # <2>
+    ## Build an RDD of Strings from the input textual file
+    ## Each element of the RDD is a line of the input file
+    #linesRDD = sc.textFile(inputFile) # <2>
 
-    # Count the number of lines in the input file
-    # Store the returned value in the local variable numLines
-    numLines = linesRDD.count() # <1>
+    ## Count the number of lines in the input file
+    ## Store the returned value in the local variable numLines
+    #numLines = linesRDD.count() # <1>
 
-    # Print the output in the standard output
+    ## Print the output in the standard output
     print("NumLines:", numLines)
 
-    # Close the Spark Context object
+    ## Close the Spark Context object
     sc.stop()
 ```
 1. Local Python variable: it is allocated in the main memory of the same process instancing the Driver.
@@ -257,7 +257,7 @@ if __name__ == "__main__":
     - In the main memory of the worker nodes, when it is possible
     - In the local disks of the worker nodes, when it is necessary
 
-## Word Count program
+### Word Count program
 In the Word Count implemented by means of Spark
 
 - The name of the input file is specified by using a command line parameter (i.e., `argv[1]`)
@@ -276,35 +276,35 @@ if __name__ == "__main__":
     inputFile= sys.argv[1]
     outputPath = sys.argv[2]
 
-    # Create a configuration object and
-    # set the name of the application
+    ## Create a configuration object and
+    ## set the name of the application
     conf = SparkConf().setAppName("Spark Word Count")
     
-    # Create a Spark Context object
+    ## Create a Spark Context object
     sc = SparkContext(conf=conf)
 
-    # Build an RDD of Strings from the input textual file
-    # Each element of the RDD is a line of the input file
+    ## Build an RDD of Strings from the input textual file
+    ## Each element of the RDD is a line of the input file
     lines = sc.textFile(inputFile)
 
-    # Split/transform the content of lines in a
-    # list of words and store them in the words RDD
+    ## Split/transform the content of lines in a
+    ## list of words and store them in the words RDD
     words = lines.flatMap(lambda line: line.split(sep=' '))
     
-    # Map/transform each word in the words RDD
-    # to a pair/tuple (word,1) and store the result 
-    # in the words_one RDD
+    ## Map/transform each word in the words RDD
+    ## to a pair/tuple (word,1) and store the result 
+    ## in the words_one RDD
     words_one = words.map(lambda word: (word, 1))
 
-    # Count the num. of occurrences of each word.
-    # Reduce by key the pairs of the words_one RDD and store
-    # the result (the list of pairs (word, num. of occurrences)
-    # in the counts RDD
+    ## Count the num. of occurrences of each word.
+    ## Reduce by key the pairs of the words_one RDD and store
+    ## the result (the list of pairs (word, num. of occurrences)
+    ## in the counts RDD
     counts = words_one.reduceByKey(lambda c1, c2: c1 + c2)
 
-    # Store the result in the output folder
+    ## Store the result in the output folder
     counts.saveAsTextFile(outputPath)
 
-    # Close/Stop the Spark Context object
+    ## Close/Stop the Spark Context object
     sc.stop()
 ```

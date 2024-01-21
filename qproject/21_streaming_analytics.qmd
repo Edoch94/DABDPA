@@ -2,8 +2,8 @@
 title: "Streaming data analytics frameworks"
 ---
 
-# Introduction
-## What is streaming processing?
+## Introduction
+### What is streaming processing?
 Streaming processing is the act of continuously incorporating new data to compute a result. Input data is unbounded (i.e., it has no beginning and no end). Series of events that arrive at the stream processing system, and the application will output multiple versions of the results as it runs or put them in a storage.
 
 Many important applications must process large streams of live data and provide results in near-real-time
@@ -30,7 +30,7 @@ Some requirements and challenges are:
 - Handling load imbalance and stragglers
 - Updating your application’s business logic at runtime
 
-## Stream processing frameworks for big streaming data analytics
+### Stream processing frameworks for big streaming data analytics
 Several frameworks have been proposed to process in real-time or in near real-time data streams
 
 - Apache Spark (Streaming component)
@@ -44,7 +44,7 @@ Several frameworks have been proposed to process in real-time or in near real-ti
 
 All these frameworks use a cluster of servers to scale horizontally with respect to the (big) amount of data to be analyzed.
 
-### Main solutions
+#### Main solutions
 There are two main solutions
 
 - **Continuous computation of data streams**. In this case, data are processed as soon as they arrive: every time a new record arrives from the input stream, it is immediately processed and a result is emitted as soon as possible. This is real-time processing.
@@ -54,7 +54,7 @@ There are two main solutions
 
 ![Micro-batch computation: one micro-batch at a time](images/21_streaming_analytics/microbatch_computation.png){width=80%}
 
-## Input data processing and result guarantees
+### Input data processing and result guarantees
 - At-most-once
     - Every input element of a stream is processed once or less
     - It is also called no guarantee
@@ -70,8 +70,8 @@ There are two main solutions
     - The result is always correct
     - Slower than the other processing approaches
 
-# Spark Streaming
-## What is Spark Streaming
+## Spark Streaming
+### What is Spark Streaming
 Spark Streaming is a framework for large scale stream processing
 
 - Scales to 100s of nodes
@@ -97,7 +97,7 @@ The requirements are
 - Simple programming model
 - Efficient fault-tolerance in stateful computations
 
-## Spark discretized stream processing
+### Spark discretized stream processing
 Spark streaming runs a streaming computation as a series of very small, deterministic batch jobs. It splits each input stream in portions and processes one portion at a time (in the incoming order): the same computation is applied on each portion (called **batch**) of the stream.
 
 So, Spark streaming 
@@ -109,7 +109,7 @@ So, Spark streaming
 ![Discretization in batches](images/21_streaming_analytics/discretization.png){width=80%}
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Word count implementation using Spark streaming. Problem specification:
 
 - The input is a stream of sentences
@@ -120,7 +120,7 @@ Word count implementation using Spark streaming. Problem specification:
 :::
 
 :::{.callout-tip}
-## Key concepts
+### Key concepts
 
 - DSream
     - Sequence of RDDs representing a discretized version of the input stream of data (Twitter, HDFS, Kafka, Flume, ZeroMQ, Akka Actor, TCP sockets, ...)
@@ -134,7 +134,7 @@ Word count implementation using Spark streaming. Problem specification:
 
 :::
 
-## Word count using DStreams
+### Word count using DStreams
 A DStream is represented by a continuous series of RDDs. Each RDD in a DStream contains data from a certain batch/interval.
 
 ![RDDs composing a DStreams](images/21_streaming_analytics/wordcount_dstreams.png){width=80%}
@@ -143,11 +143,11 @@ Any operation applied on a DStream translates to operations on the underlying RD
 
 ![Operations in a DStreams](images/21_streaming_analytics/wordcount_dstreams_operations.png){width=80%}
 
-## Fault-tolerance
+### Fault-tolerance
 DStreams remember the sequence of operations that created them from the original fault-tolerant input data. Batches of input data are replicated in memory of multiple worker nodes, therefore fault-tolerant: data lost due to worker failure, can be recomputed from input data.
 
-# Spark streaming programs
-## Basic structure of a Spark streaming program
+## Spark streaming programs
+### Basic structure of a Spark streaming program
 1. Define a Spark Streaming Context object. Define the size of the batches (in seconds) associated with the Streaming context.
 2. Specify the input stream and define a DStream based on it
 3. Specify the operations to execute for each batch of data
@@ -155,12 +155,12 @@ DStreams remember the sequence of operations that created them from the original
 5. Invoke the start method, to start processing the input stream
 6. Wait until the application is killed or the timeout specified in the application expires: if the timeout is not set and the application is not killed the application will run forever
 
-## Spark streaming context
+### Spark streaming context
 The Spark Streaming Context is defined by using the `StreamingContext(SparkConf sparkC, Duration batchDuration)` constructor of the class `pyspark.streaming.StreamingContext`.
 The `batchDuration` parameter specifies the size of the batches in seconds
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 
 ```python
 from pyspark.streaming import StreamingContext
@@ -175,17 +175,17 @@ After a context is defined, the next steps are
 - Define the input sources by creating input Dstreams
 - Define the streaming computations by applying transformation and output operations to DStreams
 
-## Input streams
+### Input streams
 The input Streams can be generated from different sources
 
 - TCP socket, Kafka, Flume, Kinesis, Twitter.
 - Also a HDFS folder can be used as input stream. This option is usually used during the application development to perform a set of initial tests.
 
-### Input: TCP socket
+#### Input: TCP socket
 A DStream can be associated with the content emitted by a TCP socket: `socketTextStream(String hostname, int port_number)` is used to create a DStream based on the textual content emitted by a TCP socket. 
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 
 ```python
 lines = ssc.socketTextStream("localhost", 9999)
@@ -194,11 +194,11 @@ lines = ssc.socketTextStream("localhost", 9999)
 It stores the content emitted by localhost:9999 in the lines DStream.
 :::
 
-### Input: (HDFS) folder
+#### Input: (HDFS) folder
 A DStream can be associated with the content of an input (HDFS) folder: every time a new file is inserted in the folder, the content of the file is stored in the associated DStream and processed. Pay attention that updating the content of a file does not trigger/change the content of the DStream. `textFileStream(String folder)` is used to create a DStream based on the content of the input folder.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 
 ```python
 lines = textFileStream(inputFolder)
@@ -207,13 +207,13 @@ lines = textFileStream(inputFolder)
 Store the content of the files inserted in the input folder in the lines Dstream: every time new files are inserted in the folder their content is stored in the current batch of the stream.
 :::
 
-### Input: other sources
+#### Input: other sources
 Usually DStream objects are defined on top of streams emitted by specific applications that emit real-time streaming data (e.g., Apache Kafka, Apache Flume, Kinesis, Twitter). It is also possible to write custom applications for generating streams of data, however Kafka, Flume and similar tools are usually a more reliable and effective solutions for generating streaming data. 
 
-## Transformations
+### Transformations
 Analogously to standard RDDs, also DStreams are characterized by a set of transformations that, when applied to DStream objects, return a new DStream Object. The transformation is applied on one batch (RDD) of the input DStream at a time and returns a batch (RDD) of the new DStream (i.e., each batch (RDD) of the input DStream is associated with exactly one batch (RDD) of the returned DStream). Many of the available transformations are the same transformations available for standard RDDs.
 
-### Basic transformations
+#### Basic transformations
 
 | Transformation | Effect |
 |-|---|
@@ -230,13 +230,13 @@ Analogously to standard RDDs, also DStreams are characterized by a set of transf
 | `join(otherStream)` | when called on two DStreams of $(K, V)$ and $(K, W)$ pairs, return a new DStream of $(K, (V, W))$ pairs with all pairs of elements for each key. |
 | `cogroup(otherStream)` | when called on a DStream of $(K, V)$ and $(K, W)$ pairs, return a new DStream of $(K, \text{Seq}[V], \text{Seq}[W])$ tuples. |
 
-### Basic actions
+#### Basic actions
 
 | Action | Effect |
 | `pprint()` | It prints the first 10 elements of every batch of data in a DStream on the standard output of the driver node running the streaming application. It is useful for development and debugging |
 | `saveAsTextFiles(prefix, [suffix])` | It saves the content of the DStream on which it is invoked as text files: one folder for each batch, and the folder name at each batch interval is generated based on prefix, time of the batch (and suffix): "prefix-TIME_IN_MS[.suffix]" (e.g., `Counts.saveAsTextFiles(outputPathPrefix, "")`). |
 
-## Start and run the computations
+### Start and run the computations
 The `streamingContext.start()` method is used to start the application on the input stream(s). The `awaitTerminationOrTimeout(long millisecons)` method is used to specify how long the application will run.
 
 The `awaitTermination()` method is used to run the application forever
@@ -244,14 +244,14 @@ The `awaitTermination()` method is used to run the application forever
 - Until the application is explicitly killed
 - The processing can be manually stopped using `streamingContext.stop()`
 
-### Points to remember
+#### Points to remember
 - Once a context has been started, no new streaming computations can be set up or added to it
 - Once a context has been stopped, it cannot be restarted
 - Only one StreamingContext per application can be active at the same time
 - `stop()` on StreamingContext also stops the SparkContext. To stop only the `StreamingContext`, set the optional parameter of `stop()` called `stopSparkContext` to False
 
 :::{.callout-note collapse="true"}
-## Example: Spark Streaming version of word count
+### Example: Spark Streaming version of word count
 Problem specification
 
 - Input: a stream of sentences retrieved from localhost:9999
@@ -262,44 +262,44 @@ Problem specification
 ```python
 from pyspark.streaming import StreamingContext
 
-# Set prefix of the output folders
+## Set prefix of the output folders
 outputPathPrefix="resSparkStreamingExamples"
 
 #Create a configuration object and#set the name of the applicationconf
 SparkConf().setAppName("Streaming word count")
 
-# Create a Spark Context object
+## Create a Spark Context object
 sc = SparkContext(conf=conf)
 
-# Create a Spark Streaming Context object
+## Create a Spark Streaming Context object
 ssc = StreamingContext(sc, 5)
 
-# Create a (Receiver) DStream that will connect to localhost:9999
+## Create a (Receiver) DStream that will connect to localhost:9999
 lines = ssc.socketTextStream("localhost", 9999)
 
-# Apply a chain of transformations to perform the word count task
-# The returned RDDs are DStream RDDs
+## Apply a chain of transformations to perform the word count task
+## The returned RDDs are DStream RDDs
 words = lines.flatMap(lambda line: line.split(" "))
 wordsOnes = words.map(lambda word: (word, 1))
 wordsCounts = wordsOnes.reduceByKey(lambda v1, v2: v1+v2)
 
-# Print the result on the standard output
+## Print the result on the standard output
 wordsCounts.pprint()
 
-# Store the result in HDFS
+## Store the result in HDFS
 wordsCounts.saveAsTextFiles(outputPathPrefix, "")
 
 #Start the computation
 ssc.start()
 
-# Run this application for 90 seconds
+## Run this application for 90 seconds
 ssc.awaitTerminationOrTimeout(90)
 ssc.stop(stopSparkContext=False)
 ```
 
 :::
 
-# Windowed computation
+## Windowed computation
 Spark Streaming also provides windowed computations, allowing to apply transformations over a sliding window of data: each window contains a set of batches of the inputstream, and windows can be overlapped (i.e., the same batch can be included in many consecutive windows).
 
 Every time the window slides over a source DStream, the source RDDs that fall within the window are combined and operated upon to produce the RDDs of the windowed DStream.
@@ -308,7 +308,7 @@ Every time the window slides over a source DStream, the source RDDs that fall wi
 
 In the example, the operationis applied over the last 3 time units of data (i.e., the last 3 batches of the input DStream), and each window contains the data of 3 batches. It slides by 2 time units.
 
-## Parameters
+### Parameters
 Any window operation needs to specify two parameters
 
 - Window length: the duration of the window (3 in the example)
@@ -317,7 +317,7 @@ Any window operation needs to specify two parameters
 These two parameters must be multiples of the batch interval of the source DStream.
 
 ::::{.callout-note collapse="true" }
-## Example: word count and window
+### Example: word count and window
 Problem specification
 
 - Input: a stream of sentences
@@ -336,7 +336,7 @@ Word count and windows
 :::
 ::::
 
-## Basic window transformations
+### Basic window transformations
 
 ::::{.content-visible when-format="html"}
 :::{.column-screen-inset}
@@ -370,13 +370,13 @@ Word count and windows
 
 :::
 
-## Checkpoint
+### Checkpoint
 A streaming application must operate 24/7 and hence must be resilient to failures unrelated to the application logic (e.g., system failures, JVM crashes, etc.). For this to be possible, Spark Streaming needs to checkpoint enough information to a fault- tolerant storage system such that it can recover from failures, and this result is achieved by means of checkpoints, which are operations that store the data and metadata needed to restart the computation if failures happen. Checkpointing is necessary even for some window transformations and stateful transformations.
 
 Checkpointing is enabled by using the `checkpoint(String folder)` method of `SparkStreamingContext`: the parameter is the folder that is used to store temporary data. This is similar as for processing graphs with GraphFrames library, however, with GraphFrames, the checkpoint was the one of SparkContext.
 
 :::{.callout-note collapse="true"}
-## Example: word count and windows
+### Example: word count and windows
 Problem specification
 
 - Input: a stream of sentences retrieved from localhost:9999
@@ -392,40 +392,40 @@ Problem specification
 ```python
 from pyspark.streaming import StreamingContext
 
-# Set prefix of the output folders
+## Set prefix of the output folders
 outputPathPrefix="resSparkStreamingExamples"
 
 #Create a configuration object and#set the name of the applicationconf
 SparkConf().setAppName("Streaming word count")
 
-# Create a Spark Context object
+## Create a Spark Context object
 sc = SparkContext(conf=conf)
 
-# Create a Spark Streaming Context object
+## Create a Spark Streaming Context object
 ssc = StreamingContext(sc, 5)
 
-# Set the checkpoint folder (it is needed by some window transformations)
+## Set the checkpoint folder (it is needed by some window transformations)
 ssc.checkpoint("checkpointfolder")
 
-# Create a (Receiver) DStream that will connect to localhost:9999
+## Create a (Receiver) DStream that will connect to localhost:9999
 lines = ssc.socketTextStream("localhost", 9999)
 
-# Apply a chain of transformations to perform the word count task
-# The returned RDDs are DStream RDDs
+## Apply a chain of transformations to perform the word count task
+## The returned RDDs are DStream RDDs
 words = lines.flatMap(lambda line: line.split(" "))
 wordsOnes = words.map(lambda word: (word, 1))
 
-# reduceByKeyAndWindow is used instead of reduceByKey
-# The durantion of the window is also specified
+## reduceByKeyAndWindow is used instead of reduceByKey
+## The durantion of the window is also specified
 wordsCounts = wordsOnes \
     .reduceByKeyAndWindow(lambda v1, v2: v1+v2, None, 15)
 
-# Print the num. of occurrences of each word of the current window
-# (only 10 of them)
+## Print the num. of occurrences of each word of the current window
+## (only 10 of them)
 wordsCounts.pprint()
 
-# Store the output of the computation in the folders with prefix
-# outputPathPrefix
+## Store the output of the computation in the folders with prefix
+## outputPathPrefix
 wordsCounts.saveAsTextFiles(outputPathPrefix, "")
 
 #Start the computation
@@ -438,58 +438,58 @@ ssc.awaitTermination ()
 ```python
 from pyspark.streaming import StreamingContext
 
-# Set prefix of the output folders
+## Set prefix of the output folders
 outputPathPrefix="resSparkStreamingExamples"
 
 #Create a configuration object and#set the name of the applicationconf
 SparkConf().setAppName("Streaming word count")
 
-# Create a Spark Context object
+## Create a Spark Context object
 sc = SparkContext(conf=conf)
 
-# Create a Spark Streaming Context object
+## Create a Spark Streaming Context object
 ssc = StreamingContext(sc, 5)
 
-# Set the checkpoint folder (it is needed by some window transformations)
+## Set the checkpoint folder (it is needed by some window transformations)
 ssc.checkpoint("checkpointfolder")
 
-# Create a (Receiver) DStream that will connect to localhost:9999
+## Create a (Receiver) DStream that will connect to localhost:9999
 lines = ssc.socketTextStream("localhost", 9999)
 
-# Apply a chain of transformations to perform the word count task
-# The returned RDDs are DStream RDDs
+## Apply a chain of transformations to perform the word count task
+## The returned RDDs are DStream RDDs
 words = lines.flatMap(lambda line: line.split(" "))
 wordsOnes = words.map(lambda word: (word, 1))
 
-# reduceByKeyAndWindow is used instead of reduceByKey
-# The durantion of the window is also specified
+## reduceByKeyAndWindow is used instead of reduceByKey
+## The durantion of the window is also specified
 wordsCounts = wordsOnes \
     .reduceByKeyAndWindow(
         lambda v1, v2: v1+v2, 
-        lambda vnow, # <1>
+        #lambda vnow, # <1>
         vold: vnow-vold, 15
     )
 
-# Print the num. of occurrences of each word of the current window
-# (only 10 of them)
+## Print the num. of occurrences of each word of the current window
+## (only 10 of them)
 wordsCounts.pprint()
 
-# Store the output of the computation in the folders with prefix
-# outputPathPrefix
+## Store the output of the computation in the folders with prefix
+## outputPathPrefix
 wordsCounts.saveAsTextFiles(outputPathPrefix, "")
 
 #Start the computation
 ssc.start()
 
-# Run this application for 90 seconds
+## Run this application for 90 seconds
 ssc.awaitTerminationOrTimeout(90)
 ssc.stop(stopSparkContext=False)
 ```
 1. In this solution the inverse function is also specified in order to compute the result incrementally
 :::
 
-# Stateful computation
-## `updateStateByKey` transformation
+## Stateful computation
+### `updateStateByKey` transformation
 The `updateStateByKey` transformation allows maintaining a state for each key. The value of the state of each key is continuously updated every time a new batch is analyzed.
 
 The use of `updateStateByKey` is based on two steps
@@ -500,7 +500,7 @@ The use of `updateStateByKey` is based on two steps
 In every batch, Spark will apply the state update function for all existing keys. For each key, the update function is used to update the value associated with a key by combining the former value and the new values associated with that key; in other words, for each key, the call method of the function is invoked on the list of new values and the former state value and returns the new aggregated value for the considered key.
 
 :::{.callout-note collapse="true"}
-## Example: word count and `updateStateByKey` transformation
+### Example: word count and `updateStateByKey` transformation
 By using the `updateStateByKey`, the application can continuously update the number of occurrences of each word. The number of occurrences stored in the DStream returned by this transformation is computed over the union of all the batches (from the first one to the current one). For efficiency reasons, the new value for each key is computed by combining the last value for that key with the values of the current batch for the same key.
 
 Problem specification:
@@ -513,53 +513,53 @@ Problem specification:
 ```python
 from pyspark.streaming import StreamingContext
 
-# Set prefix of the output folders
+## Set prefix of the output folders
 outputPathPrefix="resSparkStreamingExamples"
 
 #Create a configuration object and#set the name of the applicationconf
 SparkConf().setAppName("Streaming word count")
 
-# Create a Spark Context object
+## Create a Spark Context object
 sc = SparkContext(conf=conf)
 
-# Create a Spark Streaming Context object
+## Create a Spark Streaming Context object
 ssc = StreamingContext(sc, 5)
 
-# Set the checkpoint folder (it is needed by some window transformations)
+## Set the checkpoint folder (it is needed by some window transformations)
 ssc.checkpoint("checkpointfolder")
 
-# Create a (Receiver) DStream that will connect to localhost:9999
+## Create a (Receiver) DStream that will connect to localhost:9999
 lines = ssc.socketTextStream("localhost", 9999)
 
-# Apply a chain of transformations to perform the word count task
-# The returned RDDs are DStream RDDs
+## Apply a chain of transformations to perform the word count task
+## The returned RDDs are DStream RDDs
 words = lines.flatMap(lambda line: line.split(" "))
 wordsOnes = words.map(lambda word: (word, 1))
 
-# Define the function that is used to update the state of a key at a time
-def updateFunction(newValues, currentCount): # <1>
+## Define the function that is used to update the state of a key at a time
+#def updateFunction(newValues, currentCount): # <1>
     if currentCount is None:
         currentCount = 0
 
-    # Sum the new values to the previous state for the current key
-    return sum(newValues, currentCount) # <2>
+    ## Sum the new values to the previous state for the current key
+    #return sum(newValues, currentCount) # <2>
 
-# DStream made of cumulative counts for each key that get updated 
-# in every batch
-totalWordsCounts = wordsOnes.updateStateByKey(updateFunction) # <3>
+## DStream made of cumulative counts for each key that get updated 
+## in every batch
+#totalWordsCounts = wordsOnes.updateStateByKey(updateFunction) # <3>
 
-# Print the num. of occurrences of each word of the current window
-# (only 10 of them)
+## Print the num. of occurrences of each word of the current window
+## (only 10 of them)
 totalWordsCounts.pprint()
 
-# Store the output of the computation in the folders with prefix
-# outputPathPrefix
+## Store the output of the computation in the folders with prefix
+## outputPathPrefix
 totalWordsCounts.saveAsTextFiles(outputPathPrefix, "")
 
 #Start the computation
 ssc.start()
 
-# Run this application for 90 seconds
+## Run this application for 90 seconds
 ssc.awaitTerminationOrTimeout(90)
 ssc.stop(stopSparkContext=False)
 ```
@@ -570,7 +570,7 @@ ssc.stop(stopSparkContext=False)
 
 :::
 
-# Transform transformation
+## Transform transformation
 Some types of transformations are not available for DStreams (e.g., `sortBy()`, `sortByKey()`, `distinct()`), moreover, sometimes it is needed to combine DStreams and RDDs. For example, the functionality of joining every batch in a data stream with another dataset (a standard RDD) is not directly exposed in the DStream API. The `transform()` transformation can be used in these situations.
 
 |Transformation|Effect|
@@ -587,41 +587,41 @@ Problem specification
 ```python
 from pyspark.streaming import StreamingContext
 
-# Set prefix of the output folders
+## Set prefix of the output folders
 outputPathPrefix="resSparkStreamingExamples"
 
 #Create a configuration object and#set the name of the applicationconf
 SparkConf().setAppName("Streaming word count")
 
-# Create a Spark Context object
+## Create a Spark Context object
 sc = SparkContext(conf=conf)
 
-# Create a Spark Streaming Context object
+## Create a Spark Streaming Context object
 ssc = StreamingContext(sc, 5)
 
-# Create a (Receiver) DStream that will connect to localhost:9999
+## Create a (Receiver) DStream that will connect to localhost:9999
 lines = ssc.socketTextStream("localhost", 9999)
 
-# Apply a chain of transformations to perform the word count task
-# The returned RDDs are DStream RDDs
+## Apply a chain of transformations to perform the word count task
+## The returned RDDs are DStream RDDs
 words = lines.flatMap(lambda line: line.split(" "))
 wordsOnes = words.map(lambda word: (word, 1))
 wordsCounts = wordsOnes.reduceByKey(lambda v1, v2: v1+v2)
 
-# Sort the content/the pairs by decreasing value (# of occurrences)
+## Sort the content/the pairs by decreasing value (# of occurrences)
 wordsCountsSortByKey = wordsCounts \
     .transform(lambda batchRDD: batchRDD.sortBy(lambda pair: -1*pair[1]))
 
-# Print the result on the standard output
+## Print the result on the standard output
 wordsCountsSortByKey.pprint()
 
-# Store the result in HDFS
+## Store the result in HDFS
 wordsCountsSortByKey.saveAsTextFiles(outputPathPrefix, "")
 
 #Start the computation
 ssc.start()
 
-# Run this application for 90 seconds
+## Run this application for 90 seconds
 ssc.awaitTerminationOrTimeout(90)
 ssc.stop(stopSparkContext=False)
 ```

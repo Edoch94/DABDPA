@@ -1,13 +1,14 @@
 ---
 title: "MapReduce and Hadoop Advanced Topics"
 ---
-# Multiple inputs
+
+## Multiple inputs
 In some applications data are read from two or more datasets, also having different formats. 
 
 Hadoop allows reading data from multiple inputs (multiple datasets) with different formats by specifying one mapper for each input dataset. However, the key-value pairs emitted by the mappers must be consistent in terms of data types.
 
 :::{.callout-tip}
-## Use case
+### Use case
 The input data is collected from different sensors: all sensors measure the same "measure", but sensors developed by different vendors use a different data format to store the gathered data/measurements.
 :::
 
@@ -17,7 +18,7 @@ In the driver use the `addInputPath` method of the `MultipleInputs` class multip
 - Specify the input format class for each input path
 - Specify the Mapper class associated with each input path
 
-### Example: multiple inputs
+#### Example: multiple inputs
 ```java
 MultipleInputs.addInputPath(
     job, 
@@ -38,7 +39,7 @@ MultipleInputs.addInputPath(
 3. `Mapper1` is the class used to manage the input key-value pairs associated with the first path
 4. `Mapper2` is the class used to manage the input key-value pairs associated with the second path
 
-# Multiple outputs
+## Multiple outputs
 In some applications it could be useful to store the output key-value pairs of a MapReduce application in different files. Each file contains a specific subset of the emitted key-value pairs, based on some rules (usually this approach is useful for splitting and filtering operations), and each file name has a prefix that is used to specify the "content" of the file.
 
 All the files are stored in one single output directory: there aren't multiple output directories, but only multiple output files with different prefixes.
@@ -50,7 +51,7 @@ The `MultipleOutputs` class is used to specify the prefixes of the output files
 - One different prefix for each "type" of output file
 - There will be one output file of each type for each reducer (for each mapperfor map-only jobs)
 
-## Driver
+### Driver
 Use the method `MultipleOutputs.addNamedOutput` multiple times in the Driver to specify the prefixes of the output files. This method has 4 parameter
 
 - The job object
@@ -61,7 +62,7 @@ Use the method `MultipleOutputs.addNamedOutput` multiple times in the Driver to 
 
 Call this method one time for each "output file type"
 
-### Example: multiple outputs
+#### Example: multiple outputs
 
 ```java
 MultipleOutputs.addNamedOutput(
@@ -86,7 +87,7 @@ This example defines two types of output files
 - The first type of output files while have the prefix `"hightemp"`
 - The second type of output files while have the prefix `"normaltemp"`
 
-## Map-only
+### Map-only
 Define a private `MultipleOutputs` variable in the mapper if the job is a map-only job (in the reducer otherwise)
 
 ```java
@@ -101,7 +102,7 @@ mos = new MultipleOutputs<Text, NullWritable>(context);
 
 Use the write method of the `MultipleOutputs` object in the map method (or in the reduce method) to write the key-value pairs in the file of interest 
 
-## Example: map-only
+### Example: map-only
 
 ```java
 mos.write("hightemp", key, value);
@@ -121,7 +122,7 @@ Close the `MultipleOutputs` object in the cleanup method of the mapper (or of th
 mos.close();
 ```
 
-# Distributed cache
+## Distributed cache
 Some applications need to share and cache (small) read-only files to perform efficiently their task. These files should be accessible by all nodes of the cluster in an efficient way, hence a copy of the shared/cached (HDFS) files should be available locally in all nodes used to run the application.
 
 `DistributedCache` is a facility provided by the Hadoop-based MapReduce framework to cache files (e.g., text, archives, jars needed by applications).
@@ -137,8 +138,8 @@ The efficiency of the distributed cache depends on the number of multiple mapper
 
 Without the distributed cache, each mapper (reducer) should read, in the setup method, the shared HDFS file, hence, more time is needed because reading data from HDFS is more inefficient than reading data from the local file system of the node running the mappers (reducers).
 
-## Example: distributed cache
-### Driver
+### Example: distributed cache
+#### Driver
 
 ```java
 public int run(String[] args) throws Exception {
@@ -152,7 +153,7 @@ public int run(String[] args) throws Exception {
 }
 ```
 
-### Mapper/Reducer
+#### Mapper/Reducer
 
 ```java
 protected void setup(Context context) throws IOException, InterruptedException{

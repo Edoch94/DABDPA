@@ -1,0 +1,52 @@
+project: 
+  output-dir: "pdf_output"
+
+format:  
+  # pdf: 
+  #   toc: true
+  #   toc-depth: 2
+  #   number-sections: true
+  #   code-line-numbers: true
+  #   code-block-bg: "#f0f3f5"
+  #   code-block-border-left: "#edd39f"
+  #   cap-location: top
+  #   include-in-header: 
+  #     text: |
+  #       \usepackage{lscape}
+  #       \newcommand{\blandscape}{\begin{landscape}}
+  #       \newcommand{\elandscape}{\end{landscape}}
+
+  pdf: # using the "compact-pdf" Quarto format, see https://github.com/arcruz0/quarto-compact
+    shift-heading-level-by: 0
+    toc: true
+    number-sections: true
+    number-depth: 1
+    fig-pos: "H"
+    fig-cap-location: top
+    geometry:
+      - top=1in
+      - right=.8in
+      - bottom=1in
+      - left=.8in
+    link-citations: yes
+    linkcolor: blue
+    code-block-bg: "#f0f3f5"
+    # code-block-border-left: "#edd39f"
+    code-line-numbers: true
+    include-in-header: 
+      text: |
+        \usepackage{fancyhdr}
+        \usepackage{titling}
+        \pagestyle{fancy}
+        \fancyhf{}
+        \renewcommand\maketitle{
+          \fancyhead[C]{
+            \thetitle
+            \ifx \theauthor\empty  \else \ – \theauthor \fi
+            \ifx \thedate\empty  \else \ – \thedate \ \fi
+          }
+        }
+        \fancyfoot[C]{\thepage}
+        \usepackage{lscape}
+        \newcommand{\blandscape}{\begin{landscape}}
+        \newcommand{\elandscape}{\end{landscape}}

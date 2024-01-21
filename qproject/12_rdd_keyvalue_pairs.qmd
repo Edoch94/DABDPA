@@ -16,7 +16,7 @@ RDDs of key-value pairs are characterized by
 
 Many applications are based on RDDs of key-value pairs: the operations available for RDDs of key-value pairs allow grouping data by key and performing computation by key (i.e., by group). The basic idea is similar to the one of the MapReduce-based programs in Hadoop, but there are more operations already available.
 
-# Creating RDDs of key-value pairs
+## Creating RDDs of key-value pairs
 RDDs of key-value pairs can be built
 
 - From other RDDs by applying the `map()` or the `flatMap()` transformation on other RDDs;
@@ -27,21 +27,21 @@ Key-value pairs are represented as standard built-in Python tuples composed of t
 - Key
 - Value
 
-# RDDs of key-value pairs by using the Map transformation
+## RDDs of key-value pairs by using the Map transformation
 The goal is to define an RDD of key-value pairs by using the map transformation: apply a function `f` on each element of the input RDD that returns one tuple for each input element. The new RDD of key-value pairs contains one tuple `y` for each element `x` of the input RDD.
 
 The standard `map(f)` transformation is used, and the new RDD of key-value pairs contains one tuple `y` for each input element `x` of the input RDD ($y=f(x)$).
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 - Create an RDD from a textual file containing the first names of a list of users; each line of the file contains one first name;
 - Create an RDD of key-value pairs containing a list of pairs `(first name, 1)`.
 
 ```python
-# Read the content of the input textual file
+## Read the content of the input textual file
 namesRDD = sc.textFile("first_names.txt")
 
-# Create an RDD of key-value pairs
+## Create an RDD of key-value pairs
 nameOnePairRDD = namesRDD.map(lambda name: (name, 1))
 ```
 
@@ -51,7 +51,7 @@ nameOnePairRDD = namesRDD.map(lambda name: (name, 1))
 
 :::
 
-# RDDs of key-value pairs by using the flatMap transformation
+## RDDs of key-value pairs by using the flatMap transformation
 Define an RDD of key-value pairs by using the flatMap transformation: apply a function `f` on each element of the input RDD that returns a list of tuples for each input element. The new PairRDD contains all the pairs obtained by applying `f` on each element `x` of the input RDD.
 
 The standard `flatMap(f)` transformation is used, and the new RDD of key-value pairs contains the tuples returned by the execution of `f` on each element `x` of the input RDD.
@@ -66,35 +66,35 @@ $$
 $[y]$ can be the empty list.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create an RDD from a textual file; each line of the file contains a set of words;
 2. Create a `PairRDD` containing a list of pairs `(word, 1)`: one pair for each word occurring in the input document (with repetitions).
 
 **Version 1**
 
 ```python
-# Define the function associated with the flatMap transformation
+## Define the function associated with the flatMap transformation
 def wordsOnes(line):
     pairs = []
     for word in line.split(' '):
         pairs.append( (word, 1))
     return pairs
 
-# Read the content of the input textual file
+## Read the content of the input textual file
 linesRDD = sc.textFile("document.txt")
 
-# Create an RDD of key-value pairs based on the input document
-# One pair (word,1) for each input word
+## Create an RDD of key-value pairs based on the input document
+## One pair (word,1) for each input word
 wordOnePairRDD = linesRDD.flatMap(wordsOnes)
 ```
 
 **Version 2**
 ```python
-# Read the content of the input textual file
+## Read the content of the input textual file
 linesRDD = sc.textFile("document.txt")
 
-# Create an RDD of key-value pairs based on the input document
-# One pair (word,1) for each input word
+## Create an RDD of key-value pairs based on the input document
+## One pair (word,1) for each input word
 wordOnePairRDD = linesRDD.flatMap(
     lambda line: map(lambda w: (w, 1), line.split(' '))
 )
@@ -106,13 +106,13 @@ wordOnePairRDD = linesRDD.flatMap(
 
 :::
 
-# RDDs of key-value pairs by using parallelize
+## RDDs of key-value pairs by using parallelize
 Use the parallelize method to create an RDD of key-value pairs from a local python in-memory collection of tuples.
 
 It is based on the standard `parallelize(c)` method of the `SparkContext` class: each element (tuple) of the local python collection becomes a key-vaue pair of the returned RDD.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Create an RDD from a local python list containing the following key-value pairs
 
 - `("Paolo", 40)`
@@ -120,14 +120,14 @@ Create an RDD from a local python list containing the following key-value pairs
 - `("Paolo", 35)`
 
 ```python
-# Create the local python list
+## Create the local python list
 nameAge = [
     ("Paolo",40),
     ("Giorgio",22),
     ("Paolo",35)
 ]
 
-# Create the RDD of pairs from the local collection
+## Create the RDD of pairs from the local collection
 nameAgePairRDD = sc.parallelize(nameAge)
 ```
 
@@ -138,10 +138,10 @@ nameAgePairRDD = sc.parallelize(nameAge)
 
 :::
 
-# Transformations on RDDs of key-value pairs
+## Transformations on RDDs of key-value pairs
 All the standard transformations can be applied, where the specified functions operate on tuples, but also specific transformations are available (e.g., `reduceByKey()`, `groupyKey()`, `mapValues()`, `join()`).
 
-## ReduceByKey transformation
+### ReduceByKey transformation
 The goal is to create a new RDD of key-value pairs where there is one pair for each distinct key `k` of the input RDD of key-value pairs: 
 
 - The value associated with key `k` in the new RDD of key-value pairs is computed by applying a function `f` on the values associated with `k` in the input RDD of key-value pairs; the function `f` must be associative and commutative, otherwise the result depends on how data are partitioned and analyzed;
@@ -159,7 +159,7 @@ Similarly to the `reduce()` action, the `reduceByKey()` transformation aggregate
 A shuffle operation is executed for computing the result of the `reduceByKey()` transformation. The result/value for each group/key is computed from data stored in different input partitions.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create an RDD from a local python list containing the pairs, where the key is the first name of a user and the value is his/her age
     - `("Paolo", 40)`
     - `("Giorgio", 22)`
@@ -167,17 +167,17 @@ A shuffle operation is executed for computing the result of the `reduceByKey()` 
 2. Create a new RDD of key-value pairs containing one pair for each name. In the returned RDD, associate each name with the age of the youngest user with that name.
 
 ```python
-# Create the local python list
+## Create the local python list
 nameAge = [
     ("Paolo",40),
     ("Giorgio",22),
     ("Paolo",35)
 ]
 
-# Create the RDD of pairs from the local collection
+## Create the RDD of pairs from the local collection
 nameAgePairRDD = sc.parallelize(nameAge)
 
-# Select for each name the lowest age value
+## Select for each name the lowest age value
 youngestPairRDD= nameAgePairRDD.reduceByKey(lambda age1, age2: min(age1, age2))
 ```
 
@@ -187,7 +187,7 @@ youngestPairRDD= nameAgePairRDD.reduceByKey(lambda age1, age2: min(age1, age2))
 
 :::
 
-## FoldByKey transformation
+### FoldByKey transformation
 The `foldByKey()` has the same goal of the `reduceBykey()` transformation, however
 
 - It is characterized also by a "zero" value
@@ -204,7 +204,7 @@ The "zero" value is the neutral value for the used function `op` (i.e., "zero" c
 A shuffle operation is executed for computing the result of the `foldByKey()` transformation. The result/value for each group/key is computed from data stored in different input partitions.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create an RDD from a local python list containing the pairs, where the key is the first name of a user and the value is a message published by him/her
     - `("Paolo", "Message1")`
     - `("Giorgio", "Message2")`
@@ -212,23 +212,23 @@ A shuffle operation is executed for computing the result of the `foldByKey()` tr
 2. Create a new RDD of key-value pairs containing one pair for each name. In the returned RDD, associate each name the concatenation of its messages (preserving the order of the messages in the input RDD).
 
 ```python
-# Create the local python list
+## Create the local python list
 nameMess = [
     ("Paolo","Message1"),
     ("Giorgio","Message2"),
     ("Paolo","Message3")
 ]
 
-# Create the RDD of pairs from the local collection
+## Create the RDD of pairs from the local collection
 nameMessPairRDD = sc.parallelize(nameMess)
 
-# Concatenate the messages of each user
+## Concatenate the messages of each user
 concatPairRDD= nameMessPairRDD.foldByKey('', lambda m1, m2: m1+m2)
 ```
 
 :::
 
-## CombineByKey transformation
+### CombineByKey transformation
 The goal is to create a new RDD of key-value pairs where there is one pair for each distinct key $k$ of the input RDD of key-value pairs. The value associated with the key $k$ in the new RDD of key-value pairs is computed by applying user-provided functions on the values associated with $k$ in the input RDD of key-value pairs: the user-provided function must be associative, otherwise the result depends how data are partitioned and analyzed.
 
 The data type of the new RDD of key-value pairs can be different with respect to the data type of the input RDD of key-value pairs.
@@ -250,7 +250,7 @@ The `combineByKey` function is more general than `reduceByKey` and `foldByKey` b
 A shuffle operation is executed for computing the result of the `combineByKey()` transformation: the result/value for each group/key is computed from data stored in different input partitions.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create an RDD from a local python list containing the the following pairs: the key is the first name of a user and the value is his/her age
     - `("Paolo", 40)`
     - `("Giorgio", 22)`
@@ -258,18 +258,18 @@ A shuffle operation is executed for computing the result of the `combineByKey()`
 2. Store the results in an output HDFS folder. The output contains one line for each name followed by the average age of the users with that name
 
 ```python
-# Create the local python list
+## Create the local python list
 nameAge = [
     ("Paolo",40),
     ("Giorgio",22),
     ("Paolo",35)
 ]
 
-# Create the RDD of pairs from the local collection
+## Create the RDD of pairs from the local collection
 nameAgePairRDD = sc.parallelize(nameAge)
 
-# Compute the sum of ages and
-# the number of input pairs for each name (key)
+## Compute the sum of ages and
+## the number of input pairs for each name (key)
 sumNumPerNamePairRDD = nameAgePairRDD.combineByKey(
     lambda inputElem: (inputElem, 1),
     lambda intermediateElem, inputElem: (
@@ -282,12 +282,12 @@ sumNumPerNamePairRDD = nameAgePairRDD.combineByKey(
     )
 )
 
-# Compute the average for each name
+## Compute the average for each name
 avgPerNamePairRDD = sumNumPerNamePairRDD.map(
     lambda pair: (pair[0], pair[1][0]/pair[1][1])
 )
 
-# Store the result in an output folder
+## Store the result in an output folder
 avgPerNamePairRDD.saveAsTextFile(outputPath)
 ```
 
@@ -300,7 +300,7 @@ avgPerNamePairRDD.saveAsTextFile(outputPath)
 
 :::
 
-## GroupByKey transformation
+### GroupByKey transformation
 The goal is to create a new RDD of key-value pairs where there is one pair for each distinct key $k$ of the input RDD of key-value pairs: the value associated with key $k$ in the new RDD of key-value pairs is the list of values associated with $k$ in the input RDD of key-value pairs.
 
 The groupByKey transformation is based on the `groupByKey()` method of the `RDD` class.
@@ -310,7 +310,7 @@ If grouping values per key to perform then an aggregation such as sum or average
 A shuffle operation is executed for computing the result of the `groupByKey()` transformation: each group/key is associated with/is composed of values which are stored in different partitions of the input RDD.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create an RDD from a local python list containing the following pairs: the key is the first name of a user and the value is his/her age.
     - `("Paolo", 40)`
     - `("Giorgio", 22)`
@@ -318,20 +318,20 @@ A shuffle operation is executed for computing the result of the `groupByKey()` t
 2. Store the results in an output HDFS folder. The output contains one line for each name followed by the ages of all the users with that name.
 
 ```python
-# Create the local python list
+## Create the local python list
 nameAge = [
     ("Paolo",40),
     ("Giorgio",22),
     ("Paolo",35)
 ]
 
-# Create the RDD of pairs from the local collection
+## Create the RDD of pairs from the local collection
 nameAgePairRDD = sc.parallelize(nameAge)
 
-# Create one group for each name with the list of associated ages
+## Create one group for each name with the list of associated ages
 agesPerNamePairRDD = nameAgePairRDD.groupByKey()
 
-# Store the result in an output folder
+## Store the result in an output folder
 agesPerNamePairRDD\
     .mapValues(lambda listValues: list(listValues))\
     .saveAsTextFile(outputPath)
@@ -343,7 +343,7 @@ agesPerNamePairRDD\
 | `.mapValues(lambda listValues: list(listValues))` | This part is used to format the content of the value part of each pair before storing the result in the output folder: this transforms a `ResultIterable` object to a Python list. Without this map the output will contain the pointers to `ResultIterable` objects instead of a readable list of integer values |
 :::
 
-## MapValues transformation
+### MapValues transformation
 The goal is to apply a function $f$ over the value of each pair of an input RDD or key-value pairs and return a new RDD of key-value pairs: one pair is created in the returned RDD for each input pair
 
 - The key of the created pair is equal to the key of the input pair
@@ -354,7 +354,7 @@ The data type of the values of the new RDD of key-value pairs can be different f
 The mapValues transformation is based on the `mapValues(f)` method of the `RDD` class: a function `f` is passed to the mapValues method, where `f` contains the code that is applied to transform each input value into the a new value that is stored in the RDD of key-value pairs. The retuned RDD of pairs contains a number of key-value pairs equal to the number of key-value pairs of the input RDD of pairs (the key part is not changed).
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create an RDD from a local python list containing the following pairs: the key is the first name of a user and the value is his/her age.
     - `("Paolo", 40)`
     - `("Giorgio", 22)`
@@ -362,25 +362,25 @@ The mapValues transformation is based on the `mapValues(f)` method of the `RDD` 
 2. Increase the age of each user (+1 year) and store the result in the HDFS file system, one output line per user.
 
 ```python
-# Create the local python list
+## Create the local python list
 nameAge = [
     ("Paolo",40),
     ("Giorgio",22),
     ("Paolo",35)
 ]
 
-# Create the RDD of pairs from the local collection
+## Create the RDD of pairs from the local collection
 nameAgePairRDD = sc.parallelize(nameAge)
 
-# Increment age of all users
+## Increment age of all users
 plusOnePairRDD = nameAgePairRDD.mapValues(lambda age: age+1)
 
-# Save the result on disk
+## Save the result on disk
 plusOnePairRDD.saveAsTextFile(outputPath)
 ```
 :::
 
-## FlatMapValues transformation
+### FlatMapValues transformation
 The goal is to apply a function $f$ over the value of each pair of an input RDD or key-value pairs and return a new RDD of key-value pairs ($f$ returns a list of values for each input value). A list of pairs is inserted in the returned RDD for each input pair
 
 - The key of the created pairs is equal to the key of the input pair
@@ -391,7 +391,7 @@ The data type of the values of the new RDD of key-value pairs can be different f
 The flatMapValues transformation is based on `flatMapValues(f)` method of the `RDD` class: a function `f` is passed to the `mapValues` method, where `f` contains the code that is applied to transform each input value into a set of new values that are stored in the new RDD of key-value pairs. The keys of the input pairs are not changed.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create an RDD from a local python list containing the pairs
     - `("Sentence#1", "Sentence test")`
     - `("Sentence#2", "Sentence test number 2")`
@@ -399,31 +399,31 @@ The flatMapValues transformation is based on `flatMapValues(f)` method of the `R
 2. Select the words of each sentence and store in the HDFS file system one pair (senteceId, word) per line.
 
 ```python
-# Create the local python list
+## Create the local python list
 sentences = [
     ("Sentence#1", "Sentence test"),
     ("Sentence#2", "Sentence test number 2"),
     ("Sentence#3", "Sentence test number 3")
 ]
 
-# Create the RDD of pairs from the local collection
+## Create the RDD of pairs from the local collection
 sentPairRDD = sc.parallelize(sentences)
 
-# “Extract” words from each sentence
+## “Extract” words from each sentence
 sentIdWord = sentPairRDD.flatMapValues(lambda s: s.split(' '))
 
-# Save the result on disk
+## Save the result on disk
 sentIdWord.saveAsTextFile(outputPath)
 ```
 :::
 
-## Keys transformation
+### Keys transformation
 The goal is to return the list of keys of the input RDD of pairs and store them in a new RDD. The returned RDD is not an RDD of key-value pairs, instead it is a standard RDD of single elements, with duplicate keys not removed.
 
 The keys transformation is based on the `keys()` method of the `RDD` class.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create an RDD from a local python list containing the following pairs: the key is the first name of a user and the value is his/her age
     - `("Paolo", 40)`
     - `("Giorgio", 22)`
@@ -431,31 +431,31 @@ The keys transformation is based on the `keys()` method of the `RDD` class.
 2. Store the names of the input users in an output HDFS folder. The output contains one name per line (duplicate names are removed).
 
 ```python
-# Create the local python list
+## Create the local python list
 nameAge = [
     ("Paolo",40),
     ("Giorgio",22),
     ("Paolo",35)
 ]
 
-# Create the RDD of pairs from the local collection
+## Create the RDD of pairs from the local collection
 nameAgePairRDD = sc.parallelize(nameAge)
 
-# Select the key part of the input RDD of key-value pairs
+## Select the key part of the input RDD of key-value pairs
 namesRDD = nameAgePairRDD.keys().distinct()
 
-# Store the result in an output folder
+## Store the result in an output folder
 namesRDD.saveAsTextFile(outputPath)
 ```
 :::
 
-## Values transformation
+### Values transformation
 The goal is to return the list of values of the input RDD of pairs and store them in a new RDD. The returned RDD is not an RDD of key-value pairs, instead it is a standard RDD of single elements, with duplicate values are not removed. 
 
 The values transformation is based on the `values()` method of the `RDD` class.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create an RDD from a local python list containing the pairs: the key is the first name of a user and the value is his/her age
     - `("Paolo", 40)`
     - `("Giorgio", 22)`
@@ -463,25 +463,25 @@ The values transformation is based on the `values()` method of the `RDD` class.
 2. Store the ages of the input users in an output HDFS folder, containing one age per line and duplicate ages/values are not removed.
 
 ```python
-# Create the local python list
+## Create the local python list
 nameAge = [
     ("Paolo",40),
     ("Giorgio",22),
     ("Paolo",22)
 ]
 
-# Create the RDD of pairs from the local collection
+## Create the RDD of pairs from the local collection
 nameAgePairRDD = sc.parallelize(nameAge)
 
-# Select the value part of the input RDD of key-value pairs
+## Select the value part of the input RDD of key-value pairs
 agesRDD = nameAgePairRDD.values()
 
-# Store the result in an output folder
+## Store the result in an output folder
 agesRDD.saveAsTextFile(outputPath)
 ```
 :::
 
-## SortByKey transformation
+### SortByKey transformation
 The goal is to return a new RDD of key-value pairs obtained by sorting, in ascending order, the pairs of the input RDD by key (notice that the final order is related to the default sorting function of the data type of the input keys). The content of the new RDD of key-value pairs is the same of the input RDD but the pairs are sorted by key in the new returned RDD.
 
 The sortByKey transformation is based on the `sortByKey()` method of the `RDD` class (pairs are sorted by key in ascending order). The `sortByKey(ascending)` method of the `RDD` class is also available: this method allows to specify if the sort order is ascending or descending by means of a Boolean parameter (`True` for ascending, `False` for descending).
@@ -489,7 +489,7 @@ The sortByKey transformation is based on the `sortByKey()` method of the `RDD` c
 A shuffle operation is executed for computing the result of the `sortByKey()` transformation, since pairs from different partitions of the input RDD must be compared to sort the input pairs by key.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create an RDD from a local python list containing the pairs: the key is the first name of a user and the value is his/her age
     - `("Paolo", 40)`
     - `("Giorgio", 22)`
@@ -497,25 +497,25 @@ A shuffle operation is executed for computing the result of the `sortByKey()` tr
 2. Sort the users by name and store the result in the HDFS file system.
 
 ```python
-# Create the local python list
+## Create the local python list
 nameAge = [
     ("Paolo",40),
     ("Giorgio",22),
     ("Paolo",35)
 ]
 
-# Create the RDD of pairs from the local collection
+## Create the RDD of pairs from the local collection
 nameAgePairRDD = sc.parallelize(nameAge)
 
-# Sort by name the content of the input RDD of key-value pairs
+## Sort by name the content of the input RDD of key-value pairs
 sortedNameAgePairRDD = nameAgePairRDD.sortByKey()
 
-# Store the result in an output folder
+## Store the result in an output folder
 sortedNameAgePairRDD.saveAsTextFile(outputPath)
 ```
 :::
 
-## Summary
+### Summary
 All the examples reported in the following tables are applied on an RDD of pairs containing the following tuples (pairs): `[("k1", 2), ("k3", 4), ("k3", 6)]`.
 
 - The key of each tuple is a string
@@ -705,11 +705,11 @@ All the examples reported in the following tables are applied on an RDD of pairs
 
 :::
 
-# RDD-based programming
-## Transformations on two RDDs of key-value pairs
+## RDD-based programming
+### Transformations on two RDDs of key-value pairs
 Spark supports also some transformations that are applied on two RDDs of key-value pairs at the same time (e.g., `subtractByKey`, `join`, `coGroup`).
 
-## SubtractByKey transformation
+### SubtractByKey transformation
 The goal is to create a new RDD of key-value pairs containing only the pairs of the first input RDD of pairs associated with a key that is not appearing as key in the pairs of the second input RDD or pairs. The two input RDD of pairs must have the same type of keys, but the data type of the values can be different. The data type of the new RDD of pairs is the same of the first input RDD of pairs.
 
 The subtractByKey transformation is based on the `subtractByKey(other)` method of the `RDD` class. The two input RDDs of pairs analyzed by `subtractByKey` are the one which the method is invoked on and the one passed as parameter (i.e., `other`).
@@ -717,32 +717,32 @@ The subtractByKey transformation is based on the `subtractByKey(other)` method o
 A shuffle operation is executed for computing the result of the `subtractByKey()` transformation, since keys from different partitions of the two input RDDs must be compared.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create two RDDs of key-value pairs from two local python lists
     - First list – Profiles of the users of a blog `(username,age)`: `[("PaoloG",40),("Giorgio",22),("PaoloB",35)]`
     - Second list – Banned users `(username,motivation)`: `[("PaoloB","spam"),("Giorgio","Vandalism")]`
 2. Create a new RDD of pairs containing only the profiles of the non-banned users.
 
 ```python
-# Create the first local python list
+## Create the first local python list
 profiles = [("PaoloG",40),("Giorgio",22),("PaoloB",35)]
 
-# Create the RDD of pairs from the profiles local list
+## Create the RDD of pairs from the profiles local list
 profilesPairRDD = sc.parallelize (profiles)
 
-# Create the second local python list
+## Create the second local python list
 banned = [("PaoloB","spam"),("Giorgio","Vandalism")]
 
-# Create the RDD of pairs from the banned local list
+## Create the RDD of pairs from the banned local list
 bannedPairRDD = sc.parallelize (banned)
 
-# Select the profiles of the “good” users
+## Select the profiles of the “good” users
 selectedProfiles = profilesPairRDD.subtractByKey(bannedPairRDD)
 ```
 
 :::
 
-## Join transformation
+### Join transformation
 The goal is to Join the key-value pairs of two RDDs of key-value pairs based on the value of the key of the pairs: each pair of the input RDD of pairs is combined with all the pairs of the other RDD of pairs with the same key. The new RDD of key-value pairs has the same key data type of the input RDDs of pairs, and has a tuple as value (the pair of values of the two joined input pairs). The two input RDDs of key-value pairs must have the same type of keys, but the data types of the values can be different.
 
 The join transformation is based on the `join(other)` method of the `RDD` class: the two input RDDs of pairs analyzed by join are the one which the method is invoked on and the one passed as parameter (i.e., `other`).
@@ -750,26 +750,26 @@ The join transformation is based on the `join(other)` method of the `RDD` class:
 A shuffle operation is executed for computing the result of the `join()` transformation, since keys from different partitions of the two input RDDs must be compared and values from different partitions must be retrieved.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create two RDDs of key-value pairs from two local python lists
     - First list – List of questions (QuestionId, Text of the question): `[(1,"What is ...?"),(2,"Who is ...?")]`
     - Second list – List of answers (QuestionId, Text of the answer): `[(1,"It is a car"),(1,"It is a byke"),(2,"She is Jenny")]`
 2. Create a new RDD of pairs to associate each question with its answers: one pair for each possible pair (question-answer)
 
 ```python
-# Create the first local Python list
+## Create the first local Python list
 questions= [(1,"What is ...?"),(2,"Who is ...?")]
 
-# Create the RDD of pairs from the local list
+## Create the RDD of pairs from the local list
 questionsPairRDD = sc.parallelize(questions)
 
-# Create the second local python list
+## Create the second local python list
 answers = [(1,"It is a car"),(1,"It is a byke"),(2,"She is Jenny")]
 
-# Create the RDD of pairs from the local list
+## Create the RDD of pairs from the local list
 answersPairRDD = sc.parallelize(answers)
 
-# Join questions with answers
+## Join questions with answers
 joinPairRDD = questionsPairRDD.join(answersPairRDD)
 ```
 
@@ -779,7 +779,7 @@ joinPairRDD = questionsPairRDD.join(answersPairRDD)
 
 :::
 
-## CoGroup transformation
+### CoGroup transformation
 The goal is to associate each key $k$ of the two input RDDs of key-value pairs with 
 
 - The list of values associated with $k$ in the first input RDD of pairs
@@ -792,7 +792,7 @@ The cogroup transformation is based on the `cogroup(other)` method of the `RDD` 
 A shuffle operation is executed for computing the result of the `cogroup()` transformation, since keys from different partitions of the two input RDDs must be compared and values from different partitions must be retrieved.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create two RDDs of key-value pairs from two local python lists
     - First list – List of liked movies `(userId,likedMovies)`: `[(1,"Star Trek"),(1,"Forrest Gump"),(2,"Forrest Gump")]`
     - Second list – List of liked directors `(userId,likedDirector)`: `[(1,"Woody Allen"),(2,"Quentin Tarantino"),(2,"Alfred Hitchcock")]`
@@ -809,27 +809,27 @@ A shuffle operation is executed for computing the result of the `cogroup()` tran
 - `(2,(["Forrest Gump"],["Quentin Tarantino","Alfred Hitchcock"]))`
 
 ```python
-# Create the first local python list
+## Create the first local python list
 movies= [
     (1,"Star Trek"),
     (1,"Forrest Gump"),
     (2,"Forrest Gump")
 ]
 
-# Create the RDD of pairs from the first local list
+## Create the RDD of pairs from the first local list
 moviesPairRDD = sc.parallelize(movies)
 
-# Create the second local python list
+## Create the second local python list
 directors = [
     (1,"Woody Allen"),
     (2,"Quentin Tarantino"),
     (2,"Alfred Hitchcock")
 ]
 
-# Create the RDD of pairs from the second local list
+## Create the RDD of pairs from the second local list
 directorsPairRDD = sc.parallelize(directors)
 
-# Cogroup movies and directors per user
+## Cogroup movies and directors per user
 cogroupPairRDD = moviesPairRDD.cogroup(directorsPairRDD)
 ```
 
@@ -839,7 +839,7 @@ cogroupPairRDD = moviesPairRDD.cogroup(directorsPairRDD)
 
 :::
 
-## Summary
+### Summary
 All the examples reported in the following tables are applied on the following two RDDs of key-value pairs
 
 - `inputRDD1`: `[('k1',2),('k3',4),('k3',6)]`
@@ -931,10 +931,10 @@ All the examples reported in the following tables are applied on the following t
 
 :::
 
-# Actions on RDDs of key-value pairs
+## Actions on RDDs of key-value pairs
 Spark supports also some specific actions on RDDs of key-value pairs (e.g., `countByKey`, `collectAsMap`, `lookup`).
 
-## CountByKey action
+### CountByKey action
 The countByKey action returns a local python dictionary containing the information about the number of elements associated with each key in the input RDD of key-value pairs (i.e., the number of times each key occurs in the input RDD).
 
 :::{.callout-warning}
@@ -944,25 +944,25 @@ Pay attention to the number of distinct keys of the input RDD of pairs: if the n
 The countBykey action is based on the `countBykey()` method of the `RDD` class. Notice that data are sent on the network to compute the final result.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create an RDD of pairs from the following python list (each pair contains a movie and the rating given by someone to that movie): `[("Forrest Gump",4),("Star Trek",5),("Forrest Gump",3)]`;
 2. Compute the number of ratings for each movie.
 
 ```python
-# Create the local python list
+## Create the local python list
 movieRating= [
     ("Forrest Gump",4),
     ("Star Trek",5),
     ("Forrest Gump",3)
 ]
 
-# Create the RDD of pairs from the local collection
+## Create the RDD of pairs from the local collection
 movieRatingRDD = sc.parallelize(movieRating)
 
-# Compute the number of rating for each movie
+## Compute the number of rating for each movie
 movieNumRatings = movieRatingRDD.countByKey()
 
-# Print the result on the standard output
+## Print the result on the standard output
 print(movieNumRatings)
 ```
 
@@ -972,7 +972,7 @@ print(movieNumRatings)
 
 :::
 
-## CollectAsMap action
+### CollectAsMap action
 The collectAsMap action returns a local dictionary containing the same pairs of the considered input RDD of pairs. Pay attention to the size of the returned RDD: data are sent on the network.
 
 The collectAsMap action is based on the `collectAsMap()` method of the `RDD` class.
@@ -986,12 +986,12 @@ Use collectAsMap only if sure that each key appears only once in the input RDD o
 The `collectAsMap()` method returns a local dictionary while `collect()` return a list of key-value pairs (i.e., a list of tuples). Notice that the list of pairs returned by `collect()` can contain more than one pair associated with the same key.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create an RDD of pairs from the following python list (each pair contains a userId and the name of the user): `[("User1","Paolo"),("User2","Luca"),("User3","Daniele")]`;
 2. Retrieve the pairs of the created RDD of pairs and store them in a local python dictionary that is instantiated in the Driver.
 
 ```python
-# Create the local python list
+## Create the local python list
 users = [
     ("User1","Paolo"),
     ("User2","Luca"),
@@ -1001,11 +1001,11 @@ users = [
 #Create the RDD of pairs from the local list
 usersRDD = sc.parallelize(users)
 
-# Retrieve the content of usersRDD and store it in a
-# local python dictionary
+## Retrieve the content of usersRDD and store it in a
+## local python dictionary
 retrievedPairs = usersRDD.collectAsMap()
 
-# Print the result on the standard output
+## Print the result on the standard output
 print(retrievedPairs)
 ```
 
@@ -1015,27 +1015,27 @@ print(retrievedPairs)
 
 :::
 
-## Lookup action
+### Lookup action
 The lookup($k$) action returns a local python list containing the values of the pairs of the input RDD associated with the key $k$ specified as parameter.
 
 The lookup action is based on the `lookup(key)` method of the `RDD` class.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create an RDD of pairs from the following python list (each pair contains a movie and the rating given by someone to that movie): `[("Forrest Gump",4),("Star Trek",5),("Forrest Gump",3)]`
 2. Retrieve the ratings associated with the movie "Forrest Gump" and store them in a local python list in the Driver.
 
 ```python
-# Create the local python list
+## Create the local python list
 movieRating= [("Forrest Gump",4),("Star Trek",5),("Forrest Gump",3)]
 
-# Create the RDD of pairs from the local collection
+## Create the RDD of pairs from the local collection
 movieRatingRDD = sc.parallelize(movieRating)
 
-# Select the ratings associated with “Forrest Gump”
+## Select the ratings associated with “Forrest Gump”
 movieRatings = movieRatingRDD.lookup("Forrest Gump")
 
-# Print the result on the standard output
+## Print the result on the standard output
 print(movieRatings)
 ```
 
@@ -1045,7 +1045,7 @@ print(movieRatings)
 
 :::
 
-## Summary
+### Summary
 All the examples reported in the following tables are applied on the following RDD of key-value pairs:
 
 - `inputRDD`: `[('k1',2),('k3',4),('k3',6)]`

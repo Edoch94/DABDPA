@@ -1,0 +1,18 @@
+project: 
+  output-dir: "html_output"
+
+format:
+  html:
+    shift-heading-level-by: 1
+    toc: true
+    number-sections: true
+    number-depth: 1
+    code-overflow: scroll
+    code-tools: false
+    standalone: true
+    theme: cosmo
+    code-line-numbers: true
+    cap-location: top
+    code-block-bg: "#f0f3f5"
+    # embed-resources: true
+    # theme: simplex

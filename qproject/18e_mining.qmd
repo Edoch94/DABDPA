@@ -20,7 +20,7 @@ ADE
 
 It contains 4 transactions, and the distinct items are A, B, C, D, E.
 
-# The FP-Growth algorithm and Association rule mining
+## The FP-Growth algorithm and Association rule mining
 FP-growth is one of the most popular and efficient itemset mining algorithms. It is characterized by one single parameter: the minimum support threshold (**minsup**), that is the minimum frequency of the itemset in the input transational dataset; it can assume a real value in the range $(0,1]$. The minsup threshold is used to limit the number of mined itemsets.
 
 The input dataset is a transactional dataset.
@@ -32,7 +32,7 @@ Given a set of frequent itemsets, the frequent association rules can be mined. A
 
 The MLlib implementation of FP-growth is based on DataFrames, but differently from the other algorithms, the FP-growth algorithm is not invoked by using pipelines.
 
-## Steps for itemset and association rule mining in Spark
+### Steps for itemset and association rule mining in Spark
 
 1. Instantiate an FP-Growth object
 2. Invoke the `fit(input data)` method on the FP-Growth object
@@ -40,11 +40,11 @@ The MLlib implementation of FP-growth is based on DataFrames, but differently fr
     - `freqItemsets()`
     - `associationRules()`
 
-## Input
+### Input
 The input of the MLlib itemset and rule mining algorithm is a DataFrame containing a column called `items`, whose data type is array of values. Each record of the input DataFrame contains one transaction (i.e., a set of items).
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Example of input data
 
 ```
@@ -87,12 +87,12 @@ from pyspark.ml import Pipeline
 from pyspark.ml import PipelineModel
 from pyspark.sql.functions import col, split
 
-# input and output folders
+## input and output folders
 transactionsData = "ex_dataitemsets/transactions.csv"
 outputPathItemsets = "Itemsets/"
 outputPathRules = "Rules/"
 
-# Create a DataFrame from transactions.csv
+## Create a DataFrame from transactions.csv
 transactionsDataDF = spark.read.load(
     transactionsData,
     format="csv",
@@ -100,36 +100,36 @@ transactionsDataDF = spark.read.load(
     inferSchema=True
 )
 
-# Transform Column transactions into an ArrayType
+## Transform Column transactions into an ArrayType
 trsDataDF = transactionsDataDF \
     .selectExpr('split(transactions, " ")') \
-    .withColumnRenamed("split(transactions, )", "items") # <1>
+    #.withColumnRenamed("split(transactions, )", "items") # <1>
 
-# Transform Column transactions into an ArrayType
+## Transform Column transactions into an ArrayType
 trsDataDF = transactionsDataDF\
 .selectExpr('split(transactions, " ")')\
 .withColumnRenamed("split(transactions, )", "items")
 
-# Create an FP-growth Estimator
+## Create an FP-growth Estimator
 fpGrowth = FPGrowth(
     itemsCol="items",
     minSupport=0.5,
     minConfidence=0.6
 )
 
-# Extract itemsets and rules
+## Extract itemsets and rules
 model = fpGrowth.fit(trsDataDF)
 
-# Retrieve the DataFrame associated with the frequent itemsets
+## Retrieve the DataFrame associated with the frequent itemsets
 dfItemsets = model.freqItemsets
 
-# Retrieve the DataFrame associated with the frequent rules
+## Retrieve the DataFrame associated with the frequent rules
 dfRules = model.associationRules
 
-# Save the result in an HDFS output folder
-dfItemsets.write.json(outputPathItemsets) # <2>
+## Save the result in an HDFS output folder
+#dfItemsets.write.json(outputPathItemsets) # <2>
 
-# Save the result in an HDFS output folder
+## Save the result in an HDFS output folder
 dfRules.write.json(outputPathRules)
 ```
 1. `'split(transactions, " ")'` is the `pyspark.sql.functions.split()` function. It returns a `SQL ArrayType`.

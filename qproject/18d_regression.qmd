@@ -21,17 +21,17 @@ The input data must be transformed in a DataFrame having the following attribute
 
 The main steps used to infer a regression model with MLlib are the same we use to infer a classification model, and the difference is only given by the type of the target attribute to predict.
 
-# Linear regression
+## Linear regression
 Linear regression (LR) is a popular, effective and efficient regression algorithm. The following paragraphs show how to instantiate a linear regression algorithm in Spark and apply it on new data.
 
-## LR with structured data
+### LR with structured data
 The input dataset is a structured dataset with a fixed number of attributes
 
 - One attribute is the target attribute (the label): it is assumed that the first column contains the target attribute;
 - The others are predictive attributes that are used to predict the value of the target attribute.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Consider the following example file
 
 ```
@@ -54,16 +54,16 @@ from pyspark.ml.regression import LinearRegression
 from pyspark.ml import Pipeline
 from pyspark.ml import PipelineModel
 
-# input and output folders
+## input and output folders
 trainingData = "ex_dataregression/trainingData.csv"
 unlabeledData = "ex_dataregression/unlabeledData.csv"
 outputPath = "predictionsLinearRegressionPipeline/"
 
-# *************************
-# Training step
-# *************************
-# Create a DataFrame from trainingData.csv
-# Training data in raw format
+## *************************
+## Training step
+## *************************
+## Create a DataFrame from trainingData.csv
+## Training data in raw format
 trainingData = spark.read.load(
     trainingData,
     format="csv",
@@ -71,39 +71,39 @@ trainingData = spark.read.load(
     inferSchema=True
 )
 
-# Define an assembler to create a column (features) of type Vector
-# containing the double values associated with columns attr1, attr2, attr3
+## Define an assembler to create a column (features) of type Vector
+## containing the double values associated with columns attr1, attr2, attr3
 assembler = VectorAssembler(
     inputCols=["attr1", "attr2", "attr3"],
     outputCol="features"
 )
 
-# Create a LinearRegression object.
-# LinearRegression is an Estimator that is used to
-# create a regression model based on linear regression
+## Create a LinearRegression object.
+## LinearRegression is an Estimator that is used to
+## create a regression model based on linear regression
 lr = LinearRegression()
 
-# Set the values of the parameters of the
-# Linear Regression algorithm using the setter methods.
-# There is one set method for each parameter
-# For example, we are setting the number of maximum iterations to 10
-# and the regularization parameter to 0.01
+## Set the values of the parameters of the
+## Linear Regression algorithm using the setter methods.
+## There is one set method for each parameter
+## For example, we are setting the number of maximum iterations to 10
+## and the regularization parameter to 0.01
 lr.setMaxIter(10)
 lr.setRegParam(0.01)
 
-# Define a pipeline that is used to create the linear regression
-# model on the training data. The pipeline includes also
-# the preprocessing step
+## Define a pipeline that is used to create the linear regression
+## model on the training data. The pipeline includes also
+## the preprocessing step
 pipeline = Pipeline().setStages([assembler, lr])
 
-# Execute the pipeline on the training data to build the
-# regression model
+## Execute the pipeline on the training data to build the
+## regression model
 regressionModel = pipeline.fit(trainingData)
-# Now, the regression model can be used to predict the target attribute value
-# of new unlabeled data
+## Now, the regression model can be used to predict the target attribute value
+## of new unlabeled data
 
-# Create a DataFrame from unlabeledData.csv
-# Unlabeled data in raw format
+## Create a DataFrame from unlabeledData.csv
+## Unlabeled data in raw format
 unlabeledData = spark.read.load(
     unlabeledData,
     format="csv",
@@ -111,32 +111,32 @@ unlabeledData = spark.read.load(
     inferSchema=True
 )
 
-# Make predictions on the unlabled data using the transform() method of the
-# trained regression model transform uses only the content of 'features'
-# to perform the predictions. The model is associated with the pipeline and hence
-# also the assembler is executed
+## Make predictions on the unlabled data using the transform() method of the
+## trained regression model transform uses only the content of 'features'
+## to perform the predictions. The model is associated with the pipeline and hence
+## also the assembler is executed
 predictionsDF = regressionModel.transform(unlabeledData)
 
-# The returned DataFrame has the following schema (attributes)
-# - attr1
-# - attr2
-# - attr3
-# - original attributes
-# - features: vector (values of the attributes)
-# - label: double (actual value of the target variable)
-# - prediction: double (the predicted continuous value of the target variable)
-# Select only the original features (i.e., the value of the original attributes
-# attr1, attr2, attr3) and the predicted value of the target variable for each record
+## The returned DataFrame has the following schema (attributes)
+## - attr1
+## - attr2
+## - attr3
+## - original attributes
+## - features: vector (values of the attributes)
+## - label: double (actual value of the target variable)
+## - prediction: double (the predicted continuous value of the target variable)
+## Select only the original features (i.e., the value of the original attributes
+## attr1, attr2, attr3) and the predicted value of the target variable for each record
 predictions = predictionsDF.select("attr1", "attr2", "attr3", "prediction")
 
-# Save the result in an HDFS output folder
+## Save the result in an HDFS output folder
 predictions.write.csv(outputPath, header="true")
 ```
 
 :::
 
-## LR with textual data
+### LR with textual data
 The linear regression algorithms can be used also when the input dataset is a collection of documents/texts. Also in this case the text must be mapped to a set of continuous attributes.
 
-## Parameter setting
+### Parameter setting
 The tuning approach that we used for the classification problem can also be used to optimize the regression problem, the only difference is given by the used evaluator: in this case the difference between the actual value and the predicted one must be computed.

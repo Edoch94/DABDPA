@@ -1,18 +1,18 @@
 ---
 title: "Spark SQL and DataFrames"
 ---
-# Spark SQL
+## Spark SQL
 Spark SQL is the Spark component for structured data processing. It provides a programming abstraction called *Dataframe* and can act as a distributed SQL query engine: the input data can be queried by using
 
 - Ad-hoc methods
 - Or an SQL-like language
 
-## Spark SQL vs Spark RDD APIs
+### Spark SQL vs Spark RDD APIs
 The interfaces provided by Spark SQL provide more information about the structure of both the data and the computation being performed. Spark SQL uses this extra information to perform extra optimizations based on a "SQL-like" optimizer called **Catalyst**, and so programs based on Dataframe are usually faster than standard RDD-based programs.
 
 ![Spark SQL vs Spark RDD APIs](images/16_sparksql_dataframes/sql_vs_rdd.png){width=80%}
 
-## DataFrames
+### DataFrames
 A DataFrame is a distributed collection of structured data. It is conceptually equivalent to a table in a relational database, and it can be created reading data from different types of external sources (CSV files, JSON files, RDBMs,...). A DataFrame benefits from Spark SQL optimized execution engine exploiting the information about the data structure.
 
 All the Spark SQL functionalities are based on an instance of the `pyspark.sql.SparkSession` class
@@ -35,7 +35,7 @@ To close a `SparkSession` use the `SparkSession.stop()` method
 spark.stop()
 ```
 
-# DataFrames
+## DataFrames
 A DataFrame is a distributed collection of data organized into named columns, equivalent to a relational table: DataFrames are lists of **Row objects**.
 
 The classes used to define DataFrames are
@@ -50,7 +50,7 @@ DataFrames can be created from different sources
 - Hive tables;
 - External relational databases.
 
-## Creating DataFrames from csv files
+### Creating DataFrames from csv files
 Spark SQL provides an API that allows creating DataFrames directly from CSV files. The creation of a DataFrame from a csv file is based the `load(path)` method of the `pyspark.sql.DataFrameReader` class, where `path` is the path of the input file. To get a `DataFrameReader` using the the `read()` method of the `SparkSession` class.
 
 ```python
@@ -58,7 +58,7 @@ df = spark.read.load(path, options)
 ```
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Create a DataFrame from a csv file ("people.csv") containing the profiles of a set of people. Each line of the file contains name and age of a person, and age can assume the null value (i.e., it can be missing). The first line contains the header (i.e., the names of the attributes/columns).
 
 Example of csv file
@@ -73,10 +73,10 @@ Justin,19
 Notice that the age of the second person is unknown.
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from people.csv
+## Create a DataFrame from people.csv
 df = spark.read.load(
     "people.csv",
     format="csv",
@@ -93,7 +93,7 @@ df = spark.read.load(
 
 :::
 
-## Creating DataFrames from JSON files
+### Creating DataFrames from JSON files
 Spark SQL provides an API that allows creating a DataFrame directly from a textual file where each line contains a JSON object. Hence, the input file is not a standard JSON file: it must be properly formatted in order to have one JSON object (tuple) for each line. So, the format of the input file must be compliant with the **JSON Lines text format**, also called newline-delimited JSON.
 
 The creation of a DataFrame from JSON files is based on the same method used for reading csv files, that is the `load(path)` method of the `pyspark.sql.DataFrameReader` class, where `path` is the path of the input file. To get a DataFrameReader use the `read()` method of the `SparkSession` class.
@@ -116,7 +116,7 @@ Pay attention that reading a set of small JSON files from HDFS is very slow.
 :::
 
 :::{.callout-note collapse="true"}
-## Example 1
+### Example 1
 Create a DataFrame from a JSON Lines text formatted file ("people.json") containing the profiles of a set of people: each line of the file contains a JSON object containing name and age of a person. Age can assume the null value.
 
 Example of JSON file
@@ -130,10 +130,10 @@ Example of JSON file
 Notice that the age of the first person is unknown.
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from people.csv
+## Create a DataFrame from people.csv
 df = spark.read.load(
     "people.json",
     format="json"
@@ -147,7 +147,7 @@ df = spark.read.load(
 :::
 
 :::{.callout-note collapse="true"}
-## Example 2
+### Example 2
 Create a DataFrame from a folder containing a set of standard multiline JSON files: each input JSON file contains the profile of one person, in particular each file contains name and age of a person. Age can assume the null value.
 
 Example of JSON file
@@ -157,10 +157,10 @@ Example of JSON file
 ```
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from people.csv
+## Create a DataFrame from people.csv
 df = spark.read.load(
     "folder_JSONFiles/",
     format="json",
@@ -174,7 +174,7 @@ df = spark.read.load(
 
 :::
 
-## Creating DataFrames from other data sources
+### Creating DataFrames from other data sources
 The `DataFrameReader` class (the same we used for reading a json file and store it in a DataFrame) provides other methods to read many standard (textual) formats and read data from external databases:
 
 - Apache parquet files
@@ -182,11 +182,11 @@ The `DataFrameReader` class (the same we used for reading a json file and store 
 - Hive tables
 - ...
 
-## Creating DataFrames from RDDs or Python lists
+### Creating DataFrames from RDDs or Python lists
 The content of an RDD of tuples or the content of a Python list of tuples can be stored in a DataFrame by using the `spark.createDataFrame(data,schema)` method, where `data` is a RDD of tuples or Rows, Python list of tuples or Rows, or pandas DataFrame, and `schema` is a list of string with the names of the columns/attributes. `schema` is optional, and if not specified the column names are set to `_1`, `_2`, ..., `_n` for input RDDs/lists of tuples.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Create a DataFrame from the following Python list
 
 ```python
@@ -200,26 +200,26 @@ Create a DataFrame from the following Python list
 The column names must be set to "age" and "name".
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a Python list of tuples
+## Create a Python list of tuples
 profilesList = [
     (19,"Justin"),
     (30,"Andy"),
     (None,"Michael")
 ]
 
-# Create a DataFrame from the profilesList
+## Create a DataFrame from the profilesList
 df = spark.createDataFrame(profilesList,["age","name"])
 ```
 
 :::
 
-## From DataFrame to RDD
+### From DataFrame to RDD
 The `rdd` method of the `DataFrame` class returns an RDD of Row objects containing the content of the DataFrame which it is invoked on. Each `Row` object is like a dictionary containing the values of a record: it contains column names in the keys and column values in the values.
 
-### Usage of the Row class
+#### Usage of the Row class
 The fields in it can be accessed:
 
 - like attributes: `row.key`, where `key` is a column name;
@@ -229,15 +229,15 @@ The fields in it can be accessed:
 Also the `asDict()` method returns the Row content as a Python dictionary.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create a DataFrame from a csv file containing the profiles of a set of people: each line of the file contains name and age of a person, but the first line contains the header (i.e., the name of the attributes/columns);
 2. Transform the input DataFrame into an RDD, select only the name field/column and store the result in the output folder.
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from people.csv
+## Create a DataFrame from people.csv
 df = spark.read.load(
     "people.csv",
     format="csv",
@@ -245,27 +245,27 @@ df = spark.read.load(
     inferSchema=True
 )
 
-# Define an RDD based on the content of
-# the DataFrame
+## Define an RDD based on the content of
+## the DataFrame
 rddRows = df.rdd
 
-# Use the map transformation to extract
-# the name field/column
+## Use the map transformation to extract
+## the name field/column
 rddNames = rddRows.map(lambda row: row.name)
 
-# Store the result
+## Store the result
 rddNames.saveAsTextFile(outputPath)
 ```
 :::
 
-# Operations on DataFrames
+## Operations on DataFrames
 A set of specific methods are available for the `DataFrame` class (e.g., `show()`, `printSchema()`, `count()`, `distinct()`, `select()`, `filter()`), also the standard `collect()` and `count()` actions are available.
 
-## Show method
+### Show method
 The `show(n)` method of the `DataFrame` class prints on the standard output the first `n` of the input DataFrame. Default value of `n` is 20.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create a DataFrame from a csv file containing the profiles of a set of people;
 2. Print the content of the first 2 people (i.e., the first 2 rows of the DataFrame).
 
@@ -279,10 +279,10 @@ Justin,19
 ```
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from people.csv
+## Create a DataFrame from people.csv
 df = spark.read.load(
     "people.csv",
     format="csv",
@@ -295,13 +295,13 @@ df.show(2)
 
 :::
 
-## PrintSchema method
+### PrintSchema method
 The `printSchema()` method of the `DataFrame` class prints on the standard output the schema of the DataFrame (i.e., the name of the attributes of the data stored in the DataFrame).
 
-## Count method
+### Count method
 The `count()` method of the `DataFrame` class returns the number of rows in the input DataFrame.
 
-## Distinct method
+### Distinct method
 The `distinct()` method of the `DataFrame` class returns a new DataFrame that contains only the unique rows of the input DataFrame. A shuffle phase is needed.
 
 :::{.callout-caution}
@@ -309,7 +309,7 @@ Pay attention that the distinct operation is always an heavy operation in terms 
 :::
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create a DataFrame from a csv file containing the names of a set of people. The first line is the header.
 2. Create a new DataFrame without duplicates.
 
@@ -324,10 +324,10 @@ Michael
 ```
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from names.csv
+## Create a DataFrame from names.csv
 df = spark.read.load(
     "names.csv",
     format="csv",
@@ -340,7 +340,7 @@ df_distinct = df.distinct()
 
 :::
 
-## Select method
+### Select method
 The `select(col1, ..., coln)` method of the `DataFrame` class returns a new DataFrame that contains only the specified columns of the input DataFrame. Use `*` as special column to select all columns
 
 :::{.callout-caution}
@@ -348,7 +348,7 @@ Pay attention that the select method can generate errors at runtime if there are
 :::
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create a DataFrame from the "people2.csv" file that scontains the profiles of a set of people
     - The first line contains the header;
     - The others lines contain the users' profiles: one line per person, and each line contains name, age, and gender of a person.
@@ -363,10 +363,10 @@ John,40,male
 ```
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from people2.csv
+## Create a DataFrame from people2.csv
 df = spark.read.load(
     "people2.csv",
     format="csv",
@@ -379,11 +379,11 @@ dfNamesAges = df.select("name","age")
 
 :::
 
-## SelectExpr method
+### SelectExpr method
 The `selectExpr(expression1,...,expressionN)` method of the `DataFrame` class is a variant of the select method, where `expr` can be a SQL expression.
 
 :::{.callout-note collapse="true"}
-## Example 1
+### Example 1
 1. Create a DataFrame from the "people2.csv" file that scontains the profiles of a set of people
     - The first line contains the header;
     - The others lines contain the users' profiles: one line per person, and each line contains name, age, and gender of a person.
@@ -399,10 +399,10 @@ John,40,male
 ```
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from people2.csv
+## Create a DataFrame from people2.csv
 df = spark.read.load(
     "people2.csv",
     format="csv",
@@ -418,7 +418,7 @@ dfNamesAgesMod = df.selectExpr("name", "age + 1 AS new_age")
 :::
 
 :::{.callout-note collapse="true"}
-## Example 2
+### Example 2
 1. Create a DataFrame from the "people2.csv" file that contains the profiles of a set of people
 - The first line contains the header;
 - The others lines contain the users' profiles: each line contains name, age, and gender of a person.
@@ -433,10 +433,10 @@ John,40,male
 ```
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from people.csv
+## Create a DataFrame from people.csv
 df = spark.read.load(
     "people2.csv",
     format="csv",
@@ -444,8 +444,8 @@ df = spark.read.load(
     inferSchema=True
 )
 
-# Create a new DataFrame with four columns:
-# name, age, gender, newAge = age +1
+## Create a new DataFrame with four columns:
+## name, age, gender, newAge = age +1
 dfNewAge = df.selectExpr(
     "name",
     "age",
@@ -460,7 +460,7 @@ dfNewAge = df.selectExpr(
 
 :::
 
-## Filter method
+### Filter method
 The `filter(conditionExpr)` method of the `DataFrame` class returns a new DataFrame that contains only the rows satisfying the specified condition. The condition is expressed as a Boolean SQL expression.
 
 :::{.callout-caution}
@@ -468,17 +468,17 @@ Pay attention that this version of the filter method can generate errors at runt
 :::
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create a DataFrame from the "people.csv" file that contains the profiles of a set of people
     - The first line contains the header;
     - The others lines contain the users' profiles: each line contains name and age of a person.
 2. Create a new DataFrame containing only the people with age between 20 and 31.
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from people.csv
+## Create a DataFrame from people.csv
 df = spark.read.load(
     "people.csv",
     format="csv",
@@ -491,10 +491,10 @@ df_filtered = df.filter("age>=20 and age<=31")
 
 :::
 
-## Where method
+### Where method
 The `where(expression)` method of the `DataFrame` class is an alias of the `filter(conditionExpr)` method.
 
-## Join
+### Join
 The `join(right, on, how)` method of the `DataFrame` class is used to join two DataFrames. It returns a DataFrame that contains the join of the tuples of the two input DataFrames based on the `on` join condition.
 
 `on` specifies the join condition. It can be:
@@ -522,17 +522,17 @@ Pay attention that this method: can generate errors at runtime if there are erro
 :::
 
 :::{.callout-note collapse="true"}
-## Example 1
+### Example 1
 1. Create two DataFrames
     - One based on the "people_id.csv" file that contains the profiles of a set of people, the schema is: uid, name, age;
     - One based on the liked_sports.csv file that contains the liked sports for each person, the schema is: uid, sportname.
 2.Join the content of the two DataFrames (uid is the join column) and show it on the standard output.
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Read people_id.csv and store it in a DataFrame
+## Read people_id.csv and store it in a DataFrame
 dfPeople = spark.read.load(
     "people_id.csv",
     format="csv",
@@ -540,7 +540,7 @@ dfPeople = spark.read.load(
     inferSchema=True
 )
 
-# Read liked_sports.csv and store it in a DataFrame
+## Read liked_sports.csv and store it in a DataFrame
 dfUidSports = spark.read.load(
     "liked_sports.csv",
     format="csv",
@@ -548,13 +548,13 @@ dfUidSports = spark.read.load(
     inferSchema=True
 )
 
-# Join the two input DataFrames
+## Join the two input DataFrames
 dfPersonLikes = dfPeople.join(
     dfUidSports,
     dfPeople.uid == dfUidSports.uid
 )
 
-# Print the result on the standard output
+## Print the result on the standard output
 dfPersonLikes.show()
 ```
 
@@ -565,17 +565,17 @@ dfPersonLikes.show()
 :::
 
 :::{.callout-note collapse="true"}
-## Example 2
+### Example 2
 1. Create two DataFrames
     - One based on the "people_id.csv" file that contains the profiles of a set of people, the schema is: uid, name, age;
     - One based on the banned.csv file that contains the banned users, the schema is: uid, bannedmotivation.
 2. Select the profiles of the non-banned users and show them on the standard output.
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Read people_id.csv and store it in a DataFrame
+## Read people_id.csv and store it in a DataFrame
 dfPeople = spark.read.load(
     "people_id.csv",
     format="csv",
@@ -583,7 +583,7 @@ dfPeople = spark.read.load(
     inferSchema=True
 )
 
-# Read banned.csv and store it in a DataFrame
+## Read banned.csv and store it in a DataFrame
 dfBannedUsers = spark.read.load(
     "banned.csv",
     format="csv",
@@ -591,14 +591,14 @@ dfBannedUsers = spark.read.load(
     inferSchema=True
 )
 
-# Apply the Left Anti Join on the two input DataFrames
+## Apply the Left Anti Join on the two input DataFrames
 dfSelectedProfiles = dfPeople.join(
     dfBannedUsers,
     dfPeople.uid == dfBannedUsers.uid,
     "left_anti"
 )
 
-# Print the result on the standard output
+## Print the result on the standard output
 dfSelectedProfiles.show()
 ```
 
@@ -609,7 +609,7 @@ dfSelectedProfiles.show()
 
 :::
 
-## Aggregate functions
+### Aggregate functions
 Aggregate functions are provided to compute aggregates over the set of values of columns. Some of the provided aggregate functions/methods are
 
 - `avg(column)`
@@ -627,7 +627,7 @@ Pay attention that this methods can generate errors at runtime (e.g., wrong attr
 :::
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create a DataFrame from the "people.csv" file that contains the profiles of a set of people (each line contains name and age of a person)
     - The first line contains the header;
     - The others lines contain the users' profiles.
@@ -651,10 +651,10 @@ avg(age)
 ```
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from people.csv
+## Create a DataFrame from people.csv
 df = spark.read.load(
     "people.csv",
     format="csv",
@@ -662,13 +662,13 @@ df = spark.read.load(
     inferSchema=True
 )
 
-# Compute the average of age
+## Compute the average of age
 averageAge = df.agg({"age": "avg"})
 ```
 
 :::
 
-## groupBy and aggregate functions
+### groupBy and aggregate functions
 The method `groupBy(col1, ..., coln)` method of the `DataFrame` class combined with a set of aggregate methods can be used to split the input data in groups and compute aggregate function over each group.
 
 :::{.callout-caution}
@@ -690,7 +690,7 @@ Otherwise, the `agg()` method can be used to apply multiple aggregate functions 
 See the static methods of the `pyspark.sql.GroupedData` class for a complete list.
 
 :::{.callout-note collapse="true"}
-## Example 1
+### Example 1
 1. Create a DataFrame from the "people.csv" file that contains the profiles of a set of people
 - The first line contains the header;
 - The others lines contain the users' profiles: each line contains name and age of a person.
@@ -716,10 +716,10 @@ Justin,19
 ```
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from people.csv
+## Create a DataFrame from people.csv
 df = spark.read.load(
     "people.csv",
     format="csv",
@@ -733,7 +733,7 @@ grouped = df.groupBy("name").avg("age")
 :::
 
 :::{.callout-note collapse="true"}
-## Example 2
+### Example 2
 1. Create a DataFrame from the "people.csv" file that contains the profiles of a set of people
     - The first line contains the header
     - The others lines contain the users' profiles: each line contains name and age of a person
@@ -759,10 +759,10 @@ Justin,19,1
 ```
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from people.csv
+## Create a DataFrame from people.csv
 df = spark.read.load(
     "people.csv",
     format="csv",
@@ -776,56 +776,56 @@ grouped = df.groupBy("name") \
 
 :::
 
-## Sort method
+### Sort method
 The `sort(col1, ..., coln, ascending=True)` method of the DataFrame class returns a new DataFrame that contains the same data of the input one, but whose content is sorted by `col1, ..., coln`. `ascending` determines if the sort should be ascending (`True`) or descending (`False`).
 
-# DataFrames and the SQL language
+## DataFrames and the SQL language
 Sparks allows querying the content of a DataFrame also by using the SQL language, but in order to do this a table name must be assigned to a DataFrame. The `createOrReplaceTempView(tableName)` method of the `DataFrame` class can be used to assign a `tableName` as table name to the DataFrame which it is invoked on.
 
 Once the DataFrame has been mapped to table names, SQL-like queries can be executed (the executed queries return DataFrame objects). The `sql(query)` method of the `SparkSession` class can be used to execute a SQL-like query, where `query` is a SQL-like query. Currently some SQL features are not supported (e.g., nested subqueries in the "WHERE" clause are not allowed).
 
 :::{.callout-note collapse="true"}
-## Example 1
+### Example 1
 1. Create a DataFrame from a JSON file containing the profiles of a set of people: each line of the file contains a JSON object containing name, age, and gender of a person;
 2. Create a new DataFrame containing only the people with age between 20 and 31 and print them on the standard output (use the SQL language to perform this operation).
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from people.csv
+## Create a DataFrame from people.csv
 df = spark.read.load(
     "people.json",
     format="json"
 )
 
-# Assign the “table name” people to the df DataFrame
+## Assign the “table name” people to the df DataFrame
 df.createOrReplaceTempView("people")
 
-# Select the people with age between 20 and 31
-# by querying the people table
+## Select the people with age between 20 and 31
+## by querying the people table
 selectedPeople = spark.sql(
     "SELECT * FROM people WHERE age>=20 and age<=31"
 )
 
-# Print the result on the standard output
+## Print the result on the standard output
 selectedPeople.show()
 ```
 
 :::
 
 :::{.callout-note collapse="true"}
-## Example 2
+### Example 2
 1. Create two DataFrames
     - One based on the "people_id.csv" file that contains the profiles of a set of people, the schema is: uid, name, age;
     - One based on the "liked_sports.csv" file that contains the liked sports for each person, the schema is: uid, sportname.
 2. Join the content of the two DataFrames and show it on the standard output.
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Read people_id.csv and store it in a DataFrame
+## Read people_id.csv and store it in a DataFrame
 dfPeople = spark.read.load(
     "people_id.csv",
     format="csv",
@@ -833,10 +833,10 @@ dfPeople = spark.read.load(
     inferSchema=True
 )
 
-# Assign the “table name” people to the dfPerson
+## Assign the “table name” people to the dfPerson
 dfPeople.createOrReplaceTempView("people")
 
-# Read liked_sports.csv and store it in a DataFrame
+## Read liked_sports.csv and store it in a DataFrame
 dfUidSports = spark.read.load(
     "liked_sports.csv",
     format="csv",
@@ -844,23 +844,23 @@ dfUidSports = spark.read.load(
     inferSchema=True
 )
 
-# Assign the “table name” liked to dfUidSports
+## Assign the “table name” liked to dfUidSports
 dfUidSports.createOrReplaceTempView("liked")
 
-# Join the two input tables by using the
+## Join the two input tables by using the
 #SQL-like syntax
 dfPersonLikes = spark.sql(
     "SELECT * from people, liked where people.uid=liked.uid"
 )
 
-# Print the result on the standard output
+## Print the result on the standard output
 dfPersonLikes.show()
 ```
 
 :::
 
 :::{.callout-note collapse="true"}
-## Example 3
+### Example 3
 1. Create a DataFrame from the "people.csv" file that contains the profiles of a set of people
     - The first line contains the header;
     - The others lines contain the users' profiles: each line contains name and age of a person.
@@ -886,48 +886,48 @@ Justin,19,1
 ```
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from people.csv
+## Create a DataFrame from people.csv
 df = spark.read.load(
     "people.json",
     format="json"
 )
 
-# Assign the “table name” people to the df DataFrame
+## Assign the “table name” people to the df DataFrame
 df.createOrReplaceTempView("people")
 
-# Define groups based on the value of name and
-# compute average and number of records for each group
+## Define groups based on the value of name and
+## compute average and number of records for each group
 nameAvgAgeCount = spark.sql(
     "SELECT name, avg(age), count(name) FROM people GROUP BY name"
 )
 
-# Print the result on the standard output
+## Print the result on the standard output
 nameAvgAgeCount.show()
 ```
 
 :::
 
-# Save DataFrames
+## Save DataFrames
 The content of DataFrames can be stored on disk by using two approches
 
 - Convert DataFrames to traditional RDDs by using the rdd method of the DataFrame, and then use `saveAsTextFile(outputFolder)`;
 - Use the `write()` method of DataFrames, that returns a `DatFrameWriter` class instance.
 
 :::{.callout-note collapse="true"}
-## Example 1
+### Example 1
 1. Create a DataFrame from the "people.csv" file that contains the profiles of a set of people
     - The first line contains the header;
     - The others lines contain the users' profiles: each line contains name, age, and gender of a person.
 2. Store the DataFrame in the output folder by using the `saveAsTextFile()` method.
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from people.csv
+## Create a DataFrame from people.csv
 df = spark.read.load(
     "people.csv",
     format="csv",
@@ -935,24 +935,24 @@ df = spark.read.load(
     inferSchema=True
 )
 
-# Save it
+## Save it
 df.rdd.saveAsTextFile(outputPath)
 ```
 
 :::
 
 :::{.callout-note collapse="true"}
-## Example 2
+### Example 2
 1. Create a DataFrame from the "people.csv" file that contains the profiles of a set of people
     - The first line contains the header;
     - The others lines contain the users' profiles: each line contains name, age, and gender of a person.
 2. Store the DataFrame in the output folder by using the `write()` method, with the CSV format.
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Create a DataFrame from people.csv
+## Create a DataFrame from people.csv
 df = spark.read.load(
     "people.csv",
     format="csv",
@@ -960,13 +960,13 @@ df = spark.read.load(
     inferSchema=True
 )
 
-# Save it
+## Save it
 df.write.csv(outputPath, header=True)
 ```
 
 :::
 
-# UDFs: User Defines Functions
+## UDFs: User Defines Functions
 Spark SQL provides a set of system predefined functions, which can be used in some transformations (e.g., `selectExpr()`, `sort()`) but also in the SQL queries. Some examples are
 
 - `hour(Timestamp)`
@@ -984,16 +984,16 @@ UDFs are defined/registered by invoking the `udf().register(name, function, data
 - `datatype` is the SQL data type of the returned value
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Define a UDFs that, given a string, returns the length of the string.
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Define the UDF
-# name: length
-# output: integer value
+## Define the UDF
+## name: length
+## output: integer value
 spark.udf.register("length", lambda x: len(x))
 ```
 
@@ -1010,8 +1010,8 @@ result = spark.sql("SELECT length(name) FROM profiles")
 
 :::
 
-# Other notes
-## Data warehouse methods: cube and rollup
+## Other notes
+### Data warehouse methods: cube and rollup
 The method `cube(col1, ..., coln)` of the `DataFrame` class can be used to create a multi-dimensional cube for the input DataFrame, on top of which aggregate functions can be computed for each group.
 
 The method `rollup(col1, ..., coln)` of the `DataFrame` class can be used to create a multi-dimensional rollup for the input DataFrame, on top of which aggregate functions can be computed for each group.
@@ -1019,7 +1019,7 @@ The method `rollup(col1, ..., coln)` of the `DataFrame` class can be used to cre
 Specify which attributes are used to split the input data in groups by using `cube(col1, ..., coln)` or `rollup(col1, ..., coln)`, respectively, then, apply the aggregate functions to compute for each group of the cube/rollup. The result is a DataFrame. The same aggregate functions/methods already discussed for groupBy can be used also for cube and rollup.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create a DataFrame from the "purchases.csv" file
     - The first line contains the header;
     - The others lines contain the quantities of purchased products by users: each line contains userid, productid, quantity.
@@ -1071,10 +1071,10 @@ u2      p3      70
 ```
 
 ```python
-# Create a Spark Session object
+## Create a Spark Session object
 spark = SparkSession.builder.getOrCreate()
 
-# Read purchases.csv and store it in a DataFrame
+## Read purchases.csv and store it in a DataFrame
 dfPurchases = spark.read.load(
     "purchases.csv",
     format="csv",
@@ -1093,20 +1093,20 @@ dfRollup=dfPurchases \
 
 :::
 
-## Set methods
+### Set methods
 Similarly to RDDs also DataFrames can be combined by using set transformations
 
 - `df1.union(df2)`
 - `df1.intersect(df2)`
 - `df1.subtract(df2)`
 
-## Broadcast join
+### Broadcast join
 Spark SQL automatically implements a broadcast version of the join operation if one of the two input DataFrames is small enough to be stored in the main memory of each executor.
 
 It is possible to suggest/force it by creating a broadcast version of a DataFrame.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 
 ```python
 dfPersonLikesBroadcast = dfUidSports\
@@ -1122,6 +1122,6 @@ dfPersonLikesBroadcast = dfUidSports\
 
 :::
 
-## Execution plan
+### Execution plan
 The method `explain()` can be invoked on a DataFrame to print on the standard output the execution plan of the part of the code that is used to compute the content of the DataFrame on which `explain()` is invoked.
 

@@ -18,7 +18,7 @@ The following specific actions are also available on this type of RDDs
 - `max()`
 - `min()`
 
-# Summary
+## Summary
 All the examples reported in the following are applied on inputRDD that is an RDD containing the following double values: `[1.5,3.5,2.0]`
 
 ::::{.content-visible when-format="html"}
@@ -74,7 +74,7 @@ All the examples reported in the following are applied on inputRDD that is an RD
 :::
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 1. Create an RDD containing the following float values: `[1.5,3.5,2.0]`
 2. Print on the standard output the following statistics
     - sum
@@ -85,11 +85,11 @@ All the examples reported in the following are applied on inputRDD that is an RD
     - minimum value
 
 ```python
-# Create an RDD containing a list of float values
+## Create an RDD containing a list of float values
 inputRDD = sc.parallelize([1.5,3.5,2.0])
 
-# Compute the statistics of interest and print them on
-# the standard output
+## Compute the statistics of interest and print them on
+## the standard output
 print("sum:", inputRDD.sum())
 print("mean:", inputRDD.mean())
 print("stdev:", inputRDD.stdev())

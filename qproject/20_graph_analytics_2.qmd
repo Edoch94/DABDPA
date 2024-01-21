@@ -2,7 +2,7 @@
 title: "Graph Analytics in Spark"
 ---
 
-# Algorithms over graphs
+## Algorithms over graphs
 GraphFrame provides the parallel implementation of a set of state of the art algorithms for graph analytics
 
 - Breadth first search
@@ -15,7 +15,7 @@ GraphFrame provides the parallel implementation of a set of state of the art alg
 
 Also custom algorithms can be designed and implemented.
 
-## Checkpoint directory
+### Checkpoint directory
 To run some expensive algorithms, set a checkpoint directory that will store the state of the job at every iteration. This allows to continue where left off if the job crashes. Create such a folder to set the checkpoint directory with:
 
 ```python
@@ -25,14 +25,14 @@ sc.setCheckpointDir(graphframes_ckpts_dir)
 - `graphframes_ckpts_dir` is the new checkpoint folder directory
 - `sc` is the SparkContext object (retrieve it from a SparkSession by using `spark.sparkContext`)
 
-## Breadth first search
+### Breadth first search
 Breadth-first search (BFS) is an algorithm for traversing/searching graph data structures: it finds the shortest path(s) from one vertex (or a set of vertexes)to another vertex (or a set of vertexes). It is used in many other algorithms
 
 - Length of shortest paths
 - Connected components
 - ...
 
-### Implementation
+#### Implementation
 
 ```python
 bfs(fromExpr, toExpr, edgeFilter=None maxPathLength=10)
@@ -48,7 +48,7 @@ The `bfs()` method of the GraphFrame class returns the shortest path(s) from the
 `bfs()` returns a DataFrame containing the selected shortest path(s). Notice that ff multiple paths are valid and their length is equal to the shortest length, the returned DataFrame will contain one Row for each path. The number of columns of the returned DataFrame is equal to $(\text{length of the shortest path}*2).+1$.
 
 :::{.callout-note collapse="true"}
-## Example 1
+### Example 1
 1. Find the shortest path from Esther to Charlie
 2. Store the result in a DataFrame
 
@@ -65,7 +65,7 @@ The content of the returned DataFrame is the following
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -79,7 +79,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -94,17 +94,17 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
-# Search from vertex with name = "Esther" to vertex with name = "Charlie"
+## Search from vertex with name = "Esther" to vertex with name = "Charlie"
 shortestPaths = g.bfs("name = 'Esther' ", "name = 'Charlie' ")
 ```
 
 :::
 
 :::{.callout-note collapse="true"}
-## Example 2
+### Example 2
 1. Find the shortest path from Alice to a user who is 30 years old
 2. Store the result in a DataFrame
 
@@ -115,7 +115,7 @@ shortestPaths = g.bfs("name = 'Esther' ", "name = 'Charlie' ")
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -129,7 +129,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -144,17 +144,17 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
-# Find the shortest path from Alice to a user who is 30 years old
+## Find the shortest path from Alice to a user who is 30 years old
 shortestPaths = g.bfs("name = 'Alice' ", "age= 30")
 ```
 
 :::
 
 :::{.callout-note collapse="true"}
-## Example 3
+### Example 3
 1. Find the shortest path from any user who is less than 31 years old to any user who is more than 30 years old
 2. Store the result in a DataFrame
 
@@ -167,7 +167,7 @@ Notice that two paths are selected in this case
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -181,7 +181,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -196,11 +196,11 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
-# Find the shortest path from any user who is less than 31 years old
-# to any user who is more than 30 years old
+## Find the shortest path from any user who is less than 31 years old
+## to any user who is more than 30 years old
 shortestPaths = g.bfs("age<31", "age>30")
 ```
 
@@ -208,7 +208,7 @@ shortestPaths = g.bfs("age<31", "age>30")
 
 
 :::{.callout-note collapse="true"}
-## Example 4
+### Example 4
 1. Find the shortest path from Alice to any user who is less than 31 years old without using follow edges
 2. Store the result in a DataFrame
 
@@ -221,7 +221,7 @@ Notice that two paths are selected in this case
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -235,7 +235,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -250,20 +250,20 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
-# Find the shortest path from Alice to any user who is less
-# than 31 years old without using “follow” edges
+## Find the shortest path from Alice to any user who is less
+## than 31 years old without using “follow” edges
 shortestPaths = g.bfs("name = 'Alice' ", "age<31", "relationship<> 'follow' ")
 ```
 
 :::
 
-## Shortest path
+### Shortest path
 The shortest path method selects the length of the shortest path(s) from each vertex to a given set of landmark vertexes. It uses the BFS algorithm for computing the shortest paths.
 
-### Implementation
+#### Implementation
 
 ```python
 shortestPaths(landmarks)
@@ -279,7 +279,7 @@ The `shortestPaths(landmarks)` method of the GraphFrame class returns the length
 - distances (type map): for each landmark lm it contains one pair (ID lm: length shortest path from the vertex of the current record to lm)
 
 :::{.callout-note collapse="true"}
-## Example 1
+### Example 1
 1. Find for each user the length of the shortest path to user $u1$ (i.e., Alice)
 2. Store the result in a DataFrame
 
@@ -312,7 +312,7 @@ The content of the returned DataFrame is the following
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -326,7 +326,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -341,17 +341,17 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
-# Find for each user the length of the shortest path to user u1
+## Find for each user the length of the shortest path to user u1
 shortestPaths = g.shortestPaths(["u1"])
 ```
 
 :::
 
 :::{.callout-note collapse="true"}
-## Example 2
+### Example 2
 1. Find for each user the length of the shortest path to users $u1$ (Alice) and $u4$ (David)
 2. Store the result in a DataFrame
 
@@ -384,7 +384,7 @@ The content of the returned DataFrame is the following
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -398,7 +398,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -413,16 +413,16 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
-# Find for each user the length of the shortest paths to users u1 and u4
+## Find for each user the length of the shortest paths to users u1 and u4
 shortestPaths = g.shortestPaths(["u1", "u4"])
 ```
 
 :::
 
-## Connected components
+### Connected components
 A connected component of a graph is a subgraph $sg$ such that
 
 - Any two vertexes in $sg$ are connected to each other by at least one path
@@ -436,7 +436,7 @@ The direction of edges is not considered.
 
 The `connectedComponents()` method of the GraphFrame class returns the connected components of the input graph. This is an expensive algorithm, and requires setting a Spark checkpoint directory.
 
-### Implementation
+#### Implementation
 
 ```python
 connectedComponents()
@@ -448,7 +448,7 @@ The `connectedComponents()` method returns a DataFrame that contains one record/
 - component (type long). It is the identifier of the connected component to which the current vertex has been assigned.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Print on the stdout the number of connected components of the following graph
 
 ![Example graph](images/20_graph_analytics_2/bfs_example_1.png){width=80%}
@@ -477,7 +477,7 @@ Notice the "component" field
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -491,7 +491,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -506,16 +506,16 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
-# Set checkpoint folder
+## Set checkpoint folder
 sc.setCheckpointDir("tmp_ckpts")
 
-# Run the algorithm
+## Run the algorithm
 connComp=g.connectedComponents()
 
-# Count the number of components
+## Count the number of components
 nComp=connComp.select("component").distinct().count()
 
 print("Number of connected components: ", nComp)
@@ -523,12 +523,12 @@ print("Number of connected components: ", nComp)
 
 ::: 
 
-## Strongly connected components
+### Strongly connected components
 A directed subgraph $sg$ is called strongly connected if every vertex in $sg$ is reachable from every other vertex in $sg$. For undirected graph, connected and strongly connected components are the same.
 
 ![Three strongly connected subgraphs/components](images/20_graph_analytics_2/three_strongly_connected_components.png){width=80%}
 
-### Implementation
+#### Implementation
 
 ```python
 stronglyConnectedComponents()
@@ -542,7 +542,7 @@ The `stronglyConnectedComponents()` method of the GraphFrame class returns the s
 - component (type long). It is the identifier of the strongly connected component to which the current vertex has been assigned.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Print on the stdout the number of strongly connected components of the input graph.
 
 ![Example graph](images/20_graph_analytics_2/bfs_example_1.png){width=80%}
@@ -573,7 +573,7 @@ Notice the "component" field
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -587,7 +587,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -602,16 +602,16 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
-# Set checkpoint folder
+## Set checkpoint folder
 sc.setCheckpointDir("tmp_ckpts")
 
-# Run the algorithm
+## Run the algorithm
 strongConnComp = g.stronglyConnectedComponents(maxIter=10)
 
-# Count the number of strongly connected components
+## Count the number of strongly connected components
 nComp=strongConnComp.select("component").distinct().count()
 
 print("Number of strongly connected components: ", nComp)
@@ -619,13 +619,13 @@ print("Number of strongly connected components: ", nComp)
 
 :::
 
-## Label propagation
+### Label propagation
 Label Propagation is an algorithm for detecting communities in graphs. It is similar to clustering, but exploits connectivity. Convergence is not guaranteed, and also it is possible to end up with trivial solutions.
 
-### The Label Propagation algorithm
+#### The Label Propagation algorithm
 Each vertex in the network is initially assigned to its own community: at every step, vertexes send their community affiliation to all neighbors and update their state to the mode community affiliation of incoming messages.
 
-### Implementation
+#### Implementation
 
 ```python
 labelPropagation(maxIter)
@@ -641,7 +641,7 @@ The `labelPropagation(maxIter)` method of the GraphFrame class runs and returns 
 - label (type long). It is the identifier of the community to which the current vertex has been assigned.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Split in groups the vertexes of the graph by using the label propagation algorithm.
 
 ![Example graph](images/20_graph_analytics_2/bfs_example_1.png){width=80%}
@@ -671,7 +671,7 @@ This is the content of the DataFrame used to store the identified communities
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -685,7 +685,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -700,16 +700,16 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
-# Run the label propagation algorithm
+## Run the label propagation algorithm
 labelComm = g.labelPropagation(10)
 ```
 
 :::
 
-## PageRank
+### PageRank
 PageRank is the original famous algorithm used by the Google Search engine to rank vertexes (web pages) in a graph by order of importance. For the Google search engine vertexes are web pages in the World Wide Web, and edges are hyperlinks among web pages. This algorithm assigns a numerical weighting (importance) to each node. 
 
 It computes a likelihood that a person randomly clicking on links will arrive at any particular web page. For having a high PageRank, it is important to
@@ -719,13 +719,13 @@ It computes a likelihood that a person randomly clicking on links will arrive at
 
 The basic idea is that each link vote is proportional to the importance of its source page $p$: if page $p$ with importance $\text{PageRank}(p)$ has $n$ out-links, each out-link gets $\frac{\text{PageRank}(p)}{n}$ votes; the importance of page $p$ is the sum of the votes on its in-links.
 
-### Simple recursive formulation
+#### Simple recursive formulation
 - Initialize each page rank to $1.0$: for each $p$ in pages set $\textbf{PageRank}(p)$ to $1.0$
 - Iterate for $max$ iterations
     1. Page $p$ sends a contribution $\frac{\textbf{PageRank}(p)}{\textbf{numOutLinks}(p)}$ to its neighbors (the pages it links);
     2. Update each page rank $\textbf{PageRank}(p)$ with the sum of the received contributions.
 
-### Random jumps formulation
+#### Random jumps formulation
 The PageRank algorithm simulates the "random walk" of a user on the web. Indeed, at each step of the random walk, the random surfer has two options:
 
 - with probability $1-\alpha$, follow a link at random among the ones in the current page;
@@ -737,7 +737,7 @@ The PageRank algorithm simulates the "random walk" of a user on the web. Indeed,
     2. Update each page rank $\textbf{PageRank}(p)$ to $\alpha + (1 - \alpha)$ **times** the sum of the received contributions.
 
 ::::{.callout-note collapse="true"}
-## Example
+### Example
 - $\alpha=0.15$
 - Initialization: $\forall{p}, \textbf{PageRank}(p) = 1.0$
 
@@ -762,7 +762,7 @@ Iterations
 
 ::::
 
-### Implementation 
+#### Implementation 
 
 ```python
 pageRank(resetProbability, maxIter, tol, sourceId)
@@ -781,7 +781,7 @@ The `pageRank()` method of the GraphFrame class runs the PageRank algorithm on t
 - the edges of the new graph are characterized by one new attribute, called "weight", that stores the weight (PageRank contribution) propagated through that edge.
 
 :::{.callout-note collapse="true"}
-## Example
+### Example
 Apply the PageRank algorithm on the following graph and select the user associated with the highest PageRank value.
 
 ![Example graph](images/20_graph_analytics_2/bfs_example_1.png){width=80%}
@@ -791,7 +791,7 @@ Apply the PageRank algorithm on the following graph and select the user associat
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -805,7 +805,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -820,18 +820,18 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
-# Run the PageRank algorithm
+## Run the PageRank algorithm
 pageRanks = g.pageRank(maxIter=30)
 
-# Select the maximum value of PageRank
+## Select the maximum value of PageRank
 maxPageRank = pageRanks.vertices \
     .agg({"pagerank":"max"}) \
     .first()["max(pagerank)"]
 
-# Select the user with the maximum PageRank
+## Select the user with the maximum PageRank
 pageRanks.vertices \
     .filter(pageRanks.vertices.pagerank==maxPageRank) \
     .show()
@@ -839,7 +839,7 @@ pageRanks.vertices \
 
 :::
 
-## Custom graph algorithms
+### Custom graph algorithms
 GraphFrames provides primitives for developing yourself other graph algorithms. It is based on message passing approach: the two key components are:
 
 - `aggregateMessages`: it sends messages between vertexes, and aggregate messages for each vertex
@@ -862,7 +862,7 @@ The resulting table is
 ```python
 from graphframes import GraphFrame
 
-# Vertex DataFrame
+## Vertex DataFrame
 v = spark.createDataFrame(
     [
         ("u1", "Alice", 34),
@@ -876,7 +876,7 @@ v = spark.createDataFrame(
     ["id", "name", "age"]
 )
 
-# Edge DataFrame
+## Edge DataFrame
 e = spark.createDataFrame(
     [
         ("u1", "u2", "friend"),
@@ -891,17 +891,17 @@ e = spark.createDataFrame(
     ["src", "dst", "relationship"]
 )
 
-# Create the graph
+## Create the graph
 g = GraphFrame(v, e)
 
-# For each user, sum the ages of the adjacent users
-# Send the age of each destination of an edge to its source
+## For each user, sum the ages of the adjacent users
+## Send the age of each destination of an edge to its source
 msgToSrc = AggregateMessages.dst["age"]
 
-# Send the age of each source of an edge to its destination
+## Send the age of each source of an edge to its destination
 msgToDst = AggregateMessages.src["age"]
 
-# Aggregate messages
+## Aggregate messages
 aggAge = g.aggregateMessages(
     sum(AggregateMessages.msg),
     sendToSrc=msgToSrc,
