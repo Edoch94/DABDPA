@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Distributed architectures for big data processing and analytics - 25&nbsp; Graph Analytics in Spark</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./21_streaming_analytics.html" rel="next">
+<link href="./19_graph_analytics_1.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Distributed architectures for big data processing and analytics</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Index</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#algorithms-over-graphs" id="toc-algorithms-over-graphs" class="nav-link active" data-scroll-target="#algorithms-over-graphs">Algorithms over graphs</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="algorithms-over-graphs" class="level3">
+<h3 class="anchored" data-anchor-id="algorithms-over-graphs">Algorithms over graphs</h3>
+<p>GraphFrame provides the parallel implementation of a set of state of the art algorithms for graph analytics</p>
+<ul>
+<li>Breadth first search</li>
+<li>Shortest paths</li>
+<li>Connected components</li>
+<li>Strongly connected component</li>
+<li>Label propagation</li>
+<li>PageRank</li>
+<li>…</li>
+</ul>
+<p>Also custom algorithms can be designed and implemented.</p>
+<section id="checkpoint-directory" class="level4">
+<h4 class="anchored" data-anchor-id="checkpoint-directory">Checkpoint directory</h4>
+<p>To run some expensive algorithms, set a checkpoint directory that will store the state of the job at every iteration. This allows to continue where left off if the job crashes. Create such a folder to set the checkpoint directory with:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>sc.setCheckpointDir(graphframes_ckpts_dir)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><code>graphframes_ckpts_dir</code> is the new checkpoint folder directory</li>
+<li><code>sc</code> is the SparkContext object (retrieve it from a SparkSession by using <code>spark.sparkContext</code>)</li>
+</ul>
+</section>
+<section id="breadth-first-search" class="level4">
+<h4 class="anchored" data-anchor-id="breadth-first-search">Breadth first search</h4>
+<p>Breadth-first search (BFS) is an algorithm for traversing/searching graph data structures: it finds the shortest path(s) from one vertex (or a set of vertexes)to another vertex (or a set of vertexes). It is used in many other algorithms</p>
+<ul>
+<li>Length of shortest paths</li>
+<li>Connected components</li>
+<li>…</li>
+</ul>
+<section id="implementation" class="level5">
+<h5 class="anchored" data-anchor-id="implementation">Implementation</h5>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>bfs(fromExpr, toExpr, edgeFilter<span class="op">=</span><span class="va">None</span> maxPathLength<span class="op">=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>bfs()</code> method of the GraphFrame class returns the shortest path(s) from the vertexes matching expression <code>fromExpr</code> expression to vertexes matching expression <code>toExpr</code>. If there are many vertexes matching <code>fromExpr</code> and <code>toExpr</code>, only the couple(s) with the shortest length is returned.</p>
+<ul>
+<li><code>fromExpr</code>: Spark SQL expression specifying valid starting vertexes for the execution of the BFS algorithm (e.g., to start from a specific vertex: “id = [start vertex id]”);</li>
+<li><code>toExpr</code>: Spark SQL expression specifying valid target vertexes for the BFS algorithm;</li>
+<li><code>maxPathLength</code>: Limit on the length of paths (default = 10);</li>
+<li><code>edgeFilter</code>: Spark SQL expression specifying edges that may be used in the search (default None).</li>
+</ul>
+<p><code>bfs()</code> returns a DataFrame containing the selected shortest path(s). Notice that ff multiple paths are valid and their length is equal to the shortest length, the returned DataFrame will contain one Row for each path. The number of columns of the returned DataFrame is equal to <span class="math inline">\((\text{length of the shortest path}*2).+1\)</span>.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Find the shortest path from Esther to Charlie</li>
+<li>Store the result in a DataFrame</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Example graph</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/bfs_example_1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Resulting graph</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/bfs_example_2.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>The content of the returned DataFrame is the following</p>
+<table class="table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>from</th>
+<th><span class="math inline">\(e0\)</span></th>
+<th><span class="math inline">\(v1\)</span></th>
+<th><span class="math inline">\(e1\)</span></th>
+<th>to</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\([u5, \text{Esther}, 32]\)</span></td>
+<td><span class="math inline">\([u5, u6, \text{follow}]\)</span></td>
+<td><span class="math inline">\([u6, \text{Fanny}, 36]\)</span></td>
+<td><span class="math inline">\([u6, u3, \text{follow}]\)</span></td>
+<td><span class="math inline">\([u3, \text{Charlie}, 30]\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb3-5"><a href="#cb3-5"></a>    [</span>
+<span id="cb3-6"><a href="#cb3-6"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb3-7"><a href="#cb3-7"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb3-8"><a href="#cb3-8"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb3-9"><a href="#cb3-9"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb3-10"><a href="#cb3-10"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb3-11"><a href="#cb3-11"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb3-12"><a href="#cb3-12"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb3-13"><a href="#cb3-13"></a>    ],</span>
+<span id="cb3-14"><a href="#cb3-14"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb3-15"><a href="#cb3-15"></a>)</span>
+<span id="cb3-16"><a href="#cb3-16"></a></span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb3-18"><a href="#cb3-18"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb3-19"><a href="#cb3-19"></a>    [</span>
+<span id="cb3-20"><a href="#cb3-20"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb3-21"><a href="#cb3-21"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb3-22"><a href="#cb3-22"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb3-23"><a href="#cb3-23"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb3-24"><a href="#cb3-24"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb3-25"><a href="#cb3-25"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb3-26"><a href="#cb3-26"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb3-27"><a href="#cb3-27"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb3-28"><a href="#cb3-28"></a>    ],</span>
+<span id="cb3-29"><a href="#cb3-29"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb3-30"><a href="#cb3-30"></a>)</span>
+<span id="cb3-31"><a href="#cb3-31"></a></span>
+<span id="cb3-32"><a href="#cb3-32"></a><span class="co">## Create the graph</span></span>
+<span id="cb3-33"><a href="#cb3-33"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb3-34"><a href="#cb3-34"></a></span>
+<span id="cb3-35"><a href="#cb3-35"></a><span class="co">## Search from vertex with name = "Esther" to vertex with name = "Charlie"</span></span>
+<span id="cb3-36"><a href="#cb3-36"></a>shortestPaths <span class="op">=</span> g.bfs(<span class="st">"name = 'Esther' "</span>, <span class="st">"name = 'Charlie' "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Find the shortest path from Alice to a user who is 30 years old</li>
+<li>Store the result in a DataFrame</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Example graph</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/bfs_example_1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Resulting graph</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/bfs_example_3.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb4-2"><a href="#cb4-2"></a></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb4-5"><a href="#cb4-5"></a>    [</span>
+<span id="cb4-6"><a href="#cb4-6"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb4-7"><a href="#cb4-7"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb4-8"><a href="#cb4-8"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb4-9"><a href="#cb4-9"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb4-10"><a href="#cb4-10"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb4-11"><a href="#cb4-11"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb4-12"><a href="#cb4-12"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb4-13"><a href="#cb4-13"></a>    ],</span>
+<span id="cb4-14"><a href="#cb4-14"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb4-15"><a href="#cb4-15"></a>)</span>
+<span id="cb4-16"><a href="#cb4-16"></a></span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb4-19"><a href="#cb4-19"></a>    [</span>
+<span id="cb4-20"><a href="#cb4-20"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb4-21"><a href="#cb4-21"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb4-22"><a href="#cb4-22"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb4-23"><a href="#cb4-23"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb4-24"><a href="#cb4-24"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb4-25"><a href="#cb4-25"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb4-26"><a href="#cb4-26"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb4-27"><a href="#cb4-27"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb4-28"><a href="#cb4-28"></a>    ],</span>
+<span id="cb4-29"><a href="#cb4-29"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb4-30"><a href="#cb4-30"></a>)</span>
+<span id="cb4-31"><a href="#cb4-31"></a></span>
+<span id="cb4-32"><a href="#cb4-32"></a><span class="co">## Create the graph</span></span>
+<span id="cb4-33"><a href="#cb4-33"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb4-34"><a href="#cb4-34"></a></span>
+<span id="cb4-35"><a href="#cb4-35"></a><span class="co">## Find the shortest path from Alice to a user who is 30 years old</span></span>
+<span id="cb4-36"><a href="#cb4-36"></a>shortestPaths <span class="op">=</span> g.bfs(<span class="st">"name = 'Alice' "</span>, <span class="st">"age= 30"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Find the shortest path from any user who is less than 31 years old to any user who is more than 30 years old</li>
+<li>Store the result in a DataFrame</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Example graph</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/bfs_example_1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Resulting graph</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/bfs_example_4.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>Notice that two paths are selected in this case</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb5-2"><a href="#cb5-2"></a></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    [</span>
+<span id="cb5-6"><a href="#cb5-6"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb5-7"><a href="#cb5-7"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb5-8"><a href="#cb5-8"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb5-9"><a href="#cb5-9"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb5-10"><a href="#cb5-10"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb5-11"><a href="#cb5-11"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb5-12"><a href="#cb5-12"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb5-13"><a href="#cb5-13"></a>    ],</span>
+<span id="cb5-14"><a href="#cb5-14"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb5-15"><a href="#cb5-15"></a>)</span>
+<span id="cb5-16"><a href="#cb5-16"></a></span>
+<span id="cb5-17"><a href="#cb5-17"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb5-18"><a href="#cb5-18"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb5-19"><a href="#cb5-19"></a>    [</span>
+<span id="cb5-20"><a href="#cb5-20"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb5-21"><a href="#cb5-21"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb5-22"><a href="#cb5-22"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb5-23"><a href="#cb5-23"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb5-24"><a href="#cb5-24"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb5-25"><a href="#cb5-25"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb5-26"><a href="#cb5-26"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb5-27"><a href="#cb5-27"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb5-28"><a href="#cb5-28"></a>    ],</span>
+<span id="cb5-29"><a href="#cb5-29"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb5-30"><a href="#cb5-30"></a>)</span>
+<span id="cb5-31"><a href="#cb5-31"></a></span>
+<span id="cb5-32"><a href="#cb5-32"></a><span class="co">## Create the graph</span></span>
+<span id="cb5-33"><a href="#cb5-33"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb5-34"><a href="#cb5-34"></a></span>
+<span id="cb5-35"><a href="#cb5-35"></a><span class="co">## Find the shortest path from any user who is less than 31 years old</span></span>
+<span id="cb5-36"><a href="#cb5-36"></a><span class="co">## to any user who is more than 30 years old</span></span>
+<span id="cb5-37"><a href="#cb5-37"></a>shortestPaths <span class="op">=</span> g.bfs(<span class="st">"age&lt;31"</span>, <span class="st">"age&gt;30"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Find the shortest path from Alice to any user who is less than 31 years old without using follow edges</li>
+<li>Store the result in a DataFrame</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Example graph</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/bfs_example_1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Resulting graph</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/bfs_example_5.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>Notice that two paths are selected in this case</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb6-5"><a href="#cb6-5"></a>    [</span>
+<span id="cb6-6"><a href="#cb6-6"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb6-7"><a href="#cb6-7"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb6-8"><a href="#cb6-8"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb6-9"><a href="#cb6-9"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb6-10"><a href="#cb6-10"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb6-11"><a href="#cb6-11"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb6-12"><a href="#cb6-12"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb6-13"><a href="#cb6-13"></a>    ],</span>
+<span id="cb6-14"><a href="#cb6-14"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb6-15"><a href="#cb6-15"></a>)</span>
+<span id="cb6-16"><a href="#cb6-16"></a></span>
+<span id="cb6-17"><a href="#cb6-17"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb6-19"><a href="#cb6-19"></a>    [</span>
+<span id="cb6-20"><a href="#cb6-20"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb6-21"><a href="#cb6-21"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb6-22"><a href="#cb6-22"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb6-23"><a href="#cb6-23"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb6-24"><a href="#cb6-24"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb6-25"><a href="#cb6-25"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb6-26"><a href="#cb6-26"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb6-27"><a href="#cb6-27"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb6-28"><a href="#cb6-28"></a>    ],</span>
+<span id="cb6-29"><a href="#cb6-29"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb6-30"><a href="#cb6-30"></a>)</span>
+<span id="cb6-31"><a href="#cb6-31"></a></span>
+<span id="cb6-32"><a href="#cb6-32"></a><span class="co">## Create the graph</span></span>
+<span id="cb6-33"><a href="#cb6-33"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb6-34"><a href="#cb6-34"></a></span>
+<span id="cb6-35"><a href="#cb6-35"></a><span class="co">## Find the shortest path from Alice to any user who is less</span></span>
+<span id="cb6-36"><a href="#cb6-36"></a><span class="co">## than 31 years old without using “follow” edges</span></span>
+<span id="cb6-37"><a href="#cb6-37"></a>shortestPaths <span class="op">=</span> g.bfs(<span class="st">"name = 'Alice' "</span>, <span class="st">"age&lt;31"</span>, <span class="st">"relationship&lt;&gt; 'follow' "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="shortest-path" class="level4">
+<h4 class="anchored" data-anchor-id="shortest-path">Shortest path</h4>
+<p>The shortest path method selects the length of the shortest path(s) from each vertex to a given set of landmark vertexes. It uses the BFS algorithm for computing the shortest paths.</p>
+<section id="implementation-1" class="level5">
+<h5 class="anchored" data-anchor-id="implementation-1">Implementation</h5>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>shortestPaths(landmarks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>shortestPaths(landmarks)</code> method of the GraphFrame class returns the length of the shortest path(s) from each vertex to a given set of landmarks vertexes. For each vertex, one shortest path for each landmark vertex is computed and its length is returned.</p>
+<ul>
+<li><code>landmarks</code>: list of IDs of landmark vertexes (e.g., <span class="math inline">\([u1, u4]\)</span>)</li>
+</ul>
+<p><code>shortestPaths()</code> returns a DataFrame that contains one record/row for each distinct vertex of the input graph (also for the non-connected ones). This method is characterized by the following columns</p>
+<ul>
+<li>one column for each attribute of the vertexes</li>
+<li>distances (type map): for each landmark lm it contains one pair (ID lm: length shortest path from the vertex of the current record to lm)</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Find for each user the length of the shortest path to user <span class="math inline">\(u1\)</span> (i.e., Alice)</li>
+<li>Store the result in a DataFrame</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Example graph</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/bfs_example_1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Vertex</th>
+<th>Distance to <span class="math inline">\(u1\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(u1\)</span></td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u2\)</span></td>
+<td>-</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u3\)</span></td>
+<td>-</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u4\)</span></td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u5\)</span></td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u6\)</span></td>
+<td>-</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u7\)</span></td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p>The content of the returned DataFrame is the following</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>id</th>
+<th>name</th>
+<th>age</th>
+<th>distances</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(u1\)</span></td>
+<td>Alice</td>
+<td>34</td>
+<td><span class="math inline">\([u1 \rightarrow 0]\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u2\)</span></td>
+<td>Bob</td>
+<td>36</td>
+<td><span class="math inline">\([\quad]\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u3\)</span></td>
+<td>Charlie</td>
+<td>30</td>
+<td><span class="math inline">\([\quad]\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u4\)</span></td>
+<td>David</td>
+<td>29</td>
+<td><span class="math inline">\([u1 \rightarrow 1]\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u5\)</span></td>
+<td>Esther</td>
+<td>32</td>
+<td><span class="math inline">\([u1 \rightarrow 2]\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u6\)</span></td>
+<td>Fanny</td>
+<td>36</td>
+<td><span class="math inline">\([\quad]\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u7\)</span></td>
+<td>Gabby</td>
+<td>60</td>
+<td><span class="math inline">\([\quad]\)</span></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><span class="math inline">\([u1 \rightarrow 0]\)</span>: data type is map. It stores a set of pairs (Key: Value)</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb8-2"><a href="#cb8-2"></a></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb8-5"><a href="#cb8-5"></a>    [</span>
+<span id="cb8-6"><a href="#cb8-6"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb8-7"><a href="#cb8-7"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb8-8"><a href="#cb8-8"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb8-9"><a href="#cb8-9"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb8-10"><a href="#cb8-10"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb8-11"><a href="#cb8-11"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb8-12"><a href="#cb8-12"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb8-13"><a href="#cb8-13"></a>    ],</span>
+<span id="cb8-14"><a href="#cb8-14"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb8-15"><a href="#cb8-15"></a>)</span>
+<span id="cb8-16"><a href="#cb8-16"></a></span>
+<span id="cb8-17"><a href="#cb8-17"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb8-18"><a href="#cb8-18"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb8-19"><a href="#cb8-19"></a>    [</span>
+<span id="cb8-20"><a href="#cb8-20"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb8-21"><a href="#cb8-21"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb8-22"><a href="#cb8-22"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb8-23"><a href="#cb8-23"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb8-24"><a href="#cb8-24"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb8-25"><a href="#cb8-25"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb8-26"><a href="#cb8-26"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb8-27"><a href="#cb8-27"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb8-28"><a href="#cb8-28"></a>    ],</span>
+<span id="cb8-29"><a href="#cb8-29"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb8-30"><a href="#cb8-30"></a>)</span>
+<span id="cb8-31"><a href="#cb8-31"></a></span>
+<span id="cb8-32"><a href="#cb8-32"></a><span class="co">## Create the graph</span></span>
+<span id="cb8-33"><a href="#cb8-33"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb8-34"><a href="#cb8-34"></a></span>
+<span id="cb8-35"><a href="#cb8-35"></a><span class="co">## Find for each user the length of the shortest path to user u1</span></span>
+<span id="cb8-36"><a href="#cb8-36"></a>shortestPaths <span class="op">=</span> g.shortestPaths([<span class="st">"u1"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Find for each user the length of the shortest path to users <span class="math inline">\(u1\)</span> (Alice) and <span class="math inline">\(u4\)</span> (David)</li>
+<li>Store the result in a DataFrame</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Example graph</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/bfs_example_1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Vertex</th>
+<th>Distance to <span class="math inline">\(u1\)</span></th>
+<th>Distance to <span class="math inline">\(u1\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(u1\)</span></td>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u2\)</span></td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u3\)</span></td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u4\)</span></td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u5\)</span></td>
+<td>2</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u6\)</span></td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u7\)</span></td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p>The content of the returned DataFrame is the following</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>id</th>
+<th>name</th>
+<th>age</th>
+<th>distances</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(u1\)</span></td>
+<td>Alice</td>
+<td>34</td>
+<td><span class="math inline">\([u1 \rightarrow 0, u4 \rightarrow 2]\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u2\)</span></td>
+<td>Bob</td>
+<td>36</td>
+<td><span class="math inline">\([\quad]\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u3\)</span></td>
+<td>Charlie</td>
+<td>30</td>
+<td><span class="math inline">\([\quad]\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u4\)</span></td>
+<td>David</td>
+<td>29</td>
+<td><span class="math inline">\([u1 \rightarrow 1, u4 \rightarrow 0]\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u5\)</span></td>
+<td>Esther</td>
+<td>32</td>
+<td><span class="math inline">\([u1 \rightarrow 2, u4 \rightarrow 1]\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u6\)</span></td>
+<td>Fanny</td>
+<td>36</td>
+<td><span class="math inline">\([\quad]\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u7\)</span></td>
+<td>Gabby</td>
+<td>60</td>
+<td><span class="math inline">\([\quad]\)</span></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><span class="math inline">\([u1 \rightarrow 0]\)</span>: data type is map. It stores a set of pairs (Key: Value)</li>
+</ul>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb9-2"><a href="#cb9-2"></a></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb9-5"><a href="#cb9-5"></a>    [</span>
+<span id="cb9-6"><a href="#cb9-6"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb9-7"><a href="#cb9-7"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb9-8"><a href="#cb9-8"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb9-9"><a href="#cb9-9"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb9-10"><a href="#cb9-10"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb9-11"><a href="#cb9-11"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb9-12"><a href="#cb9-12"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb9-13"><a href="#cb9-13"></a>    ],</span>
+<span id="cb9-14"><a href="#cb9-14"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb9-15"><a href="#cb9-15"></a>)</span>
+<span id="cb9-16"><a href="#cb9-16"></a></span>
+<span id="cb9-17"><a href="#cb9-17"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb9-18"><a href="#cb9-18"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb9-19"><a href="#cb9-19"></a>    [</span>
+<span id="cb9-20"><a href="#cb9-20"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb9-21"><a href="#cb9-21"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb9-22"><a href="#cb9-22"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb9-23"><a href="#cb9-23"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb9-24"><a href="#cb9-24"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb9-25"><a href="#cb9-25"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb9-26"><a href="#cb9-26"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb9-27"><a href="#cb9-27"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb9-28"><a href="#cb9-28"></a>    ],</span>
+<span id="cb9-29"><a href="#cb9-29"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb9-30"><a href="#cb9-30"></a>)</span>
+<span id="cb9-31"><a href="#cb9-31"></a></span>
+<span id="cb9-32"><a href="#cb9-32"></a><span class="co">## Create the graph</span></span>
+<span id="cb9-33"><a href="#cb9-33"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb9-34"><a href="#cb9-34"></a></span>
+<span id="cb9-35"><a href="#cb9-35"></a><span class="co">## Find for each user the length of the shortest paths to users u1 and u4</span></span>
+<span id="cb9-36"><a href="#cb9-36"></a>shortestPaths <span class="op">=</span> g.shortestPaths([<span class="st">"u1"</span>, <span class="st">"u4"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="connected-components" class="level4">
+<h4 class="anchored" data-anchor-id="connected-components">Connected components</h4>
+<p>A connected component of a graph is a subgraph <span class="math inline">\(sg\)</span> such that</p>
+<ul>
+<li>Any two vertexes in <span class="math inline">\(sg\)</span> are connected to each other by at least one path</li>
+<li>The set of vertexes in <span class="math inline">\(sg\)</span> is not connected to any additional vertexes in the original graph</li>
+</ul>
+<p>The direction of edges is not considered.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Two connected components</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/two_connected_components.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Three connected components</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/three_connected_components.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>The <code>connectedComponents()</code> method of the GraphFrame class returns the connected components of the input graph. This is an expensive algorithm, and requires setting a Spark checkpoint directory.</p>
+<section id="implementation-2" class="level5">
+<h5 class="anchored" data-anchor-id="implementation-2">Implementation</h5>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>connectedComponents()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>connectedComponents()</code> method returns a DataFrame that contains one record/row for each distinct vertex of the input graph. It is characterized by the following columns</p>
+<ul>
+<li>one column for each attribute of the vertexes</li>
+<li>component (type long). It is the identifier of the connected component to which the current vertex has been assigned.</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Print on the stdout the number of connected components of the following graph</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Example graph</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/bfs_example_1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Result</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/connected_components_example.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>Notice that The are two connected components on this graph.</p>
+<p>This is the content of the DataFrame used to store the two identified connected components</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>id</th>
+<th>name</th>
+<th>age</th>
+<th>component</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(u6\)</span></td>
+<td>Fanny</td>
+<td>36</td>
+<td>146028888064</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u1\)</span></td>
+<td>Alice</td>
+<td>34</td>
+<td>146028888064</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u3\)</span></td>
+<td>Charlie</td>
+<td>30</td>
+<td>146028888064</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u5\)</span></td>
+<td>Esther</td>
+<td>32</td>
+<td>146028888064</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u2\)</span></td>
+<td>Bob</td>
+<td>36</td>
+<td>146028888064</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u4\)</span></td>
+<td>David</td>
+<td>29</td>
+<td>146028888064</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u7\)</span></td>
+<td>Gabby</td>
+<td>60</td>
+<td>1546188226560</td>
+</tr>
+</tbody>
+</table>
+<p>Notice the “component” field</p>
+<ul>
+<li>“146028888064”: vertexes of the first component</li>
+<li>“1546188226560”: vertexes of the second component</li>
+</ul>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb11-2"><a href="#cb11-2"></a></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb11-5"><a href="#cb11-5"></a>    [</span>
+<span id="cb11-6"><a href="#cb11-6"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb11-7"><a href="#cb11-7"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb11-8"><a href="#cb11-8"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb11-9"><a href="#cb11-9"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb11-10"><a href="#cb11-10"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb11-11"><a href="#cb11-11"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb11-12"><a href="#cb11-12"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb11-13"><a href="#cb11-13"></a>    ],</span>
+<span id="cb11-14"><a href="#cb11-14"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb11-15"><a href="#cb11-15"></a>)</span>
+<span id="cb11-16"><a href="#cb11-16"></a></span>
+<span id="cb11-17"><a href="#cb11-17"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb11-18"><a href="#cb11-18"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb11-19"><a href="#cb11-19"></a>    [</span>
+<span id="cb11-20"><a href="#cb11-20"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb11-21"><a href="#cb11-21"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb11-22"><a href="#cb11-22"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb11-23"><a href="#cb11-23"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb11-24"><a href="#cb11-24"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb11-25"><a href="#cb11-25"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb11-26"><a href="#cb11-26"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb11-27"><a href="#cb11-27"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb11-28"><a href="#cb11-28"></a>    ],</span>
+<span id="cb11-29"><a href="#cb11-29"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb11-30"><a href="#cb11-30"></a>)</span>
+<span id="cb11-31"><a href="#cb11-31"></a></span>
+<span id="cb11-32"><a href="#cb11-32"></a><span class="co">## Create the graph</span></span>
+<span id="cb11-33"><a href="#cb11-33"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb11-34"><a href="#cb11-34"></a></span>
+<span id="cb11-35"><a href="#cb11-35"></a><span class="co">## Set checkpoint folder</span></span>
+<span id="cb11-36"><a href="#cb11-36"></a>sc.setCheckpointDir(<span class="st">"tmp_ckpts"</span>)</span>
+<span id="cb11-37"><a href="#cb11-37"></a></span>
+<span id="cb11-38"><a href="#cb11-38"></a><span class="co">## Run the algorithm</span></span>
+<span id="cb11-39"><a href="#cb11-39"></a>connComp<span class="op">=</span>g.connectedComponents()</span>
+<span id="cb11-40"><a href="#cb11-40"></a></span>
+<span id="cb11-41"><a href="#cb11-41"></a><span class="co">## Count the number of components</span></span>
+<span id="cb11-42"><a href="#cb11-42"></a>nComp<span class="op">=</span>connComp.select(<span class="st">"component"</span>).distinct().count()</span>
+<span id="cb11-43"><a href="#cb11-43"></a></span>
+<span id="cb11-44"><a href="#cb11-44"></a><span class="bu">print</span>(<span class="st">"Number of connected components: "</span>, nComp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="strongly-connected-components" class="level4">
+<h4 class="anchored" data-anchor-id="strongly-connected-components">Strongly connected components</h4>
+<p>A directed subgraph <span class="math inline">\(sg\)</span> is called strongly connected if every vertex in <span class="math inline">\(sg\)</span> is reachable from every other vertex in <span class="math inline">\(sg\)</span>. For undirected graph, connected and strongly connected components are the same.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Three strongly connected subgraphs/components</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/three_strongly_connected_components.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<section id="implementation-3" class="level5">
+<h5 class="anchored" data-anchor-id="implementation-3">Implementation</h5>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>stronglyConnectedComponents()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>stronglyConnectedComponents()</code> method of the GraphFrame class returns the strongly connected components of the input graph. It is an expensive algorithm (better to run it on a cluster with yarn scheduler even with small graphs), and it requires setting a Spark checkpoint directory.</p>
+<p><code>stronglyConnectedComponents()</code> returns a DataFrame that contains one record/row for each distinct vertex of the input graph. It is characterized by the following columns</p>
+<ul>
+<li>one column for each attribute of the vertexes</li>
+<li>component (type long). It is the identifier of the strongly connected component to which the current vertex has been assigned.</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Print on the stdout the number of strongly connected components of the input graph.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Example graph</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/bfs_example_1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Resulting graph</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/strongly_connected_components_example.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>Notice that there are four connected components on this graph.</p>
+<p>This is the content of the DataFrame used to store the identified strongly connected components</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>id</th>
+<th>name</th>
+<th>age</th>
+<th>component</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(u3\)</span></td>
+<td>Charlie</td>
+<td>30</td>
+<td>146028888064</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u2\)</span></td>
+<td>Bob</td>
+<td>36</td>
+<td>146028888064</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u1\)</span></td>
+<td>Alice</td>
+<td>34</td>
+<td>498216206336</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u5\)</span></td>
+<td>Esther</td>
+<td>32</td>
+<td>498216206336</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u4\)</span></td>
+<td>David</td>
+<td>29</td>
+<td>498216206336</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u6\)</span></td>
+<td>Fanny</td>
+<td>36</td>
+<td>1090921693184</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u7\)</span></td>
+<td>Gabby</td>
+<td>60</td>
+<td>1546188226560</td>
+</tr>
+</tbody>
+</table>
+<p>Notice the “component” field</p>
+<ul>
+<li>“146028888064”: vertexes of the first strongly connected component</li>
+<li>“498216206336”: vertexes of the second strongly connected component</li>
+<li>“1090921693184”: vertexes of the third strongly connected component</li>
+<li>“1546188226560”: vertexes of the fourth strongly connected component</li>
+</ul>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb13-2"><a href="#cb13-2"></a></span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb13-4"><a href="#cb13-4"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb13-5"><a href="#cb13-5"></a>    [</span>
+<span id="cb13-6"><a href="#cb13-6"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb13-7"><a href="#cb13-7"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb13-8"><a href="#cb13-8"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb13-9"><a href="#cb13-9"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb13-10"><a href="#cb13-10"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb13-11"><a href="#cb13-11"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb13-12"><a href="#cb13-12"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb13-13"><a href="#cb13-13"></a>    ],</span>
+<span id="cb13-14"><a href="#cb13-14"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb13-15"><a href="#cb13-15"></a>)</span>
+<span id="cb13-16"><a href="#cb13-16"></a></span>
+<span id="cb13-17"><a href="#cb13-17"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb13-18"><a href="#cb13-18"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb13-19"><a href="#cb13-19"></a>    [</span>
+<span id="cb13-20"><a href="#cb13-20"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb13-21"><a href="#cb13-21"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb13-22"><a href="#cb13-22"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb13-23"><a href="#cb13-23"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb13-24"><a href="#cb13-24"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb13-25"><a href="#cb13-25"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb13-26"><a href="#cb13-26"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb13-27"><a href="#cb13-27"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb13-28"><a href="#cb13-28"></a>    ],</span>
+<span id="cb13-29"><a href="#cb13-29"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb13-30"><a href="#cb13-30"></a>)</span>
+<span id="cb13-31"><a href="#cb13-31"></a></span>
+<span id="cb13-32"><a href="#cb13-32"></a><span class="co">## Create the graph</span></span>
+<span id="cb13-33"><a href="#cb13-33"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb13-34"><a href="#cb13-34"></a></span>
+<span id="cb13-35"><a href="#cb13-35"></a><span class="co">## Set checkpoint folder</span></span>
+<span id="cb13-36"><a href="#cb13-36"></a>sc.setCheckpointDir(<span class="st">"tmp_ckpts"</span>)</span>
+<span id="cb13-37"><a href="#cb13-37"></a></span>
+<span id="cb13-38"><a href="#cb13-38"></a><span class="co">## Run the algorithm</span></span>
+<span id="cb13-39"><a href="#cb13-39"></a>strongConnComp <span class="op">=</span> g.stronglyConnectedComponents(maxIter<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb13-40"><a href="#cb13-40"></a></span>
+<span id="cb13-41"><a href="#cb13-41"></a><span class="co">## Count the number of strongly connected components</span></span>
+<span id="cb13-42"><a href="#cb13-42"></a>nComp<span class="op">=</span>strongConnComp.select(<span class="st">"component"</span>).distinct().count()</span>
+<span id="cb13-43"><a href="#cb13-43"></a></span>
+<span id="cb13-44"><a href="#cb13-44"></a><span class="bu">print</span>(<span class="st">"Number of strongly connected components: "</span>, nComp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="label-propagation" class="level4">
+<h4 class="anchored" data-anchor-id="label-propagation">Label propagation</h4>
+<p>Label Propagation is an algorithm for detecting communities in graphs. It is similar to clustering, but exploits connectivity. Convergence is not guaranteed, and also it is possible to end up with trivial solutions.</p>
+<section id="the-label-propagation-algorithm" class="level5">
+<h5 class="anchored" data-anchor-id="the-label-propagation-algorithm">The Label Propagation algorithm</h5>
+<p>Each vertex in the network is initially assigned to its own community: at every step, vertexes send their community affiliation to all neighbors and update their state to the mode community affiliation of incoming messages.</p>
+</section>
+<section id="implementation-4" class="level5">
+<h5 class="anchored" data-anchor-id="implementation-4">Implementation</h5>
+<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>labelPropagation(maxIter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>labelPropagation(maxIter)</code> method of the GraphFrame class runs and returns the result of the label propagation algorithm.</p>
+<ul>
+<li><code>maxIter</code>: number of iterations to run</li>
+</ul>
+<p><code>labelPropagation()</code> returns a DataFrame that contains one record/Row for each distinct vertex of the input graph. It is characterized by the following columns</p>
+<ul>
+<li>one column for each attribute of the vertexes</li>
+<li>label (type long). It is the identifier of the community to which the current vertex has been assigned.</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Split in groups the vertexes of the graph by using the label propagation algorithm.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Example graph</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/bfs_example_1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>Notice that the result returned by one run of the algorithm. Pay attention that convergence is not guarantee, and different results may come out from different runs.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Results</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/label_propagation_example.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>This is the content of the DataFrame used to store the identified communities</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>id</th>
+<th>name</th>
+<th>age</th>
+<th>label</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(u3\)</span></td>
+<td>Charlie</td>
+<td>30</td>
+<td>146028888064</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u4\)</span></td>
+<td>David</td>
+<td>29</td>
+<td>498216206336</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u1\)</span></td>
+<td>Alice</td>
+<td>34</td>
+<td>498216206336</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u5\)</span></td>
+<td>Esther</td>
+<td>32</td>
+<td>498216206337</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u7\)</span></td>
+<td>Gabby</td>
+<td>60</td>
+<td>1546188226560</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u2\)</span></td>
+<td>Bob</td>
+<td>36</td>
+<td>1606317768704</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u6\)</span></td>
+<td>Fanny</td>
+<td>36</td>
+<td>1606317768704</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>“146028888064”: vertexes of the first community</li>
+<li>“498216206336”: vertexes of the second community</li>
+<li>“1546188226560”: vertexes of the third community</li>
+<li>“1606317768704”: vertexes of the fourth community</li>
+</ul>
+<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb15-2"><a href="#cb15-2"></a></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb15-4"><a href="#cb15-4"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb15-5"><a href="#cb15-5"></a>    [</span>
+<span id="cb15-6"><a href="#cb15-6"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb15-7"><a href="#cb15-7"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb15-8"><a href="#cb15-8"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb15-9"><a href="#cb15-9"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb15-10"><a href="#cb15-10"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb15-11"><a href="#cb15-11"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb15-12"><a href="#cb15-12"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb15-13"><a href="#cb15-13"></a>    ],</span>
+<span id="cb15-14"><a href="#cb15-14"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb15-15"><a href="#cb15-15"></a>)</span>
+<span id="cb15-16"><a href="#cb15-16"></a></span>
+<span id="cb15-17"><a href="#cb15-17"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb15-18"><a href="#cb15-18"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb15-19"><a href="#cb15-19"></a>    [</span>
+<span id="cb15-20"><a href="#cb15-20"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb15-21"><a href="#cb15-21"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb15-22"><a href="#cb15-22"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb15-23"><a href="#cb15-23"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb15-24"><a href="#cb15-24"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb15-25"><a href="#cb15-25"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb15-26"><a href="#cb15-26"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb15-27"><a href="#cb15-27"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb15-28"><a href="#cb15-28"></a>    ],</span>
+<span id="cb15-29"><a href="#cb15-29"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb15-30"><a href="#cb15-30"></a>)</span>
+<span id="cb15-31"><a href="#cb15-31"></a></span>
+<span id="cb15-32"><a href="#cb15-32"></a><span class="co">## Create the graph</span></span>
+<span id="cb15-33"><a href="#cb15-33"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb15-34"><a href="#cb15-34"></a></span>
+<span id="cb15-35"><a href="#cb15-35"></a><span class="co">## Run the label propagation algorithm</span></span>
+<span id="cb15-36"><a href="#cb15-36"></a>labelComm <span class="op">=</span> g.labelPropagation(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="pagerank" class="level4">
+<h4 class="anchored" data-anchor-id="pagerank">PageRank</h4>
+<p>PageRank is the original famous algorithm used by the Google Search engine to rank vertexes (web pages) in a graph by order of importance. For the Google search engine vertexes are web pages in the World Wide Web, and edges are hyperlinks among web pages. This algorithm assigns a numerical weighting (importance) to each node.</p>
+<p>It computes a likelihood that a person randomly clicking on links will arrive at any particular web page. For having a high PageRank, it is important to</p>
+<ul>
+<li>Have many in-links</li>
+<li>Be liked by relevant pages (pages characterized by a high PageRank)</li>
+</ul>
+<p>The basic idea is that each link vote is proportional to the importance of its source page <span class="math inline">\(p\)</span>: if page <span class="math inline">\(p\)</span> with importance <span class="math inline">\(\text{PageRank}(p)\)</span> has <span class="math inline">\(n\)</span> out-links, each out-link gets <span class="math inline">\(\frac{\text{PageRank}(p)}{n}\)</span> votes; the importance of page <span class="math inline">\(p\)</span> is the sum of the votes on its in-links.</p>
+<section id="simple-recursive-formulation" class="level5">
+<h5 class="anchored" data-anchor-id="simple-recursive-formulation">Simple recursive formulation</h5>
+<ul>
+<li>Initialize each page rank to <span class="math inline">\(1.0\)</span>: for each <span class="math inline">\(p\)</span> in pages set <span class="math inline">\(\textbf{PageRank}(p)\)</span> to <span class="math inline">\(1.0\)</span></li>
+<li>Iterate for <span class="math inline">\(max\)</span> iterations
+<ol type="1">
+<li>Page <span class="math inline">\(p\)</span> sends a contribution <span class="math inline">\(\frac{\textbf{PageRank}(p)}{\textbf{numOutLinks}(p)}\)</span> to its neighbors (the pages it links);</li>
+<li>Update each page rank <span class="math inline">\(\textbf{PageRank}(p)\)</span> with the sum of the received contributions.</li>
+</ol></li>
+</ul>
+</section>
+<section id="random-jumps-formulation" class="level5">
+<h5 class="anchored" data-anchor-id="random-jumps-formulation">Random jumps formulation</h5>
+<p>The PageRank algorithm simulates the “random walk” of a user on the web. Indeed, at each step of the random walk, the random surfer has two options:</p>
+<ul>
+<li><p>with probability <span class="math inline">\(1-\alpha\)</span>, follow a link at random among the ones in the current page;</p></li>
+<li><p>with probability <span class="math inline">\(\alpha\)</span>, jump to a random page.</p></li>
+<li><p>Initialize each page rank to <span class="math inline">\(1.0\)</span>: for each <span class="math inline">\(p\)</span> in pages set <span class="math inline">\(\textbf{PageRank}(p)\)</span> to <span class="math inline">\(1.0\)</span></p></li>
+<li><p>Iterate for max iterations</p>
+<ol type="1">
+<li>Page <span class="math inline">\(p\)</span> sends a contribution <span class="math inline">\(\frac{\textbf{PageRank}(p)}{\textbf{numOutLinks}(p)}\)</span> to its neighbors (the pages it links);</li>
+<li>Update each page rank <span class="math inline">\(\textbf{PageRank}(p)\)</span> to <span class="math inline">\(\alpha + (1 - \alpha)\)</span> <strong>times</strong> the sum of the received contributions.</li>
+</ol></li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li><span class="math inline">\(\alpha=0.15\)</span></li>
+<li>Initialization: <span class="math inline">\(\forall{p}, \textbf{PageRank}(p) = 1.0\)</span></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Initialization</figcaption><p></p>
+<p><img src="images/15b_pagerank/pagerank_example_0.png" class="img-fluid figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<div id="fig-Example" class="quarto-layout-panel">
+<p></p><figcaption>Figure&nbsp;25.1: Iterations</figcaption><p></p>
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Iteration #1</figcaption><p></p>
+<p><img src="images/15b_pagerank/pagerank_example_1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Iteration #2</figcaption><p></p>
+<p><img src="images/15b_pagerank/pagerank_example_2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Iteration #3</figcaption><p></p>
+<p><img src="images/15b_pagerank/pagerank_example_3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Iteration #4</figcaption><p></p>
+<p><img src="images/15b_pagerank/pagerank_example_4.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Iteration #5</figcaption><p></p>
+<p><img src="images/15b_pagerank/pagerank_example_5.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Iteration #50</figcaption><p></p>
+<p><img src="images/15b_pagerank/pagerank_example_50.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="implementation-5" class="level5">
+<h5 class="anchored" data-anchor-id="implementation-5">Implementation</h5>
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>pageRank(resetProbability, maxIter, tol, sourceId)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>pageRank()</code> method of the GraphFrame class runs the PageRank algorithm on the input graph.</p>
+<ul>
+<li><code>resetProbability</code>: probability of resetting to a random vertex (probability <span class="math inline">\(\alpha\)</span> associated with random jumps);</li>
+<li><code>maxIter</code>: if set, the algorithm is run for a fixed number of iterations; this may not be set if the tol parameter is set;</li>
+<li><code>tol</code>: if set, the algorithm is run until the given tolerance; this may not be set if the numIter parameter is set;</li>
+<li><code>sourceId</code>: the source vertex for a personalized PageRank (optional parameter).</li>
+</ul>
+<p><code>pageRank()</code> returns a new GraphFrame that contains the same vertexes and edges of the input graph</p>
+<ul>
+<li>the vertexes of the new graph are characterized by one new attribute, called “pagerank”, that stores the PageRank of the vertexes;</li>
+<li>the edges of the new graph are characterized by one new attribute, called “weight”, that stores the weight (PageRank contribution) propagated through that edge.</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Apply the PageRank algorithm on the following graph and select the user associated with the highest PageRank value.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Example graph</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/bfs_example_1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Resulting graph</figcaption><p></p>
+<p><img src="images/20_graph_analytics_2/pagerank_example.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb17-2"><a href="#cb17-2"></a></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb17-4"><a href="#cb17-4"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb17-5"><a href="#cb17-5"></a>    [</span>
+<span id="cb17-6"><a href="#cb17-6"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb17-7"><a href="#cb17-7"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb17-8"><a href="#cb17-8"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb17-9"><a href="#cb17-9"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb17-10"><a href="#cb17-10"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb17-11"><a href="#cb17-11"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb17-12"><a href="#cb17-12"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb17-13"><a href="#cb17-13"></a>    ],</span>
+<span id="cb17-14"><a href="#cb17-14"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb17-15"><a href="#cb17-15"></a>)</span>
+<span id="cb17-16"><a href="#cb17-16"></a></span>
+<span id="cb17-17"><a href="#cb17-17"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb17-18"><a href="#cb17-18"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb17-19"><a href="#cb17-19"></a>    [</span>
+<span id="cb17-20"><a href="#cb17-20"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb17-21"><a href="#cb17-21"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb17-22"><a href="#cb17-22"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb17-23"><a href="#cb17-23"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb17-24"><a href="#cb17-24"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb17-25"><a href="#cb17-25"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb17-26"><a href="#cb17-26"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb17-27"><a href="#cb17-27"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb17-28"><a href="#cb17-28"></a>    ],</span>
+<span id="cb17-29"><a href="#cb17-29"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb17-30"><a href="#cb17-30"></a>)</span>
+<span id="cb17-31"><a href="#cb17-31"></a></span>
+<span id="cb17-32"><a href="#cb17-32"></a><span class="co">## Create the graph</span></span>
+<span id="cb17-33"><a href="#cb17-33"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb17-34"><a href="#cb17-34"></a></span>
+<span id="cb17-35"><a href="#cb17-35"></a><span class="co">## Run the PageRank algorithm</span></span>
+<span id="cb17-36"><a href="#cb17-36"></a>pageRanks <span class="op">=</span> g.pageRank(maxIter<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb17-37"><a href="#cb17-37"></a></span>
+<span id="cb17-38"><a href="#cb17-38"></a><span class="co">## Select the maximum value of PageRank</span></span>
+<span id="cb17-39"><a href="#cb17-39"></a>maxPageRank <span class="op">=</span> pageRanks.vertices <span class="op">\</span></span>
+<span id="cb17-40"><a href="#cb17-40"></a>    .agg({<span class="st">"pagerank"</span>:<span class="st">"max"</span>}) <span class="op">\</span></span>
+<span id="cb17-41"><a href="#cb17-41"></a>    .first()[<span class="st">"max(pagerank)"</span>]</span>
+<span id="cb17-42"><a href="#cb17-42"></a></span>
+<span id="cb17-43"><a href="#cb17-43"></a><span class="co">## Select the user with the maximum PageRank</span></span>
+<span id="cb17-44"><a href="#cb17-44"></a>pageRanks.vertices <span class="op">\</span></span>
+<span id="cb17-45"><a href="#cb17-45"></a>    .<span class="bu">filter</span>(pageRanks.vertices.pagerank<span class="op">==</span>maxPageRank) <span class="op">\</span></span>
+<span id="cb17-46"><a href="#cb17-46"></a>    .show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="custom-graph-algorithms" class="level4">
+<h4 class="anchored" data-anchor-id="custom-graph-algorithms">Custom graph algorithms</h4>
+<p>GraphFrames provides primitives for developing yourself other graph algorithms. It is based on message passing approach: the two key components are:</p>
+<ul>
+<li><code>aggregateMessages</code>: it sends messages between vertexes, and aggregate messages for each vertex</li>
+<li>joins: it joins message aggregates with the original graph</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>For each user, compute the sum of the ages of adjacent users (count many times the same adjacent user if there are many links).</p>
+<p>The resulting table is</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Vertex</th>
+<th>SumAges</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(u1\)</span></td>
+<td>97</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u2\)</span></td>
+<td>94</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u3\)</span></td>
+<td>108</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u4\)</span></td>
+<td>66</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u5\)</span></td>
+<td>99</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u6\)</span></td>
+<td>62</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb18-2"><a href="#cb18-2"></a></span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb18-4"><a href="#cb18-4"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb18-5"><a href="#cb18-5"></a>    [</span>
+<span id="cb18-6"><a href="#cb18-6"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb18-7"><a href="#cb18-7"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb18-8"><a href="#cb18-8"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb18-9"><a href="#cb18-9"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb18-10"><a href="#cb18-10"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb18-11"><a href="#cb18-11"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb18-12"><a href="#cb18-12"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb18-13"><a href="#cb18-13"></a>    ],</span>
+<span id="cb18-14"><a href="#cb18-14"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb18-15"><a href="#cb18-15"></a>)</span>
+<span id="cb18-16"><a href="#cb18-16"></a></span>
+<span id="cb18-17"><a href="#cb18-17"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb18-18"><a href="#cb18-18"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb18-19"><a href="#cb18-19"></a>    [</span>
+<span id="cb18-20"><a href="#cb18-20"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb18-21"><a href="#cb18-21"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb18-22"><a href="#cb18-22"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb18-23"><a href="#cb18-23"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb18-24"><a href="#cb18-24"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb18-25"><a href="#cb18-25"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb18-26"><a href="#cb18-26"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb18-27"><a href="#cb18-27"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb18-28"><a href="#cb18-28"></a>    ],</span>
+<span id="cb18-29"><a href="#cb18-29"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb18-30"><a href="#cb18-30"></a>)</span>
+<span id="cb18-31"><a href="#cb18-31"></a></span>
+<span id="cb18-32"><a href="#cb18-32"></a><span class="co">## Create the graph</span></span>
+<span id="cb18-33"><a href="#cb18-33"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb18-34"><a href="#cb18-34"></a></span>
+<span id="cb18-35"><a href="#cb18-35"></a><span class="co">## For each user, sum the ages of the adjacent users</span></span>
+<span id="cb18-36"><a href="#cb18-36"></a><span class="co">## Send the age of each destination of an edge to its source</span></span>
+<span id="cb18-37"><a href="#cb18-37"></a>msgToSrc <span class="op">=</span> AggregateMessages.dst[<span class="st">"age"</span>]</span>
+<span id="cb18-38"><a href="#cb18-38"></a></span>
+<span id="cb18-39"><a href="#cb18-39"></a><span class="co">## Send the age of each source of an edge to its destination</span></span>
+<span id="cb18-40"><a href="#cb18-40"></a>msgToDst <span class="op">=</span> AggregateMessages.src[<span class="st">"age"</span>]</span>
+<span id="cb18-41"><a href="#cb18-41"></a></span>
+<span id="cb18-42"><a href="#cb18-42"></a><span class="co">## Aggregate messages</span></span>
+<span id="cb18-43"><a href="#cb18-43"></a>aggAge <span class="op">=</span> g.aggregateMessages(</span>
+<span id="cb18-44"><a href="#cb18-44"></a>    <span class="bu">sum</span>(AggregateMessages.msg),</span>
+<span id="cb18-45"><a href="#cb18-45"></a>    sendToSrc<span class="op">=</span>msgToSrc,</span>
+<span id="cb18-46"><a href="#cb18-46"></a>    sendToDst<span class="op">=</span>msgToDst</span>
+<span id="cb18-47"><a href="#cb18-47"></a>)</span>
+<span id="cb18-48"><a href="#cb18-48"></a></span>
+<span id="cb18-49"><a href="#cb18-49"></a><span class="co">#Show result</span></span>
+<span id="cb18-50"><a href="#cb18-50"></a>aggAge.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./19_graph_analytics_1.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./21_streaming_analytics.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,7 +1,4 @@
----
-title: "Relational Algebra Operations and MapReduce"
----
-
+# Relational Algebra Operations and MapReduce
 The relational algebra and the SQL language have many useful operators
 
 - Selection

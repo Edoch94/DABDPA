@@ -1,7 +1,4 @@
----
-title: "Cache, Accumulators, Broadcast Variables"
----
-
+# Cache, Accumulators, Broadcast Variables
 ## Persistence and Cache
 Spark computes the content of an RDD each time an action is invoked on it. If the same RDD is used multiple times in an application, Spark recomputes its content every time an action is invoked on the RDD, or on one of its descendants, but this is expensive, especially for iterative applications.
 
@@ -290,6 +287,8 @@ Only some specific transformations set the number of partitions of the returned 
 |                                          |                                                                                                                                                                                             |
 |                                          | Usually no shuffle operation is executed to assign input elements to the partitions of the returned RDD, so coalesce is more efficient than repartition to reduce the number of partitions. |
 +------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+: {tbl-colwidths="[35,65]"}
 
 Spark allows specifying how to partition the content of RDDs of key-value pairs: he input tpairs are grouped in partitions based on the integer value returned by a function applied on the key of each input pair. This operation can be useful to improve the efficiency of the next transformations by reducing the amount of shuffle operations and the amount of data sent on the network in the next steps of the application (Spark can optimize the execution of the transformations if the input RDDs of pairs are properly partitioned).
 

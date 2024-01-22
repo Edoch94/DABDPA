@@ -1,7 +1,4 @@
----
-title: "MapReduce patterns - 2"
----
-
+# MapReduce patterns - 2
 ## Data organization patterns
 Data organization patterns are used to reorganize/split in subsets the input data
 

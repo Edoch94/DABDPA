@@ -1,7 +1,4 @@
----
-title: "MapReduce and Hadoop Advanced Topics"
----
-
+# MapReduce and Hadoop Advanced Topics
 ## Multiple inputs
 In some applications data are read from two or more datasets, also having different formats. 
 

@@ -1,7 +1,4 @@
----
-title: "Graph analytics in Spark"
----
-
+# Graph analytics in Spark
 ## Introduction
 Graphs are data structures composed of nodes and edges
 

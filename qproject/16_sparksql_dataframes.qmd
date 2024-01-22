@@ -1,6 +1,4 @@
----
-title: "Spark SQL and DataFrames"
----
+# Spark SQL and DataFrames
 ## Spark SQL
 Spark SQL is the Spark component for structured data processing. It provides a programming abstraction called *Dataframe* and can act as a distributed SQL query engine: the input data can be queried by using
 

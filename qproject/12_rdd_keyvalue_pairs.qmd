@@ -1,7 +1,4 @@
----
-title: "RDDs and key-value pairs"
----
-
+# RDDs and key-value pairs
 Spark supports also RDDs of key-value pairs. Key-value pairs in python are represented by means of python tuples:
 
 - The first value is the key part of the pair

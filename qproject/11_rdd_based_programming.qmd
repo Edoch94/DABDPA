@@ -1,7 +1,4 @@
----
-title: "RDD based programming"
----
-
+# RDD based programming
 ## Spark Context
 The "connection" of the driver to the cluster is based on the Spark Context object
 

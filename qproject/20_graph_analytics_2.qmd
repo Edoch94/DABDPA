@@ -1,7 +1,4 @@
----
-title: "Graph Analytics in Spark"
----
-
+# Graph Analytics in Spark
 ## Algorithms over graphs
 GraphFrame provides the parallel implementation of a set of state of the art algorithms for graph analytics
 

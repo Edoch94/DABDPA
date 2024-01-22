@@ -1,7 +1,4 @@
----
-title: "How to write MapReduce programs in Hadoop"
----
-
+# How to write MapReduce programs in Hadoop
 Designers and developers focus on the definition of the Map and Reduce functions (i.e., $m$ and $r$), and they don't need to manage the distributed execution of the map, shuffle and sort, and reduce phases. Indeed, the Hadoop framework coordinates the execution of the MapReduce program, managing:
 
 - the parallel execution of the map and reduce phases

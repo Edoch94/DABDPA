@@ -1,0 +1,2435 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Distributed architectures for big data processing and analytics - 13&nbsp; RDD based programming</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./12_rdd_keyvalue_pairs.html" rel="next">
+<link href="./10_intro_spark.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Distributed architectures for big data processing and analytics</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Index</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#spark-context" id="toc-spark-context" class="nav-link active" data-scroll-target="#spark-context">Spark Context</a></li>
+  <li><a href="#rdd-basics" id="toc-rdd-basics" class="nav-link" data-scroll-target="#rdd-basics">RDD basics</a></li>
+  <li><a href="#rdd-create-and-save" id="toc-rdd-create-and-save" class="nav-link" data-scroll-target="#rdd-create-and-save">RDD: create and save</a></li>
+  <li><a href="#transformations-and-actions" id="toc-transformations-and-actions" class="nav-link" data-scroll-target="#transformations-and-actions">Transformations and Actions</a></li>
+  <li><a href="#passing-functions-to-transformations-and-actions" id="toc-passing-functions-to-transformations-and-actions" class="nav-link" data-scroll-target="#passing-functions-to-transformations-and-actions">Passing functions to Transformations and Actions</a></li>
+  <li><a href="#basic-transformations" id="toc-basic-transformations" class="nav-link" data-scroll-target="#basic-transformations">Basic Transformations</a></li>
+  <li><a href="#basic-actions" id="toc-basic-actions" class="nav-link" data-scroll-target="#basic-actions">Basic Actions</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="spark-context" class="level3">
+<h3 class="anchored" data-anchor-id="spark-context">Spark Context</h3>
+<p>The “connection” of the driver to the cluster is based on the Spark Context object</p>
+<ul>
+<li>In Python the name of the class is <code>SparkContext</code></li>
+<li>The Spark Context is built by means of the constructor of the <code>SparkContext</code> class</li>
+<li>The only parameter is a configuration object</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">## Create a configuration object and</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co">## set the name of the application</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a>conf <span class="op">=</span> SparkConf().setAppName(<span class="st">"Application name"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co">## Create a Spark Context object</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p>The Spark Context object can be obtained also by using the <code>SparkContext.getOrCreate(conf)</code> method, whose only parameter is a configuration object. Notice that, if the <code>SparkContext</code> object already exists for this application, the current <code>SparkContext</code> object is returned, otherwise, a new <code>SparkContext</code> object is returned: there is always one single <code>SparkContext</code> object for each application.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">## Create a configuration object and</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co">## set the name of the application</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>conf <span class="op">=</span> SparkConf().setAppName(<span class="st">"Application name"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co">## Retrieve the current SparkContext object or</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co">## create a new one</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>sc <span class="op">=</span> SparkContext.getOrCreate(conf<span class="op">=</span>conf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="rdd-basics" class="level3">
+<h3 class="anchored" data-anchor-id="rdd-basics">RDD basics</h3>
+<p>A Spark RDD is an immutable distributed collection of objects. Each RDD is split in partitions, allowing to parallelize the code based on RDDs (i.e., code is executed on each partition in isolation).</p>
+<p>RDDs can contain any type of Scala, Java, and Python objects, including user-defined classes.</p>
+</section>
+<section id="rdd-create-and-save" class="level3">
+<h3 class="anchored" data-anchor-id="rdd-create-and-save">RDD: create and save</h3>
+<p>RDDs can be created</p>
+<ul>
+<li>By loading an external dataset (e.g., the content of a folder, a single file, a database table)</li>
+<li>By parallelizing a local collection of objects created in the Driver (e.g., a Java collection)</li>
+</ul>
+<section id="create-rdds-from-files" class="level4">
+<h4 class="anchored" data-anchor-id="create-rdds-from-files">Create RDDs from files</h4>
+<p>To built an RDD from <strong>an input textual file</strong>, use the <code>textFile(name)</code> method of the <code>SparkContext</code> class.</p>
+<ul>
+<li>The returned RDD is an RDD of Strings associated with the content of the name textual file;</li>
+<li>Each line of the input file is associated with an object (a string) of the instantiated RDD;</li>
+<li>By default, if the input file is an HDFS file the number of partitions of the created RDD is equal to the number of HDFS blocks used to store the file, in order to support data locality.</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">## Build an RDD of strings from the input textual file</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co">## myfile.txt</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co">## Each element of the RDD is a line of the input file</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>inputFile <span class="op">=</span> <span class="st">"myfile.txt"</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>lines <span class="op">=</span> sc.textFile(inputFile)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Notice that no computation occurs when <code>sc.textFile()</code> is invoked: Spark only records how to create the RDD, and the data is lazily read from the input file only when the data is needed (i.e., when an action is applied on lines, or on one of its “descendant” RDDs).</p>
+</div>
+</div>
+</div>
+<p>To build an RDD from a <strong>folder containing textual files</strong>, use the <code>textFile(name)</code> method of the <code>SparkContext</code> class.</p>
+<ul>
+<li>If name is the path of a folder all files inside that folder are considered;</li>
+<li>The returned RDD contains one string for each line of the files contained on the name folder.</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="co">## Build an RDD of strings from all the files stored in</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co">## myfolder</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">## Each element of the RDD is a line of the input files</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>inputFolder <span class="op">=</span> <span class="st">"myfolder/"</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>lines <span class="op">=</span> sc.textFile(inputFolder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Notice that all files inside myfolder are considered, also those without suffix or with a suffix different from “.txt”.</p>
+</div>
+</div>
+</div>
+<p>To set the (minimum) <strong>number of partitions</strong>, use the <code>textFile(name, minPartitions)</code> method of the <code>SparkContext</code> class.</p>
+<ul>
+<li>This option can be used to increase the parallelization of the submitted application;</li>
+<li>For the HDFS files, the number of partitions <code>minPartitions</code> must be greater than the number of blocks/chunks.</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">## Build an RDD of strings from the input textual file</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="co">## myfile.txt</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="co">## The number of partitions is manually set to 4</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="co">## Each element of the RDD is a line of the input file</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a>inputFile <span class="op">=</span> <span class="st">"myfile.txt“</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="er">lines = sc.textFile(inputFile, 4)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="create-rdds-from-a-local-python-collection" class="level4">
+<h4 class="anchored" data-anchor-id="create-rdds-from-a-local-python-collection">Create RDDs from a local Python collection</h4>
+<p>An RDD can be built from a local Python collection/list of local python objects using the <code>parallelize(c)</code> method of the <code>SparkContext</code> class</p>
+<ul>
+<li>The created RDD is an RDD of objects of the same type of objects of the input python collection <code>c</code></li>
+<li>In the created RDD, there is one object for each element of the input collection</li>
+<li>Spark tries to set the number of partitions automatically based on your cluster’s characteristics</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">## Create a local python list</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>inputList <span class="op">=</span> [</span>
+<span id="cb6-3"><a href="#cb6-3"></a>    <span class="st">'First element'</span>,</span>
+<span id="cb6-4"><a href="#cb6-4"></a>    <span class="st">'Second element'</span>,</span>
+<span id="cb6-5"><a href="#cb6-5"></a>    <span class="st">'Third element'</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>]</span>
+<span id="cb6-7"><a href="#cb6-7"></a></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="co">## Build an RDD of Strings from the local list.</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="co">## The number of partitions is set automatically by Spark</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="co">## There is one element of the RDD for each element</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="co">## of the local list</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a>distRDDList <span class="op">=</span> sc.parallelize(inputList)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Notice that no computation occurs when <code>sc.parallelize(c)</code> is invoked: Spark only records how to create the RDD, and the data is lazily read from the input file only when the data is needed (i.e., when an action is applied on <code>distRDDlist</code>, or on one of its “descendant” RDDs).</p>
+</div>
+</div>
+</div>
+<p>When the <code>parallelize(c)</code> is invoked, Spark tries to set the number of partitions automatically based on the cluster’s characteristics, but the developer can set the number of partition by using the method <code>parallelize(c, numSlices)</code> of the <code>SparkContext</code> class.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="co">## Create a local python list</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>inputList <span class="op">=</span> [</span>
+<span id="cb7-3"><a href="#cb7-3"></a>    <span class="st">'First element'</span>,</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    <span class="st">'Second element'</span>,</span>
+<span id="cb7-5"><a href="#cb7-5"></a>    <span class="st">'Third element'</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>]</span>
+<span id="cb7-7"><a href="#cb7-7"></a></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="co">## Build an RDD of Strings from the local list.</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="co">## The number of partitions is set to 3</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="co">## There is one element of the RDD for each element</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="co">## of the local list</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a>distRDDList <span class="op">=</span> sc.parallelize(inputList, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="save-rdds" class="level4">
+<h4 class="anchored" data-anchor-id="save-rdds">Save RDDs</h4>
+<p>An RDD can be easily stored in textual (HDFS) files using the <code>saveAsTextFile(path)</code> method of the <code>RDD</code> class</p>
+<ul>
+<li><code>path</code> is the path of a folder</li>
+<li>The method is invoked on the RDD to store in the output folder</li>
+<li>Each object of the RDD on which the <code>saveAsTextFile</code> method is invoked is stored in one line of the output files stored in the output folder, and there is one output file for each partition of the input RDD.</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">## Store the content of linesRDD in the output folder</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="co">## Each element of the RDD is stored in one line</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="co">## of the textual files of the output folder</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a>outputPath<span class="op">=</span><span class="st">"risFolder/"</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a>linesRDD.saveAsTextFile(outputPath)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Notice that <code>saveAsTextFile()</code> is an action, hence Spark computes the content associated with <code>linesRDD</code> when <code>saveAsTextFile()</code> is invoked. Spark computes the content of an RDD only when that content is needed.</p>
+<p>Moreover, notice that the output folder contains one textual file for each partition of <code>linesRDD</code>, such that each output file contains the elements of one partition.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="retrieve-the-content-of-rdds-and-store-it-local-python-variables" class="level4">
+<h4 class="anchored" data-anchor-id="retrieve-the-content-of-rdds-and-store-it-local-python-variables">Retrieve the content of RDDs and store it local Python variables</h4>
+<p>The content of an RDD can be retrieved from the nodes of the cluster and stored in a local python variable of the Driver using the <code>collect()</code> method of the <code>RDD</code> class.</p>
+<p>The <code>collect()</code> method of the <code>RDD</code> class is invoked on the RDD to retrieve. It returns a local python list of objects containing the same objects of the considered RDD.</p>
+<div class="callout-warning callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Pay attention to the size of the RDD: large RDDs cannot be stored in a local variable of the Driver.</p>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="co">## Retrieve the content of the linesRDD and store it</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="co">## in a local python list</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="co">## The local python list contains a copy of each</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="co">## element of linesRDD</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a>contentOfLines<span class="op">=</span>linesRDD.collect()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 80%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>contentOfLines</code></td>
+<td>Local python variable: it is allocated in the main memory of the Driver process/task</td>
+</tr>
+<tr class="even">
+<td><code>linesRDD</code></td>
+<td>RDD of strings: it is distributed across the nodes of the cluster</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="transformations-and-actions" class="level3">
+<h3 class="anchored" data-anchor-id="transformations-and-actions">Transformations and Actions</h3>
+<p>RDD support two types of operations</p>
+<ul>
+<li>Transformations</li>
+<li>Actions</li>
+</ul>
+<section id="transformations" class="level4">
+<h4 class="anchored" data-anchor-id="transformations">Transformations</h4>
+<p>Transformations are operations on RDDs that <strong>return a new RDD</strong>. This type of operation apply a transformation on the elements of the input RDD(s) and the result of the transformation is stored in/associated with a new RDD.</p>
+<p>Remember that RDDs are immutable, hence the content of an already existing RDD cannot be changed, and it only possible to applied a transformation on the content of an RDD and then store/assign the result in/to a new RDD.</p>
+<p>Transformations are computed <strong>lazily</strong>, which means that transformations are computed (executed) only when an action is applied on the RDDs generated by the transformation operations. When a transformation is invoked, Spark keeps only track of the dependency between the input RDD and the new RDD returned by the transformation, and the content of the new RDD is not computed.</p>
+<p>The graph of dependencies between RDDs represents the information about which RDDs are used to create a new RDD. This is called <strong>lineage graph</strong>, and it is represented as a <strong>DAG</strong> <strong>(Directed Acyclic Graph)</strong>: it is needed to compute the content of an RDD the first time an action is invoked on it, or to compute again the content of an RDD (or some of its partitions) when failures occur.</p>
+<p>The lineage graph is also useful for <strong>optimization</strong> purposes: when the content of an RDD is needed, Spark can consider the chain of transformations that are applied to compute the content of the needed RDD and potentially decide how to execute the chain of transformations. In this way, Spark can potentially change the order of some transformations or merge some of them based on its optimization engine.</p>
+</section>
+<section id="actions" class="level4">
+<h4 class="anchored" data-anchor-id="actions">Actions</h4>
+<p>Actions are operations that</p>
+<ul>
+<li>return <strong>results to the Driver program</strong> (i.e., return local python variables). Pay attention to the size of the returned results because they must be stored in the main memory of the Driver program.</li>
+<li>write the result in the storage (output file/folder). The size of the result can be large in this case since it is directly stored in the (distributed) file system.</li>
+</ul>
+<section id="example-of-lineage-graph-dag" class="level5">
+<h5 class="anchored" data-anchor-id="example-of-lineage-graph-dag">Example of lineage graph (DAG)</h5>
+<p>Consider the following code</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="im">from</span> pyspark <span class="im">import</span> SparkConf, SparkContext</span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="im">import</span> sys</span>
+<span id="cb10-3"><a href="#cb10-3"></a></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb10-5"><a href="#cb10-5"></a>conf <span class="op">=</span> SparkConf().setAppName(<span class="st">"Spark Application"</span>)</span>
+<span id="cb10-6"><a href="#cb10-6"></a>sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
+<span id="cb10-7"><a href="#cb10-7"></a></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="co">## Read the content of a log file</span></span>
+<span id="cb10-9"><a href="#cb10-9"></a>inputRDD <span class="op">=</span> sc.textFile(<span class="st">"log.txt"</span>)</span>
+<span id="cb10-10"><a href="#cb10-10"></a></span>
+<span id="cb10-11"><a href="#cb10-11"></a><span class="co">## Select the rows containing the word "error"</span></span>
+<span id="cb10-12"><a href="#cb10-12"></a>errorsRDD <span class="op">=</span> inputRDD.<span class="bu">filter</span>(<span class="kw">lambda</span> line: line.find(<span class="st">'error'</span>)<span class="op">&gt;=</span><span class="dv">0</span>)</span>
+<span id="cb10-13"><a href="#cb10-13"></a></span>
+<span id="cb10-14"><a href="#cb10-14"></a><span class="co">## Select the rows containing the word "warning"</span></span>
+<span id="cb10-15"><a href="#cb10-15"></a>warningRDD <span class="op">=</span> inputRDD.<span class="bu">filter</span>(<span class="kw">lambda</span> line: line.find(<span class="st">'warning'</span>)<span class="op">&gt;=</span><span class="dv">0</span>)</span>
+<span id="cb10-16"><a href="#cb10-16"></a></span>
+<span id="cb10-17"><a href="#cb10-17"></a><span class="co">## Union of errorsRDD and warningRDD</span></span>
+<span id="cb10-18"><a href="#cb10-18"></a><span class="co">## The result is associated with a new RDD: badLinesRDD</span></span>
+<span id="cb10-19"><a href="#cb10-19"></a>badLinesRDD <span class="op">=</span> errorsRDD.union(warningRDD)</span>
+<span id="cb10-20"><a href="#cb10-20"></a></span>
+<span id="cb10-21"><a href="#cb10-21"></a><span class="co">## Remove duplicates lines (i.e., those lines containing</span></span>
+<span id="cb10-22"><a href="#cb10-22"></a><span class="co">## both "error" and "warning")</span></span>
+<span id="cb10-23"><a href="#cb10-23"></a>uniqueBadLinesRDD <span class="op">=</span> badLinesRDD.distinct()</span>
+<span id="cb10-24"><a href="#cb10-24"></a></span>
+<span id="cb10-25"><a href="#cb10-25"></a><span class="co">## Count the number of bad lines by applying</span></span>
+<span id="cb10-26"><a href="#cb10-26"></a><span class="co">## the count() action</span></span>
+<span id="cb10-27"><a href="#cb10-27"></a>numBadLines <span class="op">=</span> uniqueBadLinesRDD.count()</span>
+<span id="cb10-28"><a href="#cb10-28"></a></span>
+<span id="cb10-29"><a href="#cb10-29"></a><span class="co">## Print the result on the standard output of the driver</span></span>
+<span id="cb10-30"><a href="#cb10-30"></a><span class="bu">print</span>(<span class="st">"Lines with problems:"</span>, numBadLines)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Visual representation of the DAG</figcaption><p></p>
+<p><img src="images/11_rdd_based_programming/dag_example.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>Notice that:</p>
+<ul>
+<li>The application reads the input log file only when the <code>count()</code> action is invoked: this is the first action of the program;</li>
+<li><code>filter()</code>, <code>union()</code>, and <code>distinct()</code> are transformations, so they are computed lazily;</li>
+<li>Also <code>textFile()</code> is computed lazily, however it is not a transformation because it is not applied on an RDD.</li>
+</ul>
+<p>Spark, similarly to an SQL optimizer, can potentially optimize the execution of some transformations; for instance, in this case the two filters + union + distinct can be potentially optimized and transformed in one single filter applying the constraint (i.e.&nbsp;The element contains the string “error” or “warning”). This optimization improves the efficiency of the application, but Spark can performs this kind of optimizations only on particular types of RDDs: Datasets and DataFrames.</p>
+</section>
+</section>
+</section>
+<section id="passing-functions-to-transformations-and-actions" class="level3">
+<h3 class="anchored" data-anchor-id="passing-functions-to-transformations-and-actions">Passing functions to Transformations and Actions</h3>
+<p>Many transformations (and some actions) are based on user provided functions that specify which transformation function must be applied on the elements of the input RDD. For example, the <code>filter()</code> transformation selects the elements of an RDD satisfying a user specified constraint, which is a Boolean function applied on each element of the input RDD.</p>
+<p>Each language has its own solution to pass functions to Spark’s transformations and actions. In Python, it is possible to use</p>
+<ul>
+<li>Lambda functions/expressions: simple functions that can be written as one single expression</li>
+<li>Local user defined functions (local defs): used for multi-statement functions or statements that do not return a value</li>
+</ul>
+<section id="example-based-on-the-filter-transformation" class="level4">
+<h4 class="anchored" data-anchor-id="example-based-on-the-filter-transformation">Example based on the filter transformation</h4>
+<ol type="1">
+<li>Create an RDD from a log file;</li>
+<li>Create a new RDD containing only the lines of the log file containing the word “error”. The <code>filter()</code> transformation applies the filter constraint on each element of the input RDD; the filter constraint is specified by means of a Boolean function that returns true for the elements satisfying the constraint and false for the others.</li>
+</ol>
+<section id="solution-based-on-lambda-expressions-lambda" class="level5">
+<h5 class="anchored" data-anchor-id="solution-based-on-lambda-expressions-lambda">Solution based on lambda expressions (<code>lambda</code>)</h5>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="co">## Read the content of a log file</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>inputRDD <span class="op">=</span> sc.textFile(<span class="st">"log.txt"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3"></a></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="co">## Select the rows containing the word "error"</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a>errorsRDD <span class="op">=</span> inputRDD.<span class="bu">filter</span>(<span class="kw">lambda</span> l: l.find(<span class="st">'error'</span>)<span class="op">&gt;=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>lambda l: l.find('error')&gt;=0</code></td>
+<td>This part of the code, which is based on a lambda expression, defines on the fly the function to apply. This part of the code is applied on each object of <code>inputRDD</code>: if it returns true then the current object is “stored” in the new <code>errorsRDD</code> RDD, otherwise the input object is discarded.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="solution-based-on-function-def" class="level5">
+<h5 class="anchored" data-anchor-id="solution-based-on-function-def">Solution based on function (<code>def</code>)</h5>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="co">## Define the content of the Boolean function that is applied</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="co">## to select the elements of interest</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="kw">def</span> myFunction(l):</span>
+<span id="cb12-4"><a href="#cb12-4"></a>    <span class="cf">if</span> l.find(<span class="st">'error'</span>)<span class="op">&gt;=</span><span class="dv">0</span>: <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb12-5"><a href="#cb12-5"></a>    <span class="cf">else</span>: <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb12-6"><a href="#cb12-6"></a></span>
+<span id="cb12-7"><a href="#cb12-7"></a><span class="co">## Read the content of a log file</span></span>
+<span id="cb12-8"><a href="#cb12-8"></a>inputRDD <span class="op">=</span> sc.textFile(<span class="st">"log.txt"</span>)</span>
+<span id="cb12-9"><a href="#cb12-9"></a></span>
+<span id="cb12-10"><a href="#cb12-10"></a><span class="co">## Select the rows containing the word “error”</span></span>
+<span id="cb12-11"><a href="#cb12-11"></a>errorsRDD <span class="op">=</span> inputRDD.<span class="bu">filter</span>(myFunction)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 80%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>def myFunction(l):</code></td>
+<td>When it is invoked, this function analyses the value of the parameter line and returns True if the string line contains the substring “error”. Otherwise, it returns False.</td>
+</tr>
+<tr class="even">
+<td><code>.filter(myFunction)</code></td>
+<td>For each object <code>o</code> in <code>inputRDD</code>, the <code>myFunction</code> function is automatically invoked. If <code>myFunction</code> returns True, then <code>o</code> is stored in the new RDD <code>errorsRDD</code>. Otherwise, <code>o</code> is discarded.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="solution-based-on-function-def-1" class="level5">
+<h5 class="anchored" data-anchor-id="solution-based-on-function-def-1">Solution based on function (<code>def</code>)</h5>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="co">## Define the content of the Boolean function that is applied</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="co">## to select the elements of interest</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="kw">def</span> myFunction(l):</span>
+<span id="cb13-4"><a href="#cb13-4"></a>    <span class="cf">return</span> l.find(<span class="st">'error'</span>)<span class="op">&gt;=</span><span class="dv">0</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a></span>
+<span id="cb13-6"><a href="#cb13-6"></a><span class="co">## Read the content of a log file</span></span>
+<span id="cb13-7"><a href="#cb13-7"></a>inputRDD <span class="op">=</span> sc.textFile(<span class="st">"log.txt"</span>)</span>
+<span id="cb13-8"><a href="#cb13-8"></a></span>
+<span id="cb13-9"><a href="#cb13-9"></a><span class="co">## Select the rows containing the word “error”</span></span>
+<span id="cb13-10"><a href="#cb13-10"></a>errorsRDD <span class="op">=</span> inputRDD.<span class="bu">filter</span>(myFunction)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 80%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>return l.find('error')&gt;=0</code></td>
+<td>This part of the code is the same used in the lambda-based solution.</td>
+</tr>
+<tr class="even">
+<td><code>.filter(myFunction)</code></td>
+<td>For each object <code>o</code> in <code>inputRDD</code>, the <code>myFunction</code> function is automatically invoked. If <code>myFunction</code> returns True, then <code>o</code> is stored in the new RDD <code>errorsRDD</code>. Otherwise, <code>o</code> is discarded.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="solution-comparison" class="level5">
+<h5 class="anchored" data-anchor-id="solution-comparison">Solution comparison</h5>
+<p>The two solutions are more or less equivalent in terms of efficiency</p>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Lambda function-based code (<code>lambda</code>)</th>
+<th>Local user defined functions (local <code>def</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>More concise</td>
+<td>Less concise</td>
+</tr>
+<tr class="even">
+<td>More readable</td>
+<td>Less readable</td>
+</tr>
+<tr class="odd">
+<td>Multi-statement functions or statements that do not return a value are not supported</td>
+<td>Multi-statement functions or statements that do not return a value are supported</td>
+</tr>
+<tr class="even">
+<td>Code cannot be reused</td>
+<td>Code can be reused (some functions are used in several applications)</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="basic-transformations" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="basic-transformations">Basic Transformations</h3>
+<ul>
+<li>Some basic transformations analyze the content of one single RDD and return a new RDD (e.g., <code>filter()</code>, <code>map()</code>, <code>flatMap()</code>, <code>distinct()</code>, <code>sample()</code>)</li>
+<li>Some other transformations analyze the content of two (input) RDDs and return a new RDD (e.g., <code>union()</code>, <code>intersection()</code>, <code>substract()</code>, <code>cartesian()</code>)</li>
+</ul>
+<section id="single-input-rdd-transformations" class="level4">
+<h4 class="anchored" data-anchor-id="single-input-rdd-transformations">Single input RDD transformations</h4>
+<section id="filter-transformation" class="level5">
+<h5 class="anchored" data-anchor-id="filter-transformation">Filter transformation</h5>
+<p>The filter transformation is applied on one single RDD and returns a new RDD containing only the elements of the input RDD that satisfy a user specified condition.</p>
+<p>The filter transformation is based on the <code>filter(f)</code> method of the <code>RDD</code> class: a function <code>f</code> returning a Boolean value is passed to the <code>filter</code> method, where <code>f</code> contains the code associated with the condition that we want to apply on each element <code>e</code> of the input RDD. If the condition is satisfied then the call method returns true and the input element <code>e</code> is selected, otherwise, it returns false and the <code>e</code> element is discarded.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD from a log file;</li>
+<li>Create a new RDD containing only the lines of the log file containing the word “error”.</li>
+</ol>
+<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="co">## Read the content of a log file</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>inputRDD <span class="op">=</span> sc.textFile(<span class="st">"log.txt"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3"></a></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="co">## Select the rows containing the word “error”</span></span>
+<span id="cb14-5"><a href="#cb14-5"></a>errorsRDD <span class="op">=</span> inputRDD.<span class="bu">filter</span>(<span class="kw">lambda</span> e: e.find(<span class="st">'error'</span>)<span class="op">&gt;=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Notice that, in this case, the input RDD contains strings, hence, the implemented lambda function is applied on one string at a time and returns a Boolean value.</p>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1, 2, 3, 3]</code>;</li>
+<li>Create a new RDD containing only the values greater than <code>2</code>.</li>
+</ol>
+<p><strong>Using <code>lambda</code></strong></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="co">## Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>inputList <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>]</span>
+<span id="cb15-3"><a href="#cb15-3"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb15-4"><a href="#cb15-4"></a></span>
+<span id="cb15-5"><a href="#cb15-5"></a><span class="co">## Select the values greater than 2</span></span>
+<span id="cb15-6"><a href="#cb15-6"></a>greaterRDD <span class="op">=</span> inputRDD.<span class="bu">filter</span>(<span class="kw">lambda</span> num : num<span class="op">&gt;</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Notice that the input RDD contains integers, hence, the implemented lambda function is applied on one integer at a time and returns a Boolean value.</p>
+<p><strong>Using <code>def</code></strong></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="co">## Define the function to be applied in the filter transformation</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="kw">def</span> greaterThan2(num):</span>
+<span id="cb16-3"><a href="#cb16-3"></a>    <span class="cf">return</span> num<span class="op">&gt;</span><span class="dv">2</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a></span>
+<span id="cb16-5"><a href="#cb16-5"></a><span class="co">## Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a>inputList <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>]</span>
+<span id="cb16-7"><a href="#cb16-7"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb16-8"><a href="#cb16-8"></a></span>
+<span id="cb16-9"><a href="#cb16-9"></a><span class="co">## Select the values greater than 2</span></span>
+<span id="cb16-10"><a href="#cb16-10"></a>greaterRDD <span class="op">=</span> inputRDD.<span class="bu">filter</span>(greaterThan2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In this case, the function to apply is defined using <code>def</code> and then is passed to the filter transformation.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="map-transformation" class="level5">
+<h5 class="anchored" data-anchor-id="map-transformation">Map transformation</h5>
+<p>The map transformation is used to create a new RDD by applying a function <code>f</code> on each element of the input RDD: the new RDD contains exactly one element <code>y</code> for each element <code>x</code> of the input RDD, in particular the value of <code>y</code> is obtained by applying a user defined function <code>f</code> on <code>x</code> (e.g., <code>y= f(x)</code>). The data type of <code>y</code> can be different from the data type of <code>x</code>.</p>
+<p>The map transformation is based on the RDD <code>map(f)</code> method of the RDD class: a function <code>f</code> implementing the transformation is passed to the <code>map</code> method, where <code>f</code> contains the code that is applied over each element of the input RDD to create the elements of the returned RDD. For each input element of the input RDD exactly one single new element is returned by <code>f</code>.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD from a textual file containing the surnames of a list of users (each line of the file contains one surname);</li>
+<li>Create a new RDD containing the length of each surname.</li>
+</ol>
+<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co">## Read the content of the input textual file</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>inputRDD <span class="op">=</span> sc.textFile(<span class="st">"usernames.txt"</span>)</span>
+<span id="cb17-3"><a href="#cb17-3"></a></span>
+<span id="cb17-4"><a href="#cb17-4"></a><span class="co">## Compute the lengths of the input surnames</span></span>
+<span id="cb17-5"><a href="#cb17-5"></a>lenghtsRDD <span class="op">=</span> inputRDD.<span class="bu">map</span>(<span class="kw">lambda</span> line: <span class="bu">len</span>(line))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Notice that the input RDD is an RDD of strings, hence, also the input of the lambda function is a String. Instead, the new RDD is an RDD of Integers, since the lambda function returns a new Integer for each input element.</p>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1, 2, 3, 3]</code>;</li>
+<li>Create a new RDD containing the square of each input element.</li>
+</ol>
+<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="co">## Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a>inputList <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>]</span>
+<span id="cb18-3"><a href="#cb18-3"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb18-4"><a href="#cb18-4"></a></span>
+<span id="cb18-5"><a href="#cb18-5"></a><span class="co">## Compute the square of each input element</span></span>
+<span id="cb18-6"><a href="#cb18-6"></a>squaresRDD <span class="op">=</span> inputRDD.<span class="bu">map</span>(<span class="kw">lambda</span> element: element<span class="op">*</span>element)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="flatmap-transformation" class="level5">
+<h5 class="anchored" data-anchor-id="flatmap-transformation">FlatMap transformation</h5>
+<p>The flatMap transformation is used to create a new RDD by applying a function <code>f</code> on each element of the input RDD. The new RDD contains a list of elements obtained by applying <code>f</code> on each element <code>x</code> of the input RDD; in other words, the function <code>f</code> applied on an element <code>x</code> of the input RDD returns a list of values <code>[y]</code> (e.g., <code>[y]= f(x)</code>). <code>[y]</code> can be the empty list.</p>
+<p>The final result is the concatenation of the list of values obtained by applying <code>f</code> over all the elements of the input RDD (i.e., the final RDD contains the concatenation of the lists obtained by applying <code>f</code> over all the elements of the input RDD).</p>
+<p>Notice that</p>
+<ul>
+<li>duplicates are not removed</li>
+<li>the data type of <code>y</code> can be different from the data type of <code>x</code></li>
+</ul>
+<p>The flatMap transformation is based on the <code>flatMap(f)</code> method of the <code>RDD</code> class A function <code>f</code> implementing the transformation is passed to the <code>flatMap</code> method, where <code>f</code> contains the code that is applied on each element of the input RDD and returns a list of elements which will be included in the new returned RDD: for each element of the input RDD a list of new elements is returned by <code>f</code>. The returned list can be empty.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD from a textual file containing a generic text (each line of the input file can contain many words);</li>
+<li>Create a new RDD containing the list of words, with repetitions, occurring in the input textual document. In other words, each element of the returned RDD is one of the words occurring in the input textual file, and the words occurring multiple times in the input file appear multiple times, as distinct elements, also in the returned RDD.</li>
+</ol>
+<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="co">## Read the content of the input textual file</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a>inputRDD <span class="op">=</span> sc.textFile(<span class="st">"document.txt"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3"></a></span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="co">## Compute/identify the list of words occurring in document.txt</span></span>
+<span id="cb19-5"><a href="#cb19-5"></a>listOfWordsRDD <span class="op">=</span> inputRDD.flatMap(<span class="kw">lambda</span> l: l.split(<span class="st">' '</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In this case the lambda function returns a “list” of values for each input element. However, notice that the new RDD (i.e., <code>listOfWordsRDD</code>) contains the “concatenation” of the lists obtained by applying the lambda function over all the elements of <code>inputRDD</code>: the new RDD is an RDD of strings and not an RDD of lists of strings.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="distinct-information" class="level5">
+<h5 class="anchored" data-anchor-id="distinct-information">Distinct information</h5>
+<p>The distinct transformation is applied on one single RDD and returns a new RDD containing the list of distinct elements (values) of the input RDD.</p>
+<p>The distinct transformation is based on the <code>distinct()</code> method of the <code>RDD</code> class, and no functions are needed in this case.</p>
+<p>A shuffle operation is executed for computing the result of the distinct transformation, so that data from different input partitions gets be compared to remove duplicates. The shuffle operation is used to repartition the input data: all the repetitions of the same input element are associated with the same output partition (in which one single copy of the element is stored), and a hash function assigns each input element to one of the new partitions.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD from a textual file containing the names of a list of users (each line of the input file contains one name);</li>
+<li>Create a new RDD containing the list of distinct names occurring in the input file. The type of the new RDD is the same of the input RDD.</li>
+</ol>
+<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="co">## Read the content of a textual input file</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a>inputRDD <span class="op">=</span> sc.textFile(<span class="st">"names.txt"</span>)</span>
+<span id="cb20-3"><a href="#cb20-3"></a></span>
+<span id="cb20-4"><a href="#cb20-4"></a><span class="co">## Select the distinct names occurring in inputRDD</span></span>
+<span id="cb20-5"><a href="#cb20-5"></a>distinctNamesRDD <span class="op">=</span> inputRDD.distinct()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1, 2, 3, 3]</code>;</li>
+<li>Create a new RDD containing only the distinct values appearing in the input RDD.</li>
+</ol>
+<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a><span class="co">## Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>inputList <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>]</span>
+<span id="cb21-3"><a href="#cb21-3"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb21-4"><a href="#cb21-4"></a></span>
+<span id="cb21-5"><a href="#cb21-5"></a><span class="co">## Compute the set of distinct words occurring in inputRDD</span></span>
+<span id="cb21-6"><a href="#cb21-6"></a>distinctIntRDD <span class="op">=</span> inputRDD.distinct()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="sortby-transformation" class="level5">
+<h5 class="anchored" data-anchor-id="sortby-transformation">SortBy transformation</h5>
+<p>The sortBy transformation is applied on one RDD and returns a new RDD containing the same content of the input RDD sorted in ascending order.</p>
+<p>The sortBy transformation is based on the <code>sortBy(keyfunc)</code> method of the <code>RDD</code> class: each element of the input RDD is initially mapped to a new value by applying the specified function <code>keyfunc</code>, and then the input elements are sorted by considering the values returned by the invocation of <code>keyfunc</code> on the input values.</p>
+<p>The <code>sortBy(keyfunc, ascending)</code> method of the <code>RDD</code> class allows specifying if the values in the returned RDD are sorted in ascending or descending order by using the Boolean parameter <code>ascending</code></p>
+<ul>
+<li><code>ascending</code> set to True means ascending order</li>
+<li><code>ascending</code> set to False means descending order</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD from a textual file containing the names of a list of users (each line of the input file contains one name);</li>
+<li>Create a new RDD containing the list of users sorted by name (based on the alphabetic order).</li>
+</ol>
+<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="co">## Read the content of a textual input file</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a>inputRDD <span class="op">=</span> sc.textFile(<span class="st">"names.txt"</span>)</span>
+<span id="cb22-3"><a href="#cb22-3"></a></span>
+<span id="cb22-4"><a href="#cb22-4"></a><span class="co">## Sort the content of the input RDD by name.</span></span>
+<span id="cb22-5"><a href="#cb22-5"></a><span class="co">## Store the sorted result in a new RDD</span></span>
+<span id="cb22-6"><a href="#cb22-6"></a>sortedNamesRDD <span class="op">=</span> inputRDD.sortBy(<span class="kw">lambda</span> name: name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Notice that each input element of the lambda expression is a string. The goal is sorting the input names (strings) in alphabetic order, which is the standard sort order for strings. For this reason the lambda function returns the input strings without modifying them.</p>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD from a textual file containing the names of a list of users (each line of the input file contains one name);</li>
+<li>Create a new RDD containing the list of users sorted by the length of their name (i.e., the sort order is based on <code>len(name)</code>).</li>
+</ol>
+<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a><span class="co">## Read the content of a textual input file</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a>inputRDD <span class="op">=</span> sc.textFile(<span class="st">"names.txt"</span>)</span>
+<span id="cb23-3"><a href="#cb23-3"></a></span>
+<span id="cb23-4"><a href="#cb23-4"></a><span class="co">## Sort the content of the input RDD by name.</span></span>
+<span id="cb23-5"><a href="#cb23-5"></a><span class="co">## Store the sorted result in a new RDD</span></span>
+<span id="cb23-6"><a href="#cb23-6"></a>sortedNamesLenRDD <span class="op">=</span> inputRDD.sortBy(<span class="kw">lambda</span> name: <span class="bu">len</span>(name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In this case, each input element is a string but we are interested in sorting the input names (strings) by length (integer), which is not the standard sort order for strings. For this reason the lambda function returns the length of each input string, and the sort operation is performed on the returned integer values (the lengths of the input names).</p>
+</div>
+</div>
+</div>
+</section>
+<section id="sample-transformation" class="level5">
+<h5 class="anchored" data-anchor-id="sample-transformation">Sample transformation</h5>
+<p>The sample transformation is applied on one single RDD and returns a new RDD containing a random sample of the elements (values) of the input RDD.</p>
+<p>The sample transformation is based on the <code>sample(withReplacement, fraction)</code> method of <code>RDD</code> class:</p>
+<ul>
+<li><code>withReplacement</code> specifies if the random sample is with replacement (True) or not (False);</li>
+<li><code>fraction</code> specifies the expected size of the sample as a fraction of the input RDD’s size (values in the range <span class="math inline">\([0, 1]\)</span>).</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD from a textual file containing a set of sentences (each line of the file contains one sentence);</li>
+<li>Create a new RDD containing a random sample of sentences, using the “without replacement” strategy and setting fraction to <span class="math inline">\(0.2\)</span> (i.e., <span class="math inline">\(20%\)</span>).</li>
+</ol>
+<div class="sourceCode" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a><span class="co">## Read the content of a textual input file</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a>inputRDD <span class="op">=</span> sc.textFile(<span class="st">"sentences.txt"</span>)</span>
+<span id="cb24-3"><a href="#cb24-3"></a></span>
+<span id="cb24-4"><a href="#cb24-4"></a><span class="co">## Create a random sample of sentences</span></span>
+<span id="cb24-5"><a href="#cb24-5"></a>randomSentencesRDD <span class="op">=</span> inputRDD.sample(<span class="va">False</span>,<span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1, 2, 3, 3]</code>;</li>
+<li>Create a new RDD containing a random sample of the input values, using the “replacement” strategy and setting fraction to <span class="math inline">\(0.2\)</span> (i.e., <span class="math inline">\(20%\)</span>).</li>
+</ol>
+<div class="sourceCode" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a><span class="co">## Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a>inputList <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>]</span>
+<span id="cb25-3"><a href="#cb25-3"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb25-4"><a href="#cb25-4"></a></span>
+<span id="cb25-5"><a href="#cb25-5"></a><span class="co">## Create a sample of the inputRDD</span></span>
+<span id="cb25-6"><a href="#cb25-6"></a>randomSentencesRDD <span class="op">=</span> inputRDD.sample(<span class="va">True</span>,<span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="set-transformations" class="level4">
+<h4 class="anchored" data-anchor-id="set-transformations">Set transformations</h4>
+<p>Spark provides also a set of transformations that operate on two input RDDs and return a new RDD. Some of them implement standard set transformations:</p>
+<ul>
+<li>Union</li>
+<li>Intersection</li>
+<li>Subtract</li>
+<li>Cartesian</li>
+</ul>
+<p>All these transformations have</p>
+<ul>
+<li>Two input RDDs: one is the RDD on which the method is invoked, while the other RDD is passed as parameter to the method</li>
+<li>One output RDD</li>
+</ul>
+<p>All the involved RDDs have the same data type when union, intersection, or subtract are used, instead mixed data types can be used with the cartesian transformation.</p>
+<section id="union-transformation" class="level5">
+<h5 class="anchored" data-anchor-id="union-transformation">Union transformation</h5>
+<p>The union transformation is based on the <code>union(other)</code> method of the <code>RDD</code> class: <code>other</code> is the second RDD to use, and the method returns a new RDD containing the union (with duplicates) of the elements of the two input RDDs.</p>
+<div class="callout-warning callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Duplicates elements are not removed</strong>. This choice is related to optimization reasons: removing duplicates means having a global view of the whole content of the two input RDDs, but, since each RDD is split in partitions that are stored in different nodes of the cluster, the contents of all partitions should be shared to remove duplicates, and that’s a computationally costly operation.</p>
+<p>The shuffle operation is not needed in this case.</p>
+</div>
+</div>
+<p>If removing duplicates is needed after performing the union transformation, apply the <code>distinct()</code> transformation on the output of the <code>union()</code> transformation, but pay attention that <code>distinct()</code> is a computational costly operation (it is associated with a shuffle operation). Use <code>distinct()</code> if and only if duplicate removal is indispensable for the application.</p>
+</section>
+<section id="intersection-transformation" class="level5">
+<h5 class="anchored" data-anchor-id="intersection-transformation">Intersection transformation</h5>
+<p>The intersection transformation is based on the <code>intersection(other)</code> method of the <code>RDD</code> class: <code>other</code> is the second RDD to use, and the method returns a new RDD containing the elements (without duplicates) occurring in both input RDDs.</p>
+<p>Duplicates are removed: a shuffle operation is executed for computing the result of intersection, since elements from different input partitions must be compared to find common elements.</p>
+</section>
+<section id="subtract-transformation" class="level5">
+<h5 class="anchored" data-anchor-id="subtract-transformation">Subtract transformation</h5>
+<p>The subtract transformation is based on the <code>subtract(other)</code> method of the <code>RDD</code> class: <code>other</code> is the second RDD to use, and the result contains the elements appearing only in the RDD on which the subtract method is invoked. Notice that in this transformation the two input RDDs play different roles.</p>
+<p>Duplicates are not removed, but a shuffle operation is executed for computing the result of subtract, since elements from different input partitions must be compared.</p>
+</section>
+<section id="cartesian-transformation" class="level5">
+<h5 class="anchored" data-anchor-id="cartesian-transformation">Cartesian transformation</h5>
+<p>The cartesian transformation is based on the <code>cartesian(other)</code> method of the <code>RDD</code> class: <code>other</code> is the second RDD to use, the data types of the objects of the two input RDDs can be different, and the returned RDD is an RDD of pairs (tuples) containing all the combinations composed of one element of the first input RDD and one element of the second input RDD (see later what an RDD of pairs is).</p>
+<p>In this transformation a large amount of data is sent on the network: elements from different input partitions must be combined to compute the returned pairs, but the elements of the two input RDDs are stored in different partitions, which could be even in different servers.</p>
+</section>
+<section id="examples-of-set-transformations" class="level5">
+<h5 class="anchored" data-anchor-id="examples-of-set-transformations">Examples of set transformations</h5>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create two RDDs of integers
+<ul>
+<li><code>inputRDD1</code> contains the values <code>[1, 2, 2, 3, 3]</code></li>
+<li><code>inputRDD2</code> contains the values <code>[3, 4, 5]</code></li>
+</ul></li>
+<li>Create four new RDDs
+<ul>
+<li><code>outputUnionRDD</code> contains the union of <code>inputRDD1</code> and <code>inputRDD2</code></li>
+<li><code>outputIntersectionRDD</code> contains the intersection of <code>inputRDD1</code> and <code>inputRDD2</code></li>
+<li><code>outputSubtractRDD</code> contains the result of <code>inputRDD1</code> &nbsp;<code>inputRDD2</code></li>
+<li><code>outputCartesianRDD</code> contains the cartesian product of <code>inputRDD1</code> and <code>inputRDD2</code></li>
+</ul></li>
+</ol>
+<div class="sourceCode" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a><span class="co">## Create two RDD of integers</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a>inputList1 <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>]</span>
+<span id="cb26-3"><a href="#cb26-3"></a>inputRDD1 <span class="op">=</span> sc.parallelize(inputList1)</span>
+<span id="cb26-4"><a href="#cb26-4"></a></span>
+<span id="cb26-5"><a href="#cb26-5"></a>inputList2 <span class="op">=</span> [<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>]</span>
+<span id="cb26-6"><a href="#cb26-6"></a>inputRDD2 <span class="op">=</span> sc.parallelize(inputList2)</span>
+<span id="cb26-7"><a href="#cb26-7"></a></span>
+<span id="cb26-8"><a href="#cb26-8"></a><span class="co">## Create four new RDDs by using union, intersection, </span></span>
+<span id="cb26-9"><a href="#cb26-9"></a><span class="co">## subtract, and cartesian</span></span>
+<span id="cb26-10"><a href="#cb26-10"></a>outputUnionRDD <span class="op">=</span> inputRDD1.union(inputRDD2)</span>
+<span id="cb26-11"><a href="#cb26-11"></a></span>
+<span id="cb26-12"><a href="#cb26-12"></a>outputIntersectionRDD <span class="op">=</span> inputRDD1.intersection(inputRDD2)</span>
+<span id="cb26-13"><a href="#cb26-13"></a></span>
+<span id="cb26-14"><a href="#cb26-14"></a>outputSubtractRDD <span class="op">=</span> inputRDD1.subtract(inputRDD2)</span>
+<span id="cb26-15"><a href="#cb26-15"></a></span>
+<span id="cb26-16"><a href="#cb26-16"></a>outputCartesianRDD <span class="op">=</span> inputRDD1.cartesian(inputRDD2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>outputCartesianRDD</code></td>
+<td>Each element of the returned RDD is a pair (tuple) of integer elements.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-24" class="callout-24-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create two RDDs
+<ul>
+<li><code>inputRDD1</code> contains the Integer values <code>[1, 2, 3]</code></li>
+<li><code>inputRDD2</code> contains the String values <code>["A", "B"]</code></li>
+</ul></li>
+<li>Create a new RDD containing the cartesian product of <code>inputRDD1</code> and <code>inputRDD2</code></li>
+</ol>
+<div class="sourceCode" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a><span class="co">## Create an RDD of Integers and an RDD of Strings</span></span>
+<span id="cb27-2"><a href="#cb27-2"></a>inputList1 <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]</span>
+<span id="cb27-3"><a href="#cb27-3"></a>inputRDD1 <span class="op">=</span> sc.parallelize(inputList1)</span>
+<span id="cb27-4"><a href="#cb27-4"></a></span>
+<span id="cb27-5"><a href="#cb27-5"></a>inputList2 <span class="op">=</span> [<span class="st">"A"</span>,<span class="st">"B"</span>]</span>
+<span id="cb27-6"><a href="#cb27-6"></a>inputRDD2 <span class="op">=</span> sc.parallelize(inputList2)</span>
+<span id="cb27-7"><a href="#cb27-7"></a></span>
+<span id="cb27-8"><a href="#cb27-8"></a><span class="co">## Compute the cartesian product</span></span>
+<span id="cb27-9"><a href="#cb27-9"></a>outputCartesianRDD <span class="op">=</span> inputRDD1.cartesian(inputRDD2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>outputCartesianRDD</code></td>
+<td>Each element of the returned RDD is a pair (tuple) of integer elements.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="summary" class="level4 page-columns page-full">
+<h4 class="anchored" data-anchor-id="summary">Summary</h4>
+<section id="single-input-rdd-transformations-1" class="level5 page-columns page-full">
+<h5 class="anchored" data-anchor-id="single-input-rdd-transformations-1">Single input RDD transformations</h5>
+<p>All the examples reported in the following tables are applied on an RDD of integers containing the following elements (i.e., values): <code>[1,2,3,3]</code>.</p>
+<div class="page-columns page-full">
+<div class="column-page">
+<p><strong>Purposes</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Transformation</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>filter(f)</code></td>
+<td>Return an RDD consisting only of the elements of the input RDD that pass the condition passed to <code>filter()</code>. The input RDD and the new RDD have the same data type.</td>
+</tr>
+<tr class="even">
+<td><code>map(f)</code></td>
+<td>Apply a function to each element in the RDD and return an RDD of the result. The applied function return one element for each element of the input RDD. The input RDD and the new RDD can have a different data type.</td>
+</tr>
+<tr class="odd">
+<td><code>flatMap(f)</code></td>
+<td>Apply a function to each element in the RDD and return an RDD of the result. The applied function return a set of elements (from 0 to many) for each element of the input RDD. The input RDD and the new RDD can have a different data type.</td>
+</tr>
+<tr class="even">
+<td><code>distinct()</code></td>
+<td>Remove duplicates.</td>
+</tr>
+<tr class="odd">
+<td><code>sortBy(keyfunc)</code></td>
+<td>Return a new RDD containing the same values of the input RDD sorted in ascending order.</td>
+</tr>
+<tr class="even">
+<td><code>sample(withReplacement, fraction)</code></td>
+<td>Sample the content of the input RDD, with or without replacement and return the selected sample. The input RDD and the new RDD have the same data type.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 45%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Transformation</th>
+<th>Example function</th>
+<th>Example result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>filter(f)</code></td>
+<td><code>filter(lambda x: x != 1)</code></td>
+<td><code>[2,3,3]</code></td>
+</tr>
+<tr class="even">
+<td><code>map(f)</code></td>
+<td><p><code>map(lambda x: x+1)</code></p>
+<p>For each input element <code>x</code>, the element with value <code>x+1</code> is included in the new RDD</p></td>
+<td><code>[2,3,4,4]</code></td>
+</tr>
+<tr class="odd">
+<td><code>flatMap(f)</code></td>
+<td><p><code>flatMap(lambda x: list(range(x,4))</code></p>
+<p>For each input element <code>x</code>, the set of elements with values from <code>x</code> to 3 are returned</p></td>
+<td><code>[1,2,3,2,3,3,3]</code></td>
+</tr>
+<tr class="even">
+<td><code>distinct()</code></td>
+<td><code>distinct()</code></td>
+<td><code>[1,2,3]</code></td>
+</tr>
+<tr class="odd">
+<td><code>sortBy(keyfunc)</code></td>
+<td><p><code>sortBy(lambda v: v)</code></p>
+<p>Sort the input integer values in ascending order by using the standard integer sort order</p></td>
+<td><code>[1,2,3,3]</code></td>
+</tr>
+<tr class="even">
+<td><code>sample(withReplacement, fraction)</code></td>
+<td><code>sample(True, 0.2)</code></td>
+<td>Non deterministic</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="two-input-rdd-transformations" class="level5 page-columns page-full">
+<h5 class="anchored" data-anchor-id="two-input-rdd-transformations">Two input RDD transformations</h5>
+<p>All the examples reported in the following tables are applied on the following two RDDs of integers</p>
+<ul>
+<li><code>inputRDD1</code>: <code>[1,2,2,3,3]</code></li>
+<li><code>inputRDD2</code>: <code>[3,4,5]</code></li>
+</ul>
+<div class="page-columns page-full">
+<div class="column-page">
+<p><strong>Purposes</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Transformation</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>union(other)</code></td>
+<td>Return a new RDD containing the union of the elements of the input RDD and the elements of the one passed as parameter to <code>union()</code>. Duplicate values are not removed. All the RDDs have the same data type.</td>
+</tr>
+<tr class="even">
+<td><code>intersection(other)</code></td>
+<td>Return a new RDD containing the intersection of the elements of the input RDD and the elements of the one passed as parameter to <code>intersection()</code>. All the RDDs have the same data type.</td>
+</tr>
+<tr class="odd">
+<td><code>subtract(other)</code></td>
+<td>Return a new RDD the elements appearing only in the input RDD and not in the one passed as parameter to <code>subtract()</code>. All the RDDs have the same data type.</td>
+</tr>
+<tr class="even">
+<td><code>cartesian(other)</code></td>
+<td>Return a new RDD containing the cartesian product of the elements of the input RDD and the elements of the one passed as parameter to <code>cartesian()</code>. All the RDDs have the same data type.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 45%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Transformation</th>
+<th>Example function</th>
+<th>Example result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>union(other)</code></td>
+<td><code>inputRDD1.union(inputRDD2)</code></td>
+<td><code>[1,2,2,3,3,3,4,5]</code></td>
+</tr>
+<tr class="even">
+<td><code>intersection(other)</code></td>
+<td><code>inputRDD1.intersection(inputRDD2)</code></td>
+<td><code>[3]</code></td>
+</tr>
+<tr class="odd">
+<td><code>subtract(other)</code></td>
+<td><code>inputRDD1.subtract(inputRDD2)</code></td>
+<td><code>[1,2,2]</code></td>
+</tr>
+<tr class="even">
+<td><code>cartesian(other)</code></td>
+<td><code>inputRDD1.cartesian(inputRDD2)</code></td>
+<td><code>[(1,3),(1,4),...,(3,5)]</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="basic-actions" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="basic-actions">Basic Actions</h3>
+<p>Spark actions can retrieve the content of an RDD or the result of a function applied on an RDD and</p>
+<ul>
+<li>Store it in a local Python variable of the Driver program
+<ul>
+<li>Pay attention to the size of the returned value</li>
+<li>Pay attentions that date are sent on the network from the nodes containing the content of RDDs and the executor running the Driver</li>
+</ul></li>
+<li>Store the content of an RDD in an output folder or database</li>
+</ul>
+<p>The Spark actions that return a result that is stored in local (Python) variables of the Driver 1. Are executed locally on each node containing partitions of the RDD on which the action is invoked, and so local results are generated in each node; 2. Local results are sent on the network to the Driver that computes the final result and store it in local variables of the Driver.</p>
+<p>The basic actions returning (Python) objects to the Driver are</p>
+<ul>
+<li><code>collect()</code></li>
+<li><code>count()</code></li>
+<li><code>countByValue()</code></li>
+<li><code>take()</code></li>
+<li><code>top()</code></li>
+<li><code>takeSample()</code></li>
+<li><code>reduce()</code></li>
+<li><code>fold()</code></li>
+<li><code>aggregate()</code></li>
+<li><code>foreach()</code></li>
+</ul>
+<section id="collect-action" class="level4">
+<h4 class="anchored" data-anchor-id="collect-action">Collect action</h4>
+<p>The collect action returns a local Python list of objects containing the same objects of the considered RDD.</p>
+<div class="callout-warning callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Pay attention to the size of the RDD: large RDD cannot be memorized in a local variable of the Driver.</p>
+</div>
+</div>
+<p>The collect action is based on the <code>collect()</code> method of the <code>RDD</code> class.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-26" class="callout-26-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1,2,3,3]</code>;</li>
+<li>Retrieve the values of the created RDD and store them in a local python list that is instantiated in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a><span class="co">## Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
+<span id="cb28-2"><a href="#cb28-2"></a>inputList <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>]</span>
+<span id="cb28-3"><a href="#cb28-3"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb28-4"><a href="#cb28-4"></a></span>
+<span id="cb28-5"><a href="#cb28-5"></a><span class="co">## Retrieve the elements of the inputRDD and store them in</span></span>
+<span id="cb28-6"><a href="#cb28-6"></a><span class="co">## a local python list</span></span>
+<span id="cb28-7"><a href="#cb28-7"></a>retrievedValues <span class="op">=</span> inputRDD.collect()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>inputRDD</code></td>
+<td>It is distributed across the nodes of the cluster. It can be large and it is stored in the local disks of the nodes if it is needed.</td>
+</tr>
+<tr class="even">
+<td><code>retrievedValues</code></td>
+<td>It is a local python variable. It can only be stored in the main memory of the process/task associated with the Driver. Pay attention to the size of the list. Use the <code>collect()</code> action if and only if sure that the list is small. Otherwise, store the content of the RDD in a file by using the <code>saveAsTextFile</code> method.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="count-action" class="level4">
+<h4 class="anchored" data-anchor-id="count-action">Count action</h4>
+<p>Count the number of elements of an RDD.</p>
+<p>The count action is based on the <code>count()</code> method of the <code>RDD</code> class: it returns the number of elements of the input RDD.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-27" class="callout-27-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Consider the textual files “document1.txt” and “document2.txt”;</li>
+<li>Print the name of the file with more lines.</li>
+</ol>
+<div class="sourceCode" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1"></a><span class="co">## Read the content of the two input textual files</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a>inputRDD1 <span class="op">=</span> sc.textFile(<span class="st">"document1.txt"</span>)</span>
+<span id="cb29-3"><a href="#cb29-3"></a>inputRDD2 <span class="op">=</span> sc.textFile(<span class="st">"document2.txt"</span>)</span>
+<span id="cb29-4"><a href="#cb29-4"></a></span>
+<span id="cb29-5"><a href="#cb29-5"></a><span class="co">## Count the number of lines of the two files = number of elements</span></span>
+<span id="cb29-6"><a href="#cb29-6"></a><span class="co">## of the two RDDs</span></span>
+<span id="cb29-7"><a href="#cb29-7"></a>numLinesDoc1 <span class="op">=</span> inputRDD1.count()</span>
+<span id="cb29-8"><a href="#cb29-8"></a>numLinesDoc2 <span class="op">=</span> inputRDD2.count()</span>
+<span id="cb29-9"><a href="#cb29-9"></a></span>
+<span id="cb29-10"><a href="#cb29-10"></a><span class="cf">if</span> numLinesDoc1<span class="op">&gt;</span> numLinesDoc2: </span>
+<span id="cb29-11"><a href="#cb29-11"></a>    <span class="bu">print</span>(<span class="st">"document1.txt"</span>)</span>
+<span id="cb29-12"><a href="#cb29-12"></a><span class="cf">elif</span> numLinesDoc2<span class="op">&gt;</span> numLinesDoc1: </span>
+<span id="cb29-13"><a href="#cb29-13"></a>    <span class="bu">print</span>(<span class="st">"document2.txt"</span>)</span>
+<span id="cb29-14"><a href="#cb29-14"></a><span class="cf">else</span>: </span>
+<span id="cb29-15"><a href="#cb29-15"></a>    <span class="bu">print</span>(<span class="st">"Same number of lines"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="countbyvalue-action" class="level4">
+<h4 class="anchored" data-anchor-id="countbyvalue-action">CountByValue action</h4>
+<p>The countByValue action returns a local python dictionary containing the information about the number of times each element occurs in the RDD</p>
+<ul>
+<li>The keys of the dictionary are associated with the input elements</li>
+<li>The values are the frequencies of the elements</li>
+</ul>
+<p>The countByValue action is based on the <code>countByValue()</code> method of the <code>RDD</code> class. The amount of used main memory in the Driver is related to the number of distinct elements/keys.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-28" class="callout-28-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD from a textual file containing the first names of a list of users (each line contain one name);</li>
+<li>Compute the number of occurrences of each name and store this information in a local variable of the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a><span class="co">## Read the content of the input textual file</span></span>
+<span id="cb30-2"><a href="#cb30-2"></a>namesRDD <span class="op">=</span> sc.textFile(<span class="st">"names.txt"</span>)</span>
+<span id="cb30-3"><a href="#cb30-3"></a></span>
+<span id="cb30-4"><a href="#cb30-4"></a><span class="co">## Compute the number of occurrencies of each name</span></span>
+<span id="cb30-5"><a href="#cb30-5"></a>namesOccurrences <span class="op">=</span> namesRDD.countByValue()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>namesOccurrences = namesRDD.countByValue()</code></td>
+<td>Also in this case, pay attention to the size of the returned dictionary (that is related to the number of distinct names in this case). Use the <code>countByValue()</code> action if and only if you are sure that the returned dictionary is small. Otherwise, use an appropriate chain of Spark’s transformations and write the final result in a file by using the <code>saveAsTextFile</code> method.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="take-action" class="level4">
+<h4 class="anchored" data-anchor-id="take-action">Take action</h4>
+<p>The <code>take(num)</code> action returns a local python list of objects containing the first <code>num</code> elements of the considered RDD. The order of the elements in an RDD is consistent with the order of the elements in the file or collection that has been used to create the RDD.</p>
+<p>The take action is based on the <code>take(num)</code> method of the <code>RDD</code> class.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1,5,3,3,2]</code>;</li>
+<li>Retrieve the first two values of the created RDD and store them in a local python list that is instantiated in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1"></a><span class="co">## Create an RDD of integers. Load the values 1, 5, 3, 3,2 in this RDD</span></span>
+<span id="cb31-2"><a href="#cb31-2"></a>inputList <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">2</span>]</span>
+<span id="cb31-3"><a href="#cb31-3"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb31-4"><a href="#cb31-4"></a></span>
+<span id="cb31-5"><a href="#cb31-5"></a><span class="co">## Retrieve the first two elements of the inputRDD and store them in</span></span>
+<span id="cb31-6"><a href="#cb31-6"></a><span class="co">## a local python list</span></span>
+<span id="cb31-7"><a href="#cb31-7"></a>retrievedValues <span class="op">=</span> inputRDD.take(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="first-action" class="level4">
+<h4 class="anchored" data-anchor-id="first-action">First action</h4>
+<p>The <code>first()</code> action returns a local python object containing the first element of the considered RDD. The order of the elements in an RDD is consistent with the order of the elements in the file or collection that has been used to create the RDD.</p>
+<p>The first action is based on the <code>first()</code> method of the <code>RDD</code> class.</p>
+<p>Notice that the only difference between <code>first()</code> and <code>take(1)</code> is given by the fact that <code>first()</code> returns a single element (the returned element is the first element of the RDD), while <code>take(1)</code> returns a list of elements containing one single element (the only element of the returned list is the first element of the RDD).</p>
+</section>
+<section id="top-action" class="level4">
+<h4 class="anchored" data-anchor-id="top-action">Top action</h4>
+<p>The <code>top(num)</code> action returns a local python list of objects containing the top num (largest) elements of the considered RDD. The ordering is the default one of class associated with the objects stored in the RDD (the descending order is used).</p>
+<p>The top action is based on the <code>top(num)</code> method of the <code>RDD</code> class.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-30" class="callout-30-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1,5,3,4,2]</code>;</li>
+<li>Retrieve the top-2 greatest values of the created RDD and store them in a local python list that is instantiated in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a><span class="co">## Create an RDD of integers. Load the values 1, 5, 3, 4,2 in this RDD</span></span>
+<span id="cb32-2"><a href="#cb32-2"></a>inputList <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">2</span>]</span>
+<span id="cb32-3"><a href="#cb32-3"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb32-4"><a href="#cb32-4"></a></span>
+<span id="cb32-5"><a href="#cb32-5"></a><span class="co">## Retrieve the top-2 elements of the inputRDD and store them in</span></span>
+<span id="cb32-6"><a href="#cb32-6"></a><span class="co">## a local python list</span></span>
+<span id="cb32-7"><a href="#cb32-7"></a>retrievedValues <span class="op">=</span> inputRDD.top(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p>The <code>top(num, key)</code> action returns a local python list of objects containing the num largest elements of the considered RDD sorted by considering a user specified sorting function.</p>
+<p>The top action is based on the <code>top(num, key)</code> method of the <code>RDD</code> class</p>
+<ul>
+<li><code>num</code> is the number of elements to be selected;</li>
+<li><code>key</code> is a function that is applied on each input element before comparing them.</li>
+</ul>
+<p>The comparison between elements is based on the values returned by the invocations of this function.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of strings containing the values <code>['Paolo','Giovanni','Luca']</code>;</li>
+<li>Retrieve the 2 longest names (longest strings) of the created RDD and store them in a local python list that is instantiated in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1"></a><span class="co">## Create an RDD of strings. Load the values 'Paolo', 'Giovanni', 'Luca']</span></span>
+<span id="cb33-2"><a href="#cb33-2"></a><span class="co">## in the RDD</span></span>
+<span id="cb33-3"><a href="#cb33-3"></a>inputList <span class="op">=</span> [<span class="st">'Paolo'</span>,<span class="st">'Giovanni'</span>,<span class="st">'Luca'</span>]</span>
+<span id="cb33-4"><a href="#cb33-4"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb33-5"><a href="#cb33-5"></a></span>
+<span id="cb33-6"><a href="#cb33-6"></a><span class="co">## Retrieve the 2 longest names of the inputRDD and store them in</span></span>
+<span id="cb33-7"><a href="#cb33-7"></a><span class="co">## a local python list</span></span>
+<span id="cb33-8"><a href="#cb33-8"></a>retrievedValues <span class="op">=</span> inputRDD.top(<span class="dv">2</span>,<span class="kw">lambda</span> s:<span class="bu">len</span>(s))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="takeordered-action" class="level4">
+<h4 class="anchored" data-anchor-id="takeordered-action">TakeOrdered action</h4>
+<p>The <code>takeOrdered(num)</code> action returns a local python list of objects containing the num smallest elements of the considered RDD. The ordering is the default one of class associated with the objects stored in the RDD (the ascending order is used).</p>
+<p>The takeOrdered action is based on the <code>takeOrdered(num)</code> method of the <code>RDD</code> class.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-32" class="callout-32-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1,5,3,4,2]</code>;</li>
+<li>Retrieve the 2 smallest values of the created RDD and store them in a local python list that is instantiated in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1"></a><span class="co">## Create an RDD of integers. Load the values 1, 5, 3, 4,2 in this RDD</span></span>
+<span id="cb34-2"><a href="#cb34-2"></a>inputList <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">2</span>]</span>
+<span id="cb34-3"><a href="#cb34-3"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb34-4"><a href="#cb34-4"></a></span>
+<span id="cb34-5"><a href="#cb34-5"></a><span class="co">## Retrieve the 2 smallest elements of the inputRDD and store them in</span></span>
+<span id="cb34-6"><a href="#cb34-6"></a><span class="co">## a local python list</span></span>
+<span id="cb34-7"><a href="#cb34-7"></a>retrievedValues <span class="op">=</span> inputRDD.takeOrdered(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p>The <code>takeOrdered(num, key)</code> action returns a local python list of objects containing the num smallest elements of the considered RDD sorted by considering a user specified sorting function.</p>
+<p>The takeOrdered action is based on the <code>takeOrdered(num, key)</code> method of the <code>RDD</code> class</p>
+<ul>
+<li><code>num</code> is the number of elements to be selected;</li>
+<li><code>key</code> is a function that is applied on each input element before comparing them.</li>
+</ul>
+<p>The comparison between elements is based on the values returned by the invocations of this function.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-33" class="callout-33-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of strings containing the values <code>['Paolo','Giovanni','Luca']</code>;</li>
+<li>Retrieve the 2 shortest names (shortest strings) of the created RDD and store them in a local python list that is instantiated in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1"></a><span class="co">## Create an RDD of strings. Load the values 'Paolo', 'Giovanni', 'Luca']</span></span>
+<span id="cb35-2"><a href="#cb35-2"></a><span class="co">## in the RDD</span></span>
+<span id="cb35-3"><a href="#cb35-3"></a>inputList <span class="op">=</span> [<span class="st">'Paolo'</span>,<span class="st">'Giovanni'</span>,<span class="st">'Luca'</span>]</span>
+<span id="cb35-4"><a href="#cb35-4"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb35-5"><a href="#cb35-5"></a></span>
+<span id="cb35-6"><a href="#cb35-6"></a><span class="co">## Retrieve the 2 shortest names of the inputRDD and store them in</span></span>
+<span id="cb35-7"><a href="#cb35-7"></a><span class="co">## a local python list</span></span>
+<span id="cb35-8"><a href="#cb35-8"></a>retrievedValues <span class="op">=</span> inputRDD.takeOrdered(<span class="dv">2</span>,<span class="kw">lambda</span> s:<span class="bu">len</span>(s))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="takesample-action" class="level4">
+<h4 class="anchored" data-anchor-id="takesample-action">TakeSample action</h4>
+<p>The <code>takeSample(withReplacement, num)</code> action returns a local python list of objects containing num random elements of the considered RDD.</p>
+<p>The takeSampleaction is based on the <code>takeSample(withReplacement, num)</code> method of the <code>RDD</code> class, where <code>withReplacement</code> specifies if the random sample is with replacement (True) or not (False).</p>
+<p>The <code>takeSample(withReplacement, num, seed)</code> method of the <code>RDD</code> class is used when the seed has to be set.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-34" class="callout-34-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1,5,3,3,2]</code>;</li>
+<li>Retrieve randomly, without replacement, 2 values from the created RDD and store them in a local python list that is instantiated in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a><span class="co">## Create an RDD of integers. Load the values 1, 5, 3, 3,2 in this RDD</span></span>
+<span id="cb36-2"><a href="#cb36-2"></a>inputList <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">2</span>]</span>
+<span id="cb36-3"><a href="#cb36-3"></a>inputRDD <span class="op">=</span> sc.parallelize(inputList)</span>
+<span id="cb36-4"><a href="#cb36-4"></a></span>
+<span id="cb36-5"><a href="#cb36-5"></a><span class="co">## Retrieve randomly two elements of the inputRDD and store them in</span></span>
+<span id="cb36-6"><a href="#cb36-6"></a><span class="co">## a local python list</span></span>
+<span id="cb36-7"><a href="#cb36-7"></a>randomValues<span class="op">=</span> inputRDD.takeSample(<span class="va">True</span>, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="reduce" class="level4">
+<h4 class="anchored" data-anchor-id="reduce">Reduce</h4>
+<p>Return a single python object obtained by combining all the objects of the input RDD by using a user provide function. The provided function must be associative and commutative, otherwise the result depends on the content of the partitions and the order used to analyze the elements of the RDD’s partitions. The returned object and the ones of the input RDD are all instances of the same data type/class.</p>
+<p>The reduce action is based on the <code>reduce(f)</code> method of the <code>RDD</code> class: a function <code>f</code> is passed to the reduce method</p>
+<ul>
+<li>Given two arbitrary input elements, <code>f</code> is used to combine them in one single value</li>
+<li><code>f</code> is recursively invoked over the elements of the input RDD until the input values are reduced to one single value</li>
+</ul>
+<p>Suppose <span class="math inline">\(L\)</span> contains the list of elements of the input RDD. To compute the final element/value, the reduce action operates as follows</p>
+<ol type="1">
+<li>Apply the user specified function on a pair of elements <span class="math inline">\(e_1\)</span> and <span class="math inline">\(e_2\)</span> occurring in <span class="math inline">\(L\)</span> and obtain a new element <span class="math inline">\(e_\textbf{new}\)</span>;</li>
+<li>Remove the original elements <span class="math inline">\(e_1\)</span> and <span class="math inline">\(e_2\)</span> from <span class="math inline">\(L\)</span> and then insert the element <span class="math inline">\(e_\textbf{new}\)</span> in <span class="math inline">\(L\)</span>;</li>
+<li>If <span class="math inline">\(L\)</span> contains only one value, then return it as final result of the reduce action, otherwise, return to step 1.</li>
+</ol>
+<p>Function <span class="math inline">\(f\)</span> must be associative and commutative, so that the computation of the reduce action can be performed in parallel without problems, otherwise the result depends on how the input RDD is partitioned (i.e., for the functions that are not associative and commutative the output depends on how the RDD is split in partitions and how the content of each partition is analyzed).</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-35" class="callout-35-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1,2,3,3]</code>;</li>
+<li>Compute the sum of the values occurring in the RDD and store the result in a local python integer variable in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1"></a><span class="co">## Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
+<span id="cb37-2"><a href="#cb37-2"></a>inputListReduce <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>]</span>
+<span id="cb37-3"><a href="#cb37-3"></a>inputRDDReduce <span class="op">=</span> sc.parallelize(inputListReduce)</span>
+<span id="cb37-4"><a href="#cb37-4"></a></span>
+<span id="cb37-5"><a href="#cb37-5"></a><span class="co">## Compute the sum of the values</span></span>
+<span id="cb37-6"><a href="#cb37-6"></a>sumValues <span class="op">=</span> inputRDDReduce.<span class="bu">reduce</span>(<span class="kw">lambda</span> e1, e2: e1<span class="op">+</span>e2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>lambda e1, e2: e1+e2</code></td>
+<td>This lambda function combines two input integer elements at a time and returns theirs sum.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-36-contents" aria-controls="callout-36" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-36" class="callout-36-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1,2,3,3]</code>;</li>
+<li>Compute the maximum value occurring in the RDD and store the result in a local python integer variable in the Driver.</li>
+</ol>
+<p><strong>Solution 1</strong></p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1"></a><span class="co">## Define the function for the reduce action</span></span>
+<span id="cb38-2"><a href="#cb38-2"></a><span class="kw">def</span> computeMax(v1,v2):</span>
+<span id="cb38-3"><a href="#cb38-3"></a>    <span class="cf">if</span> v1<span class="op">&gt;</span>v2:</span>
+<span id="cb38-4"><a href="#cb38-4"></a>        <span class="cf">return</span> v1</span>
+<span id="cb38-5"><a href="#cb38-5"></a>    <span class="cf">else</span>:</span>
+<span id="cb38-6"><a href="#cb38-6"></a>        <span class="cf">return</span> v2</span>
+<span id="cb38-7"><a href="#cb38-7"></a></span>
+<span id="cb38-8"><a href="#cb38-8"></a><span class="co">## Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
+<span id="cb38-9"><a href="#cb38-9"></a>inputListReduce <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>]</span>
+<span id="cb38-10"><a href="#cb38-10"></a>inputRDDReduce <span class="op">=</span> sc.parallelize(inputListReduce)</span>
+<span id="cb38-11"><a href="#cb38-11"></a></span>
+<span id="cb38-12"><a href="#cb38-12"></a><span class="co">## Compute the maximum value</span></span>
+<span id="cb38-13"><a href="#cb38-13"></a>maxValue <span class="op">=</span> inputRDDReduce.<span class="bu">reduce</span>(computeMax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Solution 2</strong></p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1"></a><span class="co">## Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
+<span id="cb39-2"><a href="#cb39-2"></a>inputListReduce <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>]</span>
+<span id="cb39-3"><a href="#cb39-3"></a>inputRDDReduce <span class="op">=</span> sc.parallelize(inputListReduce)</span>
+<span id="cb39-4"><a href="#cb39-4"></a></span>
+<span id="cb39-5"><a href="#cb39-5"></a><span class="co">## Compute the maximum value</span></span>
+<span id="cb39-6"><a href="#cb39-6"></a>maxValue <span class="op">=</span> inputRDDReduce.<span class="bu">reduce</span>(<span class="kw">lambda</span> e1, e2: <span class="bu">max</span>(e1, e2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="fold-action" class="level4">
+<h4 class="anchored" data-anchor-id="fold-action">Fold action</h4>
+<p>Return a single python object obtained by combining all the objects of the input RDD and a “zero” value by using a user provided function, which must be associative (otherwise the result depends on how the RDD is partitioned), but it is not required to be commutative. An initial neutral “zero” value is also specified.</p>
+<p>The fold action is based on the <code>fold(zeroValue, op)</code> method of the <code>RDD</code> class. A function <code>op</code> is passed to the fold method; given two arbitrary input elements, <code>op</code> is</p>
+<ul>
+<li>used to combine them in one single value</li>
+<li>used to combine input elements with the “zero” value</li>
+<li>recursively invoked over the elements of the input RDD until the input values are reduced to one single value</li>
+</ul>
+<p>The “zero” value is the neutral value for the used function <code>op</code> (i.e., “zero” combined with any value <span class="math inline">\(v\)</span> by using <code>op</code> is equal to <span class="math inline">\(v\)</span>).</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-37-contents" aria-controls="callout-37" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-37" class="callout-37-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of strings containing the values <code>['This ','is ','a ','test']</code>;</li>
+<li>Compute the concatenation of the values occurring in the RDD (from left to right) and store the result in a local python string variable in the Driver.</li>
+</ol>
+<div class="sourceCode" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1"></a><span class="co">## Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
+<span id="cb40-2"><a href="#cb40-2"></a>inputListFold <span class="op">=</span> [<span class="st">'This '</span>,<span class="st">'is '</span>,<span class="st">'a '</span>,<span class="st">'test'</span>]</span>
+<span id="cb40-3"><a href="#cb40-3"></a>inputRDDFold <span class="op">=</span> sc.parallelize(inputListFold)</span>
+<span id="cb40-4"><a href="#cb40-4"></a></span>
+<span id="cb40-5"><a href="#cb40-5"></a><span class="co">## Concatenate the input strings</span></span>
+<span id="cb40-6"><a href="#cb40-6"></a>finalString <span class="op">=</span> inputRDDFold.fold(<span class="st">''</span>, <span class="kw">lambda</span> s1, s2: s1<span class="op">+</span>s2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Fold vs Reduce
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Fold is characterized by the “zero” value;</li>
+<li>Fold can be used to parallelize functions that are associative but non-commutative (e.g., concatenation of a list of strings).</li>
+</ol>
+</div>
+</div>
+</section>
+<section id="aggregate-action" class="level4">
+<h4 class="anchored" data-anchor-id="aggregate-action">Aggregate action</h4>
+<p>Return a single python object obtained by combining the objects of the RDD and an initial “zero” value by using two user provide functions. The provided functions must be associative, otherwise the result depends on how the RDD is partitioned. The returned objects and the ones of the input RDD can be instances of different classes (this is the main difference with respect to <code>reduce()</code> and <code>fold()</code>).</p>
+<p>The aggregate action is based on the <code>aggregate(zeroValue,seqOp,combOp)</code> method of the <code>RDD</code> class. The input RDD contains objects of type <code>T</code> while the returned object is of type <code>U</code>, with <code>U</code> different from <code>T</code>.</p>
+<ul>
+<li>One function is needed for merging an element of type <code>T</code> with an element of type <code>U</code> to return a new element of type <code>U</code>: it is used to merge the elements of the input RDD and the accumulator of each partition;</li>
+<li>One function is needed for merging two elements of type <code>U</code> to return a new element of type <code>U</code>: it is used to merge two elements of type U obtained as partial results generated by two different partitions.</li>
+</ul>
+<p>The <code>seqOp</code> function contains the code that is applied to combine the accumulator value (one accumulator for each partition) with the elements of each partition: one local result per partition is computed by recursively applying <code>seqOp</code>.</p>
+<p>The <code>combOp</code> function contains the code that is applied to combine two elements of type U returned as partial results by two different partitions: the global final result is computed by recursively applying <code>combOp</code>.</p>
+<section id="how-it-works" class="level5">
+<h5 class="anchored" data-anchor-id="how-it-works">How it works</h5>
+<p>Suppose that <span class="math inline">\(L\)</span> contains the list of elements of the input RDD and this RDD is split in a set of partitions (i.e., a set of lists <span class="math inline">\({L_1,..., L_n}\)</span>). The aggregate action computes a partial result in each partition and then combines/merges the results. It operates as follows:</p>
+<ol type="1">
+<li>Aggregate the partial results in each partition, obtaining a set of partial results (of type <code>U</code>) <span class="math inline">\(P={p_1, .., p_n}\)</span>;</li>
+<li>Apply the <code>combOp</code> function on a pair of elements <span class="math inline">\(p_1\)</span> and <span class="math inline">\(p_2\)</span> in <span class="math inline">\(P\)</span> and obtain a new element <span class="math inline">\(p_\textbf{new}\)</span>;</li>
+<li>Remove the original elements <span class="math inline">\(p1\)</span> and <span class="math inline">\(p2\)</span> from <span class="math inline">\(P\)</span> and then insert the element <span class="math inline">\(p_\textbf{new}\)</span> in <span class="math inline">\(P\)</span>;</li>
+<li>If <span class="math inline">\(P\)</span> contains only one value then return it as final result of the aggregate action. Otherwise, return to step 2.</li>
+</ol>
+<p>Suppose that <span class="math inline">\(L_i\)</span> is the list of elements on the <span class="math inline">\(i\)</span>-th partition of the input RDD, and <code>zeroValue</code> is the initial zero value. To compute the partial result over the elements in <span class="math inline">\(L_i\)</span> the aggregate action operates as follows</p>
+<ol type="1">
+<li>Set <code>accumulator</code> to <code>zeroValue</code> (<code>accumulator=zeroValue</code>);</li>
+<li>Apply the <code>seqOp</code> function on <code>accumulator</code> and an elements <span class="math inline">\(ej\)</span> in <span class="math inline">\(L_i\)</span> and update <code>accumulator</code> with the value returned by <code>seqOp</code>;</li>
+<li>Remove the original elements <span class="math inline">\(e_j\)</span> from <span class="math inline">\(L_i\)</span>;</li>
+<li>If <span class="math inline">\(L_i\)</span> is empty return <code>accumulator</code> as (final) partial result <span class="math inline">\(p_i\)</span> of the <span class="math inline">\(i\)</span>-th partition. Otherwise, return to step 2.</li>
+</ol>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-39" class="callout-39-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create an RDD of integers containing the values <code>[1,2,3,3]</code>;</li>
+<li>Compute both
+<ul>
+<li>the sum of the values occurring in the input RDD</li>
+<li>and the number of elements of the input RDD</li>
+</ul></li>
+<li>Store in a local python variable of the Driver the average computed over the values of the input RDD.</li>
+</ol>
+<div class="sourceCode" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1"></a><span class="co">## Create an RDD of integers. Load the values 1, 2, 3, 3 in this RDD</span></span>
+<span id="cb41-2"><a href="#cb41-2"></a>inputListAggr <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>]</span>
+<span id="cb41-3"><a href="#cb41-3"></a>inRDD <span class="op">=</span> sc.parallelize(inputListAggr)</span>
+<span id="cb41-4"><a href="#cb41-4"></a></span>
+<span id="cb41-5"><a href="#cb41-5"></a><span class="co">## Instantiate the zero value</span></span>
+<span id="cb41-6"><a href="#cb41-6"></a><span class="co">## We use a tuple containing two values:</span></span>
+<span id="cb41-7"><a href="#cb41-7"></a><span class="co">## (sum, number of represented elements)</span></span>
+<span id="cb41-8"><a href="#cb41-8"></a>zeroValue <span class="op">=</span> (<span class="dv">0</span>,<span class="dv">0</span>)</span>
+<span id="cb41-9"><a href="#cb41-9"></a></span>
+<span id="cb41-10"><a href="#cb41-10"></a><span class="co">## Compute the sum of the elements in inputRDDAggr and count them</span></span>
+<span id="cb41-11"><a href="#cb41-11"></a>sumCount <span class="op">=</span> inRDD.aggregate(</span>
+<span id="cb41-12"><a href="#cb41-12"></a>    zeroValue,</span>
+<span id="cb41-13"><a href="#cb41-13"></a>    <span class="kw">lambda</span> acc, e: (acc[<span class="dv">0</span>]<span class="op">+</span>e, acc[<span class="dv">1</span>]<span class="op">+</span><span class="dv">1</span>),</span>
+<span id="cb41-14"><a href="#cb41-14"></a>    <span class="kw">lambda</span> p1, p2: (p1[<span class="dv">0</span>]<span class="op">+</span>p2[<span class="dv">0</span>], p1[<span class="dv">1</span>]<span class="op">+</span>p2[<span class="dv">1</span>])</span>
+<span id="cb41-15"><a href="#cb41-15"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 66%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>zeroValue(0,0)</code></td>
+<td>Instantiate the “zero” value</td>
+</tr>
+<tr class="even">
+<td><code>lambda acc, e: (acc[0]+e, acc[1]+1)</code></td>
+<td>Given a partition <span class="math inline">\(p\)</span> of the input RDD, this is the function that is used to combine the elements of partition <span class="math inline">\(p\)</span> with the accumulator of partition <span class="math inline">\(p\)</span></td>
+</tr>
+<tr class="odd">
+<td><code>acc</code></td>
+<td>It is a tupe object, initialized to the “zero” value</td>
+</tr>
+<tr class="even">
+<td><code>e</code></td>
+<td>It is an integer</td>
+</tr>
+<tr class="odd">
+<td><code>lambda p1, p2: (p1[0]+p2[0], p1[1]+p2[1])</code></td>
+<td>This is the function that is used to combine the partial results emitted by the RDD partitions</td>
+</tr>
+<tr class="even">
+<td><code>p1</code> and <code>p2</code></td>
+<td>These are tuple objects</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb42"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1"></a><span class="co">## Compute the average value</span></span>
+<span id="cb42-2"><a href="#cb42-2"></a>myAvg <span class="op">=</span> sumCount[<span class="dv">0</span>]<span class="op">/</span>sumCount[<span class="dv">1</span>]</span>
+<span id="cb42-3"><a href="#cb42-3"></a></span>
+<span id="cb42-4"><a href="#cb42-4"></a><span class="co">## Print the average on the standard output of the driver</span></span>
+<span id="cb42-5"><a href="#cb42-5"></a><span class="bu">print</span>(<span class="st">'Average:'</span>, myAvg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="aggregate-action-visual-simulation" class="level5">
+<h5 class="anchored" data-anchor-id="aggregate-action-visual-simulation">Aggregate action: visual simulation</h5>
+<ul>
+<li><code>inRDD = [1,2,3,3]</code>;</li>
+<li>Suppose <code>inRDD</code> is split in the following two partitions, <code>[1,2]</code> and <code>[3,3]</code>.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Visual simulation of the aggregate action</figcaption><p></p>
+<p><img src="images/11_rdd_based_programming/aggregate_action_simulation.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</section>
+</section>
+<section id="summary-1" class="level4 page-columns page-full">
+<h4 class="anchored" data-anchor-id="summary-1">Summary</h4>
+<p>All the examples reported in the following tables are applied on inputRDD that is an RDD of integers containing the following elements (i.e., values): <code>[1,2,3,3]</code>.</p>
+<div class="page-columns page-full">
+<div class="column-page">
+<p><strong>Purposes</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Action</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>collect()</code></td>
+<td>Return a python list containing all the elements of the RDD on which it is applied. The objects of the RDD and objects of the returned list are objects of the same class.</td>
+</tr>
+<tr class="even">
+<td><code>count()</code></td>
+<td>Return the number of elements of the RDD.</td>
+</tr>
+<tr class="odd">
+<td><code>countByValue()</code></td>
+<td>Return a Map object containing the information about the number of times each element occurs in the RDD.</td>
+</tr>
+<tr class="even">
+<td><code>take(num)</code></td>
+<td>Return a Python list containing the first <code>num</code> elements of the RDD. The objects of the RDD and objects of the returned list are objects of the same class.</td>
+</tr>
+<tr class="odd">
+<td><code>first()</code></td>
+<td>Return the first element of the RDD.</td>
+</tr>
+<tr class="even">
+<td><code>top(num)</code></td>
+<td>Return a Python list containing the top <code>num</code> elements of the RDD based on the default sort order/comparator of the objects. The objects of the RDD and objects of the returned list are objects of the same class.</td>
+</tr>
+<tr class="odd">
+<td><p><code>takeSample(withReplacement, num)</code></p>
+<p><code>takeSample(withReplacement, num, seed)</code></p></td>
+<td>Return a (Python) List containing a random sample of size <code>n</code> of the RDD. The objects of the RDD and objects of the returned list are objects of the same class.</td>
+</tr>
+<tr class="even">
+<td><code>reduce(f)</code></td>
+<td>Return a single Python object obtained by combining the values of the objects of the RDD by using a user provide function. The provided function must be associative and commutative The object returned by the method and the objects of the RDD belong to the same class.</td>
+</tr>
+<tr class="odd">
+<td><code>fold(zeroValue, op)</code></td>
+<td>Same as reduce but with the provided zero value.</td>
+</tr>
+<tr class="even">
+<td><code>Aggregate(zeroValue, seqOp, combOp)</code></td>
+<td>Similar to <code>reduce()</code> but used to return a different type.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 45%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Action</th>
+<th>Example</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>collect()</code></td>
+<td><code>inputRDD.collect()</code></td>
+<td><code>[1,2,3,3]</code></td>
+</tr>
+<tr class="even">
+<td><code>count()</code></td>
+<td><code>inputRDD.count()</code></td>
+<td><code>4</code></td>
+</tr>
+<tr class="odd">
+<td><code>countByValue()</code></td>
+<td><code>inputRDD.countByValue()</code></td>
+<td><code>[(1,1),</code> <code>(2,1),</code> <code>(3,2)]</code></td>
+</tr>
+<tr class="even">
+<td><code>take(num)</code></td>
+<td><code>inputRDD.take(2)</code></td>
+<td><code>[1,2]</code></td>
+</tr>
+<tr class="odd">
+<td><code>first()</code></td>
+<td><code>first()</code></td>
+<td><code>1</code></td>
+</tr>
+<tr class="even">
+<td><code>top(num)</code></td>
+<td><code>inputRDD.top(2)</code></td>
+<td><code>[3,3]</code></td>
+</tr>
+<tr class="odd">
+<td><p><code>takeSample(withReplacement, num)</code></p>
+<p><code>takeSample(withReplacement, num, seed)</code></p></td>
+<td><code>inputRDD.takeSample(False,1)</code></td>
+<td>Nondeterministic</td>
+</tr>
+<tr class="even">
+<td><code>reduce(f)</code></td>
+<td><p><code>inputRDD.reduce(lambda e1,e2: e1+e2)</code></p>
+<p>The passed function is the sum</p></td>
+<td><code>9</code></td>
+</tr>
+<tr class="odd">
+<td><code>fold(zeroValue, op)</code></td>
+<td><p><code>inputRDD.fold(0, lambda v1, v2: v1+v2)</code></p>
+<p>The passed function is the sum and the passed zeroValue is 0.</p></td>
+<td><code>9</code></td>
+</tr>
+<tr class="even">
+<td><code>Aggregate(zeroValue, seqOp, combOp)</code></td>
+<td><p><code>inputRDD.aggregate(</code> <code>zeroValue,</code> <code>lambda acc, e: (acc[0]+e, acc[1]+1),</code> <code>lambda p1, p2: (p1[0]+p2[0], p1[1]+p2[1])</code> <code>)</code></p>
+<p>Compute a pair of integers where the first one is the sum of the values of the RDD and the second the number of elements</p></td>
+<td><code>(9,4)</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./10_intro_spark.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./12_rdd_keyvalue_pairs.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

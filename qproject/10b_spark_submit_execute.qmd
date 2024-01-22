@@ -1,7 +1,4 @@
----
-title: "How to submit/execute a Spark application"
----
-
+# How to submit/execute a Spark application
 ## Spark submit
 Spark programs are executed (submitted) by using the `spark-submit` command. It is a command line program, characterized by a set of parameters (e.g., the name of the jar file containing all the classes of the Spark application we want to execute, the name of the Driver class, the parameters of the Spark application).
 

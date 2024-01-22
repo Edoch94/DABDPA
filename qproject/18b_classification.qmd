@@ -1,7 +1,4 @@
----
-title: "Classification algorithms"
----
-
+# Classification algorithms
 Spark MLlib provides a (limited) set of classification algorithms
 
 - Logistic regression

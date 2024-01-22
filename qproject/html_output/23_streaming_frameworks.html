@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Distributed architectures for big data processing and analytics - 28&nbsp; Streaming data analytics frameworks</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./22_structured_streaming.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Distributed architectures for big data processing and analytics</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Index</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#stream-processing-frameworks-for-big-streaming-data-analytics" id="toc-stream-processing-frameworks-for-big-streaming-data-analytics" class="nav-link active" data-scroll-target="#stream-processing-frameworks-for-big-streaming-data-analytics">Stream processing frameworks for (big) streaming data analytics</a></li>
+  <li><a href="#introduction-to-apache-storm" id="toc-introduction-to-apache-storm" class="nav-link" data-scroll-target="#introduction-to-apache-storm">Introduction to Apache Storm</a></li>
+  <li><a href="#storm-core-concepts" id="toc-storm-core-concepts" class="nav-link" data-scroll-target="#storm-core-concepts">Storm core concepts</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="stream-processing-frameworks-for-big-streaming-data-analytics" class="level3">
+<h3 class="anchored" data-anchor-id="stream-processing-frameworks-for-big-streaming-data-analytics">Stream processing frameworks for (big) streaming data analytics</h3>
+<p>Several frameworks have been proposed to process in real-time or in near real-time data streams:</p>
+<ul>
+<li>Apache Spark (Streaming component)</li>
+<li>Apache Storm</li>
+<li>Apache Flink</li>
+<li>Apache Samza</li>
+<li>Apache Apex</li>
+<li>Apache Flume</li>
+<li>Amazon Kinesis Streams</li>
+<li>…</li>
+</ul>
+<p>All these frameworks use a cluster of servers to scale horizontally with respect to the (big) amount of data to be analyzed.</p>
+<section id="comparison-among-state-of-the-art-streaming-frameworks" class="level4">
+<h4 class="anchored" data-anchor-id="comparison-among-state-of-the-art-streaming-frameworks">Comparison among state of the art streaming frameworks</h4>
+<p><strong>Apache Spark Streaming</strong></p>
+<ul>
+<li>Micro-batch applications</li>
+<li>Processes each record exactly once</li>
+</ul>
+<p><strong>Apache Storm</strong></p>
+<ul>
+<li>Continuous/real-time computation: very low latency</li>
+<li>Processes each record at least once in real-time: each record could be processed multiple times, hence may update mutable state twice</li>
+<li>Apache Storm Trident API: it is a running modality of Apache Storm that processes each record exactly once (micro-batch); slower than the Apache Storm version</li>
+</ul>
+<p><strong>Apache Flink</strong></p>
+<ul>
+<li>Continuous/real-time stateful computations over data streams: low latency</li>
+<li>Processes each record exactly once</li>
+</ul>
+</section>
+</section>
+<section id="introduction-to-apache-storm" class="level3">
+<h3 class="anchored" data-anchor-id="introduction-to-apache-storm">Introduction to Apache Storm</h3>
+<p>Apache Storm™ is a distributed framework that is used for real-time processing of data streams (e.g., Tweets analysis, Log processing). Currently, it is an <a href="http://storm.apache.org/">open source project</a> of the Apache Software Foundation. It is implemented in Clojure and Java (12 core committers, plus about 70 contributors).</p>
+<p>Storm was first developed by Nathan Marz at BackType, a company that provided social search applications. Later (2011), BackType was acquired by Twitter, and now it is a critical part of their infrastructure. Currently, Storm is a project of the Apache Software Foundation (since 2013).</p>
+<section id="data-processing" class="level4">
+<h4 class="anchored" data-anchor-id="data-processing">Data processing</h4>
+<ul>
+<li>Continuous computation: Storm can do continuous computation on data streams in real time; it can process each message as it comes (an example of continuous computation is streaming trending topics detection on Twitter)</li>
+<li>Real-time analytics: Storm can analyze and extract insights or complex knowledge from data that come from several real-time data streams</li>
+</ul>
+</section>
+<section id="features-of-storm" class="level4">
+<h4 class="anchored" data-anchor-id="features-of-storm">Features of Storm</h4>
+<p>Storm is</p>
+<ul>
+<li>Distributed: Storm is a distributed system than can run on a cluster of commodity servers.</li>
+<li>Horizontally scalable: Storm allows adding more servers (nodes) to your Storm cluster and increase the processing capacity of your application. It is linearly scalable with respect to the number of nodes, which means that you can double the processing capacity by doubling the nodes.</li>
+<li>Fast: Storm has been reported to process up to 1 million tuples per second per node.</li>
+<li>Fault tolerant: Units of work are executed by worker processes in a Storm cluster. When a worker dies, Storm will restart that worker (on the same node or on to another node).</li>
+<li>Reliable - Guaranteed data processing: Storm provides guarantees that each message (tuple) will be processed at least once; in case of failures, Storm will replay the lost tuples, and it can be configured to process each tuple only once.</li>
+<li>Easy to operate: Storm is simple to deploy and manage. Once the cluster is deployed, it requires little maintenance.</li>
+<li>Programming language agnostic: Even though the Storm platform runs on Java Virtual Machine, the applications that run over it can be written in any programming language that can read and write to standard input and output streams.</li>
+</ul>
+</section>
+</section>
+<section id="storm-core-concepts" class="level3">
+<h3 class="anchored" data-anchor-id="storm-core-concepts">Storm core concepts</h3>
+<p>Storm can be considered a distributed Function Programming-like processing of data streams. It applies a set of functions, in a specific order, on the elements of the input data streams and emits new data streams, however, each function can store its state by means of variables, and so it is not pure functional programming.</p>
+<section id="main-concepts" class="level4">
+<h4 class="anchored" data-anchor-id="main-concepts">Main concepts</h4>
+<ul>
+<li>Tuple</li>
+<li>Data Stream</li>
+<li>Spout</li>
+<li>Bolt</li>
+<li>Topology</li>
+</ul>
+</section>
+<section id="data-model" class="level4">
+<h4 class="anchored" data-anchor-id="data-model">Data model</h4>
+<p>The basic unit of data that can be processed by a Storm application is called a tuple: each tuple is a predefined list of fields. The data type of each field can be common data types, (e.g., byte, char, string, integer), or your own data types, which can be serialized as fields in a tuple. Each field of a tuple has a name.</p>
+<p>A tuple is dynamically typed, that is, you just need to define the names of the fields in a tuple and not their data type.</p>
+<p>Storm processes streams of tuples. Each stream</p>
+<ul>
+<li>is an unbounded sequence of tuples</li>
+<li>has a name</li>
+<li>is composed of homogenous tuples (i.e., tuples with the same structure)</li>
+</ul>
+<p>However, each applications can process multiple, heterogonous, data streams.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Tuple</p>
+<pre><code>(1.1.1.1,"foo.com")</code></pre>
+<p>Stream of tuples</p>
+<pre><code>(1.1.1.1,"foo.com")
+(2.2.2.2,"bar.net")
+(3.3.3.3,"foo.com")
+...</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="spout" class="level4">
+<h4 class="anchored" data-anchor-id="spout">Spout</h4>
+<p>Spout is the component generating/handling the input data stream. Spouts read or listen to data from external sources and publish them (emit in Storm terminology) into streams.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Examples
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li>A spout can be used to connect to the Twitter API and emit a stream of tweets</li>
+<li>A spout can be used to read a log file and emit a stream of composed of the its lines</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Each spout can emit multiple streams, with different schemas; for example, it is possible to implement a spout that reads 10-field records from a log file and emits them as two different streams of 7-tuples and 4-tuples, respectively.</p>
+<p>Spouts can be</p>
+<ul>
+<li>unreliable (fire-and-forget)</li>
+<li>reliable (can replay failed tuples)</li>
+</ul>
+</section>
+<section id="bolt" class="level4">
+<h4 class="anchored" data-anchor-id="bolt">Bolt</h4>
+<p>Bolt is the component that is used to apply a function over each tuple of a stream. Bolts consume one or more streams, emitted by spouts or other bolts, and potentially produce new streams.</p>
+<p>Bolts can be used to</p>
+<ul>
+<li>filter or transform the content of the input streams and emit new data streams that will be processed by other bolts</li>
+<li>process the data streams and store/persist the result of the computation in some of “storage” (files, Databases, ..)</li>
+</ul>
+<p>Each bolt can emit multiple streams, with different schemas.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Examples
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li>A bolt can be used to extract one field from each tuple of its input stream</li>
+<li>A bolt can be used to join two streams, based on a common field</li>
+<li>A bolt can be used to count the occurrences of a set of URLs</li>
+</ul>
+</div>
+</div>
+</div>
+<p>The input streams of a Storm cluster are handled by spouts</p>
+<ul>
+<li>Each spout passes the data streams to bolts, which transform them in some way</li>
+<li>Each bolt either persists the data in some sort of storage or passes it to some other bolts</li>
+</ul>
+<p>A Storm program is a chain of bolts making some computations/transformations on the data exposed by spouts and bolts.</p>
+</section>
+<section id="topology" class="level4">
+<h4 class="anchored" data-anchor-id="topology">Topology</h4>
+<p>A Storm topology is an abstraction that defines the graph of the computation: it specifies which spouts and bolts are used and how they are connected. A topology can be represented by a direct acyclic graph (DAG), where each node does some kind of processing and eventually forwards it to the next node(s) in the flow (i.e., a topology in Storm wires data and functions via a DAG).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Topology example</figcaption><p></p>
+<p><img src="images/23_streaming_frameworks/topology_example.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Functional programming</figcaption><p></p>
+<p><img src="images/23_streaming_frameworks/functional_programming.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Topology example</figcaption><p></p>
+<p><img src="images/23_streaming_frameworks/topology_example_2.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<ul>
+<li>Notice that there are two input data streams in this topology</li>
+<li>There are also two output data streams</li>
+</ul>
+<section id="topology-execution" class="level5">
+<h5 class="anchored" data-anchor-id="topology-execution">Topology execution</h5>
+<p>The topology is executed on the servers of the cluster running Storm. The system automatically decides which parts of the topology are executed by each server of the cluster</p>
+<ul>
+<li>Each topology runs until its is explicitly killed</li>
+<li>Each cluster can runs multiple topologies at the same time</li>
+</ul>
+<section id="worker-processes" class="level6">
+<h6 class="anchored" data-anchor-id="worker-processes">Worker processes</h6>
+<ul>
+<li>Each node in the cluster can run one or more JVMs called worker processes that are responsible for processing a part of the topology.</li>
+<li>Each topology executes across one or more worker processes</li>
+<li>Each worker process is bound to one of the topologies and can execute multiple components (spouts and/or bolts) of that topology; hence, even if multiple topologies are run at the same time, none of them will share any of the workers</li>
+</ul>
+</section>
+<section id="executor" class="level6">
+<h6 class="anchored" data-anchor-id="executor">Executor</h6>
+<ul>
+<li>Within each worker process, there can be multiple threads that execute parts of the topology. Each of these threads is called an executor</li>
+<li>An executor can execute only one of the components of the topology, that is, any one spout or bolt in the topology, but it may run one or more tasks for the same component</li>
+<li>Each spout or bolt can be associated with many executors and hence executed in parallel</li>
+</ul>
+</section>
+<section id="tasks" class="level6">
+<h6 class="anchored" data-anchor-id="tasks">Tasks</h6>
+<p>A task is the most granular unit of task execution in Storm: each task is an instance of a spout or bolt, and it performs the actual data processing</p>
+<ul>
+<li>Each spout or bolt that you implement in your code executes as many tasks across the cluster</li>
+<li>Each task can be executed alone or with another task of the same type (in the same executor)</li>
+</ul>
+<p>The number of tasks for a component is always the same throughout the lifetime of a topology (it is set when the topology is submitted), but the number of executors (threads) for a component can change over time (i.e., it is possible to add/remove executors for each component).</p>
+<p>The parallelism of the topology is given by the number of executors (i.e., number of threads). For each spout/bolt the application can specify</p>
+<ul>
+<li>The number of executors: this value can be changed at runtime</li>
+<li>The number of tasks: this value is set before submitting the topology and cannot be change at runtime</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./22_structured_streaming.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

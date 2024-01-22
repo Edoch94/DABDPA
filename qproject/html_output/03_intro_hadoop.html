@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Distributed architectures for big data processing and analytics - 5&nbsp; Introduction to Hadoop and MapReduce</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./04_hadoop_implementation.html" rel="next">
+<link href="./03b_HDFS_clc.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Distributed architectures for big data processing and analytics</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Index</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#motivations-of-hadoop-and-big-data-frameworks" id="toc-motivations-of-hadoop-and-big-data-frameworks" class="nav-link active" data-scroll-target="#motivations-of-hadoop-and-big-data-frameworks">Motivations of Hadoop and Big data frameworks</a></li>
+  <li><a href="#architectures" id="toc-architectures" class="nav-link" data-scroll-target="#architectures">Architectures</a></li>
+  <li><a href="#apache-hadoop" id="toc-apache-hadoop" class="nav-link" data-scroll-target="#apache-hadoop">Apache Hadoop</a></li>
+  <li><a href="#mapreduce-introduction" id="toc-mapreduce-introduction" class="nav-link" data-scroll-target="#mapreduce-introduction">MapReduce: introduction</a></li>
+  <li><a href="#the-mapreduce-programming-paradigm" id="toc-the-mapreduce-programming-paradigm" class="nav-link" data-scroll-target="#the-mapreduce-programming-paradigm">The MapReduce programming paradigm</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="motivations-of-hadoop-and-big-data-frameworks" class="level3">
+<h3 class="anchored" data-anchor-id="motivations-of-hadoop-and-big-data-frameworks">Motivations of Hadoop and Big data frameworks</h3>
+<section id="data-volumes" class="level4">
+<h4 class="anchored" data-anchor-id="data-volumes">Data volumes</h4>
+<ul>
+<li>The amount of data increases every day</li>
+<li>Some numbers (∼2012):
+<ul>
+<li>Data processed by Google every day: 100+ PB</li>
+<li>Data processed by Facebook every day: 10+ PB</li>
+</ul></li>
+<li>To analyze them, systems that scale with respect to the data volume are needed</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example: Google
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Consider this situation: you have to analyze 10 billion web pages, and the average size of a webpage is 20KB. So</p>
+<ul>
+<li>The total size of the collection: 10 billion x 20KBs = 200TB</li>
+<li>Assuming the usage of HDD hard disk (read bandwidth: 150MB/sec), the time needed to read all web pages (without analyzing them) is equal to 2 million seconds (i.e., more than 15 days).</li>
+<li>Assuming the usage of SSD hard disk (read bandwidth: 550MB/sec), the time needed to read all web pages (without analyzing them) is equal to 2 million seconds (i.e., more than 4 days).</li>
+<li>A single node architecture is not adequate</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="failures" class="level4">
+<h4 class="anchored" data-anchor-id="failures">Failures</h4>
+<p>Failures are part of everyday life, especially in a data center. A single server stays up for 3 years (~1000 days). Statistically</p>
+<ul>
+<li>With 10 servers: 1 failure every 100 days (~3 months)</li>
+<li>With 100 servers: 1 failure every 10 days</li>
+<li>With 1000 servers: 1 failure/day</li>
+</ul>
+<p>The main sources of failures</p>
+<ul>
+<li>Hardware/Software</li>
+<li>Electrical, Cooling, …</li>
+<li>Unavailability of a resource due to overload</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Examples
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>LALN data [DSN 2006]</p>
+<ul>
+<li>Data for 5000 machines, for 9 years</li>
+<li>Hardware failures: 60%, Software: 20%, Network 5%</li>
+</ul>
+<p>DRAM error analysis [Sigmetrics 2009]</p>
+<ul>
+<li>Data for 2.5 years</li>
+<li>8% of DIMMs affected by errors</li>
+</ul>
+<p>Disk drive failure analysis [FAST 2007]</p>
+<ul>
+<li>Utilization and temperature major causes of failures</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Failure types</p>
+<ul>
+<li>Permanent (e.g., broken motherboard)</li>
+<li>Transient (e.g., unavailability of a resource due to overload)</li>
+</ul>
+</section>
+<section id="network-bandwidth" class="level4">
+<h4 class="anchored" data-anchor-id="network-bandwidth">Network bandwidth</h4>
+<p>Network becomes the bottleneck if big amounts of data need to be exchanged between nodes/servers. Assuming a network bandwidth (in a data centre) equal to 10 Gbps, it means that moving 10 TB from one server to another would take more than 2 hours. So, data should be moved across nodes only when it is indispensable.</p>
+<p>Instead of moving data to the data centre, the code (i.e., programs) should be moved between the nodes: this approach is called <strong>Data Locality</strong>, and in this way very few MBs of code are exchanged between the severs, instead of huge amount of data.</p>
+</section>
+</section>
+<section id="architectures" class="level3">
+<h3 class="anchored" data-anchor-id="architectures">Architectures</h3>
+<section id="single-node-architecture" class="level4">
+<h4 class="anchored" data-anchor-id="single-node-architecture">Single node architecture</h4>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Single node architecture</figcaption><p></p>
+<p><img src="images/03_intro_hadoop/single_node.png" class="img-fluid figure-img" width="200"></p>
+</figure>
+</div>
+<div class="columns">
+<div class="column" style="width:45%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Single node architecture: Machine Learning and Statistics</figcaption><p></p>
+<p><img src="images/03_intro_hadoop/single_node_ML.png" class="img-fluid figure-img" width="200"></p>
+</figure>
+</div>
+<p>Small data: data can be completely loaded in main memory.</p>
+</div><div class="column" style="width:10%;">
+
+</div><div class="column" style="width:45%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Single node architecture: “Classical” data mining”</figcaption><p></p>
+<p><img src="images/03_intro_hadoop/single_node_classicalML.png" class="img-fluid figure-img" width="200"></p>
+</figure>
+</div>
+<p>Large data: data can not be completely loaded in main memory.</p>
+<ul>
+<li>Load in main memory one chunk of data at a time, process it and store some statistics</li>
+<li>Combine statistics to compute the final result</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="cluster-architecture" class="level4">
+<h4 class="anchored" data-anchor-id="cluster-architecture">Cluster architecture</h4>
+<p>To overcome the previously explained issues, a new architecture based on clusters of servers (i.e., data centres) has been devised. In this way:</p>
+<ul>
+<li>Computation is distributed across servers</li>
+<li>Data are stored/distributed across servers</li>
+</ul>
+<p>The standard architecture in the Big data context (∼2012) is based on</p>
+<ul>
+<li>Cluster of commodity Linux nodes/servers (32 GB of main memory per node)</li>
+<li>Gigabit Ethernet interconnection</li>
+</ul>
+<section id="commodity-cluster-architecture" class="level5">
+<h5 class="anchored" data-anchor-id="commodity-cluster-architecture">Commodity cluster architecture</h5>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Commodity cluster architecture</figcaption><p></p>
+<p><img src="images/03_intro_hadoop/commodity_cluster_architecture.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>The servers in each rack are very similar to each other, so that the servers would take the same time to process the data and none of them will become a bottleneck for the overall processing.</p>
+<p>Notice that</p>
+<ul>
+<li>In each rack, the servers are directly connected with each other in pairs</li>
+<li>Racks are directly connected with each other in pairs</li>
+</ul>
+</section>
+</section>
+<section id="scalability" class="level4">
+<h4 class="anchored" data-anchor-id="scalability">Scalability</h4>
+<p>Current systems must scale to address</p>
+<ul>
+<li>The increasing amount of data to analyze</li>
+<li>The increasing number of users to serve</li>
+<li>The increasing complexity of the problems</li>
+</ul>
+<p>Two approaches are usually used to address scalability issues</p>
+<ul>
+<li>Vertical scalability (scale up)</li>
+<li>Horizontal scalability (scale out)</li>
+</ul>
+<section id="scale-up-vs.-scale-out" class="level5">
+<h5 class="anchored" data-anchor-id="scale-up-vs.-scale-out">Scale up vs.&nbsp;Scale out</h5>
+<ul>
+<li>Vertical scalability (<em>scale up</em>): <strong>add more power/resources</strong> (i.e., main memory, CPUs) to a <strong>single node</strong> (high-performing server). The cost of super-computers is not linear with respect to their resources: the marginal cost increases as the power/resources increase.</li>
+<li>Horizontal scalability (<em>scale out</em>): <strong>add more nodes</strong> (commodity servers) to a system. The cost scales approximately linearly with respect to the number of added nodes. But data center efficiency is a difficult problem to solve.</li>
+</ul>
+<p>For data-intensive workloads, a large number of commodity servers is preferred over a small number of high-performing servers, since, at the same cost, it is possible to deploy a system that processes data more efficiently and is more fault-tolerant.</p>
+<p>Horizontal scalability (scale out) is preferred for big data applications, but distributed computing is hard: new systems hiding the complexity of the distributed part of the problem to developers are needed.</p>
+</section>
+</section>
+<section id="cluster-computing-challenges" class="level4">
+<h4 class="anchored" data-anchor-id="cluster-computing-challenges">Cluster computing challenges</h4>
+<ol type="1">
+<li>Distributed programming is hard
+<ul>
+<li>Problem decomposition and parallelization</li>
+<li>Task synchronization</li>
+</ul></li>
+<li>Task scheduling of distributed applications is critical: assign tasks to nodes by trying to
+<ul>
+<li>Speed up the execution of the application</li>
+<li>Exploit (almost) all the available resources</li>
+<li>Reduce the impact of node failures</li>
+</ul></li>
+<li>Distributed data storage</li>
+</ol>
+<p>How to store data persistently on disk and keep it available if nodes can fail? <strong>Redundancy</strong> is the solution, but it increases the complexity of the system.</p>
+<ol start="4" type="1">
+<li>Network bottleneck</li>
+</ol>
+<p>Reduce the amount of data send through the network by moving computation and code to data.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Distributed computing history
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Distributed computing is not a new topic</p>
+<ul>
+<li>HPC (High-performance computing) ~1960</li>
+<li>Grid computing ~1990</li>
+<li>Distributed databases ~1990</li>
+</ul>
+<p>Hence, many solutions to the mentioned challenges are already available, but we are now facing big data-driven problems: the former solutions are not adequate to address big data volumes.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="typical-big-data-problem" class="level4">
+<h4 class="anchored" data-anchor-id="typical-big-data-problem">Typical Big data problem</h4>
+<p>The typical way to address a Big Data problem (given a collection of historical data)</p>
+<ul>
+<li>Iterate over a large number of records/objects</li>
+<li>Extract something of interest from each record/object</li>
+<li>Aggregate intermediate results</li>
+<li>Generate final output</li>
+</ul>
+<p>Notice that, if in the second step it is needed to have some kind of knowledge of what’s in the other records, this Big data framework is not the best solution: the computations on isolated records is not possible anymore, and so this whole architecture is not suitable.</p>
+<p>The challenges:</p>
+<ul>
+<li>Parallelization</li>
+<li>Distributed storage of large data sets (Terabytes, Petabytes)</li>
+<li>Node Failure management</li>
+<li>Network bottleneck</li>
+<li>Diverse input format (data diversity &amp; heterogeneity)</li>
+</ul>
+</section>
+</section>
+<section id="apache-hadoop" class="level3">
+<h3 class="anchored" data-anchor-id="apache-hadoop">Apache Hadoop</h3>
+<p>It is scalable fault-tolerant distributed system for Big Data</p>
+<ul>
+<li>Distributed Data Storage</li>
+<li>Distributed Data Processing</li>
+</ul>
+<p>It borrowed concepts/ideas from the systems designed at Google (Google File System for Google’s MapReduce). It is open source project under the Apache license, but there are also many commercial implementations (e.g., Cloudera, Hortonworks, MapR).</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Hadoop history
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<table class="table">
+<caption>Timeline</caption>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 85%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Date</th>
+<th>Event</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dec 2004</td>
+<td>Google published a paper about GFS</td>
+</tr>
+<tr class="even">
+<td>July 2005</td>
+<td>Nutch uses MapReduce</td>
+</tr>
+<tr class="odd">
+<td>Feb 2006</td>
+<td>Hadoop becomes a Lucene subproject</td>
+</tr>
+<tr class="even">
+<td>Apr 2007</td>
+<td>Yahoo! runs it on a 1000-node cluster</td>
+</tr>
+<tr class="odd">
+<td>Jan 2008</td>
+<td>Hadoop becomes an Apache Top Level Project</td>
+</tr>
+<tr class="even">
+<td>Jul 2008</td>
+<td>Hadoop is tested on a 4000 node cluster</td>
+</tr>
+<tr class="odd">
+<td>Feb 2009</td>
+<td>The Yahoo! Search WebMap is a Hadoop application that runs on more than 10,000 core Linux cluster</td>
+</tr>
+<tr class="even">
+<td>Jun 2009</td>
+<td>Yahoo! made available the source code of its production version of Hadoop</td>
+</tr>
+<tr class="odd">
+<td>2010</td>
+<td>Facebook claimed that they have the largest Hadoop cluster in the world with 21 PB of storage</td>
+</tr>
+<tr class="even">
+<td>Jul 27, 2011</td>
+<td>Facebook announced the data has grown to 30 PB</td>
+</tr>
+</tbody>
+</table>
+<p>Who uses/used Hadoop</p>
+<ul>
+<li>Amazon</li>
+<li>Facebook</li>
+<li>Google</li>
+<li>IBM</li>
+<li>Joost</li>
+<li>Last.fm</li>
+<li>New York Times</li>
+<li>PowerSet</li>
+<li>Veoh</li>
+<li>Yahoo!</li>
+</ul>
+</div>
+</div>
+</div>
+<section id="hadoop-vs.-hpc" class="level4">
+<h4 class="anchored" data-anchor-id="hadoop-vs.-hpc">Hadoop vs.&nbsp;HPC</h4>
+<p>Hadoop</p>
+<ul>
+<li>Designed for Data intensive workloads</li>
+<li>Usually, no CPU demanding/intensive tasks</li>
+</ul>
+<p>HPC (High-performance computing)</p>
+<ul>
+<li>A supercomputer with a high-level computational capacity (performance of a supercomputer is measured in floating-point operations per second (FLOPS))</li>
+<li>Designed for CPU intensive tasks</li>
+<li>Usually it is used to process “small” data sets</li>
+</ul>
+</section>
+<section id="main-components" class="level4">
+<h4 class="anchored" data-anchor-id="main-components">Main components</h4>
+<p>Core components of Hadoop:</p>
+<ol type="1">
+<li>Distributed Big Data Processing Infrastructure based on the MapReduce programming paradigm
+<ul>
+<li>Provides a high-level abstraction view: programmers do not need to care about task scheduling and synchronization</li>
+<li>Fault-tolerant: node and task failures are automatically managed by the Hadoop system</li>
+</ul></li>
+<li>HDFS (Hadoop Distributed File System)
+<ul>
+<li>High availability distributed storage</li>
+<li>Fault-tolerant</li>
+</ul></li>
+</ol>
+<p>Hadoop virtualizes the file system, so that the interaction resembles a local file system, even if this case it spans on multiple disks on multiple servers.</p>
+<p>So Hadoop is in charge of:</p>
+<ul>
+<li>splitting the input files</li>
+<li>store the data in different servers</li>
+<li>managing the reputation of the blocks</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Hadoop main components</figcaption><p></p>
+<p><img src="images/03_intro_hadoop/hadoop_main_components.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>Notice that, in this example, the number of replicas (i.e., the number of copies) of each block (e.g., <span class="math inline">\(C_0\)</span>, <span class="math inline">\(C_1\)</span>, <span class="math inline">\(C_6\)</span>, etc.) is equal to two. Multiple copies are needed to correctly manage server failures: two copies are never stored in the same server.</p>
+<p>Notice that, with 2 copies of the same file, the user is always sure that 1 failure can be managed with no interruptions in the data processing and without the risk of losing data. In general, the number of failures that and HDFS can sustain with no repercussions is equal to <span class="math inline">\((\textbf{number of copies})-1\)</span>.</p>
+<p>When a failure occures, Hadoop immediately starts to create new copies of the data, to reach again the set number of replicas.</p>
+</section>
+<section id="distributed-big-data-processing-infrastructure" class="level4">
+<h4 class="anchored" data-anchor-id="distributed-big-data-processing-infrastructure">Distributed Big data processing infrastructure</h4>
+<p>Hadoop allows to separate the <em>what</em> from the <em>how</em> because Hadoop programs are based on the MapReduce programming paradigm:</p>
+<ul>
+<li>MapReduce abstracts away the “distributed” part of the problem (scheduling, synchronization, etc), so that programmers can focus on the <em>what</em>;</li>
+<li>the distributed part (scheduling, synchronization, etc) of the problem is handled by the framework: the Hadoop infrastructure focuses on the <em>how</em>.</li>
+</ul>
+<p>But an in-depth knowledge of the Hadoop framework is important to develop efficient applications: the design of the application must exploit data locality and limit network usage/data sharing.</p>
+</section>
+<section id="hdfs" class="level4">
+<h4 class="anchored" data-anchor-id="hdfs">HDFS</h4>
+<p>HDFS is the standard Apache Hadoop distributed file system. It provides global file namespace, and stores data redundantly on multiple nodes to provide persistence and availability (fault-tolerant file system).</p>
+<p>The typical usage pattern for Hadoop:</p>
+<ul>
+<li>huge files (GB to TB);</li>
+<li>data is rarely updated (create new files or append to existing ones);</li>
+<li>reads and appends are common, and random read/write operations are not performed.</li>
+</ul>
+<p>Each file is split in <strong>chunks</strong> (also called <strong>blocks</strong>) that are spread across the servers.</p>
+<ul>
+<li>Each chunck is replicated on different servers (usually there are 3 replicas per chunk), ensuring persistence and availability. To further increase persistence and availability, replicas are stored in different racks, if it possible.</li>
+<li>Each chunk contains a part of the content of <em>one single file</em>. It is not possible to have the content of two files in the same chunk/block</li>
+<li>Typically each chunk is 64-128 MB, and the chunk size is defined when configuring Hadoop.</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">2 files in 4 chunks</figcaption><p></p>
+<p><img src="images/03_intro_hadoop/hdfs_chunks_example.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>Each square represents a chunk in the HDFS. Each chunk contains 64 MB of data, so file 1 (65 MB) sticks out by 1 MB from a single chunk, while file 2 (127 MB) does not completely fill two chunks. The empty chunk portions are not filled by any other file.</p>
+<p>So, even if the total space occupied from the files would be 192 MB (3 chunks), the actual space they occupy is 256 (4 chunks): Hadoop does not allow two files to occupy the same chunk, so that two different processes would not try to access a block at the same time.</p>
+</div>
+</div>
+</div>
+<p>The Master node, (a.k.a., <em>Name Nodes</em> in HDFS) is a special node/server that</p>
+<ul>
+<li>Stores HDFS metadata (e.g., the mapping between the name of a file and the location of its chunks)</li>
+<li>Might be replicated (to prevent stoppings due to the failure of the Master node)</li>
+</ul>
+<p>Client applications can access the file through HDFS APIs: they talk to the master node to find data/chuck servers associated with the file of interest, and then connect to the selected chunk servers to access data.</p>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Hadoop ecosystem
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The HDFS and the YARN scheduler are the two main components of Hadoop, however there are modules, and each project/system addresses one specific class of problems.</p>
+<ul>
+<li>Hive: a distributed relational database, based on MapReduce, for querying data stored in HDFS by means of a query language based on SQL;</li>
+<li>HBase: a distributed column-oriented database that uses HDFS for storing data;</li>
+<li>Pig: a data flow language and execution environment, based on MapReduce, for exploring very large datasets;</li>
+<li>Sqoop: a tool for efficiently moving data from traditional relational databases and external flat file sources to HDFS;</li>
+<li>ZooKeeper: a distributed coordination service, that provides primitives such as distributed locks.</li>
+<li>…</li>
+</ul>
+<p>The integration of these components with Hadoop is not as good as the integration of the Spark components with Spark.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="mapreduce-introduction" class="level3">
+<h3 class="anchored" data-anchor-id="mapreduce-introduction">MapReduce: introduction</h3>
+<section id="word-count" class="level4">
+<h4 class="anchored" data-anchor-id="word-count">Word count</h4>
+<table class="table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Input</th>
+<th>Problem</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>a large textual file of words</td>
+<td>count the number of times each distinct word appears in the file</td>
+<td>a list of pairs word, number, counting the number of occurrences of each specific word in the input file</td>
+</tr>
+</tbody>
+</table>
+<section id="case-1-entire-file-fits-in-main-memory" class="level5">
+<h5 class="anchored" data-anchor-id="case-1-entire-file-fits-in-main-memory">Case 1: Entire file fits in main memory</h5>
+<p>A traditional single node approach is probably the most efficient solution in this case. The complexity and overheads of a distributed system affects the performance when files are “small” (“small” depends on the available resources).</p>
+</section>
+<section id="case-2-file-too-large-to-fit-in-main-memory" class="level5">
+<h5 class="anchored" data-anchor-id="case-2-file-too-large-to-fit-in-main-memory">Case 2: File too large to fit in main memory</h5>
+<p>How to split this problem in a set of (almost) independent sub-tasks, and execute them in parallel on a cluster of servers?</p>
+<p>Assuming that</p>
+<ul>
+<li>The cluster has 3 servers</li>
+<li>The content of the input file is: “Toy example file for Hadoop. Hadoop running example”</li>
+<li>The input file is split into 2 chunks</li>
+<li>The number of replicas is 1</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Word count solution</figcaption><p></p>
+<p><img src="images/03_intro_hadoop/word_count.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>The problem can be easily parallelized:</p>
+<ol type="1">
+<li>Each server processes its chunk of data and counts the number of times each word appears in its own chunk
+<ul>
+<li>Each server can execute its sub-task independently from the other servers of the cluster: asynchronization is not needed in this phase</li>
+<li>The output generated from each chunk by each server represents a partial result</li>
+</ul></li>
+<li>Each server sends its local (partial) list of pairs <span class="math inline">\(&lt;\textbf{word}, \textbf{number of occurrences in its chunk}&gt;\)</span> to a server that is in charge of aggregating all local results and computing the global result. The server in charge of computing the global result needs to receive all the local (partial) results to compute and emit the final list: a synchronization operation is needed in this phase.</li>
+</ol>
+<p>Assume a more realistic situation</p>
+<ul>
+<li>The file size is 100 GB and the number of distinct words occurring in it is at most 1000</li>
+<li>The cluster has 101 servers</li>
+<li>The file is spread across 100 servers (1 server is the Master node) and each of these servers contains one (different) chunk of the input file (i.e., the file is optimally spread across 100 servers, and so each server contains 1/100 of the file in its local hard drives)</li>
+</ul>
+<section id="complexity" class="level6">
+<h6 class="anchored" data-anchor-id="complexity">Complexity</h6>
+<ul>
+<li>Each server reads 1 GB of data from its local hard drive (it reads one chunk from HDFS): the time needed to process the data is equal to a few seconds;</li>
+<li>Each local list consists of at most 1,000 pairs (because the number of distinct words is 1,000): each list consists of a few MBs;</li>
+<li>The maximum amount of data sent on the network is 100 times the size of a local list (number of servers x local list size): the MBs that are moved through the network consists of some MBs.</li>
+</ul>
+<p>So, the critical step is the first one: the result of this phase should be as small as possible, to reduce the data moving between nodes during the following phase.</p>
+<p>Is also the aggregating step parallelizable? Yes, in the sense that the key-value pairs associated with the same key are sent to the same server in order to apply the aggregating function. So, different servers work in parallel, computing the aggregations on different keys.</p>
+</section>
+<section id="scalability-1" class="level6">
+<h6 class="anchored" data-anchor-id="scalability-1">Scalability</h6>
+<p>Scalability can be defined along two dimensions</p>
+<ul>
+<li>In terms of <strong>data</strong>: given twice the amount of data, the word count algorithm takes approximately no more than twice as long to run. Each server has to process twice the data, and so execution time to compute local list is doubled.</li>
+<li>In terms of <strong>resources</strong>: given twice the number of servers, the word count algorithm takes approximately no more than half as long to run. Each server processes half of the data, and execution time to compute local list is halved.</li>
+</ul>
+<p>We are assuming that the time needed to send local results to the node in charge of computing the final result and the computation of the final result are considered negligible in this running example. However, notice that frequently this assumption is not true, indeed it depends on the complexity of the problem and on the ability of the developer to limit the amount of data sent on the network.</p>
+</section>
+</section>
+</section>
+<section id="mapreduce-approach-key-ideas" class="level4">
+<h4 class="anchored" data-anchor-id="mapreduce-approach-key-ideas">MapReduce approach key ideas</h4>
+<ul>
+<li>Scale “out”, not “up”: increase the number of servers, avoiding to upgrade the resources (CPU, memory) of the current ones</li>
+<li>Move processing to data: the network has a limited bandwidth</li>
+<li>Process data sequentially, avoid random access: seek operations are expensive. Big data applications usually read and analyze all input records/objects: random access is useless</li>
+</ul>
+<section id="data-locality" class="level5">
+<h5 class="anchored" data-anchor-id="data-locality">Data locality</h5>
+<p>Traditional distributed systems (e.g., HPC) move data to computing nodes (servers). This approach cannot be used to process TBs of data, since the network bandwidth is limited So, Hadoop moves code to data: code (few KB) is copied and executed on the servers where the chunks of data are stored. This approach is based on “data locality”.</p>
+</section>
+</section>
+<section id="hadoop-and-mapreduce-usage-scope" class="level4">
+<h4 class="anchored" data-anchor-id="hadoop-and-mapreduce-usage-scope">Hadoop and MapReduce usage scope</h4>
+<p>Hadoop/MapReduce is designed for</p>
+<ul>
+<li>Batch processing involving (mostly) full scans of the input data</li>
+<li>Data-intensive applications
+<ul>
+<li>Read and process the whole Web (e.g., PageRank computation)</li>
+<li>Read and process the whole Social Graph (e.g., LinkPrediction, a.k.a. “friend suggestion”)</li>
+<li>Log analysis (e.g., Network traces, Smart-meter data)</li>
+</ul></li>
+</ul>
+<p>In general, MapReduce can be used when the same function is applied on multiple records <strong>one at a time</strong>, and its result then has to be aggregated.</p>
+<div class="callout-warning callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Notice that Hadoop/MapReduce is not the panacea for all Big Data problems. In particular, does not feet well</p>
+<ul>
+<li>Iterative problems</li>
+<li>Recursive problems</li>
+<li>Stream data processing</li>
+<li>Real-time processing</li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="the-mapreduce-programming-paradigm" class="level3">
+<h3 class="anchored" data-anchor-id="the-mapreduce-programming-paradigm">The MapReduce programming paradigm</h3>
+<p>The MapReduce programming paradigm is based on the basic concepts of Functional programming. Actually, MapReduce “implements” a subset of functional programming, and, because of this, the programming model appears quite limited and strict: everything is based on two “functions” with predefined signatures, that are Map and Reduce.</p>
+<section id="what-can-mapreduce-do" class="level4">
+<h4 class="anchored" data-anchor-id="what-can-mapreduce-do">What can MapReduce do</h4>
+<p>Solving complex problems is difficult, however there are several important problems that can be adapted to MapReduce</p>
+<ul>
+<li>Log analysis</li>
+<li>PageRank computation</li>
+<li>Social graph analysis</li>
+<li>Sensor data analysis</li>
+<li>Smart-city data analysis</li>
+<li>Network capture analysis</li>
+</ul>
+</section>
+<section id="building-blocks-map-and-reduce" class="level4">
+<h4 class="anchored" data-anchor-id="building-blocks-map-and-reduce">Building blocks: Map and Reduce</h4>
+<p>MapReduce is based on two main “building blocks”, which are the Map and Reduce functions.</p>
+<ul>
+<li>Map function: it is applied over each element of an input data set and emits a set of (key, value) pairs</li>
+<li>Reduce function: it is applied over each set of (key, value) pairs (emitted by the Map function) with the same key and emits a set of (key, value) pairs. This is the final result.</li>
+</ul>
+</section>
+<section id="solving-the-word-count-problem" class="level4">
+<h4 class="anchored" data-anchor-id="solving-the-word-count-problem">Solving the word count problem</h4>
+<table class="table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Input</th>
+<th>Problem</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>a large textual file of words</td>
+<td>count the number of times each distinct word appears in the file</td>
+<td>a list of pairs word, number, counting the number of occurrences of each specific word in the input file</td>
+</tr>
+</tbody>
+</table>
+<p>The input textual file is considered as a list <span class="math inline">\(L\)</span> of words</p>
+<p><span class="math display">\[
+L = [\text{toy}, \text{example}, \text{toy}, \text{example}, \text{hadoop}]
+\]</span></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p></p><figcaption class="figure-caption">Word count running example</figcaption><p></p>
+<p><img src="images/03_intro_hadoop/mapreduce_paradigm.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<ul>
+<li>Map phase: apply a function on each element of a list of key-value pairs (notice that the example above is not 100% correct: the elements of the list should also be key-value pairs);</li>
+<li>Shuffle and sort phase: group by key; in this phase the key-value pairs having the same key are collected together in the same node, but no computation is performed;</li>
+<li>Reduce phase: apply an aggregating function on each group; this step can be parallelized: one node may consider some keys, while another one considers others.</li>
+</ul>
+<p>A key-value pair <span class="math inline">\((w, 1)\)</span> is emitted for each word <span class="math inline">\(w\)</span> in <span class="math inline">\(L\)</span>.</p>
+<p>In other words, the Map function <span class="math inline">\(m\)</span> is <span class="math display">\[
+m(w) = (w, 1)
+\]</span></p>
+<p>A new list of (key, value) pairs <span class="math inline">\(L_m\)</span> is generated. Notice that, in this case the key-value pairs generated for each word is just one, but in other cases more than one key-value pair is generated from each element of the starting list.</p>
+<p>Then, the key-value pairs in <span class="math inline">\(L_m\)</span> are aggregated by key (i.e., by word <span class="math inline">\(w\)</span> in the example).</p>
+<section id="map" class="level5">
+<h5 class="anchored" data-anchor-id="map">Map</h5>
+<p>In the Map step, one group <span class="math inline">\(G_w\)</span> is generated for each word <span class="math inline">\(w\)</span>. Each group <span class="math inline">\(G_w\)</span> is a key-list pair <span class="math display">\[
+(w, [\textbf{list of values}])
+\]</span> where <span class="math inline">\([\textbf{list of values}]\)</span> contains all the values of the pairs associated with the word <span class="math inline">\(w\)</span>.</p>
+<p>Considering the example, <span class="math inline">\(\textbf{[list of values]}\)</span> is a list of <span class="math inline">\([1, 1, 1, ...]\)</span>, and, given a group <span class="math inline">\(G_w\)</span>, the number of ones in <span class="math inline">\([1, 1, 1, ...]\)</span> is equal to the occurrences of word <span class="math inline">\(w\)</span> in the input file.</p>
+<p>Notice that also the input of Map should be a list of key-value pairs. If a simple list of elements is passed to Map, Hadoop transforms the elements in key-value pairs, such that the value is equal to the element (e.g., the word) and the key is equal to the offset of the element in the input file.</p>
+</section>
+<section id="reduce" class="level5">
+<h5 class="anchored" data-anchor-id="reduce">Reduce</h5>
+<p>For each group <span class="math inline">\(G_w\)</span> a key-value pair is emitted as follows <span class="math display">\[
+(w,\sum_{G_w}{[\textbf{list of values}]})
+\]</span> So, the result of the Reduce function is <span class="math inline">\(r(G_w) = (w,\sum_{Gw}{[\textbf{list of values}]})\)</span>.</p>
+<p>The resulting list of emitted pairs is the solution of the word count problem: in the list there is one pair (word <span class="math inline">\(w\)</span>, number of occurrences) for each word in our running example.</p>
+</section>
+</section>
+<section id="mapreduce-phases" class="level4">
+<h4 class="anchored" data-anchor-id="mapreduce-phases">MapReduce Phases</h4>
+<section id="map-1" class="level5">
+<h5 class="anchored" data-anchor-id="map-1">Map</h5>
+<p>The Map phase can be viewed as a transformation over each element of a data set. This transformation is a function <span class="math inline">\(m\)</span> defined by developers, and it is invoked one time for each input element. Each invocation of <span class="math inline">\(m\)</span> happens in isolation, allowing the parallelization of the application of <span class="math inline">\(m\)</span> to each element of a data set in a straightforward manner.</p>
+<p>The <em>formal definition</em> of Map is <span class="math display">\[
+(k_1, v_1) \rightarrow [(k_2, v_2)]
+\]</span> Notice that</p>
+<ul>
+<li>Since the input data set is a list of key-value pairs, the argument of the Map function is a key-value pair; so, the Map function <span class="math inline">\(N\)</span> times, where <span class="math inline">\(N\)</span> is the number of input key-value pairs;</li>
+<li>The Map function emits a list of key-value pairs for each input record, and the list can also be empty;</li>
+<li>No data is moved between nodes during this phase.</li>
+</ul>
+</section>
+<section id="reduce-1" class="level5">
+<h5 class="anchored" data-anchor-id="reduce-1">Reduce</h5>
+<p>The Reduce phase can be viewed as an aggregate operation. The aggregate function is a function <span class="math inline">\(r\)</span> defined by developers, and it is invoked one time for each distinct key, aggregating all the values associated with it. Also the reduce phase can be performed in parallel and in isolation, since each group of key-value pairs with the same key can be processed in isolation.</p>
+<p>The <em>formal definition</em> of Reduce is <span class="math display">\[
+(k_2, [v_2]) \rightarrow [(k_3, v_3)]
+\]</span> Notice that</p>
+<ul>
+<li>The Reduce function receives a list of values <span class="math inline">\([v_2]\)</span> associated with a specific key <span class="math inline">\(k_2\)</span>; so the Reduce function is invoked <span class="math inline">\(M\)</span> times, where <span class="math inline">\(M\)</span> is the number of different keys in the input list;</li>
+<li>The Reduce function emits a list of key-value pairs.</li>
+</ul>
+</section>
+<section id="shuffle-and-sort" class="level5">
+<h5 class="anchored" data-anchor-id="shuffle-and-sort">Shuffle and sort</h5>
+<p>The shuffle and sort phase is always the same: it works by grouping the output of the Map phase by key. It does not need to be defined by developers, and it is already provided by the Hadoop system.</p>
+</section>
+</section>
+<section id="data-structures" class="level4">
+<h4 class="anchored" data-anchor-id="data-structures">Data structures</h4>
+<p>Key-value pair is the basic data structure in MapReduce. Keys and values can be integers, float, strings, …, in general they can also be (almost) arbitrary data structures defined by the designer. Notice that both input and output of a MapReduce program are lists of key-value pairs.</p>
+<p>All in all, the design of MapReduce involves imposing the key-value structure on the input and output data sets. For example, in a collection of Web pages, input keys may be URLs and values may be their HTML content.</p>
+<p>In many applications, the key part of the input data set is ignored. In other words, the Map function usually does not consider the key of its key-value pair argument (e.g., word count problem). Some specific applications exploit also the keys of the input data (e.g., keys can be used to uniquely identify records/objects).</p>
+</section>
+<section id="pseudocode-of-word-count-solution-using-mapreduce" class="level4">
+<h4 class="anchored" data-anchor-id="pseudocode-of-word-count-solution-using-mapreduce">Pseudocode of word count solution using MapReduce</h4>
+<p><strong>Map</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">def</span> <span class="bu">map</span>(key, value):</span>
+<span id="cb1-2"><a href="#cb1-2"></a>    <span class="co">'''</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co">    :key: offset of the word in the file</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co">    :value: a word of the input document</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co">    '''</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>    <span class="cf">return</span> (value, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Reduce</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">def</span> <span class="bu">reduce</span>(key, values):</span>
+<span id="cb2-2"><a href="#cb2-2"></a>    <span class="co">'''</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co">    :key: a word </span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">    :values: a list of integers</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co">    '''</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>    occurrences <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>    <span class="cf">for</span> c <span class="kw">in</span> values:</span>
+<span id="cb2-8"><a href="#cb2-8"></a>        occurrences <span class="op">=</span> occurrences <span class="op">+</span> c</span>
+<span id="cb2-9"><a href="#cb2-9"></a>    <span class="cf">return</span> (key, occurrences)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./03b_HDFS_clc.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./04_hadoop_implementation.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

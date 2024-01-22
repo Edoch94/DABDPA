@@ -1,7 +1,4 @@
----
-title: "Spark MLlib"
----
-
+# Spark MLlib
 Spark MLlib is the Spark component providing the machine learning/data mining algorithms
 
 - Pre-processing techniques

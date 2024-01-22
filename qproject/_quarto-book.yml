@@ -9,15 +9,31 @@ book:
     - 00_01_intro.qmd
     - 02_architectures.qmd
     - 03b_HDFS_clc.qmd
-    # - 03_intro_hadoop.qmd
-    # - 04_hadoop_implementation.qmd
-    # - 05_mapreduce_patterns_1.qmd
-    # - 06_mapreduce_advanced_topics.qmd
-    # - 07_mapreduce_patterns_2.qmd
-    # - 08_sql_operators_mapreduce.qmd
-    # - 10b_spark_submit_execute.qmd
-    # - 10_intro_spark.qmd
-    # - 11_rdd_based_programming.qmd
+    - 03_intro_hadoop.qmd
+    - 04_hadoop_implementation.qmd
+    - 05_mapreduce_patterns_1.qmd
+    - 06_mapreduce_advanced_topics.qmd
+    - 07_mapreduce_patterns_2.qmd
+    - 08_sql_operators_mapreduce.qmd
+    - 10b_spark_submit_execute.qmd
+    - 10_intro_spark.qmd
+    - 11_rdd_based_programming.qmd
+    - 12_rdd_keyvalue_pairs.qmd
+    - 13_rdd_numbers.qmd
+    - 14_cache_accumulators_broadcast.qmd
+    - 15b_pagerank.qmd
+    - 16_sparksql_dataframes.qmd
+    - 18a_spark_mllib.qmd
+    - 18b_classification.qmd
+    - 18c_clustering.qmd
+    - 18d_regression.qmd
+    - 18e_mining.qmd
+    - 19_graph_analytics_1.qmd
+    - 20_graph_analytics_2.qmd
+    - 21_streaming_analytics.qmd
+    - 22_structured_streaming.qmd
+    - 23_streaming_frameworks.qmd
+  page-navigation: true
 
 profile:
   group: 

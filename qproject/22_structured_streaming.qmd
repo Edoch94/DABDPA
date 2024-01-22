@@ -1,7 +1,4 @@
----
-title: "Spark structured streaming"
----
-
+# Spark structured streaming
 ## What is Spark structured streaming?
 Structured Streaming is a scalable and fault-tolerant stream processing engine that is built on the Spark SQL engine, and input data are represented by means of (streaming) DataFrames. Structured Streaming uses the existing Spark SQL APIs to query data streams (the same methods used for analyzing static DataFrames).
 
@@ -86,8 +83,9 @@ recordsDF = spark.readStream \
     .format("socket") \
     .option("host", "localhost") \
     .option("port", 9999) \
-    .load()
+    .load() # <1>
 ```
+1. Test
 
 :::
 

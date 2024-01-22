@@ -1,7 +1,4 @@
----
-title: "Streaming data analytics frameworks"
----
-
+# Streaming data analytics frameworks
 ## Stream processing frameworks for (big) streaming data analytics
 Several frameworks have been proposed to process in real-time or in near real-time data streams:
 

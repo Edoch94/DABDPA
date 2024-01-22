@@ -1,7 +1,4 @@
----
-title: "Regression algorithms"
----
-
+# Regression algorithms
 Spark MLlib provides a set of regression algorithms
 
 - Linear regression

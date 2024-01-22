@@ -1,7 +1,4 @@
----
-title: "Introduction to Spark"
----
-
+# Introduction to Spark
 Apache Spark<sup>TM</sup> is a fast and general-purpose engine for large-scale data processing. Spark aims at achieving the following goals in the Big data context:
 
 - Generality: diverse workloads, operators, job sizes

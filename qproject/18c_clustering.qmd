@@ -1,7 +1,4 @@
----
-title: "Clustering algorithms"
----
-
+# Clustering algorithms
 Spark MLlib provides a (limited) set of clustering algorithms
 
 - K-means

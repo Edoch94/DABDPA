@@ -1,7 +1,4 @@
----
-title: "Streaming data analytics frameworks"
----
-
+# Streaming data analytics frameworks
 ## Introduction
 ### What is streaming processing?
 Streaming processing is the act of continuously incorporating new data to compute a result. Input data is unbounded (i.e., it has no beginning and no end). Series of events that arrive at the stream processing system, and the application will output multiple versions of the results as it runs or put them in a storage.

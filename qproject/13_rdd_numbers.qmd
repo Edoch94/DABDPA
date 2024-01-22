@@ -1,7 +1,4 @@
----
-title: "RDD of numbers"
----
-
+# RDD of numbers
 Spark provides specific actions for RDD containing numerical values (integers or floats). 
 
 RDDs of numbers can be created by using the standard methods

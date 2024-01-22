@@ -1,7 +1,4 @@
----
-title: "Itemset and Association rule mining"
----
-
+# Itemset and Association rule mining
 Spark MLlib provides
 
 - An itemset mining algorithm based on the FP-growth algorithm, that extracts all the sets of items (of any length) with a minimum frequency;

@@ -1,7 +1,4 @@
----
-title: "MapReduce patterns - 1"
----
-
+# MapReduce patterns - 1
 ## Summarization Patterns
 Summarization Patterns are used to implement applications that produce top-level/summarized view of the data, such as
 

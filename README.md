@@ -1,5 +1,5 @@
 # DABDPA
-This repository containes the notes collected from the lectures and  of "Distributed architectures for big data processing and analytics" (**DABDPA**), hold at the Master Degree in Data Science and Engineering course (2022-2023) of Politecnico di Torino.
+This repository contains contains notes collected during the lectures of "Distributed architectures for big data processing and analytics" (**DABDPA**) course, hold at the Master Degree in Data Science and Engineering (2022-2023) of Politecnico di Torino.
 
 ## Initial setup
 ### 1. Install Quarto
