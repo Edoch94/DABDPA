@@ -18,6 +18,7 @@ format:
 
   pdf: # using the "compact-pdf" Quarto format, see https://github.com/arcruz0/quarto-compact
     shift-heading-level-by: 0
+    code-annotations: true
     toc: true
     number-sections: true
     number-depth: 1
@@ -28,7 +29,7 @@ format:
       - right=.8in
       - bottom=1in
       - left=.8in
-    link-citations: yes
+    link-citations: true
     linkcolor: blue
     code-block-bg: "#f0f3f5"
     # code-block-border-left: "#edd39f"

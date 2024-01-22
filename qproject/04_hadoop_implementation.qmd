@@ -232,7 +232,7 @@ Always start from these templates. The parts of the code that should be changed 
 
 ### Driver
 ```java
-#/* Set package */ // # <1> 
+* Set package */ // <1> 
 package it.polito.bigdata.hadoop.mypackage; 
 
 /* Import libraries */
@@ -248,7 +248,7 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 /* Driver class */
-#public class MapReduceAppDriver extends Configured implements Tool { // # <2> 
+public class MapReduceAppDriver extends Configured implements Tool { // <2> 
     @Override
     public int run(String[] args) throws Exception {
         /* variables */
@@ -268,7 +268,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
         Job job = Job.getInstance(conf); // Creation of the job, that is the application instance
 
         // Assign a name to the job
-        #job.setJobName("My First MapReduce program"); // # <3>
+        job.setJobName("My First MapReduce program"); // <3>
 
         // Set path of the input file/folder (if it is a folder, the job reads all the files in the specified folder) for this job
         FileInputFormat.addInputPath(job, inputPath);
@@ -279,36 +279,36 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
         // Set input format
         // TextInputFormat = textual files; the input types are (keys: LongWritable, values: text)
         // KeyValueTextInputFormat = textual files; the input types are (keys: text, values: text)
-        #job.setInputFormatClass(TextInputFormat.class); // This class also includes the information about the type of input data // # <4>
+        job.setInputFormatClass(TextInputFormat.class); // This class also includes the information about the type of input data // <4>
 
         // Set job output format
-        #job.setOutputFormatClass(TextOutputFormat.class); // # <5>
+        job.setOutputFormatClass(TextOutputFormat.class); // <5>
 
         // **********************
         //   DRIVER
         // **********************
         // Specify the class of the Driver for this job
-        #job.setJarByClass(MapReduceAppDriver.class); // # <6>
+        job.setJarByClass(MapReduceAppDriver.class); // <6>
 
         // **********************
         //   MAPPER
         // **********************
         // Set mapper class
-        #job.setMapperClass(MyMapperClass.class); // # <7>
+        job.setMapperClass(MyMapperClass.class); // <7>
         
         // Set map output key and value classes; these are also the key - value types of the reduces class
-        #job.setMapOutputKeyClass(output key type.class); // where type changes depending on the type (e.g., text, IntWritable) // # <8>
-        #job.setMapOutputValueClass(output value type.class); // # <9>
+        job.setMapOutputKeyClass(output key type.class); // where type changes depending on the type (e.g., text, IntWritable) // <8>
+        job.setMapOutputValueClass(output value type.class); // <9>
 
         // **********************
         //   REDUCER
         // **********************
         // Set reduce class
-        #job.setReducerClass(MyReducerClass.class); // # <10>
+        job.setReducerClass(MyReducerClass.class); // <10>
 
         // Set reduce output key and value classes
-        #job.setOutputKeyClass(output key type.class); // # <11>
-        #job.setOutputValueClass(output value type.class); // # <12>
+        job.setOutputKeyClass(output key type.class); // <11>
+        job.setOutputValueClass(output value type.class); // <12>
 
         // Set number of reducers
         job.setNumReduceTasks(numberOfReducers);
@@ -329,7 +329,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
         /* Exploit the ToolRunner class to "configure" and run the Hadoop application */
         int res = ToolRunner.run(
             new Configuration(), 
-            #new MapReduceAppDriver(), // # <13>
+            new MapReduceAppDriver(), // <13>
             args
         );
         System.exit(res);
@@ -354,7 +354,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 ```java
 /* Set package */
-#package it.polito.bigdata.hadoop.mypackage; // # <1>
+package it.polito.bigdata.hadoop.mypackage; // <1>
 
 /* Import libraries */
 import java.io.IOException;
@@ -363,16 +363,16 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.io.*;
 
 /* Mapper Class */
-#class myMapperClass extends Mapper< // Mapper is a template // # <2>
-    #MapperInputKeyType, // Input key type (must be consistent with the InputFormat class specified in the Driver) // # <3>
-    #MapperInputValueType, // Input value type (must be consistent with the InputFormat class specified in the Driver) // # <4>
-    #MapperOutputKeyType, // Output key type // # <5>
-    #MapperOutputValueType // Output value type // # <6>
+class myMapperClass extends Mapper< // Mapper is a template // <2>
+    MapperInputKeyType, // Input key type (must be consistent with the InputFormat class specified in the Driver) // <3>
+    MapperInputValueType, // Input value type (must be consistent with the InputFormat class specified in the Driver) // <4>
+    MapperOutputKeyType, // Output key type // <5>
+    MapperOutputValueType // Output value type // <6>
 >{
 /* Implementation of the map method */
     protected void map(
-        #MapperInputKeyType key, // Input key // # <7>
-        #MapperInputValueType value, // Input value // # <8>
+        MapperInputKeyType key, // Input key // <7>
+        MapperInputValueType value, // Input value // <8>
         Context context // This is an object containing the write method, that has to be invoked to return the (key, value) pairs
     ) throws IOException, InterruptedException {
 
@@ -381,7 +381,7 @@ import org.apache.hadoop.io.*;
         context.write(...) is used to emit (key, value) pairs context.write(new outputkey, new outputvalue); 
         */ 
 
-        #context.write(new outputkey, new outputvalue); // # <9>
+        context.write(new outputkey, new outputvalue); // <9>
         // Notice context.write(...) has to be invoked a number of times equal to the number of (key, value) pairs have to be returned. Even 0 times is accepted
 
         // In the mapper instance also setup and cleanup methods can be implemented, but are not mandatory. Instead, the map method is mandatory
@@ -403,7 +403,7 @@ import org.apache.hadoop.io.*;
 
 ```java
 /* Set package */
-#package it.polito.bigdata.hadoop.mypackage; // # <1>
+package it.polito.bigdata.hadoop.mypackage; // <1>
 
 /* Import libraries */
 import java.io.IOException;
@@ -411,16 +411,16 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.io.*;
 
 /* Reducer Class */
-#class myReducerClass extends Reducer< // Reducer is a template // # <2>
-    #ReducerInputKeyType, // Input key type (must be consistent with the OutputKeyType of the Mapper) // # <3>
-    #ReducerInputValueType, // Input value type (must be consistent with the OutputValueType of the Mapper) // # <4>
-    #ReducerOutputKeyType, // Output key type (must be consistent with the OutputFormat class specified in the Driver) // # <5>
-    #ReducerOutputValueType // Output value type (must be consistent with the OutputFormat class specified in the Driver) // # <6>
+class myReducerClass extends Reducer< // Reducer is a template // <2>
+    ReducerInputKeyType, // Input key type (must be consistent with the OutputKeyType of the Mapper) // <3>
+    ReducerInputValueType, // Input value type (must be consistent with the OutputValueType of the Mapper) // <4>
+    ReducerOutputKeyType, // Output key type (must be consistent with the OutputFormat class specified in the Driver) // <5>
+    ReducerOutputValueType // Output value type (must be consistent with the OutputFormat class specified in the Driver) // <6>
 >{
     /* Implementation of the reduce method */
     protected void reduce(
-        #ReducerInputKeyType key, // Input key // # <7>
-        Iterable<ReducerInputValueType> values, // Input values (list of values). Notice that since this is an Iterable it is not possible to iterate over it more than once (it works like a Python generator). This is done because the iterable can read directly the list from the file system #without moving and storing the data on the local server // # <8>
+        ReducerInputKeyType key, // Input key // <7>
+        Iterable<ReducerInputValueType> values, // Input values (list of values). Notice that since this is an Iterable it is not possible to iterate over it more than once (it works like a Python generator). This is done because the iterable can read directly the list from the file system without moving and storing the data on the local server // <8>
         Context context
     ) throws IOException, InterruptedException {
 
@@ -429,7 +429,7 @@ import org.apache.hadoop.io.*;
         context.write(...) is used to emit (key, value) pairs context.write(new outputkey, new outputvalue); 
         */
 
-        #context.write(new outputkey, new outputvalue); // # <9>
+        context.write(new outputkey, new outputvalue); // <9>
         // Notice context.write(...) has to be invoked a number of times equal to the number of (key, value) pairs have to be returned. Even 0 times is accepted
         // "new" has to be always specified
 
@@ -813,7 +813,7 @@ org.apache.hadoop.io.Writable {
 
     @Override /* Deserialize the fields of this object from in */
     public void readFields(DataInput in) throws IOException {
-        sum=in.readFloat(); // <1>
+        um=in.readFloat(); // <1>
         count=in.readInt();
     }
 

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -17,9 +17,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -46,43 +47,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -120,7 +91,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
@@ -131,11 +103,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10_intro_spark.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -143,162 +120,191 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Distributed architectures for big data processing and analytics</a> 
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Index</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">About this Book</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></a>
+  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></a>
+  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></a>
+  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></a>
+  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></a>
+  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></a>
+  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></a>
+  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></a>
+  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></a>
+  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></a>
+  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></a>
+  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></a>
+  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></a>
+  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></a>
+  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></a>
+  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></a>
+  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></a>
+  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></a>
+  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></a>
+  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></a>
+  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></a>
+  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></a>
+  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></a>
+  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></a>
+  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></a>
+  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -318,7 +324,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></h1>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -340,12 +346,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Fault tolerance: faults are the norm, not the exception</li>
 <li>Simplicity: often comes from generality</li>
 </ul>
-<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 History
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -355,7 +361,7 @@ History
 <p>Originally developed at the University of California - Berkeley’s AMPLab</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Spark history</figcaption><p></p>
+<figcaption class="figure-caption">Spark history</figcaption>
 <p><img src="images/10_intro_spark/spark_history.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -369,7 +375,7 @@ History
 <p>Iterative jobs, with MapReduce, involve a lot of disk I/O for each iteration and stage, and disk I/O is very slow (even if it is local I/O)</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Iterative jobs</figcaption><p></p>
+<figcaption class="figure-caption">Iterative jobs</figcaption>
 <p><img src="images/10_intro_spark/iterative_jobs.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -381,14 +387,14 @@ History
 <p>So an iterative job in MapReduce makes wide use of disk reading/writing</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Iterative jobs in MapReduce</figcaption><p></p>
+<figcaption class="figure-caption">Iterative jobs in MapReduce</figcaption>
 <p><img src="images/10_intro_spark/mapreduce_iterative_jobs.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 <p>Instead, an iterative job in Spark uses the main memory</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Iterative jobs in Spark</figcaption><p></p>
+<figcaption class="figure-caption">Iterative jobs in Spark</figcaption>
 <p><img src="images/10_intro_spark/spark_iterative_jobs.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -396,14 +402,14 @@ History
 <p>Moreover, to run multiple queries on the same data, in MapReduce the data must be read multiple times (once for each query)</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Analysing the same data in MapReduce</figcaption><p></p>
+<figcaption class="figure-caption">Analysing the same data in MapReduce</figcaption>
 <p><img src="images/10_intro_spark/mapreduce_same_data_analysis.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 <p>Instead, in Spark the data have to be loaded only once in the main memory</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Analysing the same data in Spark</figcaption><p></p>
+<figcaption class="figure-caption">Analysing the same data in Spark</figcaption>
 <p><img src="images/10_intro_spark/spark_same_data_analysis.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -457,7 +463,7 @@ History
 <p>In-memory RDDs can make a big difference in performance</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Perfomance comparison</figcaption><p></p>
+<figcaption class="figure-caption">Perfomance comparison</figcaption>
 <p><img src="images/10_intro_spark/iterative_ML_algorithms_performance.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -467,7 +473,7 @@ History
 <h3 class="anchored" data-anchor-id="main-components">Main components</h3>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Spark main components</figcaption><p></p>
+<figcaption class="figure-caption">Spark main components</figcaption>
 <p><img src="images/10_intro_spark/spark_main_components.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -524,12 +530,12 @@ History
 <h4 class="anchored" data-anchor-id="resilient-distributed-data-sets-rdds-1">Resilient Distributed Data sets (RDDs)</h4>
 <p>RDDs are the primary abstraction in Spark: they are distributed collections of objects spread across the nodes of a clusters, which means that they are split in partitions, and each node of the cluster that is running an application contains at least one partition of the RDD(s) that is (are) defined in the application.</p>
 <p>RDDs are stored in the main memory of the executors running in the nodes of the cluster (when it is possible) or in the local disk of the nodes if there is not enough main memory. This allows to execute in parallel the code invoked on eah node: each executor of a worker node runs the specified code on its partition of the RDD.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example of an RDD split in 3 partitions
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -538,7 +544,7 @@ Example of an RDD split in 3 partitions
 <div class="callout-body-container callout-body">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Example of RDD splits</figcaption><p></p>
+<figcaption class="figure-caption">Example of RDD splits</figcaption>
 <p><img src="images/10_intro_spark/example_rdd_split.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -581,12 +587,12 @@ Example of an RDD split in 3 partitions
 </section>
 <section id="structure-of-spark-programs" class="level4">
 <h4 class="anchored" data-anchor-id="structure-of-spark-programs">Structure of Spark programs</h4>
-<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Spark official terminology
 </div>
 </div>
@@ -666,7 +672,7 @@ Spark official terminology
 <p>The worker nodes of the cluster are used to run your application by means of executors. Each executor runs on its partition of the RDD(s) the operations that are specified in the driver.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Distributed execution of Spark</figcaption><p></p>
+<figcaption class="figure-caption">Distributed execution of Spark</figcaption>
 <p><img src="images/10_intro_spark/spark_distributed_execution.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -677,7 +683,7 @@ Spark official terminology
 <p>Spark programs can also be executed locally: local threads are used to parallelize the execution of the application on RDDs on a single PC. Local threads can be seen are “pseudo-worker” nodes, and a local scheduler is launched to run Spark programs locally. It is useful to develop and test the applications before deploying them on the cluster.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Distributed execution of Spark</figcaption><p></p>
+<figcaption class="figure-caption">Distributed execution of Spark</figcaption>
 <p><img src="images/10_intro_spark/spark_local_execution.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -692,37 +698,43 @@ Spark official terminology
 <li>count the number of lines of the input file, whose name is set to “myfile.txt”</li>
 <li>print the results on the standard output</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">from</span> pyspark <span class="im">import</span> SparkConf, SparkContext</span>
-<span id="cb1-2"><a href="#cb1-2"></a></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
-<span id="cb1-4"><a href="#cb1-4"></a></span>
-<span id="cb1-5"><a href="#cb1-5"></a>    <span class="co">## Create a configuration object and</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a>    <span class="co">## set the name of the application</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a>    <span class="co">#conf = SparkConf().setAppName("Spark Line Count") # &lt;1&gt;</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a></span>
-<span id="cb1-9"><a href="#cb1-9"></a>    <span class="co">## Create a Spark Context object</span></span>
-<span id="cb1-10"><a href="#cb1-10"></a>    <span class="co">#sc = SparkContext(conf=conf) # &lt;1&gt;</span></span>
-<span id="cb1-11"><a href="#cb1-11"></a></span>
-<span id="cb1-12"><a href="#cb1-12"></a>    <span class="co">## Store the path of the input file in inputfile</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a>    <span class="co">#inputFile= "myfile.txt" # &lt;1&gt;</span></span>
-<span id="cb1-14"><a href="#cb1-14"></a></span>
-<span id="cb1-15"><a href="#cb1-15"></a>    <span class="co">## Build an RDD of Strings from the input textual file</span></span>
-<span id="cb1-16"><a href="#cb1-16"></a>    <span class="co">## Each element of the RDD is a line of the input file</span></span>
-<span id="cb1-17"><a href="#cb1-17"></a>    <span class="co">#linesRDD = sc.textFile(inputFile) # &lt;2&gt;</span></span>
-<span id="cb1-18"><a href="#cb1-18"></a></span>
-<span id="cb1-19"><a href="#cb1-19"></a>    <span class="co">## Count the number of lines in the input file</span></span>
-<span id="cb1-20"><a href="#cb1-20"></a>    <span class="co">## Store the returned value in the local variable numLines</span></span>
-<span id="cb1-21"><a href="#cb1-21"></a>    <span class="co">#numLines = linesRDD.count() # &lt;1&gt;</span></span>
-<span id="cb1-22"><a href="#cb1-22"></a></span>
-<span id="cb1-23"><a href="#cb1-23"></a>    <span class="co">## Print the output in the standard output</span></span>
-<span id="cb1-24"><a href="#cb1-24"></a>    <span class="bu">print</span>(<span class="st">"NumLines:"</span>, numLines)</span>
-<span id="cb1-25"><a href="#cb1-25"></a></span>
-<span id="cb1-26"><a href="#cb1-26"></a>    <span class="co">## Close the Spark Context object</span></span>
-<span id="cb1-27"><a href="#cb1-27"></a>    sc.stop()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ol type="1">
-<li>Local Python variable: it is allocated in the main memory of the same process instancing the Driver.</li>
-<li>It is allocated/stored in the main memory or in the local disk of the executors of the worker nodes.</li>
-</ol>
+<div class="sourceCode" id="annotated-cell-1"><pre class="sourceCode numberSource python code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode python"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1"></a><span class="im">from</span> pyspark <span class="im">import</span> SparkConf, SparkContext</span>
+<span id="annotated-cell-1-2"><a href="#annotated-cell-1-2"></a></span>
+<span id="annotated-cell-1-3"><a href="#annotated-cell-1-3"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="annotated-cell-1-4"><a href="#annotated-cell-1-4"></a></span>
+<span id="annotated-cell-1-5"><a href="#annotated-cell-1-5"></a>    <span class="co">## Create a configuration object and</span></span>
+<span id="annotated-cell-1-6"><a href="#annotated-cell-1-6"></a>    <span class="co">## set the name of the application</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1">1</button><span id="annotated-cell-1-7" class="code-annotation-target"><a href="#annotated-cell-1-7"></a>    conf <span class="op">=</span> SparkConf().setAppName(<span class="st">"Spark Line Count"</span>)</span>
+<span id="annotated-cell-1-8"><a href="#annotated-cell-1-8"></a></span>
+<span id="annotated-cell-1-9"><a href="#annotated-cell-1-9"></a>    <span class="co">## Create a Spark Context object</span></span>
+<span id="annotated-cell-1-10"><a href="#annotated-cell-1-10"></a>    sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
+<span id="annotated-cell-1-11"><a href="#annotated-cell-1-11"></a></span>
+<span id="annotated-cell-1-12"><a href="#annotated-cell-1-12"></a>    <span class="co">## Store the path of the input file in inputfile</span></span>
+<span id="annotated-cell-1-13"><a href="#annotated-cell-1-13"></a>    inputFile<span class="op">=</span> <span class="st">"myfile.txt"</span></span>
+<span id="annotated-cell-1-14"><a href="#annotated-cell-1-14"></a></span>
+<span id="annotated-cell-1-15"><a href="#annotated-cell-1-15"></a>    <span class="co">## Build an RDD of Strings from the input textual file</span></span>
+<span id="annotated-cell-1-16"><a href="#annotated-cell-1-16"></a>    <span class="co">## Each element of the RDD is a line of the input file</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2">2</button><span id="annotated-cell-1-17" class="code-annotation-target"><a href="#annotated-cell-1-17"></a>    linesRDD <span class="op">=</span> sc.textFile(inputFile)</span>
+<span id="annotated-cell-1-18"><a href="#annotated-cell-1-18"></a></span>
+<span id="annotated-cell-1-19"><a href="#annotated-cell-1-19"></a>    <span class="co">## Count the number of lines in the input file</span></span>
+<span id="annotated-cell-1-20"><a href="#annotated-cell-1-20"></a>    <span class="co">## Store the returned value in the local variable numLines</span></span>
+<span id="annotated-cell-1-21"><a href="#annotated-cell-1-21"></a>    numLines <span class="op">=</span> linesRDD.count()</span>
+<span id="annotated-cell-1-22"><a href="#annotated-cell-1-22"></a></span>
+<span id="annotated-cell-1-23"><a href="#annotated-cell-1-23"></a>    <span class="co">## Print the output in the standard output</span></span>
+<span id="annotated-cell-1-24"><a href="#annotated-cell-1-24"></a>    <span class="bu">print</span>(<span class="st">"NumLines:"</span>, numLines)</span>
+<span id="annotated-cell-1-25"><a href="#annotated-cell-1-25"></a></span>
+<span id="annotated-cell-1-26"><a href="#annotated-cell-1-26"></a>    <span class="co">## Close the Spark Context object</span></span>
+<span id="annotated-cell-1-27"><a href="#annotated-cell-1-27"></a>    sc.stop()</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="7,10,13,21" data-code-annotation="1">Local Python variable: it is allocated in the main memory of the same process instancing the Driver.</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="17" data-code-annotation="2">It is allocated/stored in the main memory or in the local disk of the executors of the worker nodes.</span>
+</dd>
+</dl>
 <ul>
 <li>Local variables can be used to store only “small” objects/data (i.e., the maximum size is equal to the main memory of the process associated with the Driver)</li>
 <li>RDDs are used to store “big/large” collections of objects/data in the nodes of the cluster
@@ -740,48 +752,50 @@ Spark official terminology
 <li>The output of the application (i.e., the pairs (word, number of occurrences) are stored in an output folder (i.e., <code>argv[2]</code>))</li>
 </ul>
 <p>Notice that there is no need to worry about the details.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">from</span> pyspark <span class="im">import</span> SparkConf, SparkContext</span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="im">import</span> sys</span>
-<span id="cb2-3"><a href="#cb2-3"></a></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
-<span id="cb2-5"><a href="#cb2-5"></a>    <span class="co">"""</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="co">    Word count example</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="co">    """</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a>    inputFile<span class="op">=</span> sys.argv[<span class="dv">1</span>]</span>
-<span id="cb2-9"><a href="#cb2-9"></a>    outputPath <span class="op">=</span> sys.argv[<span class="dv">2</span>]</span>
-<span id="cb2-10"><a href="#cb2-10"></a></span>
-<span id="cb2-11"><a href="#cb2-11"></a>    <span class="co">## Create a configuration object and</span></span>
-<span id="cb2-12"><a href="#cb2-12"></a>    <span class="co">## set the name of the application</span></span>
-<span id="cb2-13"><a href="#cb2-13"></a>    conf <span class="op">=</span> SparkConf().setAppName(<span class="st">"Spark Word Count"</span>)</span>
-<span id="cb2-14"><a href="#cb2-14"></a>    </span>
-<span id="cb2-15"><a href="#cb2-15"></a>    <span class="co">## Create a Spark Context object</span></span>
-<span id="cb2-16"><a href="#cb2-16"></a>    sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
-<span id="cb2-17"><a href="#cb2-17"></a></span>
-<span id="cb2-18"><a href="#cb2-18"></a>    <span class="co">## Build an RDD of Strings from the input textual file</span></span>
-<span id="cb2-19"><a href="#cb2-19"></a>    <span class="co">## Each element of the RDD is a line of the input file</span></span>
-<span id="cb2-20"><a href="#cb2-20"></a>    lines <span class="op">=</span> sc.textFile(inputFile)</span>
-<span id="cb2-21"><a href="#cb2-21"></a></span>
-<span id="cb2-22"><a href="#cb2-22"></a>    <span class="co">## Split/transform the content of lines in a</span></span>
-<span id="cb2-23"><a href="#cb2-23"></a>    <span class="co">## list of words and store them in the words RDD</span></span>
-<span id="cb2-24"><a href="#cb2-24"></a>    words <span class="op">=</span> lines.flatMap(<span class="kw">lambda</span> line: line.split(sep<span class="op">=</span><span class="st">' '</span>))</span>
-<span id="cb2-25"><a href="#cb2-25"></a>    </span>
-<span id="cb2-26"><a href="#cb2-26"></a>    <span class="co">## Map/transform each word in the words RDD</span></span>
-<span id="cb2-27"><a href="#cb2-27"></a>    <span class="co">## to a pair/tuple (word,1) and store the result </span></span>
-<span id="cb2-28"><a href="#cb2-28"></a>    <span class="co">## in the words_one RDD</span></span>
-<span id="cb2-29"><a href="#cb2-29"></a>    words_one <span class="op">=</span> words.<span class="bu">map</span>(<span class="kw">lambda</span> word: (word, <span class="dv">1</span>))</span>
-<span id="cb2-30"><a href="#cb2-30"></a></span>
-<span id="cb2-31"><a href="#cb2-31"></a>    <span class="co">## Count the num. of occurrences of each word.</span></span>
-<span id="cb2-32"><a href="#cb2-32"></a>    <span class="co">## Reduce by key the pairs of the words_one RDD and store</span></span>
-<span id="cb2-33"><a href="#cb2-33"></a>    <span class="co">## the result (the list of pairs (word, num. of occurrences)</span></span>
-<span id="cb2-34"><a href="#cb2-34"></a>    <span class="co">## in the counts RDD</span></span>
-<span id="cb2-35"><a href="#cb2-35"></a>    counts <span class="op">=</span> words_one.reduceByKey(<span class="kw">lambda</span> c1, c2: c1 <span class="op">+</span> c2)</span>
-<span id="cb2-36"><a href="#cb2-36"></a></span>
-<span id="cb2-37"><a href="#cb2-37"></a>    <span class="co">## Store the result in the output folder</span></span>
-<span id="cb2-38"><a href="#cb2-38"></a>    counts.saveAsTextFile(outputPath)</span>
-<span id="cb2-39"><a href="#cb2-39"></a></span>
-<span id="cb2-40"><a href="#cb2-40"></a>    <span class="co">## Close/Stop the Spark Context object</span></span>
-<span id="cb2-41"><a href="#cb2-41"></a>    sc.stop()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">from</span> pyspark <span class="im">import</span> SparkConf, SparkContext</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> sys</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb1-5"><a href="#cb1-5"></a>    <span class="co">"""</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="co">    Word count example</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co">    """</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a>    inputFile<span class="op">=</span> sys.argv[<span class="dv">1</span>]</span>
+<span id="cb1-9"><a href="#cb1-9"></a>    outputPath <span class="op">=</span> sys.argv[<span class="dv">2</span>]</span>
+<span id="cb1-10"><a href="#cb1-10"></a></span>
+<span id="cb1-11"><a href="#cb1-11"></a>    <span class="co">## Create a configuration object and</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a>    <span class="co">## set the name of the application</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a>    conf <span class="op">=</span> SparkConf().setAppName(<span class="st">"Spark Word Count"</span>)</span>
+<span id="cb1-14"><a href="#cb1-14"></a>    </span>
+<span id="cb1-15"><a href="#cb1-15"></a>    <span class="co">## Create a Spark Context object</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a>    sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
+<span id="cb1-17"><a href="#cb1-17"></a></span>
+<span id="cb1-18"><a href="#cb1-18"></a>    <span class="co">## Build an RDD of Strings from the input textual file</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a>    <span class="co">## Each element of the RDD is a line of the input file</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a>    lines <span class="op">=</span> sc.textFile(inputFile)</span>
+<span id="cb1-21"><a href="#cb1-21"></a></span>
+<span id="cb1-22"><a href="#cb1-22"></a>    <span class="co">## Split/transform the content of lines in a</span></span>
+<span id="cb1-23"><a href="#cb1-23"></a>    <span class="co">## list of words and store them in the words RDD</span></span>
+<span id="cb1-24"><a href="#cb1-24"></a>    words <span class="op">=</span> lines.flatMap(<span class="kw">lambda</span> line: line.split(sep<span class="op">=</span><span class="st">' '</span>))</span>
+<span id="cb1-25"><a href="#cb1-25"></a>    </span>
+<span id="cb1-26"><a href="#cb1-26"></a>    <span class="co">## Map/transform each word in the words RDD</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a>    <span class="co">## to a pair/tuple (word,1) and store the result </span></span>
+<span id="cb1-28"><a href="#cb1-28"></a>    <span class="co">## in the words_one RDD</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a>    words_one <span class="op">=</span> words.<span class="bu">map</span>(<span class="kw">lambda</span> word: (word, <span class="dv">1</span>))</span>
+<span id="cb1-30"><a href="#cb1-30"></a></span>
+<span id="cb1-31"><a href="#cb1-31"></a>    <span class="co">## Count the num. of occurrences of each word.</span></span>
+<span id="cb1-32"><a href="#cb1-32"></a>    <span class="co">## Reduce by key the pairs of the words_one RDD and store</span></span>
+<span id="cb1-33"><a href="#cb1-33"></a>    <span class="co">## the result (the list of pairs (word, num. of occurrences)</span></span>
+<span id="cb1-34"><a href="#cb1-34"></a>    <span class="co">## in the counts RDD</span></span>
+<span id="cb1-35"><a href="#cb1-35"></a>    counts <span class="op">=</span> words_one.reduceByKey(<span class="kw">lambda</span> c1, c2: c1 <span class="op">+</span> c2)</span>
+<span id="cb1-36"><a href="#cb1-36"></a></span>
+<span id="cb1-37"><a href="#cb1-37"></a>    <span class="co">## Store the result in the output folder</span></span>
+<span id="cb1-38"><a href="#cb1-38"></a>    counts.saveAsTextFile(outputPath)</span>
+<span id="cb1-39"><a href="#cb1-39"></a></span>
+<span id="cb1-40"><a href="#cb1-40"></a>    <span class="co">## Close/Stop the Spark Context object</span></span>
+<span id="cb1-41"><a href="#cb1-41"></a>    sc.stop()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
+
+<!-- -->
 
 </section>
 </section>
@@ -814,9 +828,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -852,6 +880,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
   function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
@@ -881,6 +960,157 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Handle positioning of the toggle
+      window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -931,7 +1161,315 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu"># Introduction to Spark</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>Apache Spark<span class="kw">&lt;sup&gt;</span>TM<span class="kw">&lt;/sup&gt;</span> is a fast and general-purpose engine for large-scale data processing. Spark aims at achieving the following goals in the Big data context:</span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="ss">- </span>Generality: diverse workloads, operators, job sizes</span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="ss">- </span>Low latency: sub-second</span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="ss">- </span>Fault tolerance: faults are the norm, not the exception</span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="ss">- </span>Simplicity: often comes from generality</span>
+<span id="cb2-8"><a href="#cb2-8"></a></span>
+<span id="cb2-9"><a href="#cb2-9"></a>:::{.callout-tip collapse="true"}</span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="fu">### History</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a>Originally developed at the University of California - Berkeley's AMPLab</span>
+<span id="cb2-12"><a href="#cb2-12"></a></span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="al">![Spark history](images/10_intro_spark/spark_history.png)</span>{width=80%}</span>
+<span id="cb2-14"><a href="#cb2-14"></a></span>
+<span id="cb2-15"><a href="#cb2-15"></a>:::</span>
+<span id="cb2-16"><a href="#cb2-16"></a></span>
+<span id="cb2-17"><a href="#cb2-17"></a><span class="fu">## Motivations</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="fu">### MapReduce and Spark iterative jobs and data I/O</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a>Iterative jobs, with MapReduce, involve a lot of disk I/O for each iteration and stage, and disk I/O is very slow (even if it is local I/O)</span>
+<span id="cb2-20"><a href="#cb2-20"></a></span>
+<span id="cb2-21"><a href="#cb2-21"></a><span class="al">![Iterative jobs](images/10_intro_spark/iterative_jobs.png)</span>{width=80%}</span>
+<span id="cb2-22"><a href="#cb2-22"></a></span>
+<span id="cb2-23"><a href="#cb2-23"></a><span class="ss">- </span>Motivation: using MapReduce for complex iterative jobs or multiple jobs on the same data involves lots of disk I/O</span>
+<span id="cb2-24"><a href="#cb2-24"></a><span class="ss">- </span>Opportunity: the cost of main memory decreased, hence, large main memories are available in each server</span>
+<span id="cb2-25"><a href="#cb2-25"></a><span class="ss">- </span>Solution: keep more data in main memory, and that's the basic idea of Spark</span>
+<span id="cb2-26"><a href="#cb2-26"></a></span>
+<span id="cb2-27"><a href="#cb2-27"></a>So an iterative job in MapReduce makes wide use of disk reading/writing</span>
+<span id="cb2-28"><a href="#cb2-28"></a></span>
+<span id="cb2-29"><a href="#cb2-29"></a><span class="al">![Iterative jobs in MapReduce](images/10_intro_spark/mapreduce_iterative_jobs.png)</span>{width=80%}</span>
+<span id="cb2-30"><a href="#cb2-30"></a></span>
+<span id="cb2-31"><a href="#cb2-31"></a>Instead, an iterative job in Spark uses the main memory</span>
+<span id="cb2-32"><a href="#cb2-32"></a></span>
+<span id="cb2-33"><a href="#cb2-33"></a><span class="al">![Iterative jobs in Spark](images/10_intro_spark/spark_iterative_jobs.png)</span>{width=80%}</span>
+<span id="cb2-34"><a href="#cb2-34"></a></span>
+<span id="cb2-35"><a href="#cb2-35"></a>Data (or at least part of it) are shared between the iterations by using the main memory , which is 10 to 100 times faster than disk.</span>
+<span id="cb2-36"><a href="#cb2-36"></a></span>
+<span id="cb2-37"><a href="#cb2-37"></a>Moreover, to run multiple queries on the same data, in MapReduce the data must be read multiple times (once for each query)</span>
+<span id="cb2-38"><a href="#cb2-38"></a></span>
+<span id="cb2-39"><a href="#cb2-39"></a><span class="al">![Analysing the same data in MapReduce](images/10_intro_spark/mapreduce_same_data_analysis.png)</span>{width=80%}</span>
+<span id="cb2-40"><a href="#cb2-40"></a></span>
+<span id="cb2-41"><a href="#cb2-41"></a>Instead, in Spark the data have to be loaded only once in the main memory</span>
+<span id="cb2-42"><a href="#cb2-42"></a></span>
+<span id="cb2-43"><a href="#cb2-43"></a><span class="al">![Analysing the same data in Spark](images/10_intro_spark/spark_same_data_analysis.png)</span>{width=80%}</span>
+<span id="cb2-44"><a href="#cb2-44"></a></span>
+<span id="cb2-45"><a href="#cb2-45"></a>In other words, data are read only once from HDFS and stored in main memory, splitting of the data across the main memory of each server.</span>
+<span id="cb2-46"><a href="#cb2-46"></a></span>
+<span id="cb2-47"><a href="#cb2-47"></a><span class="fu">### Resilient distributed data sets (RDDs)</span></span>
+<span id="cb2-48"><a href="#cb2-48"></a>In Spark, data are represented as Resilient Distributed Datasets (RDDs), which are Partitioned/Distributed collections of objects spread across the nodes of a cluster, and are stored in main memory (when it is possible) or on local disk. </span>
+<span id="cb2-49"><a href="#cb2-49"></a></span>
+<span id="cb2-50"><a href="#cb2-50"></a>Spark programs are written in terms of operations on resilient distributed data sets.</span>
+<span id="cb2-51"><a href="#cb2-51"></a></span>
+<span id="cb2-52"><a href="#cb2-52"></a>RDDs are built and manipulated through a set of parallel transformations (e.g., map, filter, join) and actions (e.g., count, collect, save), and RDDs are automatically rebuilt on machine failure.</span>
+<span id="cb2-53"><a href="#cb2-53"></a></span>
+<span id="cb2-54"><a href="#cb2-54"></a>The Spark computing framework provides a programming abstraction (based on RDDs) and transparent mechanisms to execute code in parallel on RDDs</span>
+<span id="cb2-55"><a href="#cb2-55"></a></span>
+<span id="cb2-56"><a href="#cb2-56"></a><span class="ss">- </span>It hides complexities of fault-tolerance and slow machines</span>
+<span id="cb2-57"><a href="#cb2-57"></a><span class="ss">- </span>It manages scheduling and synchronization of the jobs</span>
+<span id="cb2-58"><a href="#cb2-58"></a></span>
+<span id="cb2-59"><a href="#cb2-59"></a><span class="fu">### MapReduce vs Spark</span></span>
+<span id="cb2-60"><a href="#cb2-60"></a>| | Hadoop MapReduce | Spark |</span>
+<span id="cb2-61"><a href="#cb2-61"></a>|---|---|---|</span>
+<span id="cb2-62"><a href="#cb2-62"></a>| Storage | Disk only | In-memory or on disk |</span>
+<span id="cb2-63"><a href="#cb2-63"></a>| Operations | Map and Reduce | Map, Reduce, Join, Sample, ... |</span>
+<span id="cb2-64"><a href="#cb2-64"></a>| Execution model | Batch | Batch, interactive, streaming |</span>
+<span id="cb2-65"><a href="#cb2-65"></a>| Programming environments | Java | Scala, Java, Python, R |</span>
+<span id="cb2-66"><a href="#cb2-66"></a></span>
+<span id="cb2-67"><a href="#cb2-67"></a>With respect to MapReduce, Spark has a lower overhead for starting jobs and has less expensive shuffles.</span>
+<span id="cb2-68"><a href="#cb2-68"></a></span>
+<span id="cb2-69"><a href="#cb2-69"></a>In-memory RDDs can make a big difference in performance</span>
+<span id="cb2-70"><a href="#cb2-70"></a></span>
+<span id="cb2-71"><a href="#cb2-71"></a><span class="al">![Perfomance comparison](images/10_intro_spark/iterative_ML_algorithms_performance.png)</span>{width=80%}</span>
+<span id="cb2-72"><a href="#cb2-72"></a></span>
+<span id="cb2-73"><a href="#cb2-73"></a><span class="fu">## Main components</span></span>
+<span id="cb2-74"><a href="#cb2-74"></a></span>
+<span id="cb2-75"><a href="#cb2-75"></a><span class="al">![Spark main components](images/10_intro_spark/spark_main_components.png)</span>{width=80%}</span>
+<span id="cb2-76"><a href="#cb2-76"></a></span>
+<span id="cb2-77"><a href="#cb2-77"></a>Spark is based on a basic component (the Spark Core component) that is exploited by all the high-level data analytics components: this solution provides a more uniform and efficient solution with respect to Hadoop where many non-integrated tools are available. In this way, when the efficiency of the core component is increased also the efficiency of the other high-level components increases.</span>
+<span id="cb2-78"><a href="#cb2-78"></a></span>
+<span id="cb2-79"><a href="#cb2-79"></a><span class="fu">#### Spark Core</span></span>
+<span id="cb2-80"><a href="#cb2-80"></a>Spark Core contains the basic functionalities of Spark exploited by all components</span>
+<span id="cb2-81"><a href="#cb2-81"></a></span>
+<span id="cb2-82"><a href="#cb2-82"></a><span class="ss">- </span>Task scheduling</span>
+<span id="cb2-83"><a href="#cb2-83"></a><span class="ss">- </span>Memory management</span>
+<span id="cb2-84"><a href="#cb2-84"></a><span class="ss">- </span>Fault recovery</span>
+<span id="cb2-85"><a href="#cb2-85"></a><span class="ss">- </span>...</span>
+<span id="cb2-86"><a href="#cb2-86"></a></span>
+<span id="cb2-87"><a href="#cb2-87"></a>It provides the APIs that are used to create RDDs and applies transformations and actions on them.</span>
+<span id="cb2-88"><a href="#cb2-88"></a></span>
+<span id="cb2-89"><a href="#cb2-89"></a><span class="fu">#### Spark SQL</span></span>
+<span id="cb2-90"><a href="#cb2-90"></a>Spark SQL for structured data is used to interact with structured datasets by means of the SQL language or specific querying APIs (based on Datasets). </span>
+<span id="cb2-91"><a href="#cb2-91"></a></span>
+<span id="cb2-92"><a href="#cb2-92"></a>It exploits a query optimizer engine, and supports also Hive Query Language (HQL). It interacts with many data sources (e.g., Hive Tables, Parquet, Json).</span>
+<span id="cb2-93"><a href="#cb2-93"></a></span>
+<span id="cb2-94"><a href="#cb2-94"></a><span class="fu">#### Spark Streaming</span></span>
+<span id="cb2-95"><a href="#cb2-95"></a>Spark Streaming for real-time data is used to process live streams of data in real-time. The APIs of the Streaming real-time components operated on RDDs and are similar to the ones used to process standard RDDs associated with "static" data sources.</span>
+<span id="cb2-96"><a href="#cb2-96"></a></span>
+<span id="cb2-97"><a href="#cb2-97"></a><span class="fu">#### MLlib</span></span>
+<span id="cb2-98"><a href="#cb2-98"></a>MLlib is a machine learning/data mining library that can be used to apply the parallel versions of some machine learning/data mining algorithms</span>
+<span id="cb2-99"><a href="#cb2-99"></a></span>
+<span id="cb2-100"><a href="#cb2-100"></a><span class="ss">- </span>Data preprocessing and dimensional reduction</span>
+<span id="cb2-101"><a href="#cb2-101"></a><span class="ss">- </span>Classification algorithms</span>
+<span id="cb2-102"><a href="#cb2-102"></a><span class="ss">- </span>Clustering algorithms</span>
+<span id="cb2-103"><a href="#cb2-103"></a><span class="ss">- </span>Itemset mining</span>
+<span id="cb2-104"><a href="#cb2-104"></a><span class="ss">- </span>...</span>
+<span id="cb2-105"><a href="#cb2-105"></a></span>
+<span id="cb2-106"><a href="#cb2-106"></a><span class="fu">#### GraphX and GraphFrames</span></span>
+<span id="cb2-107"><a href="#cb2-107"></a></span>
+<span id="cb2-108"><a href="#cb2-108"></a>GraphX is a graph processing library that provides algorithms for manipulating graphs (e.g., subgraph searching, PageRank). Notice that the Python version is not available.</span>
+<span id="cb2-109"><a href="#cb2-109"></a></span>
+<span id="cb2-110"><a href="#cb2-110"></a>GraphFrames is a graph library based on DataFrames and Python.</span>
+<span id="cb2-111"><a href="#cb2-111"></a></span>
+<span id="cb2-112"><a href="#cb2-112"></a><span class="fu">#### Spark schedulers</span></span>
+<span id="cb2-113"><a href="#cb2-113"></a>Spark can exploit many schedulers to execute its applications</span>
+<span id="cb2-114"><a href="#cb2-114"></a></span>
+<span id="cb2-115"><a href="#cb2-115"></a><span class="ss">- </span>Hadoop YARN: it is the standard scheduler of Hadoop</span>
+<span id="cb2-116"><a href="#cb2-116"></a><span class="ss">- </span>Mesos cluster: another popular scheduler</span>
+<span id="cb2-117"><a href="#cb2-117"></a><span class="ss">- </span>Standalone Spark Scheduler: a simple cluster scheduler included in Spark</span>
+<span id="cb2-118"><a href="#cb2-118"></a></span>
+<span id="cb2-119"><a href="#cb2-119"></a><span class="fu">## Basic concepts</span></span>
+<span id="cb2-120"><a href="#cb2-120"></a><span class="fu">### Resilient Distributed Data sets (RDDs)</span></span>
+<span id="cb2-121"><a href="#cb2-121"></a>RDDs are the primary abstraction in Spark: they are distributed collections of objects spread across the nodes of a clusters, which means that they are split in partitions, and each node of the cluster that is running an application contains at least one partition of the RDD(s) that is (are) defined in the application.</span>
+<span id="cb2-122"><a href="#cb2-122"></a></span>
+<span id="cb2-123"><a href="#cb2-123"></a>RDDs are stored in the main memory of the executors running in the nodes of the cluster (when it is possible) or in the local disk of the nodes if there is</span>
+<span id="cb2-124"><a href="#cb2-124"></a>not enough main memory. This allows to execute in parallel the code invoked on eah node: each executor of a worker node runs the specified code on its partition of the RDD.</span>
+<span id="cb2-125"><a href="#cb2-125"></a></span>
+<span id="cb2-126"><a href="#cb2-126"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb2-127"><a href="#cb2-127"></a><span class="fu">### Example of an RDD split in 3 partitions</span></span>
+<span id="cb2-128"><a href="#cb2-128"></a></span>
+<span id="cb2-129"><a href="#cb2-129"></a><span class="al">![Example of RDD splits](images/10_intro_spark/example_rdd_split.png)</span>{width=80%}</span>
+<span id="cb2-130"><a href="#cb2-130"></a></span>
+<span id="cb2-131"><a href="#cb2-131"></a>More partitions mean more parallelism.</span>
+<span id="cb2-132"><a href="#cb2-132"></a>:::</span>
+<span id="cb2-133"><a href="#cb2-133"></a></span>
+<span id="cb2-134"><a href="#cb2-134"></a>RDDs are immutable once constructed (i.e., the content of an RDD cannot be modified). Spark tracks lineage information to efficiently recompute lost data in case of failures of some executors: for each RDD, Spark knows how it has been constructed and can rebuilt it if a failure occurs. This information is represented by means of a DAG (Direct Acyclic Graph) connecting input data and RDDs.</span>
+<span id="cb2-135"><a href="#cb2-135"></a></span>
+<span id="cb2-136"><a href="#cb2-136"></a>RDDs can be created </span>
+<span id="cb2-137"><a href="#cb2-137"></a></span>
+<span id="cb2-138"><a href="#cb2-138"></a><span class="ss">- </span>by parallelizing existing collections of the hosting programming language (e.g., collections and lists of Scala, Java, Pyhton, or R): in this case the number of partition is specified by the user</span>
+<span id="cb2-139"><a href="#cb2-139"></a><span class="ss">- </span>from (large) files stored in HDFS: in this case there is one partition per HDFS block</span>
+<span id="cb2-140"><a href="#cb2-140"></a><span class="ss">- </span>from files stored in many traditional file systems or databases</span>
+<span id="cb2-141"><a href="#cb2-141"></a><span class="ss">- </span>by transforming an existing RDDs: in this case the number of partitions depends on the type of transformation</span>
+<span id="cb2-142"><a href="#cb2-142"></a></span>
+<span id="cb2-143"><a href="#cb2-143"></a>Spark programs are written in terms of operations on resilient distributed data sets</span>
+<span id="cb2-144"><a href="#cb2-144"></a></span>
+<span id="cb2-145"><a href="#cb2-145"></a><span class="ss">- </span>Transformations: map, filter, join, ...</span>
+<span id="cb2-146"><a href="#cb2-146"></a><span class="ss">- </span>Actions: count, collect, save, ...</span>
+<span id="cb2-147"><a href="#cb2-147"></a></span>
+<span id="cb2-148"><a href="#cb2-148"></a>To summarize, in the Spark framework</span>
+<span id="cb2-149"><a href="#cb2-149"></a></span>
+<span id="cb2-150"><a href="#cb2-150"></a><span class="ss">- </span>Spark manages scheduling and synchronization of the jobs</span>
+<span id="cb2-151"><a href="#cb2-151"></a><span class="ss">- </span>Spark manages the split of RDDs in partitions and allocates RDDs partitions in the nodes of the cluster</span>
+<span id="cb2-152"><a href="#cb2-152"></a><span class="ss">- </span>Spark hides complexities of fault-tolerance and slow machines (RDDs are automatically rebuilt in case of machine failures)</span>
+<span id="cb2-153"><a href="#cb2-153"></a></span>
+<span id="cb2-154"><a href="#cb2-154"></a><span class="fu">## Spark Programs</span></span>
+<span id="cb2-155"><a href="#cb2-155"></a><span class="fu">### Supported languages</span></span>
+<span id="cb2-156"><a href="#cb2-156"></a>Spark supports many programming languages</span>
+<span id="cb2-157"><a href="#cb2-157"></a></span>
+<span id="cb2-158"><a href="#cb2-158"></a><span class="ss">- </span>Scala: this is the language used to develop the Spark framework and all its components (Spark Core, Spark SQL, Spark Streaming, MLlib, GraphX)</span>
+<span id="cb2-159"><a href="#cb2-159"></a><span class="ss">- </span>Java</span>
+<span id="cb2-160"><a href="#cb2-160"></a><span class="ss">- </span>Python</span>
+<span id="cb2-161"><a href="#cb2-161"></a><span class="ss">- </span>R</span>
+<span id="cb2-162"><a href="#cb2-162"></a></span>
+<span id="cb2-163"><a href="#cb2-163"></a><span class="fu">### Structure of Spark programs</span></span>
+<span id="cb2-164"><a href="#cb2-164"></a></span>
+<span id="cb2-165"><a href="#cb2-165"></a>:::{.callout-tip}</span>
+<span id="cb2-166"><a href="#cb2-166"></a><span class="fu">### Spark official terminology</span></span>
+<span id="cb2-167"><a href="#cb2-167"></a>| Term | Definition |</span>
+<span id="cb2-168"><a href="#cb2-168"></a>| --- | --- |</span>
+<span id="cb2-169"><a href="#cb2-169"></a>| Application | User program built on Spark, consisting of a driver program and executors on the cluster. |</span>
+<span id="cb2-170"><a href="#cb2-170"></a>| Driver program | The process running the <span class="in">`main()`</span> function of the application and creating the <span class="in">`SparkContext`</span>. |</span>
+<span id="cb2-171"><a href="#cb2-171"></a>| Cluster manager | An external service for acquiring resources on the cluster (e.g. standalone manager, Mesos, YARN). |</span>
+<span id="cb2-172"><a href="#cb2-172"></a>| Deploy mode | It distinguishes where the driver process runs: in "cluster" mode (in this case the framework launches the driver inside of the cluster) or in "client" mode (in this case the submitter launches the driver outside of the cluster). |</span>
+<span id="cb2-173"><a href="#cb2-173"></a>| Worker node | Any node of the cluster that can run application code in the cluster. |</span>
+<span id="cb2-174"><a href="#cb2-174"></a>| Executor | A process launched for an application on a worker node, that runs tasks and keeps data in memory or disk storage across them; each application has its own executors. |</span>
+<span id="cb2-175"><a href="#cb2-175"></a>| Task | A unit of work that will be sent to one executor. |</span>
+<span id="cb2-176"><a href="#cb2-176"></a>| Job | A parallel computation consisting of multiple tasks that gets spawned in response to a Spark action (e.g. save, collect). |</span>
+<span id="cb2-177"><a href="#cb2-177"></a>| Stage | Each job gets divided into smaller sets of tasks called stages, such that the output of one stage is the input of the next stage(s), except for the stages that compute (part of) the final result (i.e., the stages without output edges in the graph representing the workflow of the application). Indeed, the outputs of those stages is stored in HDFS or a database. |</span>
+<span id="cb2-178"><a href="#cb2-178"></a>: {tbl-colwidths="<span class="co">[</span><span class="ot">20,80</span><span class="co">]</span>"}</span>
+<span id="cb2-179"><a href="#cb2-179"></a></span>
+<span id="cb2-180"><a href="#cb2-180"></a>The shuffle operation is always executed between two stages</span>
+<span id="cb2-181"><a href="#cb2-181"></a></span>
+<span id="cb2-182"><a href="#cb2-182"></a><span class="ss">- </span>Data must be grouped/repartitioned based on a grouping criteria that is different with respect to the one used in the previous stage</span>
+<span id="cb2-183"><a href="#cb2-183"></a><span class="ss">- </span>Similar to the shuffle operation between the map and the reduce phases in MapReduce</span>
+<span id="cb2-184"><a href="#cb2-184"></a><span class="ss">- </span>Shuffle is a heavy operation </span>
+<span id="cb2-185"><a href="#cb2-185"></a></span>
+<span id="cb2-186"><a href="#cb2-186"></a>See the <span class="co">[</span><span class="ot">official documentation</span><span class="co">](http://spark.apache.org/docs/latest/cluster-overview.html)</span> for more.</span>
+<span id="cb2-187"><a href="#cb2-187"></a>:::</span>
+<span id="cb2-188"><a href="#cb2-188"></a></span>
+<span id="cb2-189"><a href="#cb2-189"></a>The Driver program contains the main method. It defines the workflow of the application, and accesses Spark through the <span class="in">`SparkContext`</span> object, which represents a connection to the cluster.</span>
+<span id="cb2-190"><a href="#cb2-190"></a></span>
+<span id="cb2-191"><a href="#cb2-191"></a>The Driver program defines Resilient Distributed Datasets (RDDs) that are allocated in the nodes of the cluster, and invokes parallel operations on RDDs.</span>
+<span id="cb2-192"><a href="#cb2-192"></a></span>
+<span id="cb2-193"><a href="#cb2-193"></a>The Driver program defines</span>
+<span id="cb2-194"><a href="#cb2-194"></a></span>
+<span id="cb2-195"><a href="#cb2-195"></a><span class="ss">- </span>Local variables: these are standard variables of the Python programs</span>
+<span id="cb2-196"><a href="#cb2-196"></a><span class="ss">- </span>RDDs: these are distributed variables stored in the nodes of the cluster</span>
+<span id="cb2-197"><a href="#cb2-197"></a><span class="ss">- </span>The <span class="in">`SparkContext`</span> object, which allows to</span>
+<span id="cb2-198"><a href="#cb2-198"></a><span class="ss">    - </span>create RDDs</span>
+<span id="cb2-199"><a href="#cb2-199"></a><span class="ss">    - </span>submit executors (processes) that execute in parallel specific operations on RDDs</span>
+<span id="cb2-200"><a href="#cb2-200"></a><span class="ss">    - </span>perform Transformations and Actions</span>
+<span id="cb2-201"><a href="#cb2-201"></a></span>
+<span id="cb2-202"><a href="#cb2-202"></a>The worker nodes of the cluster are used to run your application by means of executors. Each executor runs on its partition of the RDD(s) the operations that are specified in the driver.</span>
+<span id="cb2-203"><a href="#cb2-203"></a></span>
+<span id="cb2-204"><a href="#cb2-204"></a><span class="al">![Distributed execution of Spark](images/10_intro_spark/spark_distributed_execution.png)</span>{width=80%}</span>
+<span id="cb2-205"><a href="#cb2-205"></a></span>
+<span id="cb2-206"><a href="#cb2-206"></a>RDDs are distributed across executors (each RDD is split in partitions that are spread across the available executors).</span>
+<span id="cb2-207"><a href="#cb2-207"></a></span>
+<span id="cb2-208"><a href="#cb2-208"></a><span class="fu">### Local execution of Spark</span></span>
+<span id="cb2-209"><a href="#cb2-209"></a>Spark programs can also be executed locally: local threads are used to parallelize the execution of the application on RDDs on a single PC. Local threads can be seen are "pseudo-worker" nodes, and a local scheduler is launched to run Spark programs locally. It is useful to develop and test the applications before deploying them on the cluster.</span>
+<span id="cb2-210"><a href="#cb2-210"></a></span>
+<span id="cb2-211"><a href="#cb2-211"></a><span class="al">![Distributed execution of Spark](images/10_intro_spark/spark_local_execution.png)</span>{width=80%}</span>
+<span id="cb2-212"><a href="#cb2-212"></a></span>
+<span id="cb2-213"><a href="#cb2-213"></a><span class="fu">## Spark program examples</span></span>
+<span id="cb2-214"><a href="#cb2-214"></a><span class="fu">### Count line program</span></span>
+<span id="cb2-215"><a href="#cb2-215"></a>The steps of this program are </span>
+<span id="cb2-216"><a href="#cb2-216"></a></span>
+<span id="cb2-217"><a href="#cb2-217"></a><span class="ss">- </span>count the number of lines of the input file, whose name is set to "myfile.txt"</span>
+<span id="cb2-218"><a href="#cb2-218"></a><span class="ss">- </span>print the results on the standard output</span>
+<span id="cb2-219"><a href="#cb2-219"></a></span>
+<span id="cb2-220"><a href="#cb2-220"></a><span class="in">```python</span></span>
+<span id="cb2-221"><a href="#cb2-221"></a><span class="im">from</span> pyspark <span class="im">import</span> SparkConf, SparkContext</span>
+<span id="cb2-222"><a href="#cb2-222"></a></span>
+<span id="cb2-223"><a href="#cb2-223"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb2-224"><a href="#cb2-224"></a></span>
+<span id="cb2-225"><a href="#cb2-225"></a>    <span class="co">## Create a configuration object and</span></span>
+<span id="cb2-226"><a href="#cb2-226"></a>    <span class="co">## set the name of the application</span></span>
+<span id="cb2-227"><a href="#cb2-227"></a>    conf <span class="op">=</span> SparkConf().setAppName(<span class="st">"Spark Line Count"</span>) <span class="co"># &lt;1&gt;</span></span>
+<span id="cb2-228"><a href="#cb2-228"></a></span>
+<span id="cb2-229"><a href="#cb2-229"></a>    <span class="co">## Create a Spark Context object</span></span>
+<span id="cb2-230"><a href="#cb2-230"></a>    sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf) <span class="co"># &lt;1&gt;</span></span>
+<span id="cb2-231"><a href="#cb2-231"></a></span>
+<span id="cb2-232"><a href="#cb2-232"></a>    <span class="co">## Store the path of the input file in inputfile</span></span>
+<span id="cb2-233"><a href="#cb2-233"></a>    inputFile<span class="op">=</span> <span class="st">"myfile.txt"</span> <span class="co"># &lt;1&gt;</span></span>
+<span id="cb2-234"><a href="#cb2-234"></a></span>
+<span id="cb2-235"><a href="#cb2-235"></a>    <span class="co">## Build an RDD of Strings from the input textual file</span></span>
+<span id="cb2-236"><a href="#cb2-236"></a>    <span class="co">## Each element of the RDD is a line of the input file</span></span>
+<span id="cb2-237"><a href="#cb2-237"></a>    linesRDD <span class="op">=</span> sc.textFile(inputFile) <span class="co"># &lt;2&gt;</span></span>
+<span id="cb2-238"><a href="#cb2-238"></a></span>
+<span id="cb2-239"><a href="#cb2-239"></a>    <span class="co">## Count the number of lines in the input file</span></span>
+<span id="cb2-240"><a href="#cb2-240"></a>    <span class="co">## Store the returned value in the local variable numLines</span></span>
+<span id="cb2-241"><a href="#cb2-241"></a>    numLines <span class="op">=</span> linesRDD.count() <span class="co"># &lt;1&gt;</span></span>
+<span id="cb2-242"><a href="#cb2-242"></a></span>
+<span id="cb2-243"><a href="#cb2-243"></a>    <span class="co">## Print the output in the standard output</span></span>
+<span id="cb2-244"><a href="#cb2-244"></a>    <span class="bu">print</span>(<span class="st">"NumLines:"</span>, numLines)</span>
+<span id="cb2-245"><a href="#cb2-245"></a></span>
+<span id="cb2-246"><a href="#cb2-246"></a>    <span class="co">## Close the Spark Context object</span></span>
+<span id="cb2-247"><a href="#cb2-247"></a>    sc.stop()</span>
+<span id="cb2-248"><a href="#cb2-248"></a><span class="in">```</span></span>
+<span id="cb2-249"><a href="#cb2-249"></a><span class="ss">1. </span>Local Python variable: it is allocated in the main memory of the same process instancing the Driver.</span>
+<span id="cb2-250"><a href="#cb2-250"></a><span class="ss">2. </span>It is allocated/stored in the main memory or in the local disk of the executors of the worker nodes.</span>
+<span id="cb2-251"><a href="#cb2-251"></a></span>
+<span id="cb2-252"><a href="#cb2-252"></a><span class="ss">- </span>Local variables can be used to store only "small" objects/data (i.e., the maximum size is equal to the main memory of the process associated with the Driver)</span>
+<span id="cb2-253"><a href="#cb2-253"></a><span class="ss">- </span>RDDs are used to store "big/large" collections of objects/data in the nodes of the cluster</span>
+<span id="cb2-254"><a href="#cb2-254"></a><span class="ss">    - </span>In the main memory of the worker nodes, when it is possible</span>
+<span id="cb2-255"><a href="#cb2-255"></a><span class="ss">    - </span>In the local disks of the worker nodes, when it is necessary</span>
+<span id="cb2-256"><a href="#cb2-256"></a></span>
+<span id="cb2-257"><a href="#cb2-257"></a><span class="fu">### Word Count program</span></span>
+<span id="cb2-258"><a href="#cb2-258"></a>In the Word Count implemented by means of Spark</span>
+<span id="cb2-259"><a href="#cb2-259"></a></span>
+<span id="cb2-260"><a href="#cb2-260"></a><span class="ss">- </span>The name of the input file is specified by using a command line parameter (i.e., <span class="in">`argv[1]`</span>)</span>
+<span id="cb2-261"><a href="#cb2-261"></a><span class="ss">- </span>The output of the application (i.e., the pairs (word, number of occurrences) are stored in an output folder (i.e., <span class="in">`argv[2]`</span>))</span>
+<span id="cb2-262"><a href="#cb2-262"></a></span>
+<span id="cb2-263"><a href="#cb2-263"></a>Notice that there is no need to worry about the details.</span>
+<span id="cb2-264"><a href="#cb2-264"></a></span>
+<span id="cb2-265"><a href="#cb2-265"></a><span class="in">```python</span></span>
+<span id="cb2-266"><a href="#cb2-266"></a><span class="im">from</span> pyspark <span class="im">import</span> SparkConf, SparkContext</span>
+<span id="cb2-267"><a href="#cb2-267"></a><span class="im">import</span> sys</span>
+<span id="cb2-268"><a href="#cb2-268"></a></span>
+<span id="cb2-269"><a href="#cb2-269"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb2-270"><a href="#cb2-270"></a>    <span class="co">"""</span></span>
+<span id="cb2-271"><a href="#cb2-271"></a><span class="co">    Word count example</span></span>
+<span id="cb2-272"><a href="#cb2-272"></a><span class="co">    """</span></span>
+<span id="cb2-273"><a href="#cb2-273"></a>    inputFile<span class="op">=</span> sys.argv[<span class="dv">1</span>]</span>
+<span id="cb2-274"><a href="#cb2-274"></a>    outputPath <span class="op">=</span> sys.argv[<span class="dv">2</span>]</span>
+<span id="cb2-275"><a href="#cb2-275"></a></span>
+<span id="cb2-276"><a href="#cb2-276"></a>    <span class="co">## Create a configuration object and</span></span>
+<span id="cb2-277"><a href="#cb2-277"></a>    <span class="co">## set the name of the application</span></span>
+<span id="cb2-278"><a href="#cb2-278"></a>    conf <span class="op">=</span> SparkConf().setAppName(<span class="st">"Spark Word Count"</span>)</span>
+<span id="cb2-279"><a href="#cb2-279"></a>    </span>
+<span id="cb2-280"><a href="#cb2-280"></a>    <span class="co">## Create a Spark Context object</span></span>
+<span id="cb2-281"><a href="#cb2-281"></a>    sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
+<span id="cb2-282"><a href="#cb2-282"></a></span>
+<span id="cb2-283"><a href="#cb2-283"></a>    <span class="co">## Build an RDD of Strings from the input textual file</span></span>
+<span id="cb2-284"><a href="#cb2-284"></a>    <span class="co">## Each element of the RDD is a line of the input file</span></span>
+<span id="cb2-285"><a href="#cb2-285"></a>    lines <span class="op">=</span> sc.textFile(inputFile)</span>
+<span id="cb2-286"><a href="#cb2-286"></a></span>
+<span id="cb2-287"><a href="#cb2-287"></a>    <span class="co">## Split/transform the content of lines in a</span></span>
+<span id="cb2-288"><a href="#cb2-288"></a>    <span class="co">## list of words and store them in the words RDD</span></span>
+<span id="cb2-289"><a href="#cb2-289"></a>    words <span class="op">=</span> lines.flatMap(<span class="kw">lambda</span> line: line.split(sep<span class="op">=</span><span class="st">' '</span>))</span>
+<span id="cb2-290"><a href="#cb2-290"></a>    </span>
+<span id="cb2-291"><a href="#cb2-291"></a>    <span class="co">## Map/transform each word in the words RDD</span></span>
+<span id="cb2-292"><a href="#cb2-292"></a>    <span class="co">## to a pair/tuple (word,1) and store the result </span></span>
+<span id="cb2-293"><a href="#cb2-293"></a>    <span class="co">## in the words_one RDD</span></span>
+<span id="cb2-294"><a href="#cb2-294"></a>    words_one <span class="op">=</span> words.<span class="bu">map</span>(<span class="kw">lambda</span> word: (word, <span class="dv">1</span>))</span>
+<span id="cb2-295"><a href="#cb2-295"></a></span>
+<span id="cb2-296"><a href="#cb2-296"></a>    <span class="co">## Count the num. of occurrences of each word.</span></span>
+<span id="cb2-297"><a href="#cb2-297"></a>    <span class="co">## Reduce by key the pairs of the words_one RDD and store</span></span>
+<span id="cb2-298"><a href="#cb2-298"></a>    <span class="co">## the result (the list of pairs (word, num. of occurrences)</span></span>
+<span id="cb2-299"><a href="#cb2-299"></a>    <span class="co">## in the counts RDD</span></span>
+<span id="cb2-300"><a href="#cb2-300"></a>    counts <span class="op">=</span> words_one.reduceByKey(<span class="kw">lambda</span> c1, c2: c1 <span class="op">+</span> c2)</span>
+<span id="cb2-301"><a href="#cb2-301"></a></span>
+<span id="cb2-302"><a href="#cb2-302"></a>    <span class="co">## Store the result in the output folder</span></span>
+<span id="cb2-303"><a href="#cb2-303"></a>    counts.saveAsTextFile(outputPath)</span>
+<span id="cb2-304"><a href="#cb2-304"></a></span>
+<span id="cb2-305"><a href="#cb2-305"></a>    <span class="co">## Close/Stop the Spark Context object</span></span>
+<span id="cb2-306"><a href="#cb2-306"></a>    sc.stop()</span>
+<span id="cb2-307"><a href="#cb2-307"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 
 

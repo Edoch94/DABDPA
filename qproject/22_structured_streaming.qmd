@@ -83,9 +83,8 @@ recordsDF = spark.readStream \
     .format("socket") \
     .option("host", "localhost") \
     .option("port", 9999) \
-    .load() # <1>
+    .load()
 ```
-1. Test
 
 :::
 
@@ -190,15 +189,15 @@ readingsDF = recordsDF \
     .withColumn("stationId", split(recordsDF.value, ',')[0].cast("string")) \ 
     .withColumn("freeslots", split(recordsDF.value, ',')[1].cast("integer")) \
     .withColumn("usedslots", split(recordsDF.value, ',')[2].cast("integer")) \
-    #.withColumn("timestamp", split(recordsDF.value, ',')[3].cast("timestamp")) # <1>
+    .withColumn("timestamp", split(recordsDF.value, ',')[3].cast("timestamp")) # <1>
 
 ## Filter data
 ## Use the standard filter transformation
-#fullReadingsDF = readingsDF.filter("freeslots=0") # <2>
+fullReadingsDF = readingsDF.filter("freeslots=0") # <2>
 
 ## Select stationid and timestamp
 ## Use the standard select transformation
-#stationIdTimestampDF = fullReadingsDF.select("stationId", "timestamp") # <2>
+stationIdTimestampDF = fullReadingsDF.select("stationId", "timestamp") # <2>
 
 ## The result of the structured streaming query will be stored/printed on
 ## the console "sink“.
@@ -259,7 +258,7 @@ fullReadingsDF = readingsDF.filter("freeslots=0")
 ## The standard groupBy method is used
 countsDF = fullReadingsDF \
     .groupBy("stationId") \
-    #.agg({"*":"count"}) # <1>
+    .agg({"*":"count"}) # <1>
 
 ## The result of the structured streaming query will be stored/printed on
 ## the console "sink"

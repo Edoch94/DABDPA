@@ -8,11 +8,12 @@ format:
     number-sections: true
     number-depth: 1
     code-overflow: scroll
-    code-tools: false
+    code-tools: true
     standalone: true
     theme: cosmo
     code-line-numbers: true
     cap-location: top
     code-block-bg: "#f0f3f5"
+    code-annotations: hover
     # embed-resources: true
     # theme: simplex

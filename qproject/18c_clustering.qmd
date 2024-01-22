@@ -103,7 +103,7 @@ kmeansModel = pipeline.fit(inputDataDF)
 ## - features: vector (values of the attributes)
 ## - prediction: double (the predicted cluster id)
 ## - original attributes attr1, attr2, attr3
-#clusteredDataDF = kmeansModel.transform(inputDataDF) # <1>
+clusteredDataDF = kmeansModel.transform(inputDataDF) # <1>
 
 ## Select only the original columns and the clusterID (prediction) one
 ## I rename prediction to clusterID

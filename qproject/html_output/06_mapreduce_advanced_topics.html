@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -17,9 +17,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -46,43 +47,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -120,7 +91,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
@@ -131,11 +103,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06_mapreduce_advanced_topics.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -143,162 +120,191 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Distributed architectures for big data processing and analytics</a> 
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Index</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">About this Book</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></a>
+  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></a>
+  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></a>
+  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></a>
+  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></a>
+  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></a>
+  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></a>
+  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></a>
+  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></a>
+  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></a>
+  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></a>
+  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></a>
+  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></a>
+  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></a>
+  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></a>
+  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></a>
+  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></a>
+  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></a>
+  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></a>
+  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></a>
+  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></a>
+  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></a>
+  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></a>
+  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></a>
+  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></a>
+  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -316,7 +322,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></h1>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -335,12 +341,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3 class="anchored" data-anchor-id="multiple-inputs">Multiple inputs</h3>
 <p>In some applications data are read from two or more datasets, also having different formats.</p>
 <p>Hadoop allows reading data from multiple inputs (multiple datasets) with different formats by specifying one mapper for each input dataset. However, the key-value pairs emitted by the mappers must be consistent in terms of data types.</p>
-<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Use case
 </div>
 </div>
@@ -356,25 +362,37 @@ Use case
 </ul>
 <section id="example-multiple-inputs" class="level5">
 <h5 class="anchored" data-anchor-id="example-multiple-inputs">Example: multiple inputs</h5>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1"></a>MultipleInputs<span class="op">.</span><span class="fu">addInputPath</span><span class="op">(</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a>    job<span class="op">,</span> </span>
-<span id="cb1-3"><a href="#cb1-3"></a>    <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>args<span class="op">[</span><span class="dv">1</span><span class="op">]),</span> <span class="co">// &lt;1&gt;</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a>    TextInputFormat<span class="op">.</span><span class="fu">class</span><span class="op">,</span> <span class="co">// &lt;2&gt;</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a>    Mapper1<span class="op">.</span><span class="fu">class</span> <span class="co">// &lt;3&gt;</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="op">);</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a></span>
-<span id="cb1-8"><a href="#cb1-8"></a>MultipleInputs<span class="op">.</span><span class="fu">addInputPath</span><span class="op">(</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a>    job<span class="op">,</span> </span>
-<span id="cb1-10"><a href="#cb1-10"></a>    <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>args<span class="op">[</span><span class="dv">2</span><span class="op">]),</span> <span class="co">// &lt;1&gt;</span></span>
-<span id="cb1-11"><a href="#cb1-11"></a>    TextInputFormat<span class="op">.</span><span class="fu">class</span><span class="op">,</span> <span class="co">// &lt;2&gt;</span></span>
-<span id="cb1-12"><a href="#cb1-12"></a>    Mapper2<span class="op">.</span><span class="fu">class</span> <span class="co">// &lt;4&gt;</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ol type="1">
-<li>Specify two input paths (<code>args[1]</code> and <code>args[2]</code>)</li>
-<li>The data of both paths are read by using the <code>TextInputFormat</code> class</li>
-<li><code>Mapper1</code> is the class used to manage the input key-value pairs associated with the first path</li>
-<li><code>Mapper2</code> is the class used to manage the input key-value pairs associated with the second path</li>
-</ol>
+<div class="sourceCode" id="annotated-cell-1"><pre class="sourceCode numberSource java code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode java"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1"></a>MultipleInputs<span class="op">.</span><span class="fu">addInputPath</span><span class="op">(</span></span>
+<span id="annotated-cell-1-2"><a href="#annotated-cell-1-2"></a>    job<span class="op">,</span> </span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1">1</button><span id="annotated-cell-1-3" class="code-annotation-target"><a href="#annotated-cell-1-3"></a>    <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>args<span class="op">[</span><span class="dv">1</span><span class="op">]),</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2">2</button><span id="annotated-cell-1-4" class="code-annotation-target"><a href="#annotated-cell-1-4"></a>    TextInputFormat<span class="op">.</span><span class="fu">class</span><span class="op">,</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="3">3</button><span id="annotated-cell-1-5" class="code-annotation-target"><a href="#annotated-cell-1-5"></a>    Mapper1<span class="op">.</span><span class="fu">class</span></span>
+<span id="annotated-cell-1-6"><a href="#annotated-cell-1-6"></a><span class="op">);</span></span>
+<span id="annotated-cell-1-7"><a href="#annotated-cell-1-7"></a></span>
+<span id="annotated-cell-1-8"><a href="#annotated-cell-1-8"></a>MultipleInputs<span class="op">.</span><span class="fu">addInputPath</span><span class="op">(</span></span>
+<span id="annotated-cell-1-9"><a href="#annotated-cell-1-9"></a>    job<span class="op">,</span> </span>
+<span id="annotated-cell-1-10"><a href="#annotated-cell-1-10"></a>    <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>args<span class="op">[</span><span class="dv">2</span><span class="op">]),</span></span>
+<span id="annotated-cell-1-11"><a href="#annotated-cell-1-11"></a>    TextInputFormat<span class="op">.</span><span class="fu">class</span><span class="op">,</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="4">4</button><span id="annotated-cell-1-12" class="code-annotation-target"><a href="#annotated-cell-1-12"></a>    Mapper2<span class="op">.</span><span class="fu">class</span></span>
+<span id="annotated-cell-1-13"><a href="#annotated-cell-1-13"></a><span class="op">);</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="3,10" data-code-annotation="1">Specify two input paths (<code>args[1]</code> and <code>args[2]</code>)</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="4,11" data-code-annotation="2">The data of both paths are read by using the <code>TextInputFormat</code> class</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="5" data-code-annotation="3"><code>Mapper1</code> is the class used to manage the input key-value pairs associated with the first path</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="12" data-code-annotation="4"><code>Mapper2</code> is the class used to manage the input key-value pairs associated with the second path</span>
+</dd>
+</dl>
 </section>
 </section>
 <section id="multiple-outputs" class="level3">
@@ -400,21 +418,21 @@ Use case
 <p>Call this method one time for each “output file type”</p>
 <section id="example-multiple-outputs" class="level5">
 <h5 class="anchored" data-anchor-id="example-multiple-outputs">Example: multiple outputs</h5>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1"></a>MultipleOutputs<span class="op">.</span><span class="fu">addNamedOutput</span><span class="op">(</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a>    job<span class="op">,</span> </span>
-<span id="cb2-3"><a href="#cb2-3"></a>    <span class="st">"hightemp"</span><span class="op">,</span> </span>
-<span id="cb2-4"><a href="#cb2-4"></a>    TextOutputFormat<span class="op">.</span><span class="fu">class</span><span class="op">,</span> </span>
-<span id="cb2-5"><a href="#cb2-5"></a>    <span class="bu">Text</span><span class="op">.</span><span class="fu">class</span><span class="op">,</span> </span>
-<span id="cb2-6"><a href="#cb2-6"></a>    NullWritable<span class="op">.</span><span class="fu">class</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="op">);</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a></span>
-<span id="cb2-9"><a href="#cb2-9"></a>MultipleOutputs<span class="op">.</span><span class="fu">addNamedOutput</span><span class="op">(</span></span>
-<span id="cb2-10"><a href="#cb2-10"></a>    job<span class="op">,</span> </span>
-<span id="cb2-11"><a href="#cb2-11"></a>    <span class="st">"normaltemp"</span><span class="op">,</span> </span>
-<span id="cb2-12"><a href="#cb2-12"></a>    TextOutputFormat<span class="op">.</span><span class="fu">class</span><span class="op">,</span> </span>
-<span id="cb2-13"><a href="#cb2-13"></a>    <span class="bu">Text</span><span class="op">.</span><span class="fu">class</span><span class="op">,</span> </span>
-<span id="cb2-14"><a href="#cb2-14"></a>    NullWritable<span class="op">.</span><span class="fu">class</span></span>
-<span id="cb2-15"><a href="#cb2-15"></a><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1"></a>MultipleOutputs<span class="op">.</span><span class="fu">addNamedOutput</span><span class="op">(</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>    job<span class="op">,</span> </span>
+<span id="cb1-3"><a href="#cb1-3"></a>    <span class="st">"hightemp"</span><span class="op">,</span> </span>
+<span id="cb1-4"><a href="#cb1-4"></a>    TextOutputFormat<span class="op">.</span><span class="fu">class</span><span class="op">,</span> </span>
+<span id="cb1-5"><a href="#cb1-5"></a>    <span class="bu">Text</span><span class="op">.</span><span class="fu">class</span><span class="op">,</span> </span>
+<span id="cb1-6"><a href="#cb1-6"></a>    NullWritable<span class="op">.</span><span class="fu">class</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="op">);</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a></span>
+<span id="cb1-9"><a href="#cb1-9"></a>MultipleOutputs<span class="op">.</span><span class="fu">addNamedOutput</span><span class="op">(</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>    job<span class="op">,</span> </span>
+<span id="cb1-11"><a href="#cb1-11"></a>    <span class="st">"normaltemp"</span><span class="op">,</span> </span>
+<span id="cb1-12"><a href="#cb1-12"></a>    TextOutputFormat<span class="op">.</span><span class="fu">class</span><span class="op">,</span> </span>
+<span id="cb1-13"><a href="#cb1-13"></a>    <span class="bu">Text</span><span class="op">.</span><span class="fu">class</span><span class="op">,</span> </span>
+<span id="cb1-14"><a href="#cb1-14"></a>    NullWritable<span class="op">.</span><span class="fu">class</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This example defines two types of output files</p>
 <ul>
 <li>The first type of output files while have the prefix <code>"hightemp"</code></li>
@@ -425,19 +443,19 @@ Use case
 <section id="map-only" class="level4">
 <h4 class="anchored" data-anchor-id="map-only">Map-only</h4>
 <p>Define a private <code>MultipleOutputs</code> variable in the mapper if the job is a map-only job (in the reducer otherwise)</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">private</span> MultipleOutputs<span class="op">&lt;</span><span class="bu">Text</span><span class="op">,</span> NullWritable<span class="op">&gt;</span> mos <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">private</span> MultipleOutputs<span class="op">&lt;</span><span class="bu">Text</span><span class="op">,</span> NullWritable<span class="op">&gt;</span> mos <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Create an instance of the <code>MultipleOutputs</code> class in the setup method of the mapper (or in the reducer)</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb4-1"><a href="#cb4-1"></a>mos <span class="op">=</span> <span class="kw">new</span> MultipleOutputs<span class="op">&lt;</span><span class="bu">Text</span><span class="op">,</span> NullWritable<span class="op">&gt;(</span>context<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb3-1"><a href="#cb3-1"></a>mos <span class="op">=</span> <span class="kw">new</span> MultipleOutputs<span class="op">&lt;</span><span class="bu">Text</span><span class="op">,</span> NullWritable<span class="op">&gt;(</span>context<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Use the write method of the <code>MultipleOutputs</code> object in the map method (or in the reduce method) to write the key-value pairs in the file of interest</p>
 </section>
 <section id="example-map-only" class="level4">
 <h4 class="anchored" data-anchor-id="example-map-only">Example: map-only</h4>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb5-1"><a href="#cb5-1"></a>mos<span class="op">.</span><span class="fu">write</span><span class="op">(</span><span class="st">"hightemp"</span><span class="op">,</span> key<span class="op">,</span> value<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb4-1"><a href="#cb4-1"></a>mos<span class="op">.</span><span class="fu">write</span><span class="op">(</span><span class="st">"hightemp"</span><span class="op">,</span> key<span class="op">,</span> value<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This example writes the current key-value pair in a file with the prefix <code>"hightemp-"</code></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb6-1"><a href="#cb6-1"></a>mos<span class="op">.</span><span class="fu">write</span><span class="op">(</span><span class="st">"normaltemp"</span><span class="op">,</span> key<span class="op">,</span> value<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb5-1"><a href="#cb5-1"></a>mos<span class="op">.</span><span class="fu">write</span><span class="op">(</span><span class="st">"normaltemp"</span><span class="op">,</span> key<span class="op">,</span> value<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This example writes the current key-value pair in a file with the prefix <code>"normaltemp-"</code></p>
 <p>Close the <code>MultipleOutputs</code> object in the cleanup method of the mapper (or of the reducer)</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb7-1"><a href="#cb7-1"></a>mos<span class="op">.</span><span class="fu">close</span><span class="op">();</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb6-1"><a href="#cb6-1"></a>mos<span class="op">.</span><span class="fu">close</span><span class="op">();</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="distributed-cache" class="level3">
@@ -446,7 +464,7 @@ Use case
 <p><code>DistributedCache</code> is a facility provided by the Hadoop-based MapReduce framework to cache files (e.g., text, archives, jars needed by applications).</p>
 <div id="fig-distributed_cache" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Figure&nbsp;8.1: Distributed cache structure</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;8.1: Distributed cache structure</figcaption>
 <p><img src="images/06_mapreduce_advanced_topics/distributed_cache.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
@@ -458,43 +476,45 @@ Use case
 <h4 class="anchored" data-anchor-id="example-distributed-cache">Example: distributed cache</h4>
 <section id="driver-1" class="level5">
 <h5 class="anchored" data-anchor-id="driver-1">Driver</h5>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">public</span> <span class="dt">int</span> <span class="fu">run</span><span class="op">(</span><span class="bu">String</span><span class="op">[]</span> args<span class="op">)</span> <span class="kw">throws</span> <span class="bu">Exception</span> <span class="op">{</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a>    <span class="co">//...</span></span>
-<span id="cb8-3"><a href="#cb8-3"></a></span>
-<span id="cb8-4"><a href="#cb8-4"></a>    <span class="co">// Add the shared/cached HDFS file in the </span></span>
-<span id="cb8-5"><a href="#cb8-5"></a>    <span class="co">// distributed cache</span></span>
-<span id="cb8-6"><a href="#cb8-6"></a>    job<span class="op">.</span><span class="fu">addCacheFile</span><span class="op">(</span><span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span><span class="st">"hdfs path/filename"</span><span class="op">).</span><span class="fu">toUri</span><span class="op">());</span></span>
-<span id="cb8-7"><a href="#cb8-7"></a></span>
-<span id="cb8-8"><a href="#cb8-8"></a>    <span class="co">//...</span></span>
-<span id="cb8-9"><a href="#cb8-9"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">public</span> <span class="dt">int</span> <span class="fu">run</span><span class="op">(</span><span class="bu">String</span><span class="op">[]</span> args<span class="op">)</span> <span class="kw">throws</span> <span class="bu">Exception</span> <span class="op">{</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>    <span class="co">//...</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a></span>
+<span id="cb7-4"><a href="#cb7-4"></a>    <span class="co">// Add the shared/cached HDFS file in the </span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>    <span class="co">// distributed cache</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>    job<span class="op">.</span><span class="fu">addCacheFile</span><span class="op">(</span><span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span><span class="st">"hdfs path/filename"</span><span class="op">).</span><span class="fu">toUri</span><span class="op">());</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a></span>
+<span id="cb7-8"><a href="#cb7-8"></a>    <span class="co">//...</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="mapperreducer" class="level5">
 <h5 class="anchored" data-anchor-id="mapperreducer">Mapper/Reducer</h5>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">protected</span> <span class="dt">void</span> <span class="fu">setup</span><span class="op">(</span><span class="bu">Context</span> context<span class="op">)</span> <span class="kw">throws</span> <span class="bu">IOException</span><span class="op">,</span> <span class="bu">InterruptedException</span><span class="op">{</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a></span>
-<span id="cb9-3"><a href="#cb9-3"></a>    <span class="bu">String</span> line<span class="op">;</span></span>
-<span id="cb9-4"><a href="#cb9-4"></a>    <span class="co">// Retrieve the (original) paths of the distributed files</span></span>
-<span id="cb9-5"><a href="#cb9-5"></a>    <span class="bu">URI</span><span class="op">[]</span> urisCachedFiles <span class="op">=</span> context<span class="op">.</span><span class="fu">getCacheFiles</span><span class="op">();</span></span>
-<span id="cb9-6"><a href="#cb9-6"></a></span>
-<span id="cb9-7"><a href="#cb9-7"></a>    <span class="co">// Read the content of the cached file and process it.</span></span>
-<span id="cb9-8"><a href="#cb9-8"></a>    <span class="co">// In this example the content of the first shared file is opened.</span></span>
-<span id="cb9-9"><a href="#cb9-9"></a>    BufferedReaderfile <span class="op">=</span> <span class="kw">new</span> <span class="bu">BufferedReader</span><span class="op">(</span></span>
-<span id="cb9-10"><a href="#cb9-10"></a>        <span class="kw">new</span> <span class="bu">FileReader</span><span class="op">(</span></span>
-<span id="cb9-11"><a href="#cb9-11"></a>            <span class="kw">new</span> <span class="bu">File</span><span class="op">(</span></span>
-<span id="cb9-12"><a href="#cb9-12"></a>                <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>urisCachedFiles<span class="op">[</span><span class="dv">0</span><span class="op">].</span><span class="fu">getPath</span><span class="op">()).</span><span class="fu">getName</span><span class="op">()</span></span>
-<span id="cb9-13"><a href="#cb9-13"></a>            <span class="op">)</span></span>
-<span id="cb9-14"><a href="#cb9-14"></a>        <span class="op">)</span></span>
-<span id="cb9-15"><a href="#cb9-15"></a>    <span class="op">);</span></span>
-<span id="cb9-16"><a href="#cb9-16"></a></span>
-<span id="cb9-17"><a href="#cb9-17"></a>    <span class="co">// Iterate over the lines of the file</span></span>
-<span id="cb9-18"><a href="#cb9-18"></a>    <span class="cf">while</span> <span class="op">((</span>line <span class="op">=</span> file<span class="op">.</span><span class="fu">readLine</span><span class="op">())</span> <span class="op">!=</span> <span class="kw">null</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb9-19"><a href="#cb9-19"></a>        <span class="co">// process the current line</span></span>
-<span id="cb9-20"><a href="#cb9-20"></a>        <span class="co">//...</span></span>
-<span id="cb9-21"><a href="#cb9-21"></a>    <span class="op">}</span></span>
-<span id="cb9-22"><a href="#cb9-22"></a>    file<span class="op">.</span><span class="fu">close</span><span class="op">();</span></span>
-<span id="cb9-23"><a href="#cb9-23"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource java number-lines code-with-copy"><code class="sourceCode java"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">protected</span> <span class="dt">void</span> <span class="fu">setup</span><span class="op">(</span><span class="bu">Context</span> context<span class="op">)</span> <span class="kw">throws</span> <span class="bu">IOException</span><span class="op">,</span> <span class="bu">InterruptedException</span><span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a></span>
+<span id="cb8-3"><a href="#cb8-3"></a>    <span class="bu">String</span> line<span class="op">;</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a>    <span class="co">// Retrieve the (original) paths of the distributed files</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a>    <span class="bu">URI</span><span class="op">[]</span> urisCachedFiles <span class="op">=</span> context<span class="op">.</span><span class="fu">getCacheFiles</span><span class="op">();</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a></span>
+<span id="cb8-7"><a href="#cb8-7"></a>    <span class="co">// Read the content of the cached file and process it.</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a>    <span class="co">// In this example the content of the first shared file is opened.</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>    BufferedReaderfile <span class="op">=</span> <span class="kw">new</span> <span class="bu">BufferedReader</span><span class="op">(</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a>        <span class="kw">new</span> <span class="bu">FileReader</span><span class="op">(</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a>            <span class="kw">new</span> <span class="bu">File</span><span class="op">(</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a>                <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>urisCachedFiles<span class="op">[</span><span class="dv">0</span><span class="op">].</span><span class="fu">getPath</span><span class="op">()).</span><span class="fu">getName</span><span class="op">()</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a>            <span class="op">)</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a>        <span class="op">)</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a>    <span class="op">);</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a></span>
+<span id="cb8-17"><a href="#cb8-17"></a>    <span class="co">// Iterate over the lines of the file</span></span>
+<span id="cb8-18"><a href="#cb8-18"></a>    <span class="cf">while</span> <span class="op">((</span>line <span class="op">=</span> file<span class="op">.</span><span class="fu">readLine</span><span class="op">())</span> <span class="op">!=</span> <span class="kw">null</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb8-19"><a href="#cb8-19"></a>        <span class="co">// process the current line</span></span>
+<span id="cb8-20"><a href="#cb8-20"></a>        <span class="co">//...</span></span>
+<span id="cb8-21"><a href="#cb8-21"></a>    <span class="op">}</span></span>
+<span id="cb8-22"><a href="#cb8-22"></a>    file<span class="op">.</span><span class="fu">close</span><span class="op">();</span></span>
+<span id="cb8-23"><a href="#cb8-23"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Notice that <code>.getName()</code> retrieves the name of the file. The shared file is stored in the root of a local temporary folder (one for each server that is used to run the application) associated with the distributed cache. The path of the original folder is different from the one used to store the local copy of the shared file.</p>
 
+
+<!-- -->
 
 </section>
 </section>
@@ -528,9 +548,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -566,6 +600,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
   function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
@@ -595,6 +680,157 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Handle positioning of the toggle
+      window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -645,7 +881,190 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb9" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu"># MapReduce and Hadoop Advanced Topics</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="fu">## Multiple inputs</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a>In some applications data are read from two or more datasets, also having different formats. </span>
+<span id="cb9-4"><a href="#cb9-4"></a></span>
+<span id="cb9-5"><a href="#cb9-5"></a>Hadoop allows reading data from multiple inputs (multiple datasets) with different formats by specifying one mapper for each input dataset. However, the key-value pairs emitted by the mappers must be consistent in terms of data types.</span>
+<span id="cb9-6"><a href="#cb9-6"></a></span>
+<span id="cb9-7"><a href="#cb9-7"></a>:::{.callout-tip}</span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="fu">### Use case</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a>The input data is collected from different sensors: all sensors measure the same "measure", but sensors developed by different vendors use a different data format to store the gathered data/measurements.</span>
+<span id="cb9-10"><a href="#cb9-10"></a>:::</span>
+<span id="cb9-11"><a href="#cb9-11"></a></span>
+<span id="cb9-12"><a href="#cb9-12"></a>In the driver use the <span class="in">`addInputPath`</span> method of the <span class="in">`MultipleInputs`</span> class multiple times to</span>
+<span id="cb9-13"><a href="#cb9-13"></a></span>
+<span id="cb9-14"><a href="#cb9-14"></a><span class="ss">- </span>Add one input path at a time</span>
+<span id="cb9-15"><a href="#cb9-15"></a><span class="ss">- </span>Specify the input format class for each input path</span>
+<span id="cb9-16"><a href="#cb9-16"></a><span class="ss">- </span>Specify the Mapper class associated with each input path</span>
+<span id="cb9-17"><a href="#cb9-17"></a></span>
+<span id="cb9-18"><a href="#cb9-18"></a><span class="fu">#### Example: multiple inputs</span></span>
+<span id="cb9-19"><a href="#cb9-19"></a><span class="in">```java</span></span>
+<span id="cb9-20"><a href="#cb9-20"></a>MultipleInputs<span class="op">.</span><span class="fu">addInputPath</span><span class="op">(</span></span>
+<span id="cb9-21"><a href="#cb9-21"></a>    job<span class="op">,</span> </span>
+<span id="cb9-22"><a href="#cb9-22"></a>    <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>args<span class="op">[</span><span class="dv">1</span><span class="op">]),</span> <span class="co">// &lt;1&gt;</span></span>
+<span id="cb9-23"><a href="#cb9-23"></a>    TextInputFormat<span class="op">.</span><span class="fu">class</span><span class="op">,</span> <span class="co">// &lt;2&gt;</span></span>
+<span id="cb9-24"><a href="#cb9-24"></a>    Mapper1<span class="op">.</span><span class="fu">class</span> <span class="co">// &lt;3&gt;</span></span>
+<span id="cb9-25"><a href="#cb9-25"></a><span class="op">);</span></span>
+<span id="cb9-26"><a href="#cb9-26"></a></span>
+<span id="cb9-27"><a href="#cb9-27"></a>MultipleInputs<span class="op">.</span><span class="fu">addInputPath</span><span class="op">(</span></span>
+<span id="cb9-28"><a href="#cb9-28"></a>    job<span class="op">,</span> </span>
+<span id="cb9-29"><a href="#cb9-29"></a>    <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>args<span class="op">[</span><span class="dv">2</span><span class="op">]),</span> <span class="co">// &lt;1&gt;</span></span>
+<span id="cb9-30"><a href="#cb9-30"></a>    TextInputFormat<span class="op">.</span><span class="fu">class</span><span class="op">,</span> <span class="co">// &lt;2&gt;</span></span>
+<span id="cb9-31"><a href="#cb9-31"></a>    Mapper2<span class="op">.</span><span class="fu">class</span> <span class="co">// &lt;4&gt;</span></span>
+<span id="cb9-32"><a href="#cb9-32"></a><span class="op">);</span></span>
+<span id="cb9-33"><a href="#cb9-33"></a><span class="in">```</span></span>
+<span id="cb9-34"><a href="#cb9-34"></a><span class="ss">1. </span>Specify two input paths (<span class="in">`args[1]`</span> and <span class="in">`args[2]`</span>)</span>
+<span id="cb9-35"><a href="#cb9-35"></a><span class="ss">2. </span>The data of both paths are read by using the <span class="in">`TextInputFormat`</span> class</span>
+<span id="cb9-36"><a href="#cb9-36"></a><span class="ss">3. </span><span class="in">`Mapper1`</span> is the class used to manage the input key-value pairs associated with the first path</span>
+<span id="cb9-37"><a href="#cb9-37"></a><span class="ss">4. </span><span class="in">`Mapper2`</span> is the class used to manage the input key-value pairs associated with the second path</span>
+<span id="cb9-38"><a href="#cb9-38"></a></span>
+<span id="cb9-39"><a href="#cb9-39"></a><span class="fu">## Multiple outputs</span></span>
+<span id="cb9-40"><a href="#cb9-40"></a>In some applications it could be useful to store the output key-value pairs of a MapReduce application in different files. Each file contains a specific subset of the emitted key-value pairs, based on some rules (usually this approach is useful for splitting and filtering operations), and each file name has a prefix that is used to specify the "content" of the file.</span>
+<span id="cb9-41"><a href="#cb9-41"></a></span>
+<span id="cb9-42"><a href="#cb9-42"></a>All the files are stored in one single output directory: there aren't multiple output directories, but only multiple output files with different prefixes.</span>
+<span id="cb9-43"><a href="#cb9-43"></a></span>
+<span id="cb9-44"><a href="#cb9-44"></a>Hadoop allows specifying the prefix of the output files: the standard prefix is "part-" (see the content of the output directory of some of the previous applications).</span>
+<span id="cb9-45"><a href="#cb9-45"></a></span>
+<span id="cb9-46"><a href="#cb9-46"></a>The <span class="in">`MultipleOutputs`</span> class is used to specify the prefixes of the output files </span>
+<span id="cb9-47"><a href="#cb9-47"></a></span>
+<span id="cb9-48"><a href="#cb9-48"></a><span class="ss">- </span>One different prefix for each "type" of output file</span>
+<span id="cb9-49"><a href="#cb9-49"></a><span class="ss">- </span>There will be one output file of each type for each reducer (for each mapperfor map-only jobs)</span>
+<span id="cb9-50"><a href="#cb9-50"></a></span>
+<span id="cb9-51"><a href="#cb9-51"></a><span class="fu">### Driver</span></span>
+<span id="cb9-52"><a href="#cb9-52"></a>Use the method <span class="in">`MultipleOutputs.addNamedOutput`</span> multiple times in the Driver to specify the prefixes of the output files. This method has 4 parameter</span>
+<span id="cb9-53"><a href="#cb9-53"></a></span>
+<span id="cb9-54"><a href="#cb9-54"></a><span class="ss">- </span>The job object</span>
+<span id="cb9-55"><a href="#cb9-55"></a><span class="ss">- </span>The "name/prefix" of MultipleOutputs</span>
+<span id="cb9-56"><a href="#cb9-56"></a><span class="ss">- </span>The OutputFormat class</span>
+<span id="cb9-57"><a href="#cb9-57"></a><span class="ss">- </span>The key output data type class</span>
+<span id="cb9-58"><a href="#cb9-58"></a><span class="ss">- </span>The value output data type class</span>
+<span id="cb9-59"><a href="#cb9-59"></a></span>
+<span id="cb9-60"><a href="#cb9-60"></a>Call this method one time for each "output file type"</span>
+<span id="cb9-61"><a href="#cb9-61"></a></span>
+<span id="cb9-62"><a href="#cb9-62"></a><span class="fu">#### Example: multiple outputs</span></span>
+<span id="cb9-63"><a href="#cb9-63"></a></span>
+<span id="cb9-64"><a href="#cb9-64"></a><span class="in">```java</span></span>
+<span id="cb9-65"><a href="#cb9-65"></a>MultipleOutputs<span class="op">.</span><span class="fu">addNamedOutput</span><span class="op">(</span></span>
+<span id="cb9-66"><a href="#cb9-66"></a>    job<span class="op">,</span> </span>
+<span id="cb9-67"><a href="#cb9-67"></a>    <span class="st">"hightemp"</span><span class="op">,</span> </span>
+<span id="cb9-68"><a href="#cb9-68"></a>    TextOutputFormat<span class="op">.</span><span class="fu">class</span><span class="op">,</span> </span>
+<span id="cb9-69"><a href="#cb9-69"></a>    <span class="bu">Text</span><span class="op">.</span><span class="fu">class</span><span class="op">,</span> </span>
+<span id="cb9-70"><a href="#cb9-70"></a>    NullWritable<span class="op">.</span><span class="fu">class</span></span>
+<span id="cb9-71"><a href="#cb9-71"></a><span class="op">);</span></span>
+<span id="cb9-72"><a href="#cb9-72"></a></span>
+<span id="cb9-73"><a href="#cb9-73"></a>MultipleOutputs<span class="op">.</span><span class="fu">addNamedOutput</span><span class="op">(</span></span>
+<span id="cb9-74"><a href="#cb9-74"></a>    job<span class="op">,</span> </span>
+<span id="cb9-75"><a href="#cb9-75"></a>    <span class="st">"normaltemp"</span><span class="op">,</span> </span>
+<span id="cb9-76"><a href="#cb9-76"></a>    TextOutputFormat<span class="op">.</span><span class="fu">class</span><span class="op">,</span> </span>
+<span id="cb9-77"><a href="#cb9-77"></a>    <span class="bu">Text</span><span class="op">.</span><span class="fu">class</span><span class="op">,</span> </span>
+<span id="cb9-78"><a href="#cb9-78"></a>    NullWritable<span class="op">.</span><span class="fu">class</span></span>
+<span id="cb9-79"><a href="#cb9-79"></a><span class="op">);</span></span>
+<span id="cb9-80"><a href="#cb9-80"></a><span class="in">```</span></span>
+<span id="cb9-81"><a href="#cb9-81"></a></span>
+<span id="cb9-82"><a href="#cb9-82"></a>This example defines two types of output files</span>
+<span id="cb9-83"><a href="#cb9-83"></a></span>
+<span id="cb9-84"><a href="#cb9-84"></a><span class="ss">- </span>The first type of output files while have the prefix <span class="in">`"hightemp"`</span></span>
+<span id="cb9-85"><a href="#cb9-85"></a><span class="ss">- </span>The second type of output files while have the prefix <span class="in">`"normaltemp"`</span></span>
+<span id="cb9-86"><a href="#cb9-86"></a></span>
+<span id="cb9-87"><a href="#cb9-87"></a><span class="fu">### Map-only</span></span>
+<span id="cb9-88"><a href="#cb9-88"></a>Define a private <span class="in">`MultipleOutputs`</span> variable in the mapper if the job is a map-only job (in the reducer otherwise)</span>
+<span id="cb9-89"><a href="#cb9-89"></a></span>
+<span id="cb9-90"><a href="#cb9-90"></a><span class="in">```java</span></span>
+<span id="cb9-91"><a href="#cb9-91"></a><span class="kw">private</span> MultipleOutputs<span class="op">&lt;</span><span class="bu">Text</span><span class="op">,</span> NullWritable<span class="op">&gt;</span> mos <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb9-92"><a href="#cb9-92"></a><span class="in">```</span></span>
+<span id="cb9-93"><a href="#cb9-93"></a></span>
+<span id="cb9-94"><a href="#cb9-94"></a>Create an instance of the <span class="in">`MultipleOutputs`</span> class in the setup method of the mapper (or in the reducer)</span>
+<span id="cb9-95"><a href="#cb9-95"></a></span>
+<span id="cb9-96"><a href="#cb9-96"></a><span class="in">```java</span></span>
+<span id="cb9-97"><a href="#cb9-97"></a>mos <span class="op">=</span> <span class="kw">new</span> MultipleOutputs<span class="op">&lt;</span><span class="bu">Text</span><span class="op">,</span> NullWritable<span class="op">&gt;(</span>context<span class="op">);</span></span>
+<span id="cb9-98"><a href="#cb9-98"></a><span class="in">```</span></span>
+<span id="cb9-99"><a href="#cb9-99"></a></span>
+<span id="cb9-100"><a href="#cb9-100"></a>Use the write method of the <span class="in">`MultipleOutputs`</span> object in the map method (or in the reduce method) to write the key-value pairs in the file of interest </span>
+<span id="cb9-101"><a href="#cb9-101"></a></span>
+<span id="cb9-102"><a href="#cb9-102"></a><span class="fu">### Example: map-only</span></span>
+<span id="cb9-103"><a href="#cb9-103"></a></span>
+<span id="cb9-104"><a href="#cb9-104"></a><span class="in">```java</span></span>
+<span id="cb9-105"><a href="#cb9-105"></a>mos<span class="op">.</span><span class="fu">write</span><span class="op">(</span><span class="st">"hightemp"</span><span class="op">,</span> key<span class="op">,</span> value<span class="op">);</span></span>
+<span id="cb9-106"><a href="#cb9-106"></a><span class="in">```</span></span>
+<span id="cb9-107"><a href="#cb9-107"></a></span>
+<span id="cb9-108"><a href="#cb9-108"></a>This example writes the current key-value pair in a file with the prefix <span class="in">`"hightemp-"`</span></span>
+<span id="cb9-109"><a href="#cb9-109"></a></span>
+<span id="cb9-110"><a href="#cb9-110"></a><span class="in">```java</span></span>
+<span id="cb9-111"><a href="#cb9-111"></a>mos<span class="op">.</span><span class="fu">write</span><span class="op">(</span><span class="st">"normaltemp"</span><span class="op">,</span> key<span class="op">,</span> value<span class="op">);</span></span>
+<span id="cb9-112"><a href="#cb9-112"></a><span class="in">```</span></span>
+<span id="cb9-113"><a href="#cb9-113"></a></span>
+<span id="cb9-114"><a href="#cb9-114"></a>This example writes the current key-value pair in a file with the prefix <span class="in">`"normaltemp-"`</span></span>
+<span id="cb9-115"><a href="#cb9-115"></a></span>
+<span id="cb9-116"><a href="#cb9-116"></a>Close the <span class="in">`MultipleOutputs`</span> object in the cleanup method of the mapper (or of the reducer)</span>
+<span id="cb9-117"><a href="#cb9-117"></a></span>
+<span id="cb9-118"><a href="#cb9-118"></a><span class="in">```java</span></span>
+<span id="cb9-119"><a href="#cb9-119"></a>mos<span class="op">.</span><span class="fu">close</span><span class="op">();</span></span>
+<span id="cb9-120"><a href="#cb9-120"></a><span class="in">```</span></span>
+<span id="cb9-121"><a href="#cb9-121"></a></span>
+<span id="cb9-122"><a href="#cb9-122"></a><span class="fu">## Distributed cache</span></span>
+<span id="cb9-123"><a href="#cb9-123"></a>Some applications need to share and cache (small) read-only files to perform efficiently their task. These files should be accessible by all nodes of the cluster in an efficient way, hence a copy of the shared/cached (HDFS) files should be available locally in all nodes used to run the application.</span>
+<span id="cb9-124"><a href="#cb9-124"></a></span>
+<span id="cb9-125"><a href="#cb9-125"></a><span class="in">`DistributedCache`</span> is a facility provided by the Hadoop-based MapReduce framework to cache files (e.g., text, archives, jars needed by applications).</span>
+<span id="cb9-126"><a href="#cb9-126"></a></span>
+<span id="cb9-127"><a href="#cb9-127"></a><span class="al">![Distributed cache structure](images/06_mapreduce_advanced_topics/distributed_cache.png)</span>{width=80%, #fig-distributed_cache}</span>
+<span id="cb9-128"><a href="#cb9-128"></a></span>
+<span id="cb9-129"><a href="#cb9-129"></a>In image @fig-distributed_cache, in HDFS disks there are the HDFS file(s) to be shared by means of the distributed cache, while on the disks there are local copies of the file(s) shared by means of the distributed cache. A local copy of the file(s) shared by means of the distributed cache is created only in the servers running the application that uses the shared file(s).</span>
+<span id="cb9-130"><a href="#cb9-130"></a></span>
+<span id="cb9-131"><a href="#cb9-131"></a>In the Driver of the application, the set of shared/cached files are specifiedby using the <span class="in">`job.addCacheFile(path)`</span> method. </span>
+<span id="cb9-132"><a href="#cb9-132"></a>During the initialization of the job, Hadoop creates a "local copy" of the shared/cached files in all nodes that are used to execute some tasks (mappers or reducers) of the job (i.e., of the running application). The shared/cache file is read by the mapper (or the reducer), usually in its setup method, since the shared/cached file is available locally in the used nodes/servers, its content can be read efficiently.</span>
+<span id="cb9-133"><a href="#cb9-133"></a></span>
+<span id="cb9-134"><a href="#cb9-134"></a>The efficiency of the distributed cache depends on the number of multiple mappers (or reducers) running on the same node/server: for each node a local copy of the file is copied during the initialization of the job, and the local copy of the file is used by all mappers (reducers) running on the same node/server. </span>
+<span id="cb9-135"><a href="#cb9-135"></a></span>
+<span id="cb9-136"><a href="#cb9-136"></a>Without the distributed cache, each mapper (reducer) should read, in the setup method, the shared HDFS file, hence, more time is needed because reading data from HDFS is more inefficient than reading data from the local file system of the node running the mappers (reducers).</span>
+<span id="cb9-137"><a href="#cb9-137"></a></span>
+<span id="cb9-138"><a href="#cb9-138"></a><span class="fu">### Example: distributed cache</span></span>
+<span id="cb9-139"><a href="#cb9-139"></a><span class="fu">#### Driver</span></span>
+<span id="cb9-140"><a href="#cb9-140"></a></span>
+<span id="cb9-141"><a href="#cb9-141"></a><span class="in">```java</span></span>
+<span id="cb9-142"><a href="#cb9-142"></a><span class="kw">public</span> <span class="dt">int</span> <span class="fu">run</span><span class="op">(</span><span class="bu">String</span><span class="op">[]</span> args<span class="op">)</span> <span class="kw">throws</span> <span class="bu">Exception</span> <span class="op">{</span></span>
+<span id="cb9-143"><a href="#cb9-143"></a>    <span class="co">//...</span></span>
+<span id="cb9-144"><a href="#cb9-144"></a></span>
+<span id="cb9-145"><a href="#cb9-145"></a>    <span class="co">// Add the shared/cached HDFS file in the </span></span>
+<span id="cb9-146"><a href="#cb9-146"></a>    <span class="co">// distributed cache</span></span>
+<span id="cb9-147"><a href="#cb9-147"></a>    job<span class="op">.</span><span class="fu">addCacheFile</span><span class="op">(</span><span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span><span class="st">"hdfs path/filename"</span><span class="op">).</span><span class="fu">toUri</span><span class="op">());</span></span>
+<span id="cb9-148"><a href="#cb9-148"></a></span>
+<span id="cb9-149"><a href="#cb9-149"></a>    <span class="co">//...</span></span>
+<span id="cb9-150"><a href="#cb9-150"></a><span class="op">}</span></span>
+<span id="cb9-151"><a href="#cb9-151"></a><span class="in">```</span></span>
+<span id="cb9-152"><a href="#cb9-152"></a></span>
+<span id="cb9-153"><a href="#cb9-153"></a><span class="fu">#### Mapper/Reducer</span></span>
+<span id="cb9-154"><a href="#cb9-154"></a></span>
+<span id="cb9-155"><a href="#cb9-155"></a><span class="in">```java</span></span>
+<span id="cb9-156"><a href="#cb9-156"></a><span class="kw">protected</span> <span class="dt">void</span> <span class="fu">setup</span><span class="op">(</span><span class="bu">Context</span> context<span class="op">)</span> <span class="kw">throws</span> <span class="bu">IOException</span><span class="op">,</span> <span class="bu">InterruptedException</span><span class="op">{</span></span>
+<span id="cb9-157"><a href="#cb9-157"></a></span>
+<span id="cb9-158"><a href="#cb9-158"></a>    <span class="bu">String</span> line<span class="op">;</span></span>
+<span id="cb9-159"><a href="#cb9-159"></a>    <span class="co">// Retrieve the (original) paths of the distributed files</span></span>
+<span id="cb9-160"><a href="#cb9-160"></a>    <span class="bu">URI</span><span class="op">[]</span> urisCachedFiles <span class="op">=</span> context<span class="op">.</span><span class="fu">getCacheFiles</span><span class="op">();</span></span>
+<span id="cb9-161"><a href="#cb9-161"></a></span>
+<span id="cb9-162"><a href="#cb9-162"></a>    <span class="co">// Read the content of the cached file and process it.</span></span>
+<span id="cb9-163"><a href="#cb9-163"></a>    <span class="co">// In this example the content of the first shared file is opened.</span></span>
+<span id="cb9-164"><a href="#cb9-164"></a>    BufferedReaderfile <span class="op">=</span> <span class="kw">new</span> <span class="bu">BufferedReader</span><span class="op">(</span></span>
+<span id="cb9-165"><a href="#cb9-165"></a>        <span class="kw">new</span> <span class="bu">FileReader</span><span class="op">(</span></span>
+<span id="cb9-166"><a href="#cb9-166"></a>            <span class="kw">new</span> <span class="bu">File</span><span class="op">(</span></span>
+<span id="cb9-167"><a href="#cb9-167"></a>                <span class="kw">new</span> <span class="fu">Path</span><span class="op">(</span>urisCachedFiles<span class="op">[</span><span class="dv">0</span><span class="op">].</span><span class="fu">getPath</span><span class="op">()).</span><span class="fu">getName</span><span class="op">()</span></span>
+<span id="cb9-168"><a href="#cb9-168"></a>            <span class="op">)</span></span>
+<span id="cb9-169"><a href="#cb9-169"></a>        <span class="op">)</span></span>
+<span id="cb9-170"><a href="#cb9-170"></a>    <span class="op">);</span></span>
+<span id="cb9-171"><a href="#cb9-171"></a></span>
+<span id="cb9-172"><a href="#cb9-172"></a>    <span class="co">// Iterate over the lines of the file</span></span>
+<span id="cb9-173"><a href="#cb9-173"></a>    <span class="cf">while</span> <span class="op">((</span>line <span class="op">=</span> file<span class="op">.</span><span class="fu">readLine</span><span class="op">())</span> <span class="op">!=</span> <span class="kw">null</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-174"><a href="#cb9-174"></a>        <span class="co">// process the current line</span></span>
+<span id="cb9-175"><a href="#cb9-175"></a>        <span class="co">//...</span></span>
+<span id="cb9-176"><a href="#cb9-176"></a>    <span class="op">}</span></span>
+<span id="cb9-177"><a href="#cb9-177"></a>    file<span class="op">.</span><span class="fu">close</span><span class="op">();</span></span>
+<span id="cb9-178"><a href="#cb9-178"></a><span class="op">}</span></span>
+<span id="cb9-179"><a href="#cb9-179"></a></span>
+<span id="cb9-180"><a href="#cb9-180"></a><span class="in">```</span></span>
+<span id="cb9-181"><a href="#cb9-181"></a></span>
+<span id="cb9-182"><a href="#cb9-182"></a>Notice that <span class="in">`.getName()`</span> retrieves the name of the file. The shared file is stored in the root of a local temporary folder (one for each server that is used to run the application) associated with the distributed cache. The path of the original folder is different from the one used to store the local copy of the shared file.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 
 

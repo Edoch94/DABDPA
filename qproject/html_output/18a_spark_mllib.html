@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -17,9 +17,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -46,43 +47,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -120,10 +91,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
@@ -132,11 +105,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./18a_spark_mllib.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -144,162 +122,191 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Distributed architectures for big data processing and analytics</a> 
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Index</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">About this Book</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></a>
+  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></a>
+  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></a>
+  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></a>
+  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></a>
+  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></a>
+  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></a>
+  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></a>
+  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></a>
+  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></a>
+  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></a>
+  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></a>
+  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></a>
+  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></a>
+  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></a>
+  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></a>
+  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></a>
+  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></a>
+  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></a>
+  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></a>
+  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></a>
+  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></a>
+  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></a>
+  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></a>
+  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></a>
+  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -318,7 +325,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></h1>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -358,12 +365,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="local-vectors" class="level4">
 <h4 class="anchored" data-anchor-id="local-vectors">Local vectors</h4>
 <p>Local <code>pyspark.ml.linalg.Vector</code> objects in MLlib are used to store vectors (in dense and sparse representations) of double values. The MLlib algorithms work on vectors of doubles, used to represent the input records/data (one vector for each input record). Non double attributes/values must be mapped to double values before applying MLlib algorithms.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -416,16 +423,16 @@ Example
 <p>Local <code>pyspark.ml.linalg.Matrix</code> objects in MLlib are used to store matrices (in dense and sparse representations) of double values. The column-major order is used to store the content of the matrix in a linear way.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Local matrices</figcaption><p></p>
+<figcaption class="figure-caption">Local matrices</figcaption>
 <p><img src="images/18a_spark_mllib/matrix_example.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -506,12 +513,12 @@ Example
 <section id="transformer" class="level4">
 <h4 class="anchored" data-anchor-id="transformer">Transformer</h4>
 <p>A Transformer is an ML algorithm/procedure that transforms one DataFrame into another DataFrame by means of the method <code>transform(inputDataFrame)</code>.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example 1
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -522,12 +529,12 @@ Example 1
 </div>
 </div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example 2
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -543,12 +550,12 @@ Example 2
 <h4 class="anchored" data-anchor-id="estimator">Estimator</h4>
 <p>An Estimator is an ML algorithm/procedure that is fit on an input (training) DataFrame to produce a Transformer: each Estimator implements a <code>fit()</code> method, which accepts a DataFrame and produces a Model of type <code>Transformer</code>.</p>
 <p>An Estimator abstracts the concept of a learning algorithm or any algorithm that fits/trains on an input dataset and returns a model</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -563,12 +570,12 @@ Example
 <section id="pipeline" class="level4">
 <h4 class="anchored" data-anchor-id="pipeline">Pipeline</h4>
 <p>A Pipeline chains multiple Transformers and Estimators together to specify a Machine learning/Data Mining workflow. In a pipeline, the output of a transformer/estimator is the input of the next one.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -633,12 +640,12 @@ Example
 <li><code>outputCol</code>: the name of the new output column</li>
 </ul>
 <p>When the transform method of VectorAssembler is invoked on a DataFrame the returned DataFrame has a new column (outputCol): for each record, the value of the new column is the concatenation of the values of the input columns. It has also all the columns of the input DataFrame.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -740,22 +747,22 @@ Example
 <span id="cb3-5"><a href="#cb3-5"></a>inputPath <span class="op">=</span> <span class="st">"data/exampleDataAssembler.csv“</span></span>
 <span id="cb3-6"><a href="#cb3-6"></a></span>
 <span id="cb3-7"><a href="#cb3-7"></a><span class="er">## Create a DataFrame from the input data</span></span>
-<span id="cb3-8"><a href="#cb3-8"></a><span class="er">inputDF = spark.read.load(</span></span>
-<span id="cb3-9"><a href="#cb3-9"></a><span class="er">    inputPath,</span></span>
-<span id="cb3-10"><a href="#cb3-10"></a><span class="er">    format="csv",</span></span>
-<span id="cb3-11"><a href="#cb3-11"></a><span class="er">    header=True,</span></span>
-<span id="cb3-12"><a href="#cb3-12"></a><span class="er">    inferSchema=True</span></span>
-<span id="cb3-13"><a href="#cb3-13"></a><span class="er">)</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>inputDF <span class="op">=</span> spark.read.load(</span>
+<span id="cb3-9"><a href="#cb3-9"></a>    inputPath,</span>
+<span id="cb3-10"><a href="#cb3-10"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">"csv"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb3-12"><a href="#cb3-12"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a>)</span>
 <span id="cb3-14"><a href="#cb3-14"></a></span>
-<span id="cb3-15"><a href="#cb3-15"></a><span class="er">## Create a VectorAssembler that combines columns colB and colC</span></span>
-<span id="cb3-16"><a href="#cb3-16"></a><span class="er">## The new vetor column is called features</span></span>
-<span id="cb3-17"><a href="#cb3-17"></a><span class="er">myVectorAssembler = VectorAssembler(</span></span>
-<span id="cb3-18"><a href="#cb3-18"></a><span class="er">    inputCols = ['colB', 'colC'],</span></span>
-<span id="cb3-19"><a href="#cb3-19"></a><span class="er">    outputCol = 'features'</span></span>
-<span id="cb3-20"><a href="#cb3-20"></a><span class="er">)</span></span>
+<span id="cb3-15"><a href="#cb3-15"></a><span class="co">## Create a VectorAssembler that combines columns colB and colC</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="co">## The new vetor column is called features</span></span>
+<span id="cb3-17"><a href="#cb3-17"></a>myVectorAssembler <span class="op">=</span> VectorAssembler(</span>
+<span id="cb3-18"><a href="#cb3-18"></a>    inputCols <span class="op">=</span> [<span class="st">'colB'</span>, <span class="st">'colC'</span>],</span>
+<span id="cb3-19"><a href="#cb3-19"></a>    outputCol <span class="op">=</span> <span class="st">'features'</span></span>
+<span id="cb3-20"><a href="#cb3-20"></a>)</span>
 <span id="cb3-21"><a href="#cb3-21"></a></span>
-<span id="cb3-22"><a href="#cb3-22"></a><span class="er">## Apply myVectorAssembler on the input DataFrame</span></span>
-<span id="cb3-23"><a href="#cb3-23"></a><span class="er">transformedDF = myVectorAssembler.transform(inputDF)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-22"><a href="#cb3-22"></a><span class="co">## Apply myVectorAssembler on the input DataFrame</span></span>
+<span id="cb3-23"><a href="#cb3-23"></a>transformedDF <span class="op">=</span> myVectorAssembler.transform(inputDF)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -779,12 +786,12 @@ Example
 </ul>
 <p>Invoke the fit method of <code>StandardScaler</code> on the input DataFrame to infer a <code>StandardScalerModel</code>. The returned model is a Transformer.</p>
 <p>Invoke the transform method of <code>StandardScalerModel</code> on the input DataFrame to create a new DataFrame that has a new column (<code>outputCol</code>): for each record, the value of the new column is the normalized version of the input vector column. It has also all the columns of the input DataFrame.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -903,36 +910,36 @@ Example
 <span id="cb4-5"><a href="#cb4-5"></a>inputPath <span class="op">=</span> <span class="st">"data/exampleDataAssembler.csv“</span></span>
 <span id="cb4-6"><a href="#cb4-6"></a></span>
 <span id="cb4-7"><a href="#cb4-7"></a><span class="er">## Create a DataFrame from the input data</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a><span class="er">inputDF = spark.read.load(</span></span>
-<span id="cb4-9"><a href="#cb4-9"></a><span class="er">    inputPath,</span></span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="er">    format="csv",</span></span>
-<span id="cb4-11"><a href="#cb4-11"></a><span class="er">    header=True,</span></span>
-<span id="cb4-12"><a href="#cb4-12"></a><span class="er">    inferSchema=True</span></span>
-<span id="cb4-13"><a href="#cb4-13"></a><span class="er">)</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a>inputDF <span class="op">=</span> spark.read.load(</span>
+<span id="cb4-9"><a href="#cb4-9"></a>    inputPath,</span>
+<span id="cb4-10"><a href="#cb4-10"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">"csv"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-12"><a href="#cb4-12"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a>)</span>
 <span id="cb4-14"><a href="#cb4-14"></a></span>
-<span id="cb4-15"><a href="#cb4-15"></a><span class="er">## Create a VectorAssembler that combines columns colB and colC</span></span>
-<span id="cb4-16"><a href="#cb4-16"></a><span class="er">## The new vetor column is called features</span></span>
-<span id="cb4-17"><a href="#cb4-17"></a><span class="er">myVectorAssembler = VectorAssembler(</span></span>
-<span id="cb4-18"><a href="#cb4-18"></a><span class="er">    inputCols = ['colB', 'colC'],</span></span>
-<span id="cb4-19"><a href="#cb4-19"></a><span class="er">    outputCol = 'features'</span></span>
-<span id="cb4-20"><a href="#cb4-20"></a><span class="er">)</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="co">## Create a VectorAssembler that combines columns colB and colC</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="co">## The new vetor column is called features</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a>myVectorAssembler <span class="op">=</span> VectorAssembler(</span>
+<span id="cb4-18"><a href="#cb4-18"></a>    inputCols <span class="op">=</span> [<span class="st">'colB'</span>, <span class="st">'colC'</span>],</span>
+<span id="cb4-19"><a href="#cb4-19"></a>    outputCol <span class="op">=</span> <span class="st">'features'</span></span>
+<span id="cb4-20"><a href="#cb4-20"></a>)</span>
 <span id="cb4-21"><a href="#cb4-21"></a></span>
-<span id="cb4-22"><a href="#cb4-22"></a><span class="er">## Apply myVectorAssembler on the input DataFrame</span></span>
-<span id="cb4-23"><a href="#cb4-23"></a><span class="er">transformedDF = myVectorAssembler.transform(inputDF)</span></span>
+<span id="cb4-22"><a href="#cb4-22"></a><span class="co">## Apply myVectorAssembler on the input DataFrame</span></span>
+<span id="cb4-23"><a href="#cb4-23"></a>transformedDF <span class="op">=</span> myVectorAssembler.transform(inputDF)</span>
 <span id="cb4-24"><a href="#cb4-24"></a></span>
-<span id="cb4-25"><a href="#cb4-25"></a><span class="er">## Create a Standard Scaler to scale the content of features</span></span>
-<span id="cb4-26"><a href="#cb4-26"></a><span class="er">myScaler = StandardScaler(</span></span>
-<span id="cb4-27"><a href="#cb4-27"></a><span class="er">    inputCol="features",</span></span>
-<span id="cb4-28"><a href="#cb4-28"></a><span class="er">    outputCol="scaledFeatures"</span></span>
-<span id="cb4-29"><a href="#cb4-29"></a><span class="er">)</span></span>
+<span id="cb4-25"><a href="#cb4-25"></a><span class="co">## Create a Standard Scaler to scale the content of features</span></span>
+<span id="cb4-26"><a href="#cb4-26"></a>myScaler <span class="op">=</span> StandardScaler(</span>
+<span id="cb4-27"><a href="#cb4-27"></a>    inputCol<span class="op">=</span><span class="st">"features"</span>,</span>
+<span id="cb4-28"><a href="#cb4-28"></a>    outputCol<span class="op">=</span><span class="st">"scaledFeatures"</span></span>
+<span id="cb4-29"><a href="#cb4-29"></a>)</span>
 <span id="cb4-30"><a href="#cb4-30"></a></span>
-<span id="cb4-31"><a href="#cb4-31"></a><span class="er">## Compute summary statistics by fitting the StandardScaler</span></span>
-<span id="cb4-32"><a href="#cb4-32"></a><span class="er">## Before normalizing the content of the data we need to compute mean and</span></span>
-<span id="cb4-33"><a href="#cb4-33"></a><span class="er">## standard deviation of the analyzed data</span></span>
-<span id="cb4-34"><a href="#cb4-34"></a><span class="er">scalerModel = myScaler.fit(transformedDF)</span></span>
+<span id="cb4-31"><a href="#cb4-31"></a><span class="co">## Compute summary statistics by fitting the StandardScaler</span></span>
+<span id="cb4-32"><a href="#cb4-32"></a><span class="co">## Before normalizing the content of the data we need to compute mean and</span></span>
+<span id="cb4-33"><a href="#cb4-33"></a><span class="co">## standard deviation of the analyzed data</span></span>
+<span id="cb4-34"><a href="#cb4-34"></a>scalerModel <span class="op">=</span> myScaler.fit(transformedDF)</span>
 <span id="cb4-35"><a href="#cb4-35"></a></span>
-<span id="cb4-36"><a href="#cb4-36"></a><span class="er">## Apply myScaler on the input column features</span></span>
-<span id="cb4-37"><a href="#cb4-37"></a><span class="er">scaledDF = scalerModel.transform(transformedDF)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-36"><a href="#cb4-36"></a><span class="co">## Apply myScaler on the input column features</span></span>
+<span id="cb4-37"><a href="#cb4-37"></a>scaledDF <span class="op">=</span> scalerModel.transform(transformedDF)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -951,12 +958,12 @@ Example
 </ul>
 <p>Invoke the fit method of <code>StringIndexer</code> on the input DataFrame to infer a <code>StringIndexerModel</code>. The returned model is a Transformer.</p>
 <p>Invoke the transform method of <code>StringIndexerModel</code> on the input DataFrame to create a new DataFrame that has a new column (<code>outputCol</code>): for each record, the value of the new column is the integer (casted to a double) associated with the value of the input string column. It has also all the columns of the input DataFrame.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -1067,12 +1074,12 @@ Example
 <li>labels: the list of original “labels”/strings; the mapping with integer values is given by the positions of the strings inside labels.</li>
 </ul>
 <p>Invoke the transform method of <code>IndexToString</code> on the input DataFrame to create a new DataFrame that has a new column (<code>outputCol</code>): for each record, the value of the new column is the original string associated with the value of the input numerical column. It has also all the columns of the input DataFrame.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -1203,12 +1210,12 @@ Example
 <li><code>statement</code>: the SQL query to execute.</li>
 </ul>
 <p>When the transform method of <code>SQLTransformer</code> is invoked on a DataFrame the returned DataFrame is the result of the executed statement query.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -1327,6 +1334,8 @@ Example
 </div>
 
 
+<!-- -->
+
 </section>
 </section>
 </section>
@@ -1359,9 +1368,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -1397,6 +1420,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
   function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
@@ -1426,6 +1500,157 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Handle positioning of the toggle
+      window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -1476,7 +1701,559 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb9" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu"># Spark MLlib</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>Spark MLlib is the Spark component providing the machine learning/data mining algorithms</span>
+<span id="cb9-3"><a href="#cb9-3"></a></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="ss">- </span>Pre-processing techniques</span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="ss">- </span>Classification (supervised learning)</span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="ss">- </span>Clustering (unsupervised learning)</span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="ss">- </span>Itemset mining</span>
+<span id="cb9-8"><a href="#cb9-8"></a></span>
+<span id="cb9-9"><a href="#cb9-9"></a>MLlib APIs are divided into two packages:</span>
+<span id="cb9-10"><a href="#cb9-10"></a></span>
+<span id="cb9-11"><a href="#cb9-11"></a><span class="ss">- </span><span class="in">`pyspark.mllib`</span>: It contains the original APIs built on top of RDDs. This version of the APIs is in maintenance mode and will be probably deprecated in the next releases of Spark.</span>
+<span id="cb9-12"><a href="#cb9-12"></a><span class="ss">- </span><span class="in">`pyspark.ml`</span>: It provides higher-level API built on top of DataFrames (i.e, Dataset<span class="sc">\&lt;</span>Row<span class="sc">\&gt;</span>) for constructing ML pipelines. It is recommended because the DataFrame-based API is more versatile and flexible, also providing the pipeline concept. This is the one explained in this course.</span>
+<span id="cb9-13"><a href="#cb9-13"></a></span>
+<span id="cb9-14"><a href="#cb9-14"></a><span class="fu">## Data types</span></span>
+<span id="cb9-15"><a href="#cb9-15"></a>Spark MLlib is based on a set of basic local and distributed data types:</span>
+<span id="cb9-16"><a href="#cb9-16"></a></span>
+<span id="cb9-17"><a href="#cb9-17"></a><span class="ss">- </span>Local vector</span>
+<span id="cb9-18"><a href="#cb9-18"></a><span class="ss">- </span>Local matrix</span>
+<span id="cb9-19"><a href="#cb9-19"></a><span class="ss">- </span>Distributed matrix</span>
+<span id="cb9-20"><a href="#cb9-20"></a><span class="ss">- </span>...</span>
+<span id="cb9-21"><a href="#cb9-21"></a></span>
+<span id="cb9-22"><a href="#cb9-22"></a>DataFrames for ML-based applications contain objects based on these basic data types.</span>
+<span id="cb9-23"><a href="#cb9-23"></a></span>
+<span id="cb9-24"><a href="#cb9-24"></a><span class="fu">### Local vectors</span></span>
+<span id="cb9-25"><a href="#cb9-25"></a>Local <span class="in">`pyspark.ml.linalg.Vector`</span> objects in MLlib are used to store vectors (in dense and sparse representations) of double values. The MLlib algorithms work on vectors of doubles, used to represent the input records/data (one vector for each input record). Non double attributes/values must be mapped to double values before applying MLlib algorithms.</span>
+<span id="cb9-26"><a href="#cb9-26"></a></span>
+<span id="cb9-27"><a href="#cb9-27"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb9-28"><a href="#cb9-28"></a><span class="fu">### Example</span></span>
+<span id="cb9-29"><a href="#cb9-29"></a>Consider the vector of doubles <span class="in">`[1.0, 0.0, 3.0]`</span>. It can be represented</span>
+<span id="cb9-30"><a href="#cb9-30"></a></span>
+<span id="cb9-31"><a href="#cb9-31"></a><span class="ss">- </span>In dense format as <span class="in">`[1.0, 0.0, 3.0]`</span></span>
+<span id="cb9-32"><a href="#cb9-32"></a><span class="ss">- </span>In sparse format as <span class="in">`(3, [0, 2], [1.0, 3.0])`</span>, where </span>
+<span id="cb9-33"><a href="#cb9-33"></a><span class="ss">    - </span>3 is the size of the vector</span>
+<span id="cb9-34"><a href="#cb9-34"></a><span class="ss">    - </span>The array <span class="in">`[0, 2]`</span> contains the indexes of the non-zero cells</span>
+<span id="cb9-35"><a href="#cb9-35"></a><span class="ss">    - </span>The array <span class="in">`[1.0, 3.0]`</span> contains the values of the non-zero cells</span>
+<span id="cb9-36"><a href="#cb9-36"></a></span>
+<span id="cb9-37"><a href="#cb9-37"></a>The following code shows how dense and sparse vectors can be created in Spark </span>
+<span id="cb9-38"><a href="#cb9-38"></a></span>
+<span id="cb9-39"><a href="#cb9-39"></a><span class="in">```python</span></span>
+<span id="cb9-40"><a href="#cb9-40"></a><span class="im">from</span> pyspark.ml.linalg <span class="im">import</span> Vectors</span>
+<span id="cb9-41"><a href="#cb9-41"></a></span>
+<span id="cb9-42"><a href="#cb9-42"></a><span class="co">## Create a dense vector [1.0, 0.0, 3.0]</span></span>
+<span id="cb9-43"><a href="#cb9-43"></a>dv <span class="op">=</span> Vectors.dense([<span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="fl">3.0</span>])</span>
+<span id="cb9-44"><a href="#cb9-44"></a></span>
+<span id="cb9-45"><a href="#cb9-45"></a><span class="co">## Create a sparse vector [1.0, 0.0, 3.0] by specifying</span></span>
+<span id="cb9-46"><a href="#cb9-46"></a><span class="co">## its indices and values corresponding to non-zero entries</span></span>
+<span id="cb9-47"><a href="#cb9-47"></a><span class="co">## by means of a dictionary</span></span>
+<span id="cb9-48"><a href="#cb9-48"></a>sv <span class="op">=</span> Vectors.sparse(<span class="dv">3</span>, { <span class="dv">0</span>:<span class="fl">1.0</span>, <span class="dv">2</span>:<span class="fl">3.0</span> })</span>
+<span id="cb9-49"><a href="#cb9-49"></a><span class="in">```</span></span>
+<span id="cb9-50"><a href="#cb9-50"></a></span>
+<span id="cb9-51"><a href="#cb9-51"></a>In the sparse vector</span>
+<span id="cb9-52"><a href="#cb9-52"></a></span>
+<span id="cb9-53"><a href="#cb9-53"></a>|||</span>
+<span id="cb9-54"><a href="#cb9-54"></a>|-|---|</span>
+<span id="cb9-55"><a href="#cb9-55"></a>| <span class="in">`3`</span> | Size of the vector |</span>
+<span id="cb9-56"><a href="#cb9-56"></a>| <span class="in">`2:3.0`</span> | Index and value of a non-empty cell |</span>
+<span id="cb9-57"><a href="#cb9-57"></a>| <span class="in">`{ 0:1.0, 2:3.0 }`</span> | Dictionary of $index:value$ pairs |</span>
+<span id="cb9-58"><a href="#cb9-58"></a></span>
+<span id="cb9-59"><a href="#cb9-59"></a>:::</span>
+<span id="cb9-60"><a href="#cb9-60"></a></span>
+<span id="cb9-61"><a href="#cb9-61"></a><span class="fu">### Local matrices</span></span>
+<span id="cb9-62"><a href="#cb9-62"></a>Local <span class="in">`pyspark.ml.linalg.Matrix`</span> objects in MLlib are used to store matrices (in dense and sparse representations) of double values. The column-major order is used to store the content of the matrix in a linear way.</span>
+<span id="cb9-63"><a href="#cb9-63"></a></span>
+<span id="cb9-64"><a href="#cb9-64"></a><span class="al">![Local matrices](images/18a_spark_mllib/matrix_example.png)</span>{width=80%}</span>
+<span id="cb9-65"><a href="#cb9-65"></a></span>
+<span id="cb9-66"><a href="#cb9-66"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb9-67"><a href="#cb9-67"></a><span class="fu">### Example</span></span>
+<span id="cb9-68"><a href="#cb9-68"></a>The following code shows how dense and sparse matrices can be created in Spark.</span>
+<span id="cb9-69"><a href="#cb9-69"></a></span>
+<span id="cb9-70"><a href="#cb9-70"></a><span class="in">```python</span></span>
+<span id="cb9-71"><a href="#cb9-71"></a><span class="im">from</span> pyspark.ml.linalg <span class="im">import</span> Matrices</span>
+<span id="cb9-72"><a href="#cb9-72"></a></span>
+<span id="cb9-73"><a href="#cb9-73"></a><span class="co">## Create a dense matrix with two rows and three columns</span></span>
+<span id="cb9-74"><a href="#cb9-74"></a><span class="co">## 3.0 0.0 0.0</span></span>
+<span id="cb9-75"><a href="#cb9-75"></a><span class="co">## 1.0 1.5 2.0</span></span>
+<span id="cb9-76"><a href="#cb9-76"></a>dm <span class="op">=</span>Matrices.dense(<span class="dv">2</span>,<span class="dv">3</span>,[<span class="fl">3.0</span>, <span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="fl">1.5</span>, <span class="fl">0.0</span>, <span class="fl">2.0</span>])</span>
+<span id="cb9-77"><a href="#cb9-77"></a></span>
+<span id="cb9-78"><a href="#cb9-78"></a><span class="co">## Create a sparse version of the same matrix</span></span>
+<span id="cb9-79"><a href="#cb9-79"></a>sm <span class="op">=</span> Matrices.sparse(<span class="dv">2</span>,<span class="dv">3</span>, [<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>] , [<span class="dv">3</span>, <span class="dv">1</span>, <span class="fl">1.5</span>, <span class="dv">2</span>])</span>
+<span id="cb9-80"><a href="#cb9-80"></a><span class="in">```</span></span>
+<span id="cb9-81"><a href="#cb9-81"></a></span>
+<span id="cb9-82"><a href="#cb9-82"></a>In the dense matrix vector</span>
+<span id="cb9-83"><a href="#cb9-83"></a></span>
+<span id="cb9-84"><a href="#cb9-84"></a>|||</span>
+<span id="cb9-85"><a href="#cb9-85"></a>|-|---|</span>
+<span id="cb9-86"><a href="#cb9-86"></a>| <span class="in">`2`</span> | Number of rows |</span>
+<span id="cb9-87"><a href="#cb9-87"></a>| <span class="in">`3`</span> | Number of columns |</span>
+<span id="cb9-88"><a href="#cb9-88"></a>| <span class="in">`[3.0, 1.0, 0.0, 1.5, 0.0, 2.0]`</span> | Values in column/major order |</span>
+<span id="cb9-89"><a href="#cb9-89"></a></span>
+<span id="cb9-90"><a href="#cb9-90"></a>In the sparse matrix vector</span>
+<span id="cb9-91"><a href="#cb9-91"></a></span>
+<span id="cb9-92"><a href="#cb9-92"></a>|||</span>
+<span id="cb9-93"><a href="#cb9-93"></a>|-|---|</span>
+<span id="cb9-94"><a href="#cb9-94"></a>| <span class="in">`2`</span> | Number of rows |</span>
+<span id="cb9-95"><a href="#cb9-95"></a>| <span class="in">`3`</span> | Number of columns |</span>
+<span id="cb9-96"><a href="#cb9-96"></a>| <span class="in">`[0, 2, 3, 4]`</span> | One element per column that encodes the offset in the array of non-zero values where the values of the given column start. The last element is the number of non-zero values. |</span>
+<span id="cb9-97"><a href="#cb9-97"></a>| <span class="in">`[0, 1, 1, 1]`</span> | Row index of each non-zero value |</span>
+<span id="cb9-98"><a href="#cb9-98"></a>| <span class="in">`[3, 1, 1.5, 2]`</span> | Array of non-zero values of the represented matrix |</span>
+<span id="cb9-99"><a href="#cb9-99"></a></span>
+<span id="cb9-100"><a href="#cb9-100"></a>:::</span>
+<span id="cb9-101"><a href="#cb9-101"></a></span>
+<span id="cb9-102"><a href="#cb9-102"></a><span class="fu">## Main concepts</span></span>
+<span id="cb9-103"><a href="#cb9-103"></a>Spark MLlib uses DataFrames as input data: the input of the MLlib algorithms are structured data (i.e., tables), and all input data must be represented by means of tables before applying the MLlib algorithms; also document collections must be transformed in a tabular format before applying the MLlib algorithms.</span>
+<span id="cb9-104"><a href="#cb9-104"></a></span>
+<span id="cb9-105"><a href="#cb9-105"></a>The DataFrames used and created by the MLlib algorithms are characterized by several columns, and each column is associated with a different role/meaning</span>
+<span id="cb9-106"><a href="#cb9-106"></a></span>
+<span id="cb9-107"><a href="#cb9-107"></a><span class="ss">- </span>**label**: the target of a classification/regression analysis;</span>
+<span id="cb9-108"><a href="#cb9-108"></a><span class="ss">- </span>**features**: the vector containing the values of the attributes/features of the input record/data points;</span>
+<span id="cb9-109"><a href="#cb9-109"></a><span class="ss">- </span>**text**: the original text of a document before being transformed in a tabular format;</span>
+<span id="cb9-110"><a href="#cb9-110"></a><span class="ss">- </span>**prediction**: the predicted value of a classification/regression analysis.</span>
+<span id="cb9-111"><a href="#cb9-111"></a></span>
+<span id="cb9-112"><a href="#cb9-112"></a><span class="fu">### Transformer</span></span>
+<span id="cb9-113"><a href="#cb9-113"></a>A Transformer is an ML algorithm/procedure that transforms one DataFrame into another DataFrame by means of the method <span class="in">`transform(inputDataFrame)`</span>.</span>
+<span id="cb9-114"><a href="#cb9-114"></a></span>
+<span id="cb9-115"><a href="#cb9-115"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb9-116"><a href="#cb9-116"></a><span class="fu">### Example 1</span></span>
+<span id="cb9-117"><a href="#cb9-117"></a>A feature transformer might take a DataFrame, read a column (e.g., text), map it into a new column (e.g., feature vectors), and output a new DataFrame with the mapped column appended.</span>
+<span id="cb9-118"><a href="#cb9-118"></a>:::</span>
+<span id="cb9-119"><a href="#cb9-119"></a></span>
+<span id="cb9-120"><a href="#cb9-120"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb9-121"><a href="#cb9-121"></a><span class="fu">### Example 2</span></span>
+<span id="cb9-122"><a href="#cb9-122"></a>A classification model is a Transformer that can be applied on a DataFrame with features and transforms it into a DataFrame with also the prediction column.</span>
+<span id="cb9-123"><a href="#cb9-123"></a>:::</span>
+<span id="cb9-124"><a href="#cb9-124"></a></span>
+<span id="cb9-125"><a href="#cb9-125"></a><span class="fu">### Estimator</span></span>
+<span id="cb9-126"><a href="#cb9-126"></a>An Estimator is an ML algorithm/procedure that is fit on an input (training) DataFrame to produce a Transformer: each Estimator implements a <span class="in">`fit()`</span> method, which accepts a DataFrame and produces a Model of type <span class="in">`Transformer`</span>.</span>
+<span id="cb9-127"><a href="#cb9-127"></a></span>
+<span id="cb9-128"><a href="#cb9-128"></a>An Estimator abstracts the concept of a learning algorithm or any algorithm that fits/trains on an input dataset and returns a model</span>
+<span id="cb9-129"><a href="#cb9-129"></a></span>
+<span id="cb9-130"><a href="#cb9-130"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb9-131"><a href="#cb9-131"></a><span class="fu">### Example</span></span>
+<span id="cb9-132"><a href="#cb9-132"></a>The Logistic Regression classification algorithm is an Estimator: calling <span class="in">`fit(input training DataFrame)`</span> on it a Logistic Regression Model is built, which is a Model/a Transformer.</span>
+<span id="cb9-133"><a href="#cb9-133"></a>:::</span>
+<span id="cb9-134"><a href="#cb9-134"></a></span>
+<span id="cb9-135"><a href="#cb9-135"></a><span class="fu">### Pipeline</span></span>
+<span id="cb9-136"><a href="#cb9-136"></a>A Pipeline chains multiple Transformers and Estimators together to specify a Machine learning/Data Mining workflow. In a pipeline, the output of a transformer/estimator is the input of the next one.</span>
+<span id="cb9-137"><a href="#cb9-137"></a></span>
+<span id="cb9-138"><a href="#cb9-138"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb9-139"><a href="#cb9-139"></a><span class="fu">### Example</span></span>
+<span id="cb9-140"><a href="#cb9-140"></a>A simple text document processing workflow aiming at building a classification model includes several steps</span>
+<span id="cb9-141"><a href="#cb9-141"></a></span>
+<span id="cb9-142"><a href="#cb9-142"></a><span class="ss">1. </span>Split each document into a set of words;</span>
+<span id="cb9-143"><a href="#cb9-143"></a><span class="ss">2. </span>Convert each set of words into a numerical feature vector;</span>
+<span id="cb9-144"><a href="#cb9-144"></a><span class="ss">3. </span>Learn a prediction model using the feature vectors and the associated class labels.</span>
+<span id="cb9-145"><a href="#cb9-145"></a>:::</span>
+<span id="cb9-146"><a href="#cb9-146"></a></span>
+<span id="cb9-147"><a href="#cb9-147"></a><span class="fu">### Parameters</span></span>
+<span id="cb9-148"><a href="#cb9-148"></a>Transformers and Estimators share common APIs for specifying the values of their parameters.</span>
+<span id="cb9-149"><a href="#cb9-149"></a></span>
+<span id="cb9-150"><a href="#cb9-150"></a>In the new APIs of Spark MLlib the use of the pipeline approach is preferred/recommended. This approach is based on the following steps</span>
+<span id="cb9-151"><a href="#cb9-151"></a></span>
+<span id="cb9-152"><a href="#cb9-152"></a><span class="ss">1. </span>The set of Transformers and Estimators that are needed are instantiated;</span>
+<span id="cb9-153"><a href="#cb9-153"></a><span class="ss">2. </span>A pipeline object is created and the sequence of transformers and estimators associated with the pipeline are specified;</span>
+<span id="cb9-154"><a href="#cb9-154"></a><span class="ss">3. </span>The pipeline is executed and a model is trained;</span>
+<span id="cb9-155"><a href="#cb9-155"></a><span class="ss">4. </span>(optional) The model is applied on new data.</span>
+<span id="cb9-156"><a href="#cb9-156"></a></span>
+<span id="cb9-157"><a href="#cb9-157"></a><span class="fu">## Data preprocessing</span></span>
+<span id="cb9-158"><a href="#cb9-158"></a>Input data must be preprocessed before applying machine learning and data mining algorithms</span>
+<span id="cb9-159"><a href="#cb9-159"></a></span>
+<span id="cb9-160"><a href="#cb9-160"></a><span class="ss">- </span>To organize data in a format consistent with the one expected by the applied algorithms;</span>
+<span id="cb9-161"><a href="#cb9-161"></a><span class="ss">- </span>To define good (predictive) features;</span>
+<span id="cb9-162"><a href="#cb9-162"></a><span class="ss">- </span>To remove bias (e.g., normalization);</span>
+<span id="cb9-163"><a href="#cb9-163"></a><span class="ss">- </span>To remove noise and missing values.</span>
+<span id="cb9-164"><a href="#cb9-164"></a></span>
+<span id="cb9-165"><a href="#cb9-165"></a><span class="fu">### Extracting, transformings, and selecting features</span></span>
+<span id="cb9-166"><a href="#cb9-166"></a>MLlib provides a set of transformers than can be used to extract, transform and select features from DataFrames</span>
+<span id="cb9-167"><a href="#cb9-167"></a></span>
+<span id="cb9-168"><a href="#cb9-168"></a><span class="ss">- </span>Feature Extractors (e.g., TF-IDF, Word2Vec)</span>
+<span id="cb9-169"><a href="#cb9-169"></a><span class="ss">- </span>Feature Transformers (e.g., Tokenizer, StopWordsRemover, StringIndexer, IndexToString, OneHotEncoderEstimator, Normalizer)</span>
+<span id="cb9-170"><a href="#cb9-170"></a><span class="ss">- </span>Feature Selectors (e.g., VectorSlicer)</span>
+<span id="cb9-171"><a href="#cb9-171"></a></span>
+<span id="cb9-172"><a href="#cb9-172"></a>See the up-to-date list <span class="co">[</span><span class="ot">here</span><span class="co">](https://spark.apache.org/docs/latest/ml-features.html)</span>.</span>
+<span id="cb9-173"><a href="#cb9-173"></a></span>
+<span id="cb9-174"><a href="#cb9-174"></a><span class="fu">## Feature transformations</span></span>
+<span id="cb9-175"><a href="#cb9-175"></a>Several algorithms are provided by MLlib to transform features. They are used to create new columns/features by combining or transforming other features</span>
+<span id="cb9-176"><a href="#cb9-176"></a>It is possible to perform feature transformations and feature creations by using the standard methods for DataFrames and RDDs.</span>
+<span id="cb9-177"><a href="#cb9-177"></a></span>
+<span id="cb9-178"><a href="#cb9-178"></a><span class="fu">### `VectorAssembler`</span></span>
+<span id="cb9-179"><a href="#cb9-179"></a><span class="in">`VectorAssembler`</span> (<span class="in">`pyspark.ml.feature.VectorAssembler`</span>) is a transformer that combines a given list of columns into a single vector column. It is useful for combining features into a single feature vector before applying ML algorithms.</span>
+<span id="cb9-180"><a href="#cb9-180"></a></span>
+<span id="cb9-181"><a href="#cb9-181"></a>Given <span class="in">`VectorAssembler(inputCols, outputCol)`</span></span>
+<span id="cb9-182"><a href="#cb9-182"></a></span>
+<span id="cb9-183"><a href="#cb9-183"></a><span class="ss">- </span><span class="in">`inputCols`</span>: the list of original columns to include in the new column of type <span class="in">`Vector`</span>. The following input column types are accepted</span>
+<span id="cb9-184"><a href="#cb9-184"></a><span class="ss">    - </span>all numeric types, boolean type, and vector type</span>
+<span id="cb9-185"><a href="#cb9-185"></a><span class="ss">    - </span>Boolean values are mapped to 1 (True) and 0 (False)</span>
+<span id="cb9-186"><a href="#cb9-186"></a><span class="ss">- </span><span class="in">`outputCol`</span>: the name of the new output column</span>
+<span id="cb9-187"><a href="#cb9-187"></a></span>
+<span id="cb9-188"><a href="#cb9-188"></a>When the transform method of VectorAssembler is invoked on a DataFrame the returned DataFrame has a new column (outputCol): for each record, the value of the new column is the concatenation of the values of the input columns. It has also all the columns of the input DataFrame.</span>
+<span id="cb9-189"><a href="#cb9-189"></a></span>
+<span id="cb9-190"><a href="#cb9-190"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb9-191"><a href="#cb9-191"></a><span class="fu">### Example</span></span>
+<span id="cb9-192"><a href="#cb9-192"></a>Consider an input DataFrame with three columns: create a new DataFrame with a new column containing the concatenation of "colB" and "colC" in a new vector column. Set the name of the new column to "features".</span>
+<span id="cb9-193"><a href="#cb9-193"></a></span>
+<span id="cb9-194"><a href="#cb9-194"></a>**Original DataFrame**</span>
+<span id="cb9-195"><a href="#cb9-195"></a></span>
+<span id="cb9-196"><a href="#cb9-196"></a>|colA|colB|colC|</span>
+<span id="cb9-197"><a href="#cb9-197"></a>|-|-|-|</span>
+<span id="cb9-198"><a href="#cb9-198"></a>|$1$|$4.5$|True|</span>
+<span id="cb9-199"><a href="#cb9-199"></a>|$2$|$0.6$|True|</span>
+<span id="cb9-200"><a href="#cb9-200"></a>|$3$|$1.5$|False|</span>
+<span id="cb9-201"><a href="#cb9-201"></a>|$4$|$12.1$|True|</span>
+<span id="cb9-202"><a href="#cb9-202"></a>|$5$|$0.0$|True|</span>
+<span id="cb9-203"><a href="#cb9-203"></a></span>
+<span id="cb9-204"><a href="#cb9-204"></a>**Transformed DataFrame**</span>
+<span id="cb9-205"><a href="#cb9-205"></a></span>
+<span id="cb9-206"><a href="#cb9-206"></a>|colA|colB|colC|features|</span>
+<span id="cb9-207"><a href="#cb9-207"></a>|-|-|-|-|-|</span>
+<span id="cb9-208"><a href="#cb9-208"></a>|$1$|$4.5$|True|$<span class="co">[</span><span class="ot">4.5,1.0</span><span class="co">]</span>$|</span>
+<span id="cb9-209"><a href="#cb9-209"></a>|$2$|$0.6$|True|$<span class="co">[</span><span class="ot">0.6,1.0</span><span class="co">]</span>$|</span>
+<span id="cb9-210"><a href="#cb9-210"></a>|$3$|$1.5$|False|$<span class="co">[</span><span class="ot">1.5,0.0</span><span class="co">]</span>$|</span>
+<span id="cb9-211"><a href="#cb9-211"></a>|$4$|$12.1$|True|$<span class="co">[</span><span class="ot">12.1,1.0</span><span class="co">]</span>$|</span>
+<span id="cb9-212"><a href="#cb9-212"></a>|$5$|$0.0$|True|$<span class="co">[</span><span class="ot">0.0,1.0</span><span class="co">]</span>$|</span>
+<span id="cb9-213"><a href="#cb9-213"></a></span>
+<span id="cb9-214"><a href="#cb9-214"></a>Notice that columns of DataFrames can also be vectors.</span>
+<span id="cb9-215"><a href="#cb9-215"></a></span>
+<span id="cb9-216"><a href="#cb9-216"></a><span class="in">```python</span></span>
+<span id="cb9-217"><a href="#cb9-217"></a><span class="im">from</span> pyspark.mllib.linalg <span class="im">import</span> Vectors</span>
+<span id="cb9-218"><a href="#cb9-218"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> VectorAssembler</span>
+<span id="cb9-219"><a href="#cb9-219"></a></span>
+<span id="cb9-220"><a href="#cb9-220"></a><span class="co">## input and output folders</span></span>
+<span id="cb9-221"><a href="#cb9-221"></a>inputPath <span class="op">=</span> <span class="st">"data/exampleDataAssembler.csv“</span></span>
+<span id="cb9-222"><a href="#cb9-222"></a></span>
+<span id="cb9-223"><a href="#cb9-223"></a><span class="er">## Create a DataFrame from the input data</span></span>
+<span id="cb9-224"><a href="#cb9-224"></a>inputDF <span class="op">=</span> spark.read.load(</span>
+<span id="cb9-225"><a href="#cb9-225"></a>    inputPath,</span>
+<span id="cb9-226"><a href="#cb9-226"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">"csv"</span>,</span>
+<span id="cb9-227"><a href="#cb9-227"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb9-228"><a href="#cb9-228"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb9-229"><a href="#cb9-229"></a>)</span>
+<span id="cb9-230"><a href="#cb9-230"></a></span>
+<span id="cb9-231"><a href="#cb9-231"></a><span class="co">## Create a VectorAssembler that combines columns colB and colC</span></span>
+<span id="cb9-232"><a href="#cb9-232"></a><span class="co">## The new vetor column is called features</span></span>
+<span id="cb9-233"><a href="#cb9-233"></a>myVectorAssembler <span class="op">=</span> VectorAssembler(</span>
+<span id="cb9-234"><a href="#cb9-234"></a>    inputCols <span class="op">=</span> [<span class="st">'colB'</span>, <span class="st">'colC'</span>],</span>
+<span id="cb9-235"><a href="#cb9-235"></a>    outputCol <span class="op">=</span> <span class="st">'features'</span></span>
+<span id="cb9-236"><a href="#cb9-236"></a>)</span>
+<span id="cb9-237"><a href="#cb9-237"></a></span>
+<span id="cb9-238"><a href="#cb9-238"></a><span class="co">## Apply myVectorAssembler on the input DataFrame</span></span>
+<span id="cb9-239"><a href="#cb9-239"></a>transformedDF <span class="op">=</span> myVectorAssembler.transform(inputDF)</span>
+<span id="cb9-240"><a href="#cb9-240"></a>```</span>
+<span id="cb9-241"><a href="#cb9-241"></a></span>
+<span id="cb9-242"><a href="#cb9-242"></a>:::</span>
+<span id="cb9-243"><a href="#cb9-243"></a></span>
+<span id="cb9-244"><a href="#cb9-244"></a><span class="co">### Data Normalization</span></span>
+<span id="cb9-245"><a href="#cb9-245"></a>MLlib provides a <span class="bu">set</span> of normalization algorithms (called scalers)</span>
+<span id="cb9-246"><a href="#cb9-246"></a></span>
+<span id="cb9-247"><a href="#cb9-247"></a><span class="op">-</span> StandardScaler</span>
+<span id="cb9-248"><a href="#cb9-248"></a><span class="op">-</span> MinMaxScaler</span>
+<span id="cb9-249"><a href="#cb9-249"></a><span class="op">-</span> Normalizer</span>
+<span id="cb9-250"><a href="#cb9-250"></a><span class="op">-</span> MaxAbsScaler</span>
+<span id="cb9-251"><a href="#cb9-251"></a></span>
+<span id="cb9-252"><a href="#cb9-252"></a><span class="co">#### `StandardScaler`</span></span>
+<span id="cb9-253"><a href="#cb9-253"></a>`StandardScaler` (`pyspark.ml.feature.StandardScaler`) <span class="kw">is</span> an Estimator that returns a Transformer (`pyspark.ml.feature.StandardScalerModel`). `StandardScalerModel` transforms a vector column of an <span class="bu">input</span> DataFrame normalizing each feature of the <span class="bu">input</span> vector column to have unit standard deviation <span class="kw">and</span><span class="op">/</span><span class="kw">or</span> zero mean.</span>
+<span id="cb9-254"><a href="#cb9-254"></a></span>
+<span id="cb9-255"><a href="#cb9-255"></a>Given `StandardScaler(inputCol, outputCol)`</span>
+<span id="cb9-256"><a href="#cb9-256"></a></span>
+<span id="cb9-257"><a href="#cb9-257"></a><span class="op">-</span> `inputCol`: the name of the <span class="bu">input</span> vector column (of doubles) to normalize</span>
+<span id="cb9-258"><a href="#cb9-258"></a><span class="op">-</span> `outputCol`: the name of the new output normalized vector column</span>
+<span id="cb9-259"><a href="#cb9-259"></a></span>
+<span id="cb9-260"><a href="#cb9-260"></a>Invoke the fit method of `StandardScaler` on the <span class="bu">input</span> DataFrame to infer a `StandardScalerModel`. The returned model <span class="kw">is</span> a Transformer.</span>
+<span id="cb9-261"><a href="#cb9-261"></a></span>
+<span id="cb9-262"><a href="#cb9-262"></a>Invoke the transform method of `StandardScalerModel` on the <span class="bu">input</span> DataFrame to create a new DataFrame that has a new column (`outputCol`): <span class="cf">for</span> each record, the value of the new column <span class="kw">is</span> the normalized version of the <span class="bu">input</span> vector column. It has also <span class="bu">all</span> the columns of the <span class="bu">input</span> DataFrame.</span>
+<span id="cb9-263"><a href="#cb9-263"></a></span>
+<span id="cb9-264"><a href="#cb9-264"></a>:::{.callout<span class="op">-</span>note collapse<span class="op">=</span><span class="st">"true"</span>}</span>
+<span id="cb9-265"><a href="#cb9-265"></a><span class="co">### Example</span></span>
+<span id="cb9-266"><a href="#cb9-266"></a>Consider an <span class="bu">input</span> DataFrame <span class="cf">with</span> four columns: create a new DataFrame <span class="cf">with</span> a new column containing the normalized version of the vector column features. Set the name of the new column to <span class="st">"scaledFeatures"</span>.</span>
+<span id="cb9-267"><a href="#cb9-267"></a></span>
+<span id="cb9-268"><a href="#cb9-268"></a><span class="op">**</span>Original DataFrame<span class="op">**</span></span>
+<span id="cb9-269"><a href="#cb9-269"></a></span>
+<span id="cb9-270"><a href="#cb9-270"></a><span class="op">|</span>colA<span class="op">|</span>colB<span class="op">|</span>colC<span class="op">|</span>features<span class="op">|</span></span>
+<span id="cb9-271"><a href="#cb9-271"></a><span class="op">|-|-|-|-|-|</span></span>
+<span id="cb9-272"><a href="#cb9-272"></a><span class="op">|</span>$<span class="dv">1</span>$<span class="op">|</span>$<span class="fl">4.5</span>$<span class="op">|</span><span class="va">True</span><span class="op">|</span>$[<span class="fl">4.5</span>,<span class="fl">1.0</span>]$<span class="op">|</span></span>
+<span id="cb9-273"><a href="#cb9-273"></a><span class="op">|</span>$<span class="dv">2</span>$<span class="op">|</span>$<span class="fl">0.6</span>$<span class="op">|</span><span class="va">True</span><span class="op">|</span>$[<span class="fl">0.6</span>,<span class="fl">1.0</span>]$<span class="op">|</span></span>
+<span id="cb9-274"><a href="#cb9-274"></a><span class="op">|</span>$<span class="dv">3</span>$<span class="op">|</span>$<span class="fl">1.5</span>$<span class="op">|</span><span class="va">False</span><span class="op">|</span>$[<span class="fl">1.5</span>,<span class="fl">0.0</span>]$<span class="op">|</span></span>
+<span id="cb9-275"><a href="#cb9-275"></a><span class="op">|</span>$<span class="dv">4</span>$<span class="op">|</span>$<span class="fl">12.1</span>$<span class="op">|</span><span class="va">True</span><span class="op">|</span>$[<span class="fl">12.1</span>,<span class="fl">1.0</span>]$<span class="op">|</span></span>
+<span id="cb9-276"><a href="#cb9-276"></a><span class="op">|</span>$<span class="dv">5</span>$<span class="op">|</span>$<span class="fl">0.0</span>$<span class="op">|</span><span class="va">True</span><span class="op">|</span>$[<span class="fl">0.0</span>,<span class="fl">1.0</span>]$<span class="op">|</span></span>
+<span id="cb9-277"><a href="#cb9-277"></a></span>
+<span id="cb9-278"><a href="#cb9-278"></a><span class="op">**</span>Transformed DataFrame<span class="op">**</span></span>
+<span id="cb9-279"><a href="#cb9-279"></a></span>
+<span id="cb9-280"><a href="#cb9-280"></a><span class="op">|</span>colA<span class="op">|</span>colB<span class="op">|</span>colC<span class="op">|</span>features<span class="op">|</span>scaledFeatures<span class="op">|</span></span>
+<span id="cb9-281"><a href="#cb9-281"></a><span class="op">|-|-|-|-|-|-|</span></span>
+<span id="cb9-282"><a href="#cb9-282"></a><span class="op">|</span>$<span class="dv">1</span>$<span class="op">|</span>$<span class="fl">4.5</span>$<span class="op">|</span><span class="va">True</span><span class="op">|</span>$[<span class="fl">4.5</span>,<span class="fl">1.0</span>]$<span class="op">|</span>$[<span class="fl">0.903</span>,<span class="fl">2.236</span>]$<span class="op">|</span></span>
+<span id="cb9-283"><a href="#cb9-283"></a><span class="op">|</span>$<span class="dv">2</span>$<span class="op">|</span>$<span class="fl">0.6</span>$<span class="op">|</span><span class="va">True</span><span class="op">|</span>$[<span class="fl">0.6</span>,<span class="fl">1.0</span>]$<span class="op">|</span>$[<span class="fl">0.120</span>,<span class="fl">2.236</span>]$<span class="op">|</span></span>
+<span id="cb9-284"><a href="#cb9-284"></a><span class="op">|</span>$<span class="dv">3</span>$<span class="op">|</span>$<span class="fl">1.5</span>$<span class="op">|</span><span class="va">False</span><span class="op">|</span>$[<span class="fl">1.5</span>,<span class="fl">0.0</span>]$<span class="op">|</span>$[<span class="fl">0.301</span>,<span class="fl">0.0</span>]$<span class="op">|</span></span>
+<span id="cb9-285"><a href="#cb9-285"></a><span class="op">|</span>$<span class="dv">4</span>$<span class="op">|</span>$<span class="fl">12.1</span>$<span class="op">|</span><span class="va">True</span><span class="op">|</span>$[<span class="fl">12.1</span>,<span class="fl">1.0</span>]$<span class="op">|</span>$[<span class="fl">2.428</span>,<span class="fl">2.236</span>]$<span class="op">|</span></span>
+<span id="cb9-286"><a href="#cb9-286"></a><span class="op">|</span>$<span class="dv">5</span>$<span class="op">|</span>$<span class="fl">0.0</span>$<span class="op">|</span><span class="va">True</span><span class="op">|</span>$[<span class="fl">0.0</span>,<span class="fl">1.0</span>]$<span class="op">|</span>$[<span class="fl">0.0</span>,<span class="fl">2.236</span>]$<span class="op">|</span></span>
+<span id="cb9-287"><a href="#cb9-287"></a></span>
+<span id="cb9-288"><a href="#cb9-288"></a>```python</span>
+<span id="cb9-289"><a href="#cb9-289"></a><span class="im">from</span> pyspark.mllib.linalg <span class="im">import</span> Vectors</span>
+<span id="cb9-290"><a href="#cb9-290"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> VectorAssembler</span>
+<span id="cb9-291"><a href="#cb9-291"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> StandardScaler</span>
+<span id="cb9-292"><a href="#cb9-292"></a><span class="co">## input and output folders</span></span>
+<span id="cb9-293"><a href="#cb9-293"></a>inputPath <span class="op">=</span> <span class="st">"data/exampleDataAssembler.csv“</span></span>
+<span id="cb9-294"><a href="#cb9-294"></a></span>
+<span id="cb9-295"><a href="#cb9-295"></a><span class="er">## Create a DataFrame from the input data</span></span>
+<span id="cb9-296"><a href="#cb9-296"></a>inputDF <span class="op">=</span> spark.read.load(</span>
+<span id="cb9-297"><a href="#cb9-297"></a>    inputPath,</span>
+<span id="cb9-298"><a href="#cb9-298"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">"csv"</span>,</span>
+<span id="cb9-299"><a href="#cb9-299"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb9-300"><a href="#cb9-300"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb9-301"><a href="#cb9-301"></a>)</span>
+<span id="cb9-302"><a href="#cb9-302"></a></span>
+<span id="cb9-303"><a href="#cb9-303"></a><span class="co">## Create a VectorAssembler that combines columns colB and colC</span></span>
+<span id="cb9-304"><a href="#cb9-304"></a><span class="co">## The new vetor column is called features</span></span>
+<span id="cb9-305"><a href="#cb9-305"></a>myVectorAssembler <span class="op">=</span> VectorAssembler(</span>
+<span id="cb9-306"><a href="#cb9-306"></a>    inputCols <span class="op">=</span> [<span class="st">'colB'</span>, <span class="st">'colC'</span>],</span>
+<span id="cb9-307"><a href="#cb9-307"></a>    outputCol <span class="op">=</span> <span class="st">'features'</span></span>
+<span id="cb9-308"><a href="#cb9-308"></a>)</span>
+<span id="cb9-309"><a href="#cb9-309"></a></span>
+<span id="cb9-310"><a href="#cb9-310"></a><span class="co">## Apply myVectorAssembler on the input DataFrame</span></span>
+<span id="cb9-311"><a href="#cb9-311"></a>transformedDF <span class="op">=</span> myVectorAssembler.transform(inputDF)</span>
+<span id="cb9-312"><a href="#cb9-312"></a></span>
+<span id="cb9-313"><a href="#cb9-313"></a><span class="co">## Create a Standard Scaler to scale the content of features</span></span>
+<span id="cb9-314"><a href="#cb9-314"></a>myScaler <span class="op">=</span> StandardScaler(</span>
+<span id="cb9-315"><a href="#cb9-315"></a>    inputCol<span class="op">=</span><span class="st">"features"</span>,</span>
+<span id="cb9-316"><a href="#cb9-316"></a>    outputCol<span class="op">=</span><span class="st">"scaledFeatures"</span></span>
+<span id="cb9-317"><a href="#cb9-317"></a>)</span>
+<span id="cb9-318"><a href="#cb9-318"></a></span>
+<span id="cb9-319"><a href="#cb9-319"></a><span class="co">## Compute summary statistics by fitting the StandardScaler</span></span>
+<span id="cb9-320"><a href="#cb9-320"></a><span class="co">## Before normalizing the content of the data we need to compute mean and</span></span>
+<span id="cb9-321"><a href="#cb9-321"></a><span class="co">## standard deviation of the analyzed data</span></span>
+<span id="cb9-322"><a href="#cb9-322"></a>scalerModel <span class="op">=</span> myScaler.fit(transformedDF)</span>
+<span id="cb9-323"><a href="#cb9-323"></a></span>
+<span id="cb9-324"><a href="#cb9-324"></a><span class="co">## Apply myScaler on the input column features</span></span>
+<span id="cb9-325"><a href="#cb9-325"></a>scaledDF <span class="op">=</span> scalerModel.transform(transformedDF)</span>
+<span id="cb9-326"><a href="#cb9-326"></a>```</span>
+<span id="cb9-327"><a href="#cb9-327"></a></span>
+<span id="cb9-328"><a href="#cb9-328"></a>:::</span>
+<span id="cb9-329"><a href="#cb9-329"></a></span>
+<span id="cb9-330"><a href="#cb9-330"></a><span class="co">### Categorical columns</span></span>
+<span id="cb9-331"><a href="#cb9-331"></a>Frequently the <span class="bu">input</span> data are characterized by categorical attributes (i.e., string columns), <span class="kw">and</span> the <span class="kw">class</span> label of the classification problem <span class="kw">is</span> a categorical attribute. The Spark MLlib classification <span class="kw">and</span> regression algorithms work only <span class="cf">with</span> numerical values, so categorical columns must be mapped to double values.</span>
+<span id="cb9-332"><a href="#cb9-332"></a></span>
+<span id="cb9-333"><a href="#cb9-333"></a><span class="co">#### `StringIndexer`</span></span>
+<span id="cb9-334"><a href="#cb9-334"></a>A `StringIndexer` (`pyspark.ml.feature.StringIndexer`) <span class="kw">is</span> an Estimator that returns a Transformer of <span class="bu">type</span> `pyspark.ml.feature.StringIndexerModel`. `StringIndexerModel` encodes a string column of <span class="st">"labels"</span> to a column of <span class="st">"label indices"</span>: each distinct value of the <span class="bu">input</span> string column <span class="kw">is</span> mapped to an integer value <span class="kw">in</span> $[<span class="dv">0</span>, \textbf{number of distinct values})$.</span>
+<span id="cb9-335"><a href="#cb9-335"></a></span>
+<span id="cb9-336"><a href="#cb9-336"></a>`StringIndexer(inputCol, outputCol)`</span>
+<span id="cb9-337"><a href="#cb9-337"></a></span>
+<span id="cb9-338"><a href="#cb9-338"></a><span class="op">-</span> `inputCol`: the name of the <span class="bu">input</span> string column to <span class="bu">map</span> to a <span class="bu">set</span> of integers</span>
+<span id="cb9-339"><a href="#cb9-339"></a><span class="op">-</span> `outputCol`: the name of the new output column</span>
+<span id="cb9-340"><a href="#cb9-340"></a></span>
+<span id="cb9-341"><a href="#cb9-341"></a>Invoke the fit method of `StringIndexer` on the <span class="bu">input</span> DataFrame to infer a `StringIndexerModel`. The returned model <span class="kw">is</span> a Transformer.</span>
+<span id="cb9-342"><a href="#cb9-342"></a></span>
+<span id="cb9-343"><a href="#cb9-343"></a>Invoke the transform method of `StringIndexerModel` on the <span class="bu">input</span> DataFrame to create a new DataFrame that has a new column (`outputCol`): <span class="cf">for</span> each record, the value of the new column <span class="kw">is</span> the integer (casted to a double) associated <span class="cf">with</span> the value of the <span class="bu">input</span> string column. It has also <span class="bu">all</span> the columns of the <span class="bu">input</span> DataFrame.</span>
+<span id="cb9-344"><a href="#cb9-344"></a></span>
+<span id="cb9-345"><a href="#cb9-345"></a>:::{.callout<span class="op">-</span>note collapse<span class="op">=</span><span class="st">"true"</span>}</span>
+<span id="cb9-346"><a href="#cb9-346"></a><span class="co">### Example</span></span>
+<span id="cb9-347"><a href="#cb9-347"></a>Consider an <span class="bu">input</span> DataFrame <span class="cf">with</span> two columns: create a new DataFrame <span class="cf">with</span> a new column containing the integer version of the string column category. Set the name of the new column to <span class="st">"categoryIndex"</span>.</span>
+<span id="cb9-348"><a href="#cb9-348"></a></span>
+<span id="cb9-349"><a href="#cb9-349"></a><span class="op">**</span>Original DataFrame<span class="op">**</span></span>
+<span id="cb9-350"><a href="#cb9-350"></a></span>
+<span id="cb9-351"><a href="#cb9-351"></a><span class="op">|</span><span class="bu">id</span><span class="op">|</span>category<span class="op">|</span></span>
+<span id="cb9-352"><a href="#cb9-352"></a><span class="op">|-|-|</span></span>
+<span id="cb9-353"><a href="#cb9-353"></a><span class="op">|</span>$<span class="dv">1</span>$<span class="op">|</span>a<span class="op">|</span></span>
+<span id="cb9-354"><a href="#cb9-354"></a><span class="op">|</span>$<span class="dv">2</span>$<span class="op">|</span>b<span class="op">|</span></span>
+<span id="cb9-355"><a href="#cb9-355"></a><span class="op">|</span>$<span class="dv">3</span>$<span class="op">|</span>c<span class="op">|</span></span>
+<span id="cb9-356"><a href="#cb9-356"></a><span class="op">|</span>$<span class="dv">4</span>$<span class="op">|</span>c<span class="op">|</span></span>
+<span id="cb9-357"><a href="#cb9-357"></a><span class="op">|</span>$<span class="dv">5</span>$<span class="op">|</span>a<span class="op">|</span></span>
+<span id="cb9-358"><a href="#cb9-358"></a></span>
+<span id="cb9-359"><a href="#cb9-359"></a><span class="op">**</span>Transformed DataFrame<span class="op">**</span></span>
+<span id="cb9-360"><a href="#cb9-360"></a></span>
+<span id="cb9-361"><a href="#cb9-361"></a><span class="op">|</span><span class="bu">id</span><span class="op">|</span>category<span class="op">|</span>categoryIndex<span class="op">|</span></span>
+<span id="cb9-362"><a href="#cb9-362"></a><span class="op">|-|-|-|</span></span>
+<span id="cb9-363"><a href="#cb9-363"></a><span class="op">|</span>$<span class="dv">1</span>$<span class="op">|</span>a<span class="op">|</span>$<span class="fl">0.0</span>$<span class="op">|</span></span>
+<span id="cb9-364"><a href="#cb9-364"></a><span class="op">|</span>$<span class="dv">2</span>$<span class="op">|</span>b<span class="op">|</span>$<span class="fl">2.0</span>$<span class="op">|</span></span>
+<span id="cb9-365"><a href="#cb9-365"></a><span class="op">|</span>$<span class="dv">3</span>$<span class="op">|</span>c<span class="op">|</span>$<span class="fl">1.0</span>$<span class="op">|</span></span>
+<span id="cb9-366"><a href="#cb9-366"></a><span class="op">|</span>$<span class="dv">4</span>$<span class="op">|</span>c<span class="op">|</span>$<span class="fl">1.0</span>$<span class="op">|</span></span>
+<span id="cb9-367"><a href="#cb9-367"></a><span class="op">|</span>$<span class="dv">5</span>$<span class="op">|</span>a<span class="op">|</span>$<span class="fl">0.0</span>$<span class="op">|</span></span>
+<span id="cb9-368"><a href="#cb9-368"></a></span>
+<span id="cb9-369"><a href="#cb9-369"></a>```python</span>
+<span id="cb9-370"><a href="#cb9-370"></a><span class="im">from</span> pyspark.mllib.linalg <span class="im">import</span> Vectors</span>
+<span id="cb9-371"><a href="#cb9-371"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> StringIndexer</span>
+<span id="cb9-372"><a href="#cb9-372"></a></span>
+<span id="cb9-373"><a href="#cb9-373"></a><span class="co">## input DataFrame</span></span>
+<span id="cb9-374"><a href="#cb9-374"></a>df <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb9-375"><a href="#cb9-375"></a>    [(<span class="dv">1</span>,<span class="st">"a"</span>),(<span class="dv">2</span>,<span class="st">"b"</span>),(<span class="dv">3</span>,<span class="st">"c"</span>),(<span class="dv">4</span>,<span class="st">"c"</span>),(<span class="dv">5</span>,<span class="st">"a"</span>)],</span>
+<span id="cb9-376"><a href="#cb9-376"></a>    [<span class="st">"id"</span>,<span class="st">"category"</span>]</span>
+<span id="cb9-377"><a href="#cb9-377"></a>)</span>
+<span id="cb9-378"><a href="#cb9-378"></a></span>
+<span id="cb9-379"><a href="#cb9-379"></a><span class="co">## Create a StringIndexer to map the content of category</span></span>
+<span id="cb9-380"><a href="#cb9-380"></a><span class="co">##  to a set of "integers"</span></span>
+<span id="cb9-381"><a href="#cb9-381"></a>indexer <span class="op">=</span> StringIndexer(</span>
+<span id="cb9-382"><a href="#cb9-382"></a>    inputCol<span class="op">=</span><span class="st">"category"</span>, </span>
+<span id="cb9-383"><a href="#cb9-383"></a>    outputCol<span class="op">=</span><span class="st">"categoryIndex"</span></span>
+<span id="cb9-384"><a href="#cb9-384"></a>)</span>
+<span id="cb9-385"><a href="#cb9-385"></a></span>
+<span id="cb9-386"><a href="#cb9-386"></a><span class="co">## Analyze the input data to define the mapping string -&gt; integer</span></span>
+<span id="cb9-387"><a href="#cb9-387"></a>indexerModel <span class="op">=</span> indexer.fit(df)</span>
+<span id="cb9-388"><a href="#cb9-388"></a></span>
+<span id="cb9-389"><a href="#cb9-389"></a><span class="co">## Apply indexerModel on the input column category</span></span>
+<span id="cb9-390"><a href="#cb9-390"></a>indexedDF <span class="op">=</span> indexerModel.transform(df)</span>
+<span id="cb9-391"><a href="#cb9-391"></a>```</span>
+<span id="cb9-392"><a href="#cb9-392"></a></span>
+<span id="cb9-393"><a href="#cb9-393"></a>:::</span>
+<span id="cb9-394"><a href="#cb9-394"></a></span>
+<span id="cb9-395"><a href="#cb9-395"></a><span class="co">#### `IndexToString`</span></span>
+<span id="cb9-396"><a href="#cb9-396"></a>`IndexToString` (`pyspark.ml.feature.IndexToString`), which <span class="kw">is</span> symmetrical to `StringIndexer`, <span class="kw">is</span> a Transformer that maps a column of <span class="st">"label indices"</span> back to a column containing the original <span class="st">"labels"</span> <span class="im">as</span> strings. Classification models <span class="cf">return</span> the integer version of the predicted label values. To obtain human readable results, remap those values to the original ones.</span>
+<span id="cb9-397"><a href="#cb9-397"></a></span>
+<span id="cb9-398"><a href="#cb9-398"></a>Given `IndexToString(inputCol, outputCol, labels)`</span>
+<span id="cb9-399"><a href="#cb9-399"></a></span>
+<span id="cb9-400"><a href="#cb9-400"></a><span class="op">-</span> inputCol: the name of the <span class="bu">input</span> numerical column to <span class="bu">map</span> to the original a <span class="bu">set</span> of string <span class="st">"labels"</span><span class="op">;</span></span>
+<span id="cb9-401"><a href="#cb9-401"></a><span class="op">-</span> outputCol: the name of the new output column<span class="op">;</span></span>
+<span id="cb9-402"><a href="#cb9-402"></a><span class="op">-</span> labels: the <span class="bu">list</span> of original <span class="st">"labels"</span><span class="op">/</span>strings<span class="op">;</span> the mapping <span class="cf">with</span> integer values <span class="kw">is</span> given by the positions of the strings inside labels.</span>
+<span id="cb9-403"><a href="#cb9-403"></a></span>
+<span id="cb9-404"><a href="#cb9-404"></a>Invoke the transform method of `IndexToString` on the <span class="bu">input</span> DataFrame to create a new DataFrame that has a new column (`outputCol`): <span class="cf">for</span> each record, the value of the new column <span class="kw">is</span> the original string associated <span class="cf">with</span> the value of the <span class="bu">input</span> numerical column. It has also <span class="bu">all</span> the columns of the <span class="bu">input</span> DataFrame.</span>
+<span id="cb9-405"><a href="#cb9-405"></a></span>
+<span id="cb9-406"><a href="#cb9-406"></a>:::{.callout<span class="op">-</span>note collapse<span class="op">=</span><span class="st">"true"</span>}</span>
+<span id="cb9-407"><a href="#cb9-407"></a><span class="co">### Example</span></span>
+<span id="cb9-408"><a href="#cb9-408"></a>Consider an <span class="bu">input</span> DataFrame <span class="cf">with</span> two columns: create a new DataFrame <span class="cf">with</span> a new column containing the integer version of the string column category <span class="kw">and</span> then <span class="bu">map</span> it back to the string version <span class="kw">in</span> a new column.</span>
+<span id="cb9-409"><a href="#cb9-409"></a></span>
+<span id="cb9-410"><a href="#cb9-410"></a><span class="op">**</span>Original DataFrame<span class="op">**</span></span>
+<span id="cb9-411"><a href="#cb9-411"></a></span>
+<span id="cb9-412"><a href="#cb9-412"></a><span class="op">|</span><span class="bu">id</span><span class="op">|</span>category<span class="op">|</span></span>
+<span id="cb9-413"><a href="#cb9-413"></a><span class="op">|-|-|</span></span>
+<span id="cb9-414"><a href="#cb9-414"></a><span class="op">|</span>$<span class="dv">1</span>$<span class="op">|</span>a<span class="op">|</span></span>
+<span id="cb9-415"><a href="#cb9-415"></a><span class="op">|</span>$<span class="dv">2</span>$<span class="op">|</span>b<span class="op">|</span></span>
+<span id="cb9-416"><a href="#cb9-416"></a><span class="op">|</span>$<span class="dv">3</span>$<span class="op">|</span>c<span class="op">|</span></span>
+<span id="cb9-417"><a href="#cb9-417"></a><span class="op">|</span>$<span class="dv">4</span>$<span class="op">|</span>c<span class="op">|</span></span>
+<span id="cb9-418"><a href="#cb9-418"></a><span class="op">|</span>$<span class="dv">5</span>$<span class="op">|</span>a<span class="op">|</span></span>
+<span id="cb9-419"><a href="#cb9-419"></a></span>
+<span id="cb9-420"><a href="#cb9-420"></a><span class="op">**</span>Transformed DataFrame<span class="op">**</span></span>
+<span id="cb9-421"><a href="#cb9-421"></a></span>
+<span id="cb9-422"><a href="#cb9-422"></a><span class="op">|</span><span class="bu">id</span><span class="op">|</span>category<span class="op">|</span>categoryIndex<span class="op">|</span>originalCategory<span class="op">|</span></span>
+<span id="cb9-423"><a href="#cb9-423"></a><span class="op">|-|-|-|-|</span></span>
+<span id="cb9-424"><a href="#cb9-424"></a><span class="op">|</span>$<span class="dv">1</span>$<span class="op">|</span>a<span class="op">|</span>$<span class="fl">0.0</span>$<span class="op">|</span>a<span class="op">|</span></span>
+<span id="cb9-425"><a href="#cb9-425"></a><span class="op">|</span>$<span class="dv">2</span>$<span class="op">|</span>b<span class="op">|</span>$<span class="fl">2.0</span>$<span class="op">|</span>b<span class="op">|</span></span>
+<span id="cb9-426"><a href="#cb9-426"></a><span class="op">|</span>$<span class="dv">3</span>$<span class="op">|</span>c<span class="op">|</span>$<span class="fl">1.0</span>$<span class="op">|</span>c<span class="op">|</span></span>
+<span id="cb9-427"><a href="#cb9-427"></a><span class="op">|</span>$<span class="dv">4</span>$<span class="op">|</span>c<span class="op">|</span>$<span class="fl">1.0</span>$<span class="op">|</span>c<span class="op">|</span></span>
+<span id="cb9-428"><a href="#cb9-428"></a><span class="op">|</span>$<span class="dv">5</span>$<span class="op">|</span>a<span class="op">|</span>$<span class="fl">0.0</span>$<span class="op">|</span>a<span class="op">|</span></span>
+<span id="cb9-429"><a href="#cb9-429"></a></span>
+<span id="cb9-430"><a href="#cb9-430"></a>```python</span>
+<span id="cb9-431"><a href="#cb9-431"></a><span class="im">from</span> pyspark.mllib.linalg <span class="im">import</span> Vectors</span>
+<span id="cb9-432"><a href="#cb9-432"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> StringIndexer</span>
+<span id="cb9-433"><a href="#cb9-433"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> IndexToString</span>
+<span id="cb9-434"><a href="#cb9-434"></a></span>
+<span id="cb9-435"><a href="#cb9-435"></a><span class="co">## input DataFrame</span></span>
+<span id="cb9-436"><a href="#cb9-436"></a>df <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb9-437"><a href="#cb9-437"></a>    [(<span class="dv">1</span>,<span class="st">"a"</span>),(<span class="dv">2</span>,<span class="st">"b"</span>),(<span class="dv">3</span>,<span class="st">"c"</span>),(<span class="dv">4</span>,<span class="st">"c"</span>),(<span class="dv">5</span>,<span class="st">"a"</span>)],</span>
+<span id="cb9-438"><a href="#cb9-438"></a>    [<span class="st">"id"</span>,<span class="st">"category"</span>]</span>
+<span id="cb9-439"><a href="#cb9-439"></a>)</span>
+<span id="cb9-440"><a href="#cb9-440"></a></span>
+<span id="cb9-441"><a href="#cb9-441"></a><span class="co">## Create a StringIndexer to map the content of category </span></span>
+<span id="cb9-442"><a href="#cb9-442"></a><span class="co">## to a set of integers</span></span>
+<span id="cb9-443"><a href="#cb9-443"></a>indexer <span class="op">=</span> StringIndexer(</span>
+<span id="cb9-444"><a href="#cb9-444"></a>    inputCol<span class="op">=</span><span class="st">"category"</span>, </span>
+<span id="cb9-445"><a href="#cb9-445"></a>    outputCol<span class="op">=</span><span class="st">"categoryIndex"</span></span>
+<span id="cb9-446"><a href="#cb9-446"></a>)</span>
+<span id="cb9-447"><a href="#cb9-447"></a></span>
+<span id="cb9-448"><a href="#cb9-448"></a><span class="co">## Analyze the input data to define the mapping </span></span>
+<span id="cb9-449"><a href="#cb9-449"></a><span class="co">## string -&gt; integer</span></span>
+<span id="cb9-450"><a href="#cb9-450"></a>indexerModel <span class="op">=</span> indexer.fit(df)</span>
+<span id="cb9-451"><a href="#cb9-451"></a></span>
+<span id="cb9-452"><a href="#cb9-452"></a><span class="co">## Apply indexerModel on the input column category</span></span>
+<span id="cb9-453"><a href="#cb9-453"></a>indexedDF <span class="op">=</span> indexerModel.transform(df)</span>
+<span id="cb9-454"><a href="#cb9-454"></a></span>
+<span id="cb9-455"><a href="#cb9-455"></a><span class="co">## Create an IndexToString to map the content of numerical </span></span>
+<span id="cb9-456"><a href="#cb9-456"></a><span class="co">## attribute categoryIndex to the original string value</span></span>
+<span id="cb9-457"><a href="#cb9-457"></a>converter <span class="op">=</span> IndexToString(</span>
+<span id="cb9-458"><a href="#cb9-458"></a>    inputCol<span class="op">=</span><span class="st">"categoryIndex"</span>, </span>
+<span id="cb9-459"><a href="#cb9-459"></a>    outputCol<span class="op">=</span><span class="st">"originalCategory"</span>,</span>
+<span id="cb9-460"><a href="#cb9-460"></a>    labels<span class="op">=</span>indexerModel.labels</span>
+<span id="cb9-461"><a href="#cb9-461"></a>)</span>
+<span id="cb9-462"><a href="#cb9-462"></a></span>
+<span id="cb9-463"><a href="#cb9-463"></a><span class="co">## Apply converter on the input column categoryIndex</span></span>
+<span id="cb9-464"><a href="#cb9-464"></a>reconvertedDF <span class="op">=</span> converter.transform(indexedDF)</span>
+<span id="cb9-465"><a href="#cb9-465"></a>```</span>
+<span id="cb9-466"><a href="#cb9-466"></a></span>
+<span id="cb9-467"><a href="#cb9-467"></a>:::</span>
+<span id="cb9-468"><a href="#cb9-468"></a></span>
+<span id="cb9-469"><a href="#cb9-469"></a><span class="co">#### `SQLTransformer`</span></span>
+<span id="cb9-470"><a href="#cb9-470"></a>`SQLTransformer` (`pyspark.ml.feature.SQLTransformer`) <span class="kw">is</span> a transformer that implements the transformations which are defined by SQL queries. Currently, the syntax of the supported (simplified) SQL queries <span class="kw">is</span></span>
+<span id="cb9-471"><a href="#cb9-471"></a></span>
+<span id="cb9-472"><a href="#cb9-472"></a>```sql</span>
+<span id="cb9-473"><a href="#cb9-473"></a>SELECT attributes, function(attributes) FROM __THIS__</span>
+<span id="cb9-474"><a href="#cb9-474"></a>```</span>
+<span id="cb9-475"><a href="#cb9-475"></a></span>
+<span id="cb9-476"><a href="#cb9-476"></a>Where `__THIS__` represents the DataFrame on which the `SQLTransformer` <span class="kw">is</span> invoked.</span>
+<span id="cb9-477"><a href="#cb9-477"></a></span>
+<span id="cb9-478"><a href="#cb9-478"></a>`SQLTransformer` executes an SQL query on the <span class="bu">input</span> DataFrame <span class="kw">and</span> returns a new DataFrame associated <span class="cf">with</span> the result of the query.</span>
+<span id="cb9-479"><a href="#cb9-479"></a></span>
+<span id="cb9-480"><a href="#cb9-480"></a>Given `SQLTransformer(statement)`</span>
+<span id="cb9-481"><a href="#cb9-481"></a></span>
+<span id="cb9-482"><a href="#cb9-482"></a><span class="op">-</span> `statement`: the SQL query to execute.</span>
+<span id="cb9-483"><a href="#cb9-483"></a></span>
+<span id="cb9-484"><a href="#cb9-484"></a>When the transform method of `SQLTransformer` <span class="kw">is</span> invoked on a DataFrame the returned DataFrame <span class="kw">is</span> the result of the executed statement query.</span>
+<span id="cb9-485"><a href="#cb9-485"></a></span>
+<span id="cb9-486"><a href="#cb9-486"></a>:::{.callout<span class="op">-</span>note collapse<span class="op">=</span><span class="st">"true"</span>}</span>
+<span id="cb9-487"><a href="#cb9-487"></a><span class="co">### Example</span></span>
+<span id="cb9-488"><a href="#cb9-488"></a>Consider an <span class="bu">input</span> DataFrame <span class="cf">with</span> two columns: <span class="st">"text"</span> <span class="kw">and</span> <span class="st">"id"</span>: create a new DataFrame <span class="cf">with</span> a new column, called <span class="st">"numWords"</span>, containing the number of words occurring <span class="kw">in</span> column <span class="st">"text"</span>.</span>
+<span id="cb9-489"><a href="#cb9-489"></a></span>
+<span id="cb9-490"><a href="#cb9-490"></a><span class="op">**</span>Original DataFrame<span class="op">**</span></span>
+<span id="cb9-491"><a href="#cb9-491"></a></span>
+<span id="cb9-492"><a href="#cb9-492"></a><span class="op">|</span><span class="bu">id</span><span class="op">|</span>text<span class="op">|</span></span>
+<span id="cb9-493"><a href="#cb9-493"></a><span class="op">|-|-|</span></span>
+<span id="cb9-494"><a href="#cb9-494"></a><span class="op">|</span>$<span class="dv">1</span>$<span class="op">|</span>This <span class="kw">is</span> Spark<span class="op">|</span></span>
+<span id="cb9-495"><a href="#cb9-495"></a><span class="op">|</span>$<span class="dv">2</span>$<span class="op">|</span>Spark<span class="op">|</span></span>
+<span id="cb9-496"><a href="#cb9-496"></a><span class="op">|</span>$<span class="dv">3</span>$<span class="op">|</span>Another sample sentence of words<span class="op">|</span></span>
+<span id="cb9-497"><a href="#cb9-497"></a><span class="op">|</span>$<span class="dv">4</span>$<span class="op">|</span>Paolo Rossi<span class="op">|</span></span>
+<span id="cb9-498"><a href="#cb9-498"></a><span class="op">|</span>$<span class="dv">5</span>$<span class="op">|</span>Giovanni<span class="op">|</span></span>
+<span id="cb9-499"><a href="#cb9-499"></a></span>
+<span id="cb9-500"><a href="#cb9-500"></a><span class="op">**</span>Transformed DataFrame<span class="op">**</span></span>
+<span id="cb9-501"><a href="#cb9-501"></a></span>
+<span id="cb9-502"><a href="#cb9-502"></a><span class="op">|</span><span class="bu">id</span><span class="op">|</span>text<span class="op">|</span>numWords<span class="op">|</span></span>
+<span id="cb9-503"><a href="#cb9-503"></a><span class="op">|-|-|-|</span></span>
+<span id="cb9-504"><a href="#cb9-504"></a><span class="op">|</span>$<span class="dv">1</span>$<span class="op">|</span>This <span class="kw">is</span> Spark<span class="op">|</span>$<span class="dv">3</span>$<span class="op">|</span></span>
+<span id="cb9-505"><a href="#cb9-505"></a><span class="op">|</span>$<span class="dv">2</span>$<span class="op">|</span>Spark<span class="op">|</span>$<span class="dv">1</span>$<span class="op">|</span></span>
+<span id="cb9-506"><a href="#cb9-506"></a><span class="op">|</span>$<span class="dv">3</span>$<span class="op">|</span>Another sample sentence of words<span class="op">|</span>$<span class="dv">5</span>$<span class="op">|</span></span>
+<span id="cb9-507"><a href="#cb9-507"></a><span class="op">|</span>$<span class="dv">4</span>$<span class="op">|</span>Paolo Rossi<span class="op">|</span>$<span class="dv">2</span>$<span class="op">|</span></span>
+<span id="cb9-508"><a href="#cb9-508"></a><span class="op">|</span>$<span class="dv">5</span>$<span class="op">|</span>Giovanni<span class="op">|</span>$<span class="dv">1</span>$<span class="op">|</span></span>
+<span id="cb9-509"><a href="#cb9-509"></a></span>
+<span id="cb9-510"><a href="#cb9-510"></a>```python</span>
+<span id="cb9-511"><a href="#cb9-511"></a><span class="im">from</span> pyspark.sql.types <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb9-512"><a href="#cb9-512"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> SQLTransformer</span>
+<span id="cb9-513"><a href="#cb9-513"></a></span>
+<span id="cb9-514"><a href="#cb9-514"></a><span class="co">#Local Input data</span></span>
+<span id="cb9-515"><a href="#cb9-515"></a>inputList <span class="op">=</span> [</span>
+<span id="cb9-516"><a href="#cb9-516"></a>    (<span class="dv">1</span>,<span class="st">"ThisisSpark"</span>),</span>
+<span id="cb9-517"><a href="#cb9-517"></a>    (<span class="dv">2</span>,<span class="st">"Spark"</span>),</span>
+<span id="cb9-518"><a href="#cb9-518"></a>    (<span class="dv">3</span>,<span class="st">"Anothersamplesentenceofwords"</span>),</span>
+<span id="cb9-519"><a href="#cb9-519"></a>    (<span class="dv">4</span>,<span class="st">"PaoloRossi"</span>),</span>
+<span id="cb9-520"><a href="#cb9-520"></a>    (<span class="dv">5</span>,<span class="st">"Giovanni"</span>)</span>
+<span id="cb9-521"><a href="#cb9-521"></a>]</span>
+<span id="cb9-522"><a href="#cb9-522"></a></span>
+<span id="cb9-523"><a href="#cb9-523"></a><span class="co">## Create the initial DataFrame</span></span>
+<span id="cb9-524"><a href="#cb9-524"></a>dfInput <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb9-525"><a href="#cb9-525"></a>    inputList, </span>
+<span id="cb9-526"><a href="#cb9-526"></a>    [<span class="st">"id"</span>,<span class="st">"text"</span>]</span>
+<span id="cb9-527"><a href="#cb9-527"></a>)</span>
+<span id="cb9-528"><a href="#cb9-528"></a></span>
+<span id="cb9-529"><a href="#cb9-529"></a><span class="co">## Define a UDF function that that counts the number of words </span></span>
+<span id="cb9-530"><a href="#cb9-530"></a><span class="co">## in an input string</span></span>
+<span id="cb9-531"><a href="#cb9-531"></a>spark.udf.register(</span>
+<span id="cb9-532"><a href="#cb9-532"></a>    <span class="st">"countWords"</span>, </span>
+<span id="cb9-533"><a href="#cb9-533"></a>    <span class="kw">lambda</span> text: <span class="bu">len</span>(text.split(<span class="st">" "</span>)), </span>
+<span id="cb9-534"><a href="#cb9-534"></a>    IntegerType()</span>
+<span id="cb9-535"><a href="#cb9-535"></a>)</span>
+<span id="cb9-536"><a href="#cb9-536"></a></span>
+<span id="cb9-537"><a href="#cb9-537"></a><span class="co">## Define an SQLTranformer to create the columns we are </span></span>
+<span id="cb9-538"><a href="#cb9-538"></a><span class="co">## interested in</span></span>
+<span id="cb9-539"><a href="#cb9-539"></a>sqlTrans <span class="op">=</span> SQLTransformer(</span>
+<span id="cb9-540"><a href="#cb9-540"></a>    statement<span class="op">=</span><span class="st">"""</span></span>
+<span id="cb9-541"><a href="#cb9-541"></a><span class="st">    SELECT *, countWords(text) AS numLines </span></span>
+<span id="cb9-542"><a href="#cb9-542"></a><span class="st">    FROM __THIS__</span></span>
+<span id="cb9-543"><a href="#cb9-543"></a><span class="st">    """</span></span>
+<span id="cb9-544"><a href="#cb9-544"></a>)</span>
+<span id="cb9-545"><a href="#cb9-545"></a></span>
+<span id="cb9-546"><a href="#cb9-546"></a><span class="co">## Create the new DataFrame by invoking the transform method of </span></span>
+<span id="cb9-547"><a href="#cb9-547"></a><span class="co">## the defined SQLTranformer</span></span>
+<span id="cb9-548"><a href="#cb9-548"></a>newDF <span class="op">=</span> sqlTrans.transform(dfInput)</span>
+<span id="cb9-549"><a href="#cb9-549"></a>```</span>
+<span id="cb9-550"><a href="#cb9-550"></a></span>
+<span id="cb9-551"><a href="#cb9-551"></a>:::</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 
 

@@ -499,7 +499,7 @@ motifs = g.find("(v1)-[friend]->(v2); (v2)-[follow]->(v3)")
 ## Select only the ones matching the pattern
 ## vertex -> friend-> vertex -> follow ->vertex
 motifsFriendFollow = motifs \
-    #.filter("friend.relationship='friend' AND follow.relationship='follow' ") # <1>
+    .filter("friend.relationship='friend' AND follow.relationship='follow' ") # <1>
 ```
 1. Columns friend and follow are structs with three fields/attributes: "src", "dst", "relationship". To access a field of a struct column use the syntax `columnName.field` (e.g., `friend.relationship`)
 

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -17,9 +17,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -46,43 +47,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -120,10 +91,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
@@ -132,11 +105,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./18e_mining.html"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -144,162 +122,191 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Distributed architectures for big data processing and analytics</a> 
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Index</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">About this Book</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></a>
+  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></a>
+  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></a>
+  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></a>
+  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></a>
+  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></a>
+  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></a>
+  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></a>
+  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></a>
+  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></a>
+  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></a>
+  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></a>
+  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></a>
+  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></a>
+  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></a>
+  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></a>
+  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></a>
+  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></a>
+  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></a>
+  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></a>
+  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></a>
+  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></a>
+  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></a>
+  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></a>
+  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></a>
+  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -315,7 +322,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></h1>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -367,12 +374,12 @@ ADE</code></pre>
 <section id="input" class="level4">
 <h4 class="anchored" data-anchor-id="input">Input</h4>
 <p>The input of the MLlib itemset and rule mining algorithm is a DataFrame containing a column called <code>items</code>, whose data type is array of values. Each record of the input DataFrame contains one transaction (i.e., a set of items).</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -411,12 +418,12 @@ ADE</code></pre>
 </div>
 </div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Note
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -430,63 +437,71 @@ ABCD
 AB
 BC
 ADE</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">from</span> pyspark.ml.fpm <span class="im">import</span> FPGrowth</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> Pipeline</span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> PipelineModel</span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col, split</span>
-<span id="cb4-5"><a href="#cb4-5"></a></span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="co">## input and output folders</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a>transactionsData <span class="op">=</span> <span class="st">"ex_dataitemsets/transactions.csv"</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a>outputPathItemsets <span class="op">=</span> <span class="st">"Itemsets/"</span></span>
-<span id="cb4-9"><a href="#cb4-9"></a>outputPathRules <span class="op">=</span> <span class="st">"Rules/"</span></span>
-<span id="cb4-10"><a href="#cb4-10"></a></span>
-<span id="cb4-11"><a href="#cb4-11"></a><span class="co">## Create a DataFrame from transactions.csv</span></span>
-<span id="cb4-12"><a href="#cb4-12"></a>transactionsDataDF <span class="op">=</span> spark.read.load(</span>
-<span id="cb4-13"><a href="#cb4-13"></a>    transactionsData,</span>
-<span id="cb4-14"><a href="#cb4-14"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">"csv"</span>,</span>
-<span id="cb4-15"><a href="#cb4-15"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb4-16"><a href="#cb4-16"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
-<span id="cb4-17"><a href="#cb4-17"></a>)</span>
-<span id="cb4-18"><a href="#cb4-18"></a></span>
-<span id="cb4-19"><a href="#cb4-19"></a><span class="co">## Transform Column transactions into an ArrayType</span></span>
-<span id="cb4-20"><a href="#cb4-20"></a>trsDataDF <span class="op">=</span> transactionsDataDF <span class="op">\</span></span>
-<span id="cb4-21"><a href="#cb4-21"></a>    .selectExpr(<span class="st">'split(transactions, " ")'</span>) <span class="op">\</span></span>
-<span id="cb4-22"><a href="#cb4-22"></a>    <span class="co">#.withColumnRenamed("split(transactions, )", "items") # &lt;1&gt;</span></span>
-<span id="cb4-23"><a href="#cb4-23"></a></span>
-<span id="cb4-24"><a href="#cb4-24"></a><span class="co">## Transform Column transactions into an ArrayType</span></span>
-<span id="cb4-25"><a href="#cb4-25"></a>trsDataDF <span class="op">=</span> transactionsDataDF<span class="op">\</span></span>
-<span id="cb4-26"><a href="#cb4-26"></a>.selectExpr(<span class="st">'split(transactions, " ")'</span>)<span class="op">\</span></span>
-<span id="cb4-27"><a href="#cb4-27"></a>.withColumnRenamed(<span class="st">"split(transactions, )"</span>, <span class="st">"items"</span>)</span>
-<span id="cb4-28"><a href="#cb4-28"></a></span>
-<span id="cb4-29"><a href="#cb4-29"></a><span class="co">## Create an FP-growth Estimator</span></span>
-<span id="cb4-30"><a href="#cb4-30"></a>fpGrowth <span class="op">=</span> FPGrowth(</span>
-<span id="cb4-31"><a href="#cb4-31"></a>    itemsCol<span class="op">=</span><span class="st">"items"</span>,</span>
-<span id="cb4-32"><a href="#cb4-32"></a>    minSupport<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span id="cb4-33"><a href="#cb4-33"></a>    minConfidence<span class="op">=</span><span class="fl">0.6</span></span>
-<span id="cb4-34"><a href="#cb4-34"></a>)</span>
-<span id="cb4-35"><a href="#cb4-35"></a></span>
-<span id="cb4-36"><a href="#cb4-36"></a><span class="co">## Extract itemsets and rules</span></span>
-<span id="cb4-37"><a href="#cb4-37"></a>model <span class="op">=</span> fpGrowth.fit(trsDataDF)</span>
-<span id="cb4-38"><a href="#cb4-38"></a></span>
-<span id="cb4-39"><a href="#cb4-39"></a><span class="co">## Retrieve the DataFrame associated with the frequent itemsets</span></span>
-<span id="cb4-40"><a href="#cb4-40"></a>dfItemsets <span class="op">=</span> model.freqItemsets</span>
-<span id="cb4-41"><a href="#cb4-41"></a></span>
-<span id="cb4-42"><a href="#cb4-42"></a><span class="co">## Retrieve the DataFrame associated with the frequent rules</span></span>
-<span id="cb4-43"><a href="#cb4-43"></a>dfRules <span class="op">=</span> model.associationRules</span>
-<span id="cb4-44"><a href="#cb4-44"></a></span>
-<span id="cb4-45"><a href="#cb4-45"></a><span class="co">## Save the result in an HDFS output folder</span></span>
-<span id="cb4-46"><a href="#cb4-46"></a><span class="co">#dfItemsets.write.json(outputPathItemsets) # &lt;2&gt;</span></span>
-<span id="cb4-47"><a href="#cb4-47"></a></span>
-<span id="cb4-48"><a href="#cb4-48"></a><span class="co">## Save the result in an HDFS output folder</span></span>
-<span id="cb4-49"><a href="#cb4-49"></a>dfRules.write.json(outputPathRules)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ol type="1">
-<li><code>'split(transactions, " ")'</code> is the <code>pyspark.sql.functions.split()</code> function. It returns a <code>SQL ArrayType</code>.</li>
-<li>The result is stored in a JSON file because itemsets and rules are stored in columns associated with the data type Array. Hence, CSV files cannot be used to store the result.</li>
-</ol>
+<div class="sourceCode" id="annotated-cell-2"><pre class="sourceCode numberSource python code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode python"><span id="annotated-cell-2-1"><a href="#annotated-cell-2-1"></a><span class="im">from</span> pyspark.ml.fpm <span class="im">import</span> FPGrowth</span>
+<span id="annotated-cell-2-2"><a href="#annotated-cell-2-2"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> Pipeline</span>
+<span id="annotated-cell-2-3"><a href="#annotated-cell-2-3"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> PipelineModel</span>
+<span id="annotated-cell-2-4"><a href="#annotated-cell-2-4"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col, split</span>
+<span id="annotated-cell-2-5"><a href="#annotated-cell-2-5"></a></span>
+<span id="annotated-cell-2-6"><a href="#annotated-cell-2-6"></a><span class="co">## input and output folders</span></span>
+<span id="annotated-cell-2-7"><a href="#annotated-cell-2-7"></a>transactionsData <span class="op">=</span> <span class="st">"ex_dataitemsets/transactions.csv"</span></span>
+<span id="annotated-cell-2-8"><a href="#annotated-cell-2-8"></a>outputPathItemsets <span class="op">=</span> <span class="st">"Itemsets/"</span></span>
+<span id="annotated-cell-2-9"><a href="#annotated-cell-2-9"></a>outputPathRules <span class="op">=</span> <span class="st">"Rules/"</span></span>
+<span id="annotated-cell-2-10"><a href="#annotated-cell-2-10"></a></span>
+<span id="annotated-cell-2-11"><a href="#annotated-cell-2-11"></a><span class="co">## Create a DataFrame from transactions.csv</span></span>
+<span id="annotated-cell-2-12"><a href="#annotated-cell-2-12"></a>transactionsDataDF <span class="op">=</span> spark.read.load(</span>
+<span id="annotated-cell-2-13"><a href="#annotated-cell-2-13"></a>    transactionsData,</span>
+<span id="annotated-cell-2-14"><a href="#annotated-cell-2-14"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">"csv"</span>,</span>
+<span id="annotated-cell-2-15"><a href="#annotated-cell-2-15"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="annotated-cell-2-16"><a href="#annotated-cell-2-16"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="annotated-cell-2-17"><a href="#annotated-cell-2-17"></a>)</span>
+<span id="annotated-cell-2-18"><a href="#annotated-cell-2-18"></a></span>
+<span id="annotated-cell-2-19"><a href="#annotated-cell-2-19"></a><span class="co">## Transform Column transactions into an ArrayType</span></span>
+<span id="annotated-cell-2-20"><a href="#annotated-cell-2-20"></a>trsDataDF <span class="op">=</span> transactionsDataDF <span class="op">\</span></span>
+<span id="annotated-cell-2-21"><a href="#annotated-cell-2-21"></a>    .selectExpr(<span class="st">'split(transactions, " ")'</span>) <span class="op">\</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1">1</button><span id="annotated-cell-2-22" class="code-annotation-target"><a href="#annotated-cell-2-22"></a>    .withColumnRenamed(<span class="st">"split(transactions, )"</span>, <span class="st">"items"</span>)</span>
+<span id="annotated-cell-2-23"><a href="#annotated-cell-2-23"></a></span>
+<span id="annotated-cell-2-24"><a href="#annotated-cell-2-24"></a><span class="co">## Transform Column transactions into an ArrayType</span></span>
+<span id="annotated-cell-2-25"><a href="#annotated-cell-2-25"></a>trsDataDF <span class="op">=</span> transactionsDataDF<span class="op">\</span></span>
+<span id="annotated-cell-2-26"><a href="#annotated-cell-2-26"></a>.selectExpr(<span class="st">'split(transactions, " ")'</span>)<span class="op">\</span></span>
+<span id="annotated-cell-2-27"><a href="#annotated-cell-2-27"></a>.withColumnRenamed(<span class="st">"split(transactions, )"</span>, <span class="st">"items"</span>)</span>
+<span id="annotated-cell-2-28"><a href="#annotated-cell-2-28"></a></span>
+<span id="annotated-cell-2-29"><a href="#annotated-cell-2-29"></a><span class="co">## Create an FP-growth Estimator</span></span>
+<span id="annotated-cell-2-30"><a href="#annotated-cell-2-30"></a>fpGrowth <span class="op">=</span> FPGrowth(</span>
+<span id="annotated-cell-2-31"><a href="#annotated-cell-2-31"></a>    itemsCol<span class="op">=</span><span class="st">"items"</span>,</span>
+<span id="annotated-cell-2-32"><a href="#annotated-cell-2-32"></a>    minSupport<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="annotated-cell-2-33"><a href="#annotated-cell-2-33"></a>    minConfidence<span class="op">=</span><span class="fl">0.6</span></span>
+<span id="annotated-cell-2-34"><a href="#annotated-cell-2-34"></a>)</span>
+<span id="annotated-cell-2-35"><a href="#annotated-cell-2-35"></a></span>
+<span id="annotated-cell-2-36"><a href="#annotated-cell-2-36"></a><span class="co">## Extract itemsets and rules</span></span>
+<span id="annotated-cell-2-37"><a href="#annotated-cell-2-37"></a>model <span class="op">=</span> fpGrowth.fit(trsDataDF)</span>
+<span id="annotated-cell-2-38"><a href="#annotated-cell-2-38"></a></span>
+<span id="annotated-cell-2-39"><a href="#annotated-cell-2-39"></a><span class="co">## Retrieve the DataFrame associated with the frequent itemsets</span></span>
+<span id="annotated-cell-2-40"><a href="#annotated-cell-2-40"></a>dfItemsets <span class="op">=</span> model.freqItemsets</span>
+<span id="annotated-cell-2-41"><a href="#annotated-cell-2-41"></a></span>
+<span id="annotated-cell-2-42"><a href="#annotated-cell-2-42"></a><span class="co">## Retrieve the DataFrame associated with the frequent rules</span></span>
+<span id="annotated-cell-2-43"><a href="#annotated-cell-2-43"></a>dfRules <span class="op">=</span> model.associationRules</span>
+<span id="annotated-cell-2-44"><a href="#annotated-cell-2-44"></a></span>
+<span id="annotated-cell-2-45"><a href="#annotated-cell-2-45"></a><span class="co">## Save the result in an HDFS output folder</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2">2</button><span id="annotated-cell-2-46" class="code-annotation-target"><a href="#annotated-cell-2-46"></a>dfItemsets.write.json(outputPathItemsets)</span>
+<span id="annotated-cell-2-47"><a href="#annotated-cell-2-47"></a></span>
+<span id="annotated-cell-2-48"><a href="#annotated-cell-2-48"></a><span class="co">## Save the result in an HDFS output folder</span></span>
+<span id="annotated-cell-2-49"><a href="#annotated-cell-2-49"></a>dfRules.write.json(outputPathRules)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-lines="22" data-code-annotation="1" data-code-cell="annotated-cell-2"><code>'split(transactions, " ")'</code> is the <code>pyspark.sql.functions.split()</code> function. It returns a <code>SQL ArrayType</code>.</span>
+</dd>
+<dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-lines="46" data-code-annotation="2" data-code-cell="annotated-cell-2">The result is stored in a JSON file because itemsets and rules are stored in columns associated with the data type Array. Hence, CSV files cannot be used to store the result.</span>
+</dd>
+</dl>
 </div>
 </div>
 </div>
 
+
+<!-- -->
 
 </section>
 </section>
@@ -519,9 +534,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -557,6 +586,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
   function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
@@ -586,6 +666,157 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Handle positioning of the toggle
+      window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -636,7 +867,143 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         <span class="nav-page-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb4" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu"># Itemset and Association rule mining</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>Spark MLlib provides</span>
+<span id="cb4-3"><a href="#cb4-3"></a></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="ss">- </span>An itemset mining algorithm based on the FP-growth algorithm, that extracts all the sets of items (of any length) with a minimum frequency;</span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="ss">- </span>A rule mining algorithm, that extracts the association rules with a minimum frequency and a minimum confidence; notice that only the rules with one single item in the consequent of the rules are extracted.</span>
+<span id="cb4-6"><a href="#cb4-6"></a></span>
+<span id="cb4-7"><a href="#cb4-7"></a>The input dataset in this case is a set of transactions, where each transaction is defined as a set of items</span>
+<span id="cb4-8"><a href="#cb4-8"></a></span>
+<span id="cb4-9"><a href="#cb4-9"></a>A transactional dataset example</span>
+<span id="cb4-10"><a href="#cb4-10"></a></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="in">```</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="in">ABCD</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="in">AB</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="in">BC</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="in">ADE</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="in">```</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a></span>
+<span id="cb4-18"><a href="#cb4-18"></a>It contains 4 transactions, and the distinct items are A, B, C, D, E.</span>
+<span id="cb4-19"><a href="#cb4-19"></a></span>
+<span id="cb4-20"><a href="#cb4-20"></a><span class="fu">## The FP-Growth algorithm and Association rule mining</span></span>
+<span id="cb4-21"><a href="#cb4-21"></a>FP-growth is one of the most popular and efficient itemset mining algorithms. It is characterized by one single parameter: the minimum support threshold (**minsup**), that is the minimum frequency of the itemset in the input transational dataset; it can assume a real value in the range $(0,1]$. The minsup threshold is used to limit the number of mined itemsets.</span>
+<span id="cb4-22"><a href="#cb4-22"></a></span>
+<span id="cb4-23"><a href="#cb4-23"></a>The input dataset is a transactional dataset.</span>
+<span id="cb4-24"><a href="#cb4-24"></a></span>
+<span id="cb4-25"><a href="#cb4-25"></a>Given a set of frequent itemsets, the frequent association rules can be mined. An association rule is mined if</span>
+<span id="cb4-26"><a href="#cb4-26"></a></span>
+<span id="cb4-27"><a href="#cb4-27"></a><span class="ss">- </span>Its frequency is greater than the minimum support threshold **minsup** (i.e., a minimum frequency). The minsup value is specified during the itemset mining step and not during the association rule mining step. </span>
+<span id="cb4-28"><a href="#cb4-28"></a><span class="ss">- </span>Its confidence is greater than the minimum confidence threshold **minconf** (i.e., a minimum correlation). It is a real value in the range $<span class="co">[</span><span class="ot">0,1</span><span class="co">]</span>$.</span>
+<span id="cb4-29"><a href="#cb4-29"></a></span>
+<span id="cb4-30"><a href="#cb4-30"></a>The MLlib implementation of FP-growth is based on DataFrames, but differently from the other algorithms, the FP-growth algorithm is not invoked by using pipelines.</span>
+<span id="cb4-31"><a href="#cb4-31"></a></span>
+<span id="cb4-32"><a href="#cb4-32"></a><span class="fu">### Steps for itemset and association rule mining in Spark</span></span>
+<span id="cb4-33"><a href="#cb4-33"></a></span>
+<span id="cb4-34"><a href="#cb4-34"></a><span class="ss">1. </span>Instantiate an FP-Growth object</span>
+<span id="cb4-35"><a href="#cb4-35"></a><span class="ss">2. </span>Invoke the <span class="in">`fit(input data)`</span> method on the FP-Growth object</span>
+<span id="cb4-36"><a href="#cb4-36"></a><span class="ss">3. </span>Retrieve the sets of frequent itemset and association rules by invoking the following methods of on the FP-Growth object</span>
+<span id="cb4-37"><a href="#cb4-37"></a><span class="ss">    - </span><span class="in">`freqItemsets()`</span></span>
+<span id="cb4-38"><a href="#cb4-38"></a><span class="ss">    - </span><span class="in">`associationRules()`</span></span>
+<span id="cb4-39"><a href="#cb4-39"></a></span>
+<span id="cb4-40"><a href="#cb4-40"></a><span class="fu">### Input</span></span>
+<span id="cb4-41"><a href="#cb4-41"></a>The input of the MLlib itemset and rule mining algorithm is a DataFrame containing a column called <span class="in">`items`</span>, whose data type is array of values. Each record of the input DataFrame contains one transaction (i.e., a set of items).</span>
+<span id="cb4-42"><a href="#cb4-42"></a></span>
+<span id="cb4-43"><a href="#cb4-43"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb4-44"><a href="#cb4-44"></a><span class="fu">### Example</span></span>
+<span id="cb4-45"><a href="#cb4-45"></a>Example of input data</span>
+<span id="cb4-46"><a href="#cb4-46"></a></span>
+<span id="cb4-47"><a href="#cb4-47"></a><span class="in">```</span></span>
+<span id="cb4-48"><a href="#cb4-48"></a><span class="in">transactions</span></span>
+<span id="cb4-49"><a href="#cb4-49"></a><span class="in">ABCD</span></span>
+<span id="cb4-50"><a href="#cb4-50"></a><span class="in">AB</span></span>
+<span id="cb4-51"><a href="#cb4-51"></a><span class="in">BC</span></span>
+<span id="cb4-52"><a href="#cb4-52"></a><span class="in">ADE</span></span>
+<span id="cb4-53"><a href="#cb4-53"></a><span class="in">```</span></span>
+<span id="cb4-54"><a href="#cb4-54"></a></span>
+<span id="cb4-55"><a href="#cb4-55"></a>The column items must be created before invoking FP-growth</span>
+<span id="cb4-56"><a href="#cb4-56"></a></span>
+<span id="cb4-57"><a href="#cb4-57"></a>|items|</span>
+<span id="cb4-58"><a href="#cb4-58"></a>|-|</span>
+<span id="cb4-59"><a href="#cb4-59"></a>|$<span class="co">[</span><span class="ot">A,B,C,D</span><span class="co">]</span>$|</span>
+<span id="cb4-60"><a href="#cb4-60"></a>|$<span class="co">[</span><span class="ot">A,B</span><span class="co">]</span>$|</span>
+<span id="cb4-61"><a href="#cb4-61"></a>|$<span class="co">[</span><span class="ot">B,C</span><span class="co">]</span>$|</span>
+<span id="cb4-62"><a href="#cb4-62"></a>|$<span class="co">[</span><span class="ot">A,D,E</span><span class="co">]</span>$|</span>
+<span id="cb4-63"><a href="#cb4-63"></a></span>
+<span id="cb4-64"><a href="#cb4-64"></a>Each input line is stored in an array of strings. The generated DataFrame contains a column called items, which is an <span class="in">`ArrayType`</span>, containing the lists of items associated with the input transactions.</span>
+<span id="cb4-65"><a href="#cb4-65"></a></span>
+<span id="cb4-66"><a href="#cb4-66"></a>:::</span>
+<span id="cb4-67"><a href="#cb4-67"></a></span>
+<span id="cb4-68"><a href="#cb4-68"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb4-69"><a href="#cb4-69"></a>This example shows how to extract the set of frequent itemsets from a transactional dataset and the association rules from the extracted frequent itemsets.</span>
+<span id="cb4-70"><a href="#cb4-70"></a></span>
+<span id="cb4-71"><a href="#cb4-71"></a>The input dataset is a transactional dataset: each line of the input file contains a transaction (i.e., a set of items)</span>
+<span id="cb4-72"><a href="#cb4-72"></a></span>
+<span id="cb4-73"><a href="#cb4-73"></a><span class="in">```</span></span>
+<span id="cb4-74"><a href="#cb4-74"></a><span class="in">transactions</span></span>
+<span id="cb4-75"><a href="#cb4-75"></a><span class="in">ABCD</span></span>
+<span id="cb4-76"><a href="#cb4-76"></a><span class="in">AB</span></span>
+<span id="cb4-77"><a href="#cb4-77"></a><span class="in">BC</span></span>
+<span id="cb4-78"><a href="#cb4-78"></a><span class="in">ADE</span></span>
+<span id="cb4-79"><a href="#cb4-79"></a><span class="in">```</span></span>
+<span id="cb4-80"><a href="#cb4-80"></a></span>
+<span id="cb4-81"><a href="#cb4-81"></a><span class="in">```python</span></span>
+<span id="cb4-82"><a href="#cb4-82"></a><span class="im">from</span> pyspark.ml.fpm <span class="im">import</span> FPGrowth</span>
+<span id="cb4-83"><a href="#cb4-83"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> Pipeline</span>
+<span id="cb4-84"><a href="#cb4-84"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> PipelineModel</span>
+<span id="cb4-85"><a href="#cb4-85"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col, split</span>
+<span id="cb4-86"><a href="#cb4-86"></a></span>
+<span id="cb4-87"><a href="#cb4-87"></a><span class="co">## input and output folders</span></span>
+<span id="cb4-88"><a href="#cb4-88"></a>transactionsData <span class="op">=</span> <span class="st">"ex_dataitemsets/transactions.csv"</span></span>
+<span id="cb4-89"><a href="#cb4-89"></a>outputPathItemsets <span class="op">=</span> <span class="st">"Itemsets/"</span></span>
+<span id="cb4-90"><a href="#cb4-90"></a>outputPathRules <span class="op">=</span> <span class="st">"Rules/"</span></span>
+<span id="cb4-91"><a href="#cb4-91"></a></span>
+<span id="cb4-92"><a href="#cb4-92"></a><span class="co">## Create a DataFrame from transactions.csv</span></span>
+<span id="cb4-93"><a href="#cb4-93"></a>transactionsDataDF <span class="op">=</span> spark.read.load(</span>
+<span id="cb4-94"><a href="#cb4-94"></a>    transactionsData,</span>
+<span id="cb4-95"><a href="#cb4-95"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">"csv"</span>,</span>
+<span id="cb4-96"><a href="#cb4-96"></a>    header<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-97"><a href="#cb4-97"></a>    inferSchema<span class="op">=</span><span class="va">True</span></span>
+<span id="cb4-98"><a href="#cb4-98"></a>)</span>
+<span id="cb4-99"><a href="#cb4-99"></a></span>
+<span id="cb4-100"><a href="#cb4-100"></a><span class="co">## Transform Column transactions into an ArrayType</span></span>
+<span id="cb4-101"><a href="#cb4-101"></a>trsDataDF <span class="op">=</span> transactionsDataDF <span class="op">\</span></span>
+<span id="cb4-102"><a href="#cb4-102"></a>    .selectExpr(<span class="st">'split(transactions, " ")'</span>) <span class="op">\</span></span>
+<span id="cb4-103"><a href="#cb4-103"></a>    .withColumnRenamed(<span class="st">"split(transactions, )"</span>, <span class="st">"items"</span>) <span class="co"># &lt;1&gt;</span></span>
+<span id="cb4-104"><a href="#cb4-104"></a></span>
+<span id="cb4-105"><a href="#cb4-105"></a><span class="co">## Transform Column transactions into an ArrayType</span></span>
+<span id="cb4-106"><a href="#cb4-106"></a>trsDataDF <span class="op">=</span> transactionsDataDF<span class="op">\</span></span>
+<span id="cb4-107"><a href="#cb4-107"></a>.selectExpr(<span class="st">'split(transactions, " ")'</span>)<span class="op">\</span></span>
+<span id="cb4-108"><a href="#cb4-108"></a>.withColumnRenamed(<span class="st">"split(transactions, )"</span>, <span class="st">"items"</span>)</span>
+<span id="cb4-109"><a href="#cb4-109"></a></span>
+<span id="cb4-110"><a href="#cb4-110"></a><span class="co">## Create an FP-growth Estimator</span></span>
+<span id="cb4-111"><a href="#cb4-111"></a>fpGrowth <span class="op">=</span> FPGrowth(</span>
+<span id="cb4-112"><a href="#cb4-112"></a>    itemsCol<span class="op">=</span><span class="st">"items"</span>,</span>
+<span id="cb4-113"><a href="#cb4-113"></a>    minSupport<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb4-114"><a href="#cb4-114"></a>    minConfidence<span class="op">=</span><span class="fl">0.6</span></span>
+<span id="cb4-115"><a href="#cb4-115"></a>)</span>
+<span id="cb4-116"><a href="#cb4-116"></a></span>
+<span id="cb4-117"><a href="#cb4-117"></a><span class="co">## Extract itemsets and rules</span></span>
+<span id="cb4-118"><a href="#cb4-118"></a>model <span class="op">=</span> fpGrowth.fit(trsDataDF)</span>
+<span id="cb4-119"><a href="#cb4-119"></a></span>
+<span id="cb4-120"><a href="#cb4-120"></a><span class="co">## Retrieve the DataFrame associated with the frequent itemsets</span></span>
+<span id="cb4-121"><a href="#cb4-121"></a>dfItemsets <span class="op">=</span> model.freqItemsets</span>
+<span id="cb4-122"><a href="#cb4-122"></a></span>
+<span id="cb4-123"><a href="#cb4-123"></a><span class="co">## Retrieve the DataFrame associated with the frequent rules</span></span>
+<span id="cb4-124"><a href="#cb4-124"></a>dfRules <span class="op">=</span> model.associationRules</span>
+<span id="cb4-125"><a href="#cb4-125"></a></span>
+<span id="cb4-126"><a href="#cb4-126"></a><span class="co">## Save the result in an HDFS output folder</span></span>
+<span id="cb4-127"><a href="#cb4-127"></a>dfItemsets.write.json(outputPathItemsets) <span class="co"># &lt;2&gt;</span></span>
+<span id="cb4-128"><a href="#cb4-128"></a></span>
+<span id="cb4-129"><a href="#cb4-129"></a><span class="co">## Save the result in an HDFS output folder</span></span>
+<span id="cb4-130"><a href="#cb4-130"></a>dfRules.write.json(outputPathRules)</span>
+<span id="cb4-131"><a href="#cb4-131"></a><span class="in">```</span></span>
+<span id="cb4-132"><a href="#cb4-132"></a><span class="ss">1. </span><span class="in">`'split(transactions, " ")'`</span> is the <span class="in">`pyspark.sql.functions.split()`</span> function. It returns a <span class="in">`SQL ArrayType`</span>.</span>
+<span id="cb4-133"><a href="#cb4-133"></a><span class="ss">2. </span>The result is stored in a JSON file because itemsets and rules are stored in columns associated with the data type Array. Hence, CSV files cannot be used to store the result.</span>
+<span id="cb4-134"><a href="#cb4-134"></a></span>
+<span id="cb4-135"><a href="#cb4-135"></a>:::</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 
 

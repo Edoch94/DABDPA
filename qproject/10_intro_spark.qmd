@@ -224,21 +224,21 @@ if __name__ == "__main__":
 
     ## Create a configuration object and
     ## set the name of the application
-    #conf = SparkConf().setAppName("Spark Line Count") # <1>
+    conf = SparkConf().setAppName("Spark Line Count") # <1>
 
     ## Create a Spark Context object
-    #sc = SparkContext(conf=conf) # <1>
+    sc = SparkContext(conf=conf) # <1>
 
     ## Store the path of the input file in inputfile
-    #inputFile= "myfile.txt" # <1>
+    inputFile= "myfile.txt" # <1>
 
     ## Build an RDD of Strings from the input textual file
     ## Each element of the RDD is a line of the input file
-    #linesRDD = sc.textFile(inputFile) # <2>
+    linesRDD = sc.textFile(inputFile) # <2>
 
     ## Count the number of lines in the input file
     ## Store the returned value in the local variable numLines
-    #numLines = linesRDD.count() # <1>
+    numLines = linesRDD.count() # <1>
 
     ## Print the output in the standard output
     print("NumLines:", numLines)

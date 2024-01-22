@@ -100,7 +100,7 @@ transactionsDataDF = spark.read.load(
 ## Transform Column transactions into an ArrayType
 trsDataDF = transactionsDataDF \
     .selectExpr('split(transactions, " ")') \
-    #.withColumnRenamed("split(transactions, )", "items") # <1>
+    .withColumnRenamed("split(transactions, )", "items") # <1>
 
 ## Transform Column transactions into an ArrayType
 trsDataDF = transactionsDataDF\
@@ -124,7 +124,7 @@ dfItemsets = model.freqItemsets
 dfRules = model.associationRules
 
 ## Save the result in an HDFS output folder
-#dfItemsets.write.json(outputPathItemsets) # <2>
+dfItemsets.write.json(outputPathItemsets) # <2>
 
 ## Save the result in an HDFS output folder
 dfRules.write.json(outputPathRules)

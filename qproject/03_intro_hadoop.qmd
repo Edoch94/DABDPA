@@ -438,7 +438,8 @@ Notice that also the input of Map should be a list of key-value pairs. If a simp
 For each group $G_w$ a key-value pair is emitted as follows 
 $$
 (w,\sum_{G_w}{[\textbf{list of values}]})
-$$ 
+$$
+
 So, the result of the Reduce function is $r(G_w) = (w,\sum_{Gw}{[\textbf{list of values}]})$. 
 
 The resulting list of emitted pairs is the solution of the word count problem: in the list there is one pair (word $w$, number of occurrences) for each word in our running example.
@@ -451,6 +452,7 @@ The *formal definition* of Map is
 $$
 (k_1, v_1) \rightarrow [(k_2, v_2)]
 $$
+
 Notice that 
 
 - Since the input data set is a list of key-value pairs, the argument of the Map function is a key-value pair; so, the Map function $N$ times, where $N$ is the number of input key-value pairs;
@@ -464,6 +466,7 @@ The *formal definition* of Reduce is
 $$
 (k_2, [v_2]) \rightarrow [(k_3, v_3)]
 $$
+
 Notice that 
 
 - The Reduce function receives a list of values $[v_2]$ associated with a specific key $k_2$; so the Reduce function is invoked $M$ times, where $M$ is the number of different keys in the input list;

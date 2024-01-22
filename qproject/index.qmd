@@ -1,2 +1,2 @@
-# Index
+# About this Book
 This Quarto Book contains notes collected during the lectures of "Distributed architectures for big data processing and analytics" (**DABDPA**) course, hold at the Master Degree in Data Science and Engineering (2022-2023) of Politecnico di Torino.

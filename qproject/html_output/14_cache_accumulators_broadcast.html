@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -17,9 +17,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -46,43 +47,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -120,10 +91,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
@@ -132,11 +105,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14_cache_accumulators_broadcast.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -144,162 +122,191 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Distributed architectures for big data processing and analytics</a> 
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Index</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">About this Book</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></a>
+  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></a>
+  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></a>
+  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></a>
+  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></a>
+  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></a>
+  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></a>
+  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></a>
+  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></a>
+  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></a>
+  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></a>
+  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></a>
+  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></a>
+  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></a>
+  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></a>
+  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></a>
+  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></a>
+  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></a>
+  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></a>
+  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></a>
+  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></a>
+  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></a>
+  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></a>
+  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></a>
+  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></a>
+  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -319,7 +326,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></h1>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -396,12 +403,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <p>The storage level <code>*_2</code> replicate each partition on two cluster nodes, so that, ff one node fails, the other one can be used to perform the actions on the RDD without recomputing the content of the RDD.</p>
 <p>It is possible to cache an RDD by using the <code>cache()</code> method of the <code>RDD</code> class: it corresponds to persist the RDD with the storage level <code>'MEMORY_ONLY'</code> (i.e., it is equivalent to <code>inRDD.persist(pyspark.StorageLevel.MEMORY_ONLY)</code>)</p>
-<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Important
 </div>
 </div>
@@ -419,12 +426,12 @@ Important
 <section id="remove-data-from-cache" class="level4">
 <h4 class="anchored" data-anchor-id="remove-data-from-cache">Remove data from cache</h4>
 <p>Spark automatically monitors cache usage on each node and drops out old data partitions in a least-recently-used (LRU) fashion. It is also possible to manually remove an RDD from the cache by using the <code>unpersist()</code> method of the <code>RDD</code> class.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -486,12 +493,12 @@ Example
 <li>The worker nodes cannot access the value of the accumulator: they can only add values to it</li>
 </ul></li>
 </ol>
-<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Important
 </div>
 </div>
@@ -501,12 +508,12 @@ Important
 </div>
 <p>Spark natively supports numerical accumulators (integers and floats), but programmers can add support for new data types: accumulators are <code>pyspark.accumulators.Accumulator</code> objects.</p>
 <p>Accumulators are defined and initialized by using the <code>accumulator(value)</code> method of the <code>SparkContext</code> class: the value of an accumulator can be increased by using the <code>add(value)</code> method of the <code>Accumulator</code> class, that adds <code>value</code> to the current value of the accumulator. The final value of an accumulator can be retrieved in the driver program by using <code>value</code> of the <code>Accumulator</code> class.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -584,12 +591,12 @@ Example
 <p>A copy each broadcast variable is sent to all executors that are used to run a task executing a Spark operation based on that variable (i.e., the variable is sent <code>num.executors</code> times). A broadcast variable is sent only one time to each executor that uses that variable in at least one Spark operation (i.e., in at least one of its tasks). Each executor can run multiples tasks associated with the same broadcast variable, but the broadcast variable is sent only one time for each executor, hence the amount of data sent on the network is limited by using broadcast variables instead of standard variables.</p>
 <p>Broadcast variables are usually used to share (small/medium) lookup-tables, and, since they are stored in local variables, they must the small enough to be stored in the main memory of the driver and also in the main memory of the executors.</p>
 <p>Broadcast variables are objects of type <code>Broadcast</code>: a broadcast variable (of type <span class="math inline">\(T\)</span>) is defined in the driver by using the <code>broadcast(value)</code> method of the <code>SparkContext</code> class. The value of a broadcast variable (of type <span class="math inline">\(T\)</span>) is retrieved (usually in transformations) by using <code>value</code> of the <code>Broadcast</code> class.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -675,12 +682,12 @@ spark test java</code></pre>
 <section id="rdds-and-partitions" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="rdds-and-partitions">RDDs and Partitions</h3>
 <p>The content of each RDD is split in partitions: the number of partitions and the content of each partition depend on how RDDs are defined/created. The number of partitions impacts on the maximum parallelization degree of the Spark application, but pay attention that the amount of resources is limited (there is a maximum number of executors and parallel tasks).</p>
-<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 How many partitions are good?
 </div>
 </div>
@@ -759,12 +766,12 @@ n = portable\_hash(key) \% numPart
 <p><span class="math display">\[
 n = partitionFunc(key) \% numPart
 \]</span></p>
-<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Use case scenario
 </div>
 </div>
@@ -774,12 +781,12 @@ Use case scenario
 <p>Pay attention to the amount of data that is actually sent on the network: <code>partitionBy()</code> can slow down the application instead of speeding it up.</p>
 </div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -866,7 +873,6 @@ Example
 </section>
 <section id="default-partitioning-behavior-of-the-main-transformations" class="level4 page-columns page-full">
 <h4 class="anchored" data-anchor-id="default-partitioning-behavior-of-the-main-transformations">Default partitioning behavior of the main transformations</h4>
-<div class="page-columns page-full">
 <div class="column-page">
 <table class="table">
 <colgroup>
@@ -940,7 +946,6 @@ Example
 </tbody>
 </table>
 </div>
-</div>
 </section>
 </section>
 <section id="broadcast-join" class="level3">
@@ -950,12 +955,12 @@ Example
 <li>Broadcast hash join (or map-side join)</li>
 <li>The smaller the small RDD, the higher the speed up</li>
 </ul>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -1012,6 +1017,8 @@ Example
 </div>
 
 
+<!-- -->
+
 </section>
 
 </main> <!-- /main -->
@@ -1042,9 +1049,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -1080,6 +1101,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
   function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
@@ -1109,6 +1181,157 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Handle positioning of the toggle
+      window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -1159,7 +1382,499 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb9" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu"># Cache, Accumulators, Broadcast Variables</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="fu">## Persistence and Cache</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a>Spark computes the content of an RDD each time an action is invoked on it. If the same RDD is used multiple times in an application, Spark recomputes its content every time an action is invoked on the RDD, or on one of its descendants, but this is expensive, especially for iterative applications.</span>
+<span id="cb9-4"><a href="#cb9-4"></a></span>
+<span id="cb9-5"><a href="#cb9-5"></a>So, it is possible to ask Spark to persist/cache RDDs: in this way, each node stores the content of its partitions in memory and reuses them in other actions on that RDD/dataset (or RDDs derived from it).</span>
+<span id="cb9-6"><a href="#cb9-6"></a></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="ss">- </span>The first time the content of a persistent/cached RDD is computed in an action, it will be kept in the main memory of the nodes;</span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="ss">- </span>The next actions on the same RDD will read its content from memory (i.e., Spark persists/caches the content of the RDD across operations). This allows future actions to be much faster, often by more than ten times faster.</span>
+<span id="cb9-9"><a href="#cb9-9"></a></span>
+<span id="cb9-10"><a href="#cb9-10"></a>Spark supports several storage levels, which are used to specify if the content of the RDD is stored</span>
+<span id="cb9-11"><a href="#cb9-11"></a></span>
+<span id="cb9-12"><a href="#cb9-12"></a><span class="ss">- </span>In the main memory of the nodes</span>
+<span id="cb9-13"><a href="#cb9-13"></a><span class="ss">- </span>On the local disks of the nodes</span>
+<span id="cb9-14"><a href="#cb9-14"></a><span class="ss">- </span>Partially in the main memory and partially on disk</span>
+<span id="cb9-15"><a href="#cb9-15"></a></span>
+<span id="cb9-16"><a href="#cb9-16"></a>+--------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span id="cb9-17"><a href="#cb9-17"></a>| Storage Level                              | Meaning                                                                                                                                                                                                         |</span>
+<span id="cb9-18"><a href="#cb9-18"></a>+============================================+=================================================================================================================================================================================================================+</span>
+<span id="cb9-19"><a href="#cb9-19"></a>| <span class="in">`MEMORY_ONLY`</span>                              | Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory, some partitions will not be cached and will be recomputed on the fly each time they're needed. This is the default level. |</span>
+<span id="cb9-20"><a href="#cb9-20"></a>+--------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span id="cb9-21"><a href="#cb9-21"></a>| <span class="in">`MEMORY_AND_DISK`</span>                          | Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory, store the partitions that don't fit on (local) disk, and read them from there when they're needed.                        |</span>
+<span id="cb9-22"><a href="#cb9-22"></a>+--------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span id="cb9-23"><a href="#cb9-23"></a>| <span class="in">`DISK_ONLY`</span>                                | Store the RDD partitions only on disk.                                                                                                                                                                          |</span>
+<span id="cb9-24"><a href="#cb9-24"></a>+--------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span id="cb9-25"><a href="#cb9-25"></a>| <span class="in">`MEMORY_ONLY_2`</span>, <span class="in">`MEMORY_AND_DISK_2`</span>, etc. | Same as the levels above, but replicate each partition on two cluster nodes.                                                                                                                                    |</span>
+<span id="cb9-26"><a href="#cb9-26"></a>+--------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span id="cb9-27"><a href="#cb9-27"></a>| <span class="in">`OFF_HEAP`</span> (experimental)                  | Similar to <span class="in">`MEMORY_ONLY`</span>, but store the data in off-heap memory. This requires off-heap memory to be enabled.                                                                                                   |</span>
+<span id="cb9-28"><a href="#cb9-28"></a>+--------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span id="cb9-29"><a href="#cb9-29"></a></span>
+<span id="cb9-30"><a href="#cb9-30"></a>: Storage levels {tbl-colwidths="<span class="co">[</span><span class="ot">40,50</span><span class="co">]</span>"}</span>
+<span id="cb9-31"><a href="#cb9-31"></a></span>
+<span id="cb9-32"><a href="#cb9-32"></a>See <span class="co">[</span><span class="ot">here</span><span class="co">](https://spark.apache.org/docs/2.4.0/rdd-programming-guide.html#rdd-persistence)</span> for more details.</span>
+<span id="cb9-33"><a href="#cb9-33"></a></span>
+<span id="cb9-34"><a href="#cb9-34"></a>It is possible to mark an RDD to be persisted by using the <span class="in">`persist(storageLevel)`</span> method of the <span class="in">`RDD`</span> class. The parameter of persist can assume the following values</span>
+<span id="cb9-35"><a href="#cb9-35"></a></span>
+<span id="cb9-36"><a href="#cb9-36"></a><span class="ss">- </span><span class="in">`pyspark.StorageLevel.MEMORY_ONLY`</span></span>
+<span id="cb9-37"><a href="#cb9-37"></a><span class="ss">- </span><span class="in">`pyspark.StorageLevel.MEMORY_AND_DISK`</span></span>
+<span id="cb9-38"><a href="#cb9-38"></a><span class="ss">- </span><span class="in">`pyspark.StorageLevel.DISK_ONLY`</span></span>
+<span id="cb9-39"><a href="#cb9-39"></a><span class="ss">- </span><span class="in">`pyspark.StorageLevel.NONE`</span></span>
+<span id="cb9-40"><a href="#cb9-40"></a><span class="ss">- </span><span class="in">`pyspark.StorageLevel.OFF_HEAP`</span></span>
+<span id="cb9-41"><a href="#cb9-41"></a><span class="ss">- </span><span class="in">`pyspark.StorageLevel.MEMORY_ONLY_2`</span></span>
+<span id="cb9-42"><a href="#cb9-42"></a><span class="ss">- </span><span class="in">`pyspark.StorageLevel.MEMORY_AND_DISK_2`</span></span>
+<span id="cb9-43"><a href="#cb9-43"></a></span>
+<span id="cb9-44"><a href="#cb9-44"></a>The storage level <span class="in">`*_2`</span> replicate each partition on two cluster nodes, so that, ff one node fails, the other one can be used to perform the actions on the RDD without recomputing the content of the RDD.</span>
+<span id="cb9-45"><a href="#cb9-45"></a></span>
+<span id="cb9-46"><a href="#cb9-46"></a>It is possible to cache an RDD by using the <span class="in">`cache()`</span> method of the <span class="in">`RDD`</span> class: it corresponds to persist the RDD with the storage level <span class="in">`'MEMORY_ONLY'`</span> (i.e., it is equivalent to <span class="in">`inRDD.persist(pyspark.StorageLevel.MEMORY_ONLY)`</span>)</span>
+<span id="cb9-47"><a href="#cb9-47"></a></span>
+<span id="cb9-48"><a href="#cb9-48"></a>:::{.callout-important}</span>
+<span id="cb9-49"><a href="#cb9-49"></a>Notice that both persist and cache return a new RDD, since RDDs are immutable.</span>
+<span id="cb9-50"><a href="#cb9-50"></a>:::</span>
+<span id="cb9-51"><a href="#cb9-51"></a></span>
+<span id="cb9-52"><a href="#cb9-52"></a>The use of the persist/cache mechanism on an RDD provides an advantage if the same RDD is used multiple times (i.e., multiples actions are applied on it or on its descendants).</span>
+<span id="cb9-53"><a href="#cb9-53"></a></span>
+<span id="cb9-54"><a href="#cb9-54"></a>The storage levels that store RDDs on disk are useful if and only if</span>
+<span id="cb9-55"><a href="#cb9-55"></a></span>
+<span id="cb9-56"><a href="#cb9-56"></a><span class="ss">- </span>the size of the RDD is significantly smaller than the size of the input dataset;</span>
+<span id="cb9-57"><a href="#cb9-57"></a><span class="ss">- </span>the functions that are used to compute the content of the RDD are expensive.</span>
+<span id="cb9-58"><a href="#cb9-58"></a></span>
+<span id="cb9-59"><a href="#cb9-59"></a>Otherwise, recomputing a partition may be as fast as reading it from disk.</span>
+<span id="cb9-60"><a href="#cb9-60"></a></span>
+<span id="cb9-61"><a href="#cb9-61"></a><span class="fu">### Remove data from cache</span></span>
+<span id="cb9-62"><a href="#cb9-62"></a>Spark automatically monitors cache usage on each node and drops out old data partitions in a least-recently-used (LRU) fashion. It is also possible to manually remove an RDD from the cache by using the <span class="in">`unpersist()`</span> method of the <span class="in">`RDD`</span> class.</span>
+<span id="cb9-63"><a href="#cb9-63"></a></span>
+<span id="cb9-64"><a href="#cb9-64"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb9-65"><a href="#cb9-65"></a><span class="fu">### Example</span></span>
+<span id="cb9-66"><a href="#cb9-66"></a><span class="ss">1. </span>Create an RDD from a textual file containing a list of words (one word for each line);</span>
+<span id="cb9-67"><a href="#cb9-67"></a><span class="ss">2. </span>Print on the standard output</span>
+<span id="cb9-68"><a href="#cb9-68"></a><span class="ss">    - </span>The number of lines of the input file</span>
+<span id="cb9-69"><a href="#cb9-69"></a><span class="ss">    - </span>The number of distinct words</span>
+<span id="cb9-70"><a href="#cb9-70"></a></span>
+<span id="cb9-71"><a href="#cb9-71"></a><span class="in">```python</span></span>
+<span id="cb9-72"><a href="#cb9-72"></a><span class="co">## Read the content of a textual file</span></span>
+<span id="cb9-73"><a href="#cb9-73"></a><span class="co">## and cache the associated RDD</span></span>
+<span id="cb9-74"><a href="#cb9-74"></a>inputRDD <span class="op">=</span> sc.textFile(<span class="st">"words.txt"</span>).cache()</span>
+<span id="cb9-75"><a href="#cb9-75"></a></span>
+<span id="cb9-76"><a href="#cb9-76"></a><span class="bu">print</span>(<span class="st">"Number of words: "</span>,inputRDD.count())</span>
+<span id="cb9-77"><a href="#cb9-77"></a><span class="bu">print</span>(<span class="st">"Number of distinct words: "</span>, inputRDD.distinct().count())</span>
+<span id="cb9-78"><a href="#cb9-78"></a><span class="in">```</span></span>
+<span id="cb9-79"><a href="#cb9-79"></a></span>
+<span id="cb9-80"><a href="#cb9-80"></a>|||</span>
+<span id="cb9-81"><a href="#cb9-81"></a>|-|---|</span>
+<span id="cb9-82"><a href="#cb9-82"></a>| <span class="in">`.cache()`</span> | The cache method is invoked, hence <span class="in">`inputRDD`</span> is a cached RDD |</span>
+<span id="cb9-83"><a href="#cb9-83"></a>| <span class="in">`inputRDD.count()`</span> | This is the first time an action is invoked on the <span class="in">`inputRDD`</span> RDD. The content of the RDD is computed by reading the lines of the words.txt file and the result of the count action is returned. The content of <span class="in">`inputRDD`</span> is also stored in the main memory of the nodes of the cluster. |</span>
+<span id="cb9-84"><a href="#cb9-84"></a>| <span class="in">`inputRDD.distinct().count()`</span> | The content of <span class="in">`inputRDD`</span> is in the main memory if the nodes of the cluster. Hence the computation of <span class="in">`distinct()`</span> and <span class="in">`count()`</span> is performed by reading the data from the main memory and not from the input (HDFS) file <span class="in">`words.txt`</span>. |</span>
+<span id="cb9-85"><a href="#cb9-85"></a></span>
+<span id="cb9-86"><a href="#cb9-86"></a>:::</span>
+<span id="cb9-87"><a href="#cb9-87"></a></span>
+<span id="cb9-88"><a href="#cb9-88"></a><span class="fu">## Accumulators</span></span>
+<span id="cb9-89"><a href="#cb9-89"></a>When a function passed to a Spark operation is executed on a remote cluster node, it works on separate copies of all the variables used in the function. These variables are copied to each node of the cluster, and no updates to the variables on the nodes are propagated back to the driver program.</span>
+<span id="cb9-90"><a href="#cb9-90"></a></span>
+<span id="cb9-91"><a href="#cb9-91"></a>Spark provides a type of shared variables called **accumulators**: accumulators are shared variables that are only "added" to through an associative operation and can therefore be efficiently supported in parallel, and they can be used to implement counters or sums.</span>
+<span id="cb9-92"><a href="#cb9-92"></a></span>
+<span id="cb9-93"><a href="#cb9-93"></a>Accumulators are usually used to compute simple statistics while performing some other actions on the input RDD, avoiding to use actions like <span class="in">`reduce()`</span> to compute simple statistics (e.g., count the number of lines with some characteristics).</span>
+<span id="cb9-94"><a href="#cb9-94"></a></span>
+<span id="cb9-95"><a href="#cb9-95"></a><span class="fu">### How to use accumulators</span></span>
+<span id="cb9-96"><a href="#cb9-96"></a><span class="ss">1. </span>The driver defines and initializes the accumulator</span>
+<span id="cb9-97"><a href="#cb9-97"></a><span class="ss">2. </span>The code executed in the worker nodes increases the value of the accumulator (i.e., the code in the functions associated with the transformations)</span>
+<span id="cb9-98"><a href="#cb9-98"></a><span class="ss">3. </span>The final value of the accumulator is returned to the driver node</span>
+<span id="cb9-99"><a href="#cb9-99"></a><span class="ss">    - </span>Only the driver node can access the final value of the accumulator</span>
+<span id="cb9-100"><a href="#cb9-100"></a><span class="ss">    - </span>The worker nodes cannot access the value of the accumulator: they can only add values to it</span>
+<span id="cb9-101"><a href="#cb9-101"></a></span>
+<span id="cb9-102"><a href="#cb9-102"></a>:::{.callout-important}</span>
+<span id="cb9-103"><a href="#cb9-103"></a>Pay attention that the value of the accumulator is increased in the functions associated with transformations, and, since transformations are lazily evaluated, the value of the accumulator is computed only when an action is executed on the RDD on which the transformations increasing the accumulator are applied.</span>
+<span id="cb9-104"><a href="#cb9-104"></a>:::</span>
+<span id="cb9-105"><a href="#cb9-105"></a></span>
+<span id="cb9-106"><a href="#cb9-106"></a>Spark natively supports numerical accumulators (integers and floats), but programmers can add support for new data types: accumulators are <span class="in">`pyspark.accumulators.Accumulator`</span> objects.</span>
+<span id="cb9-107"><a href="#cb9-107"></a></span>
+<span id="cb9-108"><a href="#cb9-108"></a>Accumulators are defined and initialized by using the <span class="in">`accumulator(value)`</span> method of the <span class="in">`SparkContext`</span> class: the value of an accumulator can be increased by using the <span class="in">`add(value)`</span> method of the <span class="in">`Accumulator`</span> class, that adds <span class="in">`value`</span> to the current value of the accumulator. The final value of an accumulator can be retrieved in the driver program by using <span class="in">`value`</span> of the <span class="in">`Accumulator`</span> class.</span>
+<span id="cb9-109"><a href="#cb9-109"></a></span>
+<span id="cb9-110"><a href="#cb9-110"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb9-111"><a href="#cb9-111"></a><span class="fu">### Example</span></span>
+<span id="cb9-112"><a href="#cb9-112"></a><span class="ss">1. </span>Create an RDD from a textual file containing a list of email addresses (one email for each line);</span>
+<span id="cb9-113"><a href="#cb9-113"></a><span class="ss">2. </span>Select the lines containing a valid email and store them in an HDFS file (in this example, an email is considered a valid email if it contains the @ symbol);</span>
+<span id="cb9-114"><a href="#cb9-114"></a><span class="ss">3. </span>Print also, on the standard output, the number of invalid emails.</span>
+<span id="cb9-115"><a href="#cb9-115"></a></span>
+<span id="cb9-116"><a href="#cb9-116"></a><span class="in">```python</span></span>
+<span id="cb9-117"><a href="#cb9-117"></a><span class="co">## Define an accumulator. Initialize it to 0</span></span>
+<span id="cb9-118"><a href="#cb9-118"></a>invalidEmails <span class="op">=</span> sc.accumulator(<span class="dv">0</span>)</span>
+<span id="cb9-119"><a href="#cb9-119"></a></span>
+<span id="cb9-120"><a href="#cb9-120"></a><span class="co">## Read the content of the input textual file</span></span>
+<span id="cb9-121"><a href="#cb9-121"></a>emailsRDD <span class="op">=</span> sc.textFile(<span class="st">"emails.txt"</span>)</span>
+<span id="cb9-122"><a href="#cb9-122"></a></span>
+<span id="cb9-123"><a href="#cb9-123"></a><span class="co">#Define the filtering function</span></span>
+<span id="cb9-124"><a href="#cb9-124"></a><span class="kw">def</span> validEmailFunc(line):</span>
+<span id="cb9-125"><a href="#cb9-125"></a>    <span class="cf">if</span> (line.find(<span class="st">'@'</span>)<span class="op">&lt;</span><span class="dv">0</span>):</span>
+<span id="cb9-126"><a href="#cb9-126"></a>        invalidEmails.add(<span class="dv">1</span>)</span>
+<span id="cb9-127"><a href="#cb9-127"></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb9-128"><a href="#cb9-128"></a>    <span class="cf">else</span>:</span>
+<span id="cb9-129"><a href="#cb9-129"></a>        <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb9-130"><a href="#cb9-130"></a></span>
+<span id="cb9-131"><a href="#cb9-131"></a><span class="co">## Select only valid emails</span></span>
+<span id="cb9-132"><a href="#cb9-132"></a><span class="co">## Count also the number of invalid emails</span></span>
+<span id="cb9-133"><a href="#cb9-133"></a>validEmailsRDD <span class="op">=</span> emailsRDD.<span class="bu">filter</span>(validEmailFunc)</span>
+<span id="cb9-134"><a href="#cb9-134"></a></span>
+<span id="cb9-135"><a href="#cb9-135"></a><span class="co">## Store valid emails in the output file</span></span>
+<span id="cb9-136"><a href="#cb9-136"></a>validEmailsRDD.saveAsTextFile(outputPath)</span>
+<span id="cb9-137"><a href="#cb9-137"></a></span>
+<span id="cb9-138"><a href="#cb9-138"></a><span class="co">## Print the number of invalid emails</span></span>
+<span id="cb9-139"><a href="#cb9-139"></a><span class="bu">print</span>(<span class="st">"Invalid email addresses: "</span>, invalidEmails.value)</span>
+<span id="cb9-140"><a href="#cb9-140"></a><span class="in">```</span></span>
+<span id="cb9-141"><a href="#cb9-141"></a></span>
+<span id="cb9-142"><a href="#cb9-142"></a>|||</span>
+<span id="cb9-143"><a href="#cb9-143"></a>|-|--|</span>
+<span id="cb9-144"><a href="#cb9-144"></a>| <span class="in">`invalidEmails = sc.accumulator(0)`</span> | Definition of an accumulator of type integer. |</span>
+<span id="cb9-145"><a href="#cb9-145"></a>| <span class="in">`invalidEmails.add(1)`</span> | This function increments the value of the <span class="in">`invalidEmails`</span> accumulator if the email is invalid. |</span>
+<span id="cb9-146"><a href="#cb9-146"></a>| <span class="in">`invalidEmails.value`</span> | Read the final value of the accumulator. Pay attention that the value of the accumulator is correct only because an action (<span class="in">`saveAsTextFile`</span>) has been executed on the <span class="in">`validEmailsRDD`</span> and its content has been computed (the function <span class="in">`validEmailFunc`</span> has been executed on each element of <span class="in">`emailsRDD`</span>) |</span>
+<span id="cb9-147"><a href="#cb9-147"></a></span>
+<span id="cb9-148"><a href="#cb9-148"></a>:::</span>
+<span id="cb9-149"><a href="#cb9-149"></a></span>
+<span id="cb9-150"><a href="#cb9-150"></a><span class="fu">### Personalized accumulators</span></span>
+<span id="cb9-151"><a href="#cb9-151"></a>Programmers can define accumulators based on new data types (different from integers and floats): to define a new accumulator data type of type $T$, the programmer must define a class subclassing the <span class="in">`AccumulatorParam`</span> interface. The <span class="in">`AccumulatorParam`</span> interface has two methods</span>
+<span id="cb9-152"><a href="#cb9-152"></a></span>
+<span id="cb9-153"><a href="#cb9-153"></a><span class="ss">- </span><span class="in">`zero`</span> for providing a zero value for your data type</span>
+<span id="cb9-154"><a href="#cb9-154"></a><span class="ss">- </span><span class="in">`addInPlace`</span> for adding two values together</span>
+<span id="cb9-155"><a href="#cb9-155"></a></span>
+<span id="cb9-156"><a href="#cb9-156"></a><span class="fu">## Broadcast variables</span></span>
+<span id="cb9-157"><a href="#cb9-157"></a>Spark supports broadcast variables. A broadcast variable is a read-only (small/medium) shared variable</span>
+<span id="cb9-158"><a href="#cb9-158"></a></span>
+<span id="cb9-159"><a href="#cb9-159"></a><span class="ss">- </span>It is instantiated in the driver: the broadcast variable is stored in the main memory of the driver in a local variable;</span>
+<span id="cb9-160"><a href="#cb9-160"></a><span class="ss">- </span>It is sent to all worker nodes that use it in one or more Spark operations: the broadcast variable is also stored in the main memory of the executors (which are instantiated in the used worker nodes).</span>
+<span id="cb9-161"><a href="#cb9-161"></a></span>
+<span id="cb9-162"><a href="#cb9-162"></a>A copy each broadcast variable is sent to all executors that are used to run a task executing a Spark operation based on that variable (i.e., the variable is sent <span class="in">`num.executors`</span> times). A broadcast variable is sent only one time to each executor that uses that variable in at least one Spark operation (i.e., in at least one of its tasks). Each executor can run multiples tasks associated with the same broadcast variable, but the broadcast variable is sent only one time for each executor, hence the amount of data sent on the network is limited by using broadcast variables instead of standard variables.</span>
+<span id="cb9-163"><a href="#cb9-163"></a></span>
+<span id="cb9-164"><a href="#cb9-164"></a>Broadcast variables are usually used to share (small/medium) lookup-tables, and, since they are stored in local variables, they must the small enough to be stored in the main memory of the driver and also in the main memory of the executors.</span>
+<span id="cb9-165"><a href="#cb9-165"></a></span>
+<span id="cb9-166"><a href="#cb9-166"></a>Broadcast variables are objects of type <span class="in">`Broadcast`</span>: a broadcast variable (of type $T$) is defined in the driver by using the <span class="in">`broadcast(value)`</span> method of the <span class="in">`SparkContext`</span> class. The value of a broadcast variable (of type $T$) is retrieved (usually in transformations) by using <span class="in">`value`</span> of the <span class="in">`Broadcast`</span> class.</span>
+<span id="cb9-167"><a href="#cb9-167"></a></span>
+<span id="cb9-168"><a href="#cb9-168"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb9-169"><a href="#cb9-169"></a><span class="fu">### Example</span></span>
+<span id="cb9-170"><a href="#cb9-170"></a><span class="ss">1. </span>Create an RDD from a textual file containing a dictionary of pairs (word, integer value), one pair for each line. Suppose the content of this first file is large but can be stored in main-memory;</span>
+<span id="cb9-171"><a href="#cb9-171"></a><span class="ss">2. </span>Create an RDD from a textual file containing a set of words, in particular a sentence (set of words) for each line;</span>
+<span id="cb9-172"><a href="#cb9-172"></a>Transform the content of the second file mapping each word to an integer based on the dictionary contained in the first file; then, store the result in an HDFS file.</span>
+<span id="cb9-173"><a href="#cb9-173"></a></span>
+<span id="cb9-174"><a href="#cb9-174"></a><span class="ss">- </span>First file (dictionary)</span>
+<span id="cb9-175"><a href="#cb9-175"></a></span>
+<span id="cb9-176"><a href="#cb9-176"></a><span class="in">```</span></span>
+<span id="cb9-177"><a href="#cb9-177"></a><span class="in">java 1</span></span>
+<span id="cb9-178"><a href="#cb9-178"></a><span class="in">spark 2</span></span>
+<span id="cb9-179"><a href="#cb9-179"></a><span class="in">test 3</span></span>
+<span id="cb9-180"><a href="#cb9-180"></a><span class="in">```</span></span>
+<span id="cb9-181"><a href="#cb9-181"></a></span>
+<span id="cb9-182"><a href="#cb9-182"></a><span class="ss">- </span>Second file (the text to transform)</span>
+<span id="cb9-183"><a href="#cb9-183"></a></span>
+<span id="cb9-184"><a href="#cb9-184"></a><span class="in">```</span></span>
+<span id="cb9-185"><a href="#cb9-185"></a><span class="in">java spark</span></span>
+<span id="cb9-186"><a href="#cb9-186"></a><span class="in">spark test java</span></span>
+<span id="cb9-187"><a href="#cb9-187"></a><span class="in">```</span></span>
+<span id="cb9-188"><a href="#cb9-188"></a></span>
+<span id="cb9-189"><a href="#cb9-189"></a><span class="ss">- </span>Output file</span>
+<span id="cb9-190"><a href="#cb9-190"></a></span>
+<span id="cb9-191"><a href="#cb9-191"></a><span class="in">```</span></span>
+<span id="cb9-192"><a href="#cb9-192"></a><span class="in">12</span></span>
+<span id="cb9-193"><a href="#cb9-193"></a><span class="in">231</span></span>
+<span id="cb9-194"><a href="#cb9-194"></a><span class="in">```</span></span>
+<span id="cb9-195"><a href="#cb9-195"></a></span>
+<span id="cb9-196"><a href="#cb9-196"></a><span class="in">```python</span></span>
+<span id="cb9-197"><a href="#cb9-197"></a><span class="co">## Read the content of the dictionary from the first file and</span></span>
+<span id="cb9-198"><a href="#cb9-198"></a><span class="co">## map each line to a pair (word, integer value)</span></span>
+<span id="cb9-199"><a href="#cb9-199"></a>dictionaryRDD <span class="op">=</span> sc <span class="op">\</span></span>
+<span id="cb9-200"><a href="#cb9-200"></a>    .textFile(<span class="st">"dictionary.txt"</span>) <span class="op">\</span></span>
+<span id="cb9-201"><a href="#cb9-201"></a>    .<span class="bu">map</span>(<span class="kw">lambda</span> line: (</span>
+<span id="cb9-202"><a href="#cb9-202"></a>        line.split(<span class="st">" "</span>)[<span class="dv">0</span>], </span>
+<span id="cb9-203"><a href="#cb9-203"></a>        line.split(<span class="st">" "</span>)[<span class="dv">1</span>]</span>
+<span id="cb9-204"><a href="#cb9-204"></a>    ))</span>
+<span id="cb9-205"><a href="#cb9-205"></a></span>
+<span id="cb9-206"><a href="#cb9-206"></a><span class="co">## Create a broadcast variable based on the content of dictionaryRDD.</span></span>
+<span id="cb9-207"><a href="#cb9-207"></a><span class="co">## Pay attention that a broadcast variable can be instantiated only</span></span>
+<span id="cb9-208"><a href="#cb9-208"></a><span class="co">## by passing as parameter a local variable and not an RDD.</span></span>
+<span id="cb9-209"><a href="#cb9-209"></a><span class="co">## Hence, the collectAsMap method is used to retrieve the content of the</span></span>
+<span id="cb9-210"><a href="#cb9-210"></a><span class="co">## RDD and store it in the dictionary variable</span></span>
+<span id="cb9-211"><a href="#cb9-211"></a>dictionary <span class="op">=</span> dictionaryRDD.collectAsMap()</span>
+<span id="cb9-212"><a href="#cb9-212"></a></span>
+<span id="cb9-213"><a href="#cb9-213"></a><span class="co">## Broadcast dictionary</span></span>
+<span id="cb9-214"><a href="#cb9-214"></a>dictionaryBroadcast <span class="op">=</span> sc.broadcast(dictionary)</span>
+<span id="cb9-215"><a href="#cb9-215"></a></span>
+<span id="cb9-216"><a href="#cb9-216"></a><span class="co">## Read the content of the second file</span></span>
+<span id="cb9-217"><a href="#cb9-217"></a>textRDD <span class="op">=</span> sc.textFile(<span class="st">"document.txt"</span>)</span>
+<span id="cb9-218"><a href="#cb9-218"></a></span>
+<span id="cb9-219"><a href="#cb9-219"></a><span class="co">## Define the function that is used to map strings to integers</span></span>
+<span id="cb9-220"><a href="#cb9-220"></a><span class="kw">def</span> myMapFunc(line):</span>
+<span id="cb9-221"><a href="#cb9-221"></a>    transformedLine<span class="op">=</span><span class="st">''</span></span>
+<span id="cb9-222"><a href="#cb9-222"></a>    <span class="cf">for</span> word <span class="kw">in</span> line.split(<span class="st">' '</span>):</span>
+<span id="cb9-223"><a href="#cb9-223"></a>        intValue <span class="op">=</span> dictionaryBroadcast.value[word]</span>
+<span id="cb9-224"><a href="#cb9-224"></a>        transformedLine <span class="op">=</span> transformedLine<span class="op">+</span>intValue<span class="op">+</span><span class="st">' '</span></span>
+<span id="cb9-225"><a href="#cb9-225"></a>    <span class="cf">return</span> transformedLine.strip()</span>
+<span id="cb9-226"><a href="#cb9-226"></a></span>
+<span id="cb9-227"><a href="#cb9-227"></a><span class="co">## Map words in textRDD to the corresponding integers and concatenate</span></span>
+<span id="cb9-228"><a href="#cb9-228"></a><span class="co">## them</span></span>
+<span id="cb9-229"><a href="#cb9-229"></a>mappedTextRDD<span class="op">=</span> textRDD.<span class="bu">map</span>(myMapFunc)</span>
+<span id="cb9-230"><a href="#cb9-230"></a></span>
+<span id="cb9-231"><a href="#cb9-231"></a><span class="co">## Store the result in an HDFS file</span></span>
+<span id="cb9-232"><a href="#cb9-232"></a>mappedTextRDD.saveAsTextFile(outputPath)</span>
+<span id="cb9-233"><a href="#cb9-233"></a><span class="in">```</span></span>
+<span id="cb9-234"><a href="#cb9-234"></a></span>
+<span id="cb9-235"><a href="#cb9-235"></a>|||</span>
+<span id="cb9-236"><a href="#cb9-236"></a>|-|--|</span>
+<span id="cb9-237"><a href="#cb9-237"></a>| <span class="in">`sc.broadcast(dictionary)`</span> | Define a broadcast variable. |</span>
+<span id="cb9-238"><a href="#cb9-238"></a>| <span class="in">`dictionaryBroadcast.value[word]`</span> | Retrieve the content of the broadcast variable and use it. |</span>
+<span id="cb9-239"><a href="#cb9-239"></a></span>
+<span id="cb9-240"><a href="#cb9-240"></a>:::</span>
+<span id="cb9-241"><a href="#cb9-241"></a></span>
+<span id="cb9-242"><a href="#cb9-242"></a><span class="fu">## RDDs and Partitions</span></span>
+<span id="cb9-243"><a href="#cb9-243"></a>The content of each RDD is split in partitions: the number of partitions and the content of each partition depend on how RDDs are defined/created. The number of partitions impacts on the maximum parallelization degree of the Spark application, but pay attention that the amount of resources is limited (there is a maximum number of executors and parallel tasks).</span>
+<span id="cb9-244"><a href="#cb9-244"></a></span>
+<span id="cb9-245"><a href="#cb9-245"></a>:::{.callout-tip}</span>
+<span id="cb9-246"><a href="#cb9-246"></a><span class="fu">### How many partitions are good?</span></span>
+<span id="cb9-247"><a href="#cb9-247"></a>**Disadvantages of too few partitions**</span>
+<span id="cb9-248"><a href="#cb9-248"></a></span>
+<span id="cb9-249"><a href="#cb9-249"></a><span class="ss">- </span>Less concurrency/parallelism: there could be worker nodes that are idle and could be used to speed up the execution of your application;</span>
+<span id="cb9-250"><a href="#cb9-250"></a><span class="ss">- </span>Data skewing and improper resource utilization: data might be skewed on one partition (i.e., one partition with many data, many partitions with few data). The worker node that processes the largest partition needs more time than the other workers, becoming the bottleneck of your application.</span>
+<span id="cb9-251"><a href="#cb9-251"></a></span>
+<span id="cb9-252"><a href="#cb9-252"></a>**Disadvantages of too many partitions**</span>
+<span id="cb9-253"><a href="#cb9-253"></a></span>
+<span id="cb9-254"><a href="#cb9-254"></a><span class="ss">- </span>Task scheduling may take more time than actual execution time if the amount of data in some partitions is too small</span>
+<span id="cb9-255"><a href="#cb9-255"></a>:::</span>
+<span id="cb9-256"><a href="#cb9-256"></a></span>
+<span id="cb9-257"><a href="#cb9-257"></a>Only some specific transformations set the number of partitions of the returned RDD: <span class="in">`parallelize()`</span>, <span class="in">`textFile()`</span>, <span class="in">`repartition()`</span>, <span class="in">`coalesce()`</span>. The majority of the Spark transformations do not change the number of partitions, preserving the number of partitions of the input RDD (i.e., the returned RDD has the same number of partitions of the input RDD).</span>
+<span id="cb9-258"><a href="#cb9-258"></a></span>
+<span id="cb9-259"><a href="#cb9-259"></a>+------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span id="cb9-260"><a href="#cb9-260"></a>| Transformation                           | Effect                                                                                                                                                                                      |</span>
+<span id="cb9-261"><a href="#cb9-261"></a>+==========================================+=============================================================================================================================================================================================+</span>
+<span id="cb9-262"><a href="#cb9-262"></a>| <span class="in">`parallelize(collection)`</span>                | The number of partitions of the returned RDD is equal to <span class="in">`sc.defaultParallelism`</span>.                                                                                                           |</span>
+<span id="cb9-263"><a href="#cb9-263"></a>|                                          |                                                                                                                                                                                             |</span>
+<span id="cb9-264"><a href="#cb9-264"></a>|                                          | Sparks tries to balance the number of elements per partition in the returned RDD; notice that elements are not assigned to partitions based on their value.                                 |</span>
+<span id="cb9-265"><a href="#cb9-265"></a>+------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span id="cb9-266"><a href="#cb9-266"></a>| <span class="in">`parallelize(collection, numSlices)`</span>     | The number of partitions of the returned RDD is equal to <span class="in">`numSlices`</span>.                                                                                                                       |</span>
+<span id="cb9-267"><a href="#cb9-267"></a>|                                          |                                                                                                                                                                                             |</span>
+<span id="cb9-268"><a href="#cb9-268"></a>|                                          | Sparks tries to balance the number of elements per partition in the returned RDD; notice that elements are not assigned to partitions based on their value.                                 |</span>
+<span id="cb9-269"><a href="#cb9-269"></a>+------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span id="cb9-270"><a href="#cb9-270"></a>| <span class="in">`textFile(pathInputData)`</span>                | The number of partitions of the returned RDD is equal to the number of input chunks/blocks of the input HDFS data.                                                                          |</span>
+<span id="cb9-271"><a href="#cb9-271"></a>|                                          |                                                                                                                                                                                             |</span>
+<span id="cb9-272"><a href="#cb9-272"></a>|                                          | Each partition contains the content of one of the input blocks.                                                                                                                             |</span>
+<span id="cb9-273"><a href="#cb9-273"></a>+------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span id="cb9-274"><a href="#cb9-274"></a>| <span class="in">`textFile(pathInputData, minPartitions)`</span> | The user specified number of partitions must be greater than the number of input blocks.                                                                                                    |</span>
+<span id="cb9-275"><a href="#cb9-275"></a>|                                          |                                                                                                                                                                                             |</span>
+<span id="cb9-276"><a href="#cb9-276"></a>|                                          | The number of partitions of the returned RDD is greater than or equal to the specified value <span class="in">`minPartitions`</span>, and each partition contains a part of one input blocks.                       |</span>
+<span id="cb9-277"><a href="#cb9-277"></a>+------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span id="cb9-278"><a href="#cb9-278"></a>| <span class="in">`repartition(numPartitions)`</span>             | <span class="in">`numPartitions`</span> can be greater or smaller than the number of partitions of the input RDD, and the number of partitions of the returned RDD is equal to <span class="in">`numPartitions`</span>.                     |</span>
+<span id="cb9-279"><a href="#cb9-279"></a>|                                          |                                                                                                                                                                                             |</span>
+<span id="cb9-280"><a href="#cb9-280"></a>|                                          | Sparks tries to balance the number of elements per partition in the returned RDD; notice that elements are not assigned to partitions based on their value.                                 |</span>
+<span id="cb9-281"><a href="#cb9-281"></a>|                                          |                                                                                                                                                                                             |</span>
+<span id="cb9-282"><a href="#cb9-282"></a>|                                          | A shuffle operation is executed to assign input elements to the partitions of the returned RDD.                                                                                             |</span>
+<span id="cb9-283"><a href="#cb9-283"></a>+------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span id="cb9-284"><a href="#cb9-284"></a>| <span class="in">`coalesce(numPartitions)`</span>                | <span class="in">`numPartitions`</span> is smaller than the number of partitions of the input RDD, and the number of partitions of the returned RDD is equal to <span class="in">`numPartitions`</span>.                                    |</span>
+<span id="cb9-285"><a href="#cb9-285"></a>|                                          |                                                                                                                                                                                             |</span>
+<span id="cb9-286"><a href="#cb9-286"></a>|                                          | Sparks tries to balance the number of elements per partition in the returned RDD; notice that elements are not assigned to partitions based on their value.                                 |</span>
+<span id="cb9-287"><a href="#cb9-287"></a>|                                          |                                                                                                                                                                                             |</span>
+<span id="cb9-288"><a href="#cb9-288"></a>|                                          | Usually no shuffle operation is executed to assign input elements to the partitions of the returned RDD, so coalesce is more efficient than repartition to reduce the number of partitions. |</span>
+<span id="cb9-289"><a href="#cb9-289"></a>+------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span id="cb9-290"><a href="#cb9-290"></a></span>
+<span id="cb9-291"><a href="#cb9-291"></a>: {tbl-colwidths="<span class="co">[</span><span class="ot">35,65</span><span class="co">]</span>"}</span>
+<span id="cb9-292"><a href="#cb9-292"></a></span>
+<span id="cb9-293"><a href="#cb9-293"></a>Spark allows specifying how to partition the content of RDDs of key-value pairs: he input tpairs are grouped in partitions based on the integer value returned by a function applied on the key of each input pair. This operation can be useful to improve the efficiency of the next transformations by reducing the amount of shuffle operations and the amount of data sent on the network in the next steps of the application (Spark can optimize the execution of the transformations if the input RDDs of pairs are properly partitioned).</span>
+<span id="cb9-294"><a href="#cb9-294"></a></span>
+<span id="cb9-295"><a href="#cb9-295"></a><span class="fu">### `partitionBy(numPartitions)`</span></span>
+<span id="cb9-296"><a href="#cb9-296"></a>Partitioning is based on the <span class="in">`partitionBy()`</span> transformation. The input pairs are grouped in partitions based on the integer value returned by a default hash function applied on the key of each input pair. A shuffle operation is executed to assign input elements to the partitions of the returned RDD.</span>
+<span id="cb9-297"><a href="#cb9-297"></a></span>
+<span id="cb9-298"><a href="#cb9-298"></a>Suppose that the number of partition of the returned Pair RDD is $\textbf{numPart}$. The default partition function is <span class="in">`portable_hash`</span>: given an input pair $(key, value)$ a copy of that pair will be stored in the partition number $n$ of the returned RDD, where</span>
+<span id="cb9-299"><a href="#cb9-299"></a></span>
+<span id="cb9-300"><a href="#cb9-300"></a>$$</span>
+<span id="cb9-301"><a href="#cb9-301"></a>n = portable<span class="sc">\_</span>hash(key) \% numPart</span>
+<span id="cb9-302"><a href="#cb9-302"></a>$$</span>
+<span id="cb9-303"><a href="#cb9-303"></a></span>
+<span id="cb9-304"><a href="#cb9-304"></a>Notice that $portable<span class="sc">\_</span>hash(key)$ returns and integer.</span>
+<span id="cb9-305"><a href="#cb9-305"></a></span>
+<span id="cb9-306"><a href="#cb9-306"></a><span class="fu">#### `partitionBy(numPartitions, partitionFunc)`</span></span>
+<span id="cb9-307"><a href="#cb9-307"></a>The input pairs are grouped in partitions based on the integer value returned by the user provided <span class="in">`partitionFunc`</span> function. A shuffle operation is executed to assign input elements to the partitions of the returned RDD.</span>
+<span id="cb9-308"><a href="#cb9-308"></a></span>
+<span id="cb9-309"><a href="#cb9-309"></a>Suppose that the number of partition of the returned Pair RDD is $\textbf{numPart}$. The custom partition function is <span class="in">`partitionFunc`</span>: given an input pair $(key, value)$ a copy of that pair will be stored in the partition number $n$ of the returned RDD, where</span>
+<span id="cb9-310"><a href="#cb9-310"></a></span>
+<span id="cb9-311"><a href="#cb9-311"></a>$$</span>
+<span id="cb9-312"><a href="#cb9-312"></a>n = partitionFunc(key) \% numPart</span>
+<span id="cb9-313"><a href="#cb9-313"></a>$$</span>
+<span id="cb9-314"><a href="#cb9-314"></a></span>
+<span id="cb9-315"><a href="#cb9-315"></a>:::{.callout-tip}</span>
+<span id="cb9-316"><a href="#cb9-316"></a><span class="fu">### Use case scenario</span></span>
+<span id="cb9-317"><a href="#cb9-317"></a>Partitioning Pair RDDs by using <span class="in">`partitionBy()`</span> is useful only when the same partitioned RDD is cached and reused multiple times in the application in time and network consuming key-oriented transformations.</span>
+<span id="cb9-318"><a href="#cb9-318"></a></span>
+<span id="cb9-319"><a href="#cb9-319"></a>For example, the same partitioned RDD is used in many <span class="in">`join()`</span>, <span class="in">`cogroup()`</span>, <span class="in">`groupyByKey()`</span>, ... transformations in different paths/branches of the application (different paths/branches of the DAG).</span>
+<span id="cb9-320"><a href="#cb9-320"></a></span>
+<span id="cb9-321"><a href="#cb9-321"></a>Pay attention to the amount of data that is actually sent on the network: <span class="in">`partitionBy()`</span> can slow down the application instead of speeding it up.</span>
+<span id="cb9-322"><a href="#cb9-322"></a>:::</span>
+<span id="cb9-323"><a href="#cb9-323"></a></span>
+<span id="cb9-324"><a href="#cb9-324"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb9-325"><a href="#cb9-325"></a><span class="fu">### Example</span></span>
+<span id="cb9-326"><a href="#cb9-326"></a><span class="ss">1. </span>Create an RDD from a textual file containing a list of pairs (pageID, list of linked pages);</span>
+<span id="cb9-327"><a href="#cb9-327"></a><span class="ss">2. </span>Implement the (simplified) PageRank algorithm and compute the pageRank of each input page;</span>
+<span id="cb9-328"><a href="#cb9-328"></a><span class="ss">3. </span>Print the result on the standard output.</span>
+<span id="cb9-329"><a href="#cb9-329"></a></span>
+<span id="cb9-330"><a href="#cb9-330"></a><span class="in">```python</span></span>
+<span id="cb9-331"><a href="#cb9-331"></a><span class="co">## Read the input file with the structure of the web graph</span></span>
+<span id="cb9-332"><a href="#cb9-332"></a>inputData <span class="op">=</span> sc.textFile(<span class="st">"links.txt"</span>)</span>
+<span id="cb9-333"><a href="#cb9-333"></a></span>
+<span id="cb9-334"><a href="#cb9-334"></a><span class="co">## Format of each input line</span></span>
+<span id="cb9-335"><a href="#cb9-335"></a><span class="co">## PageId,LinksToOtherPages - e.g., P3 [P1,P2,P4,P5]</span></span>
+<span id="cb9-336"><a href="#cb9-336"></a><span class="kw">def</span> mapToPairPageIDLinks(line):</span>
+<span id="cb9-337"><a href="#cb9-337"></a>    fields <span class="op">=</span> line.split(<span class="st">' '</span>)</span>
+<span id="cb9-338"><a href="#cb9-338"></a>    pageID <span class="op">=</span> fields[<span class="dv">0</span>]</span>
+<span id="cb9-339"><a href="#cb9-339"></a>    links <span class="op">=</span> fields[<span class="dv">1</span>].split(<span class="st">','</span>)</span>
+<span id="cb9-340"><a href="#cb9-340"></a>    <span class="cf">return</span> (pageID, links)</span>
+<span id="cb9-341"><a href="#cb9-341"></a></span>
+<span id="cb9-342"><a href="#cb9-342"></a>links <span class="op">=</span> inputData.<span class="bu">map</span>(mapToPairPageIDLinks) <span class="op">\</span></span>
+<span id="cb9-343"><a href="#cb9-343"></a>    .partitionBy(inputData.getNumPartitions()) <span class="op">\</span></span>
+<span id="cb9-344"><a href="#cb9-344"></a>    .cache()</span>
+<span id="cb9-345"><a href="#cb9-345"></a></span>
+<span id="cb9-346"><a href="#cb9-346"></a><span class="co">## Initialize each page's rank to 1.0; since we use mapValues,</span></span>
+<span id="cb9-347"><a href="#cb9-347"></a><span class="co">## the resulting RDD will have the same partitioner as links</span></span>
+<span id="cb9-348"><a href="#cb9-348"></a>ranks <span class="op">=</span> links.mapValues(<span class="kw">lambda</span> v: <span class="fl">1.0</span>)</span>
+<span id="cb9-349"><a href="#cb9-349"></a></span>
+<span id="cb9-350"><a href="#cb9-350"></a><span class="co">## Function that returns a set of pairs from each input pair</span></span>
+<span id="cb9-351"><a href="#cb9-351"></a><span class="co">## input pair: (pageid, (linked pages, current page rank of pageid) )</span></span>
+<span id="cb9-352"><a href="#cb9-352"></a><span class="co">## one output pair for each linked page. Output pairs:</span></span>
+<span id="cb9-353"><a href="#cb9-353"></a><span class="co">## (pageid linked page,</span></span>
+<span id="cb9-354"><a href="#cb9-354"></a><span class="co">## current page rank of the linking page pageid / number of linked pages)</span></span>
+<span id="cb9-355"><a href="#cb9-355"></a><span class="kw">def</span> computeContributions(pageIDLinksPageRank):</span>
+<span id="cb9-356"><a href="#cb9-356"></a>    pagesContributions <span class="op">=</span> []</span>
+<span id="cb9-357"><a href="#cb9-357"></a>    currentPageRank <span class="op">=</span> pageIDLinksPageRank[<span class="dv">1</span>][<span class="dv">1</span>]</span>
+<span id="cb9-358"><a href="#cb9-358"></a>    linkedPages <span class="op">=</span> pageIDLinksPageRank[<span class="dv">1</span>][<span class="dv">0</span>]</span>
+<span id="cb9-359"><a href="#cb9-359"></a>    numLinkedPages <span class="op">=</span> <span class="bu">len</span>(linkedPages)</span>
+<span id="cb9-360"><a href="#cb9-360"></a>    contribution <span class="op">=</span> currentPageRank<span class="op">/</span>numLinkedPages</span>
+<span id="cb9-361"><a href="#cb9-361"></a></span>
+<span id="cb9-362"><a href="#cb9-362"></a>    <span class="cf">for</span> pageidLinkedPage <span class="kw">in</span> linkedPages:</span>
+<span id="cb9-363"><a href="#cb9-363"></a>        pagesContributions.append((pageidLinkedPage, contribution))</span>
+<span id="cb9-364"><a href="#cb9-364"></a>    </span>
+<span id="cb9-365"><a href="#cb9-365"></a>    <span class="cf">return</span> pagesContributions</span>
+<span id="cb9-366"><a href="#cb9-366"></a></span>
+<span id="cb9-367"><a href="#cb9-367"></a><span class="co">## Run 30 iterations of PageRank</span></span>
+<span id="cb9-368"><a href="#cb9-368"></a><span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">30</span>):</span>
+<span id="cb9-369"><a href="#cb9-369"></a>    <span class="co">## Retrieve for each page its current pagerank and</span></span>
+<span id="cb9-370"><a href="#cb9-370"></a>    <span class="co">## the list of linked pages by using the join transformation</span></span>
+<span id="cb9-371"><a href="#cb9-371"></a></span>
+<span id="cb9-372"><a href="#cb9-372"></a>    pageRankLinks <span class="op">=</span> links.join(ranks)</span>
+<span id="cb9-373"><a href="#cb9-373"></a>    <span class="co">## Compute contributions from linking pages to linked pages</span></span>
+<span id="cb9-374"><a href="#cb9-374"></a>    <span class="co">## for this iteration</span></span>
+<span id="cb9-375"><a href="#cb9-375"></a>    </span>
+<span id="cb9-376"><a href="#cb9-376"></a>    contributions <span class="op">=</span> pageRankLinks.flatMap(computeContributions)</span>
+<span id="cb9-377"><a href="#cb9-377"></a>    <span class="co">## Update current pagerank of all pages for this iteration</span></span>
+<span id="cb9-378"><a href="#cb9-378"></a>    ranks <span class="op">=</span> contributions<span class="op">\</span></span>
+<span id="cb9-379"><a href="#cb9-379"></a>        .reduceByKey(<span class="kw">lambda</span> contrib1, contrib2: contrib1<span class="op">+</span>contrib2)</span>
+<span id="cb9-380"><a href="#cb9-380"></a></span>
+<span id="cb9-381"><a href="#cb9-381"></a><span class="co">## Print the result</span></span>
+<span id="cb9-382"><a href="#cb9-382"></a>ranks.collect()</span>
+<span id="cb9-383"><a href="#cb9-383"></a><span class="in">```</span></span>
+<span id="cb9-384"><a href="#cb9-384"></a></span>
+<span id="cb9-385"><a href="#cb9-385"></a>|||</span>
+<span id="cb9-386"><a href="#cb9-386"></a>|-|--|</span>
+<span id="cb9-387"><a href="#cb9-387"></a>| <span class="in">`.partitionBy()...cache()`</span> | Notice that the returned Pair RDD is partitioned and cached. |</span>
+<span id="cb9-388"><a href="#cb9-388"></a>| <span class="in">`links`</span> | The join transformation is invoked many times on the links Pair RDD. The content of links is constant (it does not change during the loop iterations). Hence, caching it and also partitioning its content by key is useful: its content is computed one time and cached in the main memory of the executors, and it is shuffled and sent on the network only one time because <span class="in">`partitionBy`</span> was applied on it |</span>
+<span id="cb9-389"><a href="#cb9-389"></a></span>
+<span id="cb9-390"><a href="#cb9-390"></a>:::</span>
+<span id="cb9-391"><a href="#cb9-391"></a></span>
+<span id="cb9-392"><a href="#cb9-392"></a><span class="fu">### Default partitioning behavior of the main transformations</span></span>
+<span id="cb9-393"><a href="#cb9-393"></a></span>
+<span id="cb9-394"><a href="#cb9-394"></a>::::{.content-visible when-format="html"}</span>
+<span id="cb9-395"><a href="#cb9-395"></a>:::{.column-page}</span>
+<span id="cb9-396"><a href="#cb9-396"></a></span>
+<span id="cb9-397"><a href="#cb9-397"></a>| Transformation | Number of partitions | Partitioner |</span>
+<span id="cb9-398"><a href="#cb9-398"></a>|----|---|---|</span>
+<span id="cb9-399"><a href="#cb9-399"></a>| <span class="in">`sc.parallelize()`</span> | <span class="in">`sc.defaultParallelism`</span> | NONE |</span>
+<span id="cb9-400"><a href="#cb9-400"></a>| <span class="in">`sc.textFile()`</span> | the maximum between <span class="in">`sc.defaultParallelism`</span> and the number of file blocks | NONE |</span>
+<span id="cb9-401"><a href="#cb9-401"></a>| <span class="in">`filter()`</span>, <span class="in">`map()`</span>, <span class="in">`flatMap()`</span>, <span class="in">`distinct()`</span> | same as parent RDD | NONE except filter preserve parent RDD's partitioner |</span>
+<span id="cb9-402"><a href="#cb9-402"></a>| <span class="in">`rdd.union(otherRDD)`</span> | <span class="in">`rdd.partitions.size + otherRDD.partitions.size`</span> | NONE except filter preserve parent RDD's partitioner |</span>
+<span id="cb9-403"><a href="#cb9-403"></a>| <span class="in">`rdd.intersection(otherRDD)`</span> | <span class="in">`max(rdd.partitions.size, otherRDD.partitions.size)`</span> | NONE except filter preserve parent RDD's partitioner |</span>
+<span id="cb9-404"><a href="#cb9-404"></a>| <span class="in">`rdd.subtract(otherRDD)`</span> | <span class="in">`rdd.partitions.size`</span> | NONE except filter preserve parent RDD's partitioner |</span>
+<span id="cb9-405"><a href="#cb9-405"></a>| <span class="in">`rdd.cartesian(otherRDD)`</span> | <span class="in">`rdd.partitions.size * otherRDD. partitions.size`</span> | NONE except filter preserve parent RDD's partitioner |</span>
+<span id="cb9-406"><a href="#cb9-406"></a>| <span class="in">`reduceByKey()`</span>, <span class="in">`foldByKey()`</span>, <span class="in">`combineByKey()`</span>, <span class="in">`groupByKey()`</span> | same as parent RDD | HashPartitioner |</span>
+<span id="cb9-407"><a href="#cb9-407"></a>| <span class="in">`sortByKey()`</span> | same as parent RDD | RangePartitioner |</span>
+<span id="cb9-408"><a href="#cb9-408"></a>| <span class="in">`mapValues()`</span>, <span class="in">`flatMapValues()`</span> | same as parent RDD | parent RDD's partitioner |</span>
+<span id="cb9-409"><a href="#cb9-409"></a>| <span class="in">`cogroup()`</span>, <span class="in">`join()`</span>,<span class="in">`leftOuterJoin()`</span>, <span class="in">`rightOuterJoin()`</span> | depends upon input properties of two involved RDDs | HashPartitioner |</span>
+<span id="cb9-410"><a href="#cb9-410"></a></span>
+<span id="cb9-411"><a href="#cb9-411"></a>:::</span>
+<span id="cb9-412"><a href="#cb9-412"></a>::::</span>
+<span id="cb9-413"><a href="#cb9-413"></a></span>
+<span id="cb9-414"><a href="#cb9-414"></a>:::{.content-visible when-format="pdf"}</span>
+<span id="cb9-415"><a href="#cb9-415"></a></span>
+<span id="cb9-416"><a href="#cb9-416"></a>\blandscape</span>
+<span id="cb9-417"><a href="#cb9-417"></a></span>
+<span id="cb9-418"><a href="#cb9-418"></a>| Transformation | Number of partitions | Partitioner |</span>
+<span id="cb9-419"><a href="#cb9-419"></a>|----|---|---|</span>
+<span id="cb9-420"><a href="#cb9-420"></a>| <span class="in">`sc.parallelize()`</span> | <span class="in">`sc.defaultParallelism`</span> | NONE |</span>
+<span id="cb9-421"><a href="#cb9-421"></a>| <span class="in">`sc.textFile()`</span> | the maximum between <span class="in">`sc.defaultParallelism`</span> and the number of file blocks | NONE |</span>
+<span id="cb9-422"><a href="#cb9-422"></a>| <span class="in">`filter()`</span>, <span class="in">`map()`</span>, <span class="in">`flatMap()`</span>, <span class="in">`distinct()`</span> | same as parent RDD | NONE except filter preserve parent RDD's partitioner |</span>
+<span id="cb9-423"><a href="#cb9-423"></a>| <span class="in">`rdd.union(otherRDD)`</span> | <span class="in">`rdd.partitions.size + otherRDD.partitions.size`</span> | NONE except filter preserve parent RDD's partitioner |</span>
+<span id="cb9-424"><a href="#cb9-424"></a>| <span class="in">`rdd.intersection(otherRDD)`</span> | <span class="in">`max(rdd.partitions.size, otherRDD.partitions.size)`</span> | NONE except filter preserve parent RDD's partitioner |</span>
+<span id="cb9-425"><a href="#cb9-425"></a>| <span class="in">`rdd.subtract(otherRDD)`</span> | <span class="in">`rdd.partitions.size`</span> | NONE except filter preserve parent RDD's partitioner |</span>
+<span id="cb9-426"><a href="#cb9-426"></a>| <span class="in">`rdd.cartesian(otherRDD)`</span> | <span class="in">`rdd.partitions.size * otherRDD. partitions.size`</span> | NONE except filter preserve parent RDD's partitioner |</span>
+<span id="cb9-427"><a href="#cb9-427"></a>| <span class="in">`reduceByKey()`</span>, <span class="in">`foldByKey()`</span>, <span class="in">`combineByKey()`</span>, <span class="in">`groupByKey()`</span> | same as parent RDD | HashPartitioner |</span>
+<span id="cb9-428"><a href="#cb9-428"></a>| <span class="in">`sortByKey()`</span> | same as parent RDD | RangePartitioner |</span>
+<span id="cb9-429"><a href="#cb9-429"></a>| <span class="in">`mapValues()`</span>, <span class="in">`flatMapValues()`</span> | same as parent RDD | parent RDD's partitioner |</span>
+<span id="cb9-430"><a href="#cb9-430"></a>| <span class="in">`cogroup()`</span>, <span class="in">`join()`</span>,<span class="in">`leftOuterJoin()`</span>, <span class="in">`rightOuterJoin()`</span> | depends upon input properties of two involved RDDs | HashPartitioner |</span>
+<span id="cb9-431"><a href="#cb9-431"></a></span>
+<span id="cb9-432"><a href="#cb9-432"></a>\elandscape</span>
+<span id="cb9-433"><a href="#cb9-433"></a></span>
+<span id="cb9-434"><a href="#cb9-434"></a>:::</span>
+<span id="cb9-435"><a href="#cb9-435"></a></span>
+<span id="cb9-436"><a href="#cb9-436"></a><span class="fu">## Broadcast join</span></span>
+<span id="cb9-437"><a href="#cb9-437"></a>The join transformation is expensive in terms of execution time and amount of data sent on the network. If one of the two input RDDs of key-value pairs is small enough to be stored in the main memory, then it is possible to use a more efficient solution based on a broadcast variable.</span>
+<span id="cb9-438"><a href="#cb9-438"></a></span>
+<span id="cb9-439"><a href="#cb9-439"></a><span class="ss">- </span>Broadcast hash join (or map-side join)</span>
+<span id="cb9-440"><a href="#cb9-440"></a><span class="ss">- </span>The smaller the small RDD, the higher the speed up</span>
+<span id="cb9-441"><a href="#cb9-441"></a></span>
+<span id="cb9-442"><a href="#cb9-442"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb9-443"><a href="#cb9-443"></a><span class="fu">### Example</span></span>
+<span id="cb9-444"><a href="#cb9-444"></a><span class="ss">1. </span>Create a large RDD from a textual file containing a list of pairs <span class="in">`(userID, post)`</span>; notice that each user can be associated to several posts;</span>
+<span id="cb9-445"><a href="#cb9-445"></a><span class="ss">2. </span>Create a small RDD from a textual file containing a list of pairs <span class="in">`(userID, (name, surname, age))`</span>; notice that each user can be associated to one single line in this second file;</span>
+<span id="cb9-446"><a href="#cb9-446"></a><span class="ss">3. </span>Compute the join between these two files.</span>
+<span id="cb9-447"><a href="#cb9-447"></a></span>
+<span id="cb9-448"><a href="#cb9-448"></a><span class="in">```python</span></span>
+<span id="cb9-449"><a href="#cb9-449"></a><span class="co">## Read the first input file</span></span>
+<span id="cb9-450"><a href="#cb9-450"></a>largeRDD <span class="op">=</span> sc <span class="op">\</span></span>
+<span id="cb9-451"><a href="#cb9-451"></a>    .textFile(<span class="st">"post.txt"</span>) <span class="op">\</span></span>
+<span id="cb9-452"><a href="#cb9-452"></a>    .<span class="bu">map</span>(<span class="kw">lambda</span> line: (</span>
+<span id="cb9-453"><a href="#cb9-453"></a>        <span class="bu">int</span>(line.split(<span class="st">','</span>)[<span class="dv">0</span>]), </span>
+<span id="cb9-454"><a href="#cb9-454"></a>        line.split(<span class="st">','</span>)[<span class="dv">1</span>]</span>
+<span id="cb9-455"><a href="#cb9-455"></a>    ))</span>
+<span id="cb9-456"><a href="#cb9-456"></a></span>
+<span id="cb9-457"><a href="#cb9-457"></a><span class="co">## Read the second input file</span></span>
+<span id="cb9-458"><a href="#cb9-458"></a>smallRDD <span class="op">=</span> sc <span class="op">\</span></span>
+<span id="cb9-459"><a href="#cb9-459"></a>    .textFile(<span class="st">"profiles.txt"</span>) <span class="op">\</span></span>
+<span id="cb9-460"><a href="#cb9-460"></a>    .<span class="bu">map</span>(<span class="kw">lambda</span> line: (</span>
+<span id="cb9-461"><a href="#cb9-461"></a>        <span class="bu">int</span>(line.split(<span class="st">','</span>)[<span class="dv">0</span>]), </span>
+<span id="cb9-462"><a href="#cb9-462"></a>        line.split(<span class="st">','</span>)[<span class="dv">1</span>]</span>
+<span id="cb9-463"><a href="#cb9-463"></a>    ))</span>
+<span id="cb9-464"><a href="#cb9-464"></a></span>
+<span id="cb9-465"><a href="#cb9-465"></a><span class="co">## Broadcast join version</span></span>
+<span id="cb9-466"><a href="#cb9-466"></a><span class="co">## Store the "small" RDD in a local python variable in the driver</span></span>
+<span id="cb9-467"><a href="#cb9-467"></a><span class="co">## and broadcast it</span></span>
+<span id="cb9-468"><a href="#cb9-468"></a>localSmallTable <span class="op">=</span> smallRDD.collectAsMap()</span>
+<span id="cb9-469"><a href="#cb9-469"></a>localSmallTableBroadcast <span class="op">=</span> sc.broadcast(localSmallTable)</span>
+<span id="cb9-470"><a href="#cb9-470"></a></span>
+<span id="cb9-471"><a href="#cb9-471"></a><span class="co">## Function for joining a record of the large RDD with the matching</span></span>
+<span id="cb9-472"><a href="#cb9-472"></a><span class="co">## record of the small one</span></span>
+<span id="cb9-473"><a href="#cb9-473"></a><span class="kw">def</span> joinRecords(largeTableRecord):</span>
+<span id="cb9-474"><a href="#cb9-474"></a>    returnedRecords <span class="op">=</span> []</span>
+<span id="cb9-475"><a href="#cb9-475"></a>    key <span class="op">=</span> largeTableRecord[<span class="dv">0</span>]</span>
+<span id="cb9-476"><a href="#cb9-476"></a>    valueLargeRecord <span class="op">=</span> largeTableRecord[<span class="dv">1</span>]</span>
+<span id="cb9-477"><a href="#cb9-477"></a></span>
+<span id="cb9-478"><a href="#cb9-478"></a>    <span class="cf">if</span> key <span class="kw">in</span> localSmallTableBroadcast.value:</span>
+<span id="cb9-479"><a href="#cb9-479"></a>        returnedRecords.append((</span>
+<span id="cb9-480"><a href="#cb9-480"></a>            key,</span>
+<span id="cb9-481"><a href="#cb9-481"></a>            (valueLargeRecord,localSmallTableBroadcast.value[key])</span>
+<span id="cb9-482"><a href="#cb9-482"></a>        ))</span>
+<span id="cb9-483"><a href="#cb9-483"></a></span>
+<span id="cb9-484"><a href="#cb9-484"></a>    <span class="cf">return</span> returnedRecords</span>
+<span id="cb9-485"><a href="#cb9-485"></a></span>
+<span id="cb9-486"><a href="#cb9-486"></a><span class="co">## Execute the broadcast join operation by using a flatMap</span></span>
+<span id="cb9-487"><a href="#cb9-487"></a><span class="co">## transformation on the "large" RDD</span></span>
+<span id="cb9-488"><a href="#cb9-488"></a>userPostProfileRDDBroadcatJoin <span class="op">=</span> largeRDD.flatMap(joinRecords)</span>
+<span id="cb9-489"><a href="#cb9-489"></a><span class="in">```</span></span>
+<span id="cb9-490"><a href="#cb9-490"></a></span>
+<span id="cb9-491"><a href="#cb9-491"></a>:::</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 
 

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -17,9 +17,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -46,43 +47,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -120,10 +91,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
@@ -132,11 +105,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./19_graph_analytics_1.html"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -144,162 +122,191 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Distributed architectures for big data processing and analytics</a> 
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Index</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">About this Book</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></a>
+  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></a>
+  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></a>
+  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></a>
+  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></a>
+  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></a>
+  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></a>
+  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></a>
+  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></a>
+  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></a>
+  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></a>
+  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></a>
+  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></a>
+  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></a>
+  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></a>
+  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></a>
+  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></a>
+  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></a>
+  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></a>
+  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></a>
+  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></a>
+  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></a>
+  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></a>
+  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></a>
+  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></a>
+  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -318,7 +325,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></h1>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -343,7 +350,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Graph analytics is the process of analyzing relationships between vertexes and edges.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Example of graph</figcaption><p></p>
+<figcaption class="figure-caption">Example of graph</figcaption>
 <p><img src="images/19_graph_analytics_1/graph_example.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -354,16 +361,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Graph with labels and weights</figcaption><p></p>
+<figcaption class="figure-caption">Graph with labels and weights</figcaption>
 <p><img src="images/19_graph_analytics_1/labels_weights_example.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
-<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Why graph analytics?
 </div>
 </div>
@@ -374,7 +381,7 @@ Why graph analytics?
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Pages in the web</figcaption><p></p>
+<figcaption class="figure-caption">Pages in the web</figcaption>
 <p><img src="images/19_graph_analytics_1/rank_pages_example.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -383,13 +390,13 @@ Why graph analytics?
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Social networks</figcaption><p></p>
+<figcaption class="figure-caption">Social networks</figcaption>
 <p><img src="images/19_graph_analytics_1/social_network_example.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Movies watched by users</figcaption><p></p>
+<figcaption class="figure-caption">Movies watched by users</figcaption>
 <p><img src="images/19_graph_analytics_1/movies_watched_example.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -405,7 +412,7 @@ Why graph analytics?
 <p>GraphX is the Spark RDD-based library for performing graph processing. It is a core part of Spark.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Spark core libraries</figcaption><p></p>
+<figcaption class="figure-caption">Spark core libraries</figcaption>
 <p><img src="images/19_graph_analytics_1/spark_core.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -419,7 +426,7 @@ Why graph analytics?
 <p><a href="https://graphframes.github.io/graphframes/docs/_site/index.html">GraphFrames</a> is a library DataFrame-based for performing graph processing. It is a Spark external package built on top of GraphX.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">GraphFrame structure</figcaption><p></p>
+<figcaption class="figure-caption">GraphFrame structure</figcaption>
 <p><img src="images/19_graph_analytics_1/graphframes_structure.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -451,16 +458,16 @@ Why graph analytics?
 <p>Graphs in graphframes are directed graphs.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Building a graph example</figcaption><p></p>
+<figcaption class="figure-caption">Building a graph example</figcaption>
 <p><img src="images/19_graph_analytics_1/building_graph_example.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -633,12 +640,12 @@ Example
 <section id="dropisolatedvertices" class="level5">
 <h5 class="anchored" data-anchor-id="dropisolatedvertices"><code>dropIsolatedVertices()</code></h5>
 <p><code>dropIsolatedVertices()</code> drops the vertexes that are not connected with any other node and returns a new graph without the dropped nodes.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -648,7 +655,7 @@ Example
 <p>Given the input graph, create a new subgraph</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Input graph</figcaption><p></p>
+<figcaption class="figure-caption">Input graph</figcaption>
 <p><img src="images/19_graph_analytics_1/vertex_filtering_example_1.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -657,7 +664,7 @@ Example
 </ol>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Filter vertexes</figcaption><p></p>
+<figcaption class="figure-caption">Filter vertexes</figcaption>
 <p><img src="images/19_graph_analytics_1/vertex_filtering_example_2.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -666,7 +673,7 @@ Example
 </ol>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Filter edges</figcaption><p></p>
+<figcaption class="figure-caption">Filter edges</figcaption>
 <p><img src="images/19_graph_analytics_1/vertex_filtering_example_3.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -675,13 +682,13 @@ Example
 </ol>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Drop isolated vertices</figcaption><p></p>
+<figcaption class="figure-caption">Drop isolated vertices</figcaption>
 <p><img src="images/19_graph_analytics_1/vertex_filtering_example_4.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Output graph</figcaption><p></p>
+<figcaption class="figure-caption">Output graph</figcaption>
 <p><img src="images/19_graph_analytics_1/vertex_filtering_example_5.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -732,12 +739,12 @@ Example
 <li><code>g.edges</code> returns the DataFrame associated with the edges of the input graph</li>
 </ul>
 <p>All the standard DataFrame transformations/actions are available also for the DataFrames that are used to store vertexes and edges. For example, the number of vertexes and the number of edges can be computed by invoking the <code>count()</code> action on the DataFrames vertices and edges, respectively.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -818,7 +825,7 @@ Example
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Basic unit</figcaption><p></p>
+<figcaption class="figure-caption">Basic unit</figcaption>
 <p><img src="images/19_graph_analytics_1/motif_basic_unit.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -829,7 +836,7 @@ Example
 <p>means: an arbitrary edge from an arbitrary vertex <span class="math inline">\(v1\)</span> to another arbitrary vertex <span class="math inline">\(v2\)</span> and another arbitrary edge from <span class="math inline">\(v2\)</span> to another arbitrary vertex <span class="math inline">\(v3\)</span>. Notice that <span class="math inline">\(v3\)</span> and <span class="math inline">\(v1\)</span> can be the same vertex.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Basic unit chaining</figcaption><p></p>
+<figcaption class="figure-caption">Basic unit chaining</figcaption>
 <p><img src="images/19_graph_analytics_1/motif_basic_unit_chaining.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -840,7 +847,7 @@ Example
 <p>means: an arbitrary edge from an arbitrary vertex <span class="math inline">\(v1\)</span> to another arbitrary vertex <span class="math inline">\(v2\)</span> and vice-versa.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Basic unit self-chaining</figcaption><p></p>
+<figcaption class="figure-caption">Basic unit self-chaining</figcaption>
 <p><img src="images/19_graph_analytics_1/motif_basic_unit_chaining.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -851,7 +858,7 @@ Example
 <p>means: an arbitrary edge between two arbitrary vertexes <span class="math inline">\(v1\)</span>, <span class="math inline">\(v2\)</span>, but does not assign a name to the edge. These are called <strong>anonymous</strong> vertexes and edges.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Anonymous vertexes and edges</figcaption><p></p>
+<figcaption class="figure-caption">Anonymous vertexes and edges</figcaption>
 <p><img src="images/19_graph_analytics_1/motif_anonyomous_vertexes.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -862,7 +869,7 @@ Example
 <p>means: edges from <span class="math inline">\(v1\)</span> to <span class="math inline">\(v2\)</span> but no edges from <span class="math inline">\(v2\)</span> to <span class="math inline">\(v1\)</span>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Negating edges</figcaption><p></p>
+<figcaption class="figure-caption">Negating edges</figcaption>
 <p><img src="images/19_graph_analytics_1/motif_negating_edges.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -872,12 +879,12 @@ Example
 </ul>
 <p><code>find()</code> returns a DataFrame of all the paths matching the structural motif/pattern, one path per record. The returned DataFrame will have a column for each of the named elements (vertexes and edges) in the structural pattern/motif: Each column is a struct, and the fields of each struct are the labels/features of the associated vertex or edge. It can return duplicate rows/records, if there are many paths connecting the same nodes.</p>
 <p>More complex queries on the structure and content of the patterns can be expressed by applying filters to the result DataFrame (i.e., more complex queries can be applied by combing <code>find()</code> and <code>filter()</code>).</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example 1
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -887,7 +894,7 @@ Example 1
 <p>Given the following graph</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Example graph</figcaption><p></p>
+<figcaption class="figure-caption">Example graph</figcaption>
 <p><img src="images/19_graph_analytics_1/motif_finding_example_1.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -898,7 +905,7 @@ Example 1
 <p>Store the result in a DataFrame</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Result</figcaption><p></p>
+<figcaption class="figure-caption">Result</figcaption>
 <p><img src="images/19_graph_analytics_1/motif_finding_example_2.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -983,12 +990,12 @@ Example 1
 </div>
 </div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example 2
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -998,7 +1005,7 @@ Example 2
 <p>Given the following graph</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Example graph</figcaption><p></p>
+<figcaption class="figure-caption">Example graph</figcaption>
 <p><img src="images/19_graph_analytics_1/motif_finding_example_1.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -1009,16 +1016,109 @@ Example 2
 <p>Store the result in a DataFrame</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">First selected path</figcaption><p></p>
+<figcaption class="figure-caption">First selected path</figcaption>
 <p><img src="images/19_graph_analytics_1/motif_finding_example_3.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Second selected path</figcaption><p></p>
+<figcaption class="figure-caption">Second selected path</figcaption>
 <p><img src="images/19_graph_analytics_1/motif_finding_example_4.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
+<div class="sourceCode" id="annotated-cell-1"><pre class="sourceCode numberSource python code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode python"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="annotated-cell-1-2"><a href="#annotated-cell-1-2"></a></span>
+<span id="annotated-cell-1-3"><a href="#annotated-cell-1-3"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="annotated-cell-1-4"><a href="#annotated-cell-1-4"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="annotated-cell-1-5"><a href="#annotated-cell-1-5"></a>    [</span>
+<span id="annotated-cell-1-6"><a href="#annotated-cell-1-6"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="annotated-cell-1-7"><a href="#annotated-cell-1-7"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="annotated-cell-1-8"><a href="#annotated-cell-1-8"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="annotated-cell-1-9"><a href="#annotated-cell-1-9"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="annotated-cell-1-10"><a href="#annotated-cell-1-10"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="annotated-cell-1-11"><a href="#annotated-cell-1-11"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="annotated-cell-1-12"><a href="#annotated-cell-1-12"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="annotated-cell-1-13"><a href="#annotated-cell-1-13"></a>    ],</span>
+<span id="annotated-cell-1-14"><a href="#annotated-cell-1-14"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="annotated-cell-1-15"><a href="#annotated-cell-1-15"></a>)</span>
+<span id="annotated-cell-1-16"><a href="#annotated-cell-1-16"></a></span>
+<span id="annotated-cell-1-17"><a href="#annotated-cell-1-17"></a><span class="co">## Edge DataFrame</span></span>
+<span id="annotated-cell-1-18"><a href="#annotated-cell-1-18"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="annotated-cell-1-19"><a href="#annotated-cell-1-19"></a>    [</span>
+<span id="annotated-cell-1-20"><a href="#annotated-cell-1-20"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="annotated-cell-1-21"><a href="#annotated-cell-1-21"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="annotated-cell-1-22"><a href="#annotated-cell-1-22"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="annotated-cell-1-23"><a href="#annotated-cell-1-23"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="annotated-cell-1-24"><a href="#annotated-cell-1-24"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="annotated-cell-1-25"><a href="#annotated-cell-1-25"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="annotated-cell-1-26"><a href="#annotated-cell-1-26"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="annotated-cell-1-27"><a href="#annotated-cell-1-27"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="annotated-cell-1-28"><a href="#annotated-cell-1-28"></a>    ],</span>
+<span id="annotated-cell-1-29"><a href="#annotated-cell-1-29"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="annotated-cell-1-30"><a href="#annotated-cell-1-30"></a>)</span>
+<span id="annotated-cell-1-31"><a href="#annotated-cell-1-31"></a></span>
+<span id="annotated-cell-1-32"><a href="#annotated-cell-1-32"></a><span class="co">## Create the graph</span></span>
+<span id="annotated-cell-1-33"><a href="#annotated-cell-1-33"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="annotated-cell-1-34"><a href="#annotated-cell-1-34"></a></span>
+<span id="annotated-cell-1-35"><a href="#annotated-cell-1-35"></a><span class="co">## Retrieve the motifs associated with the pattern</span></span>
+<span id="annotated-cell-1-36"><a href="#annotated-cell-1-36"></a><span class="co">## vertex -&gt; edge -&gt; vertex -&gt; edge -&gt;vertex</span></span>
+<span id="annotated-cell-1-37"><a href="#annotated-cell-1-37"></a>motifs <span class="op">=</span> g.find(<span class="st">"(v1)-[friend]-&gt;(v2); (v2)-[follow]-&gt;(v3)"</span>)</span>
+<span id="annotated-cell-1-38"><a href="#annotated-cell-1-38"></a></span>
+<span id="annotated-cell-1-39"><a href="#annotated-cell-1-39"></a><span class="co">## Filter the motifs (the content of the motifs DataFrame)</span></span>
+<span id="annotated-cell-1-40"><a href="#annotated-cell-1-40"></a><span class="co">## Select only the ones matching the pattern</span></span>
+<span id="annotated-cell-1-41"><a href="#annotated-cell-1-41"></a><span class="co">## vertex -&gt; friend-&gt; vertex -&gt; follow -&gt;vertex</span></span>
+<span id="annotated-cell-1-42"><a href="#annotated-cell-1-42"></a>motifsFriendFollow <span class="op">=</span> motifs <span class="op">\</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1">1</button><span id="annotated-cell-1-43" class="code-annotation-target"><a href="#annotated-cell-1-43"></a>    .<span class="bu">filter</span>(<span class="st">"friend.relationship='friend' AND follow.relationship='follow' "</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="43" data-code-annotation="1">Columns friend and follow are structs with three fields/attributes: “src”, “dst”, “relationship”. To access a field of a struct column use the syntax <code>columnName.field</code> (e.g., <code>friend.relationship</code>)</span>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="basic-statistics" class="level3">
+<h3 class="anchored" data-anchor-id="basic-statistics">Basic statistics</h3>
+<p>Some specific properties are provided to compute basic statistics on the degrees of the vertexes</p>
+<ul>
+<li><code>degrees</code></li>
+<li><code>inDegrees</code></li>
+<li><code>outDegrees</code></li>
+</ul>
+<p>The returned result of each of this property is a DataFrame with id and (in/out)Degree value.</p>
+<section id="degrees" class="level4">
+<h4 class="anchored" data-anchor-id="degrees"><code>degrees</code></h4>
+<p><code>degrees</code> returns the degree of each vertex (i.e., the number of edges associated with each vertex). The result is stored in a DataFrame with Columns (vertex) “id” and “degree”, with one record per vertex. Only the vertexes with <span class="math inline">\(\text{degree} \geq 1\)</span> are stored in the returned DataFrame.</p>
+</section>
+<section id="indegrees" class="level4">
+<h4 class="anchored" data-anchor-id="indegrees"><code>inDegrees</code></h4>
+<p><code>inDegrees</code> returns the in-degree of each vertex (i.e., the number of in-edges associated with each vertex). The result is stored in a DataFrame with Columns (vertex) “id” and “inDegree”, with one record per vertex. Only the vertexes with <span class="math inline">\(\text{in-degree} \geq 1\)</span> are stored in the returned DataFrame.</p>
+</section>
+<section id="outdegrees" class="level4">
+<h4 class="anchored" data-anchor-id="outdegrees"><code>outDegrees</code></h4>
+<p><code>outDegrees</code> returns the out-degree of each vertex (i.e., the number of out-edges associated with each vertex). The result is stored in a DataFrame with Columns (vertex) “id” and “outDegree”, with one record per vertex. Only the vertexes with <span class="math inline">\(\text{out-degree} \geq 1\)</span> are stored in the returned DataFrame.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Example 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Given the input graph, compute</p>
+<ul>
+<li>Degree of each vertex</li>
+<li>inDegree of each vertex</li>
+<li>outDegree of each vertex</li>
+</ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
 <span id="cb5-2"><a href="#cb5-2"></a></span>
 <span id="cb5-3"><a href="#cb5-3"></a><span class="co">## Vertex DataFrame</span></span>
@@ -1053,62 +1153,58 @@ Example 2
 <span id="cb5-32"><a href="#cb5-32"></a><span class="co">## Create the graph</span></span>
 <span id="cb5-33"><a href="#cb5-33"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
 <span id="cb5-34"><a href="#cb5-34"></a></span>
-<span id="cb5-35"><a href="#cb5-35"></a><span class="co">## Retrieve the motifs associated with the pattern</span></span>
-<span id="cb5-36"><a href="#cb5-36"></a><span class="co">## vertex -&gt; edge -&gt; vertex -&gt; edge -&gt;vertex</span></span>
-<span id="cb5-37"><a href="#cb5-37"></a>motifs <span class="op">=</span> g.find(<span class="st">"(v1)-[friend]-&gt;(v2); (v2)-[follow]-&gt;(v3)"</span>)</span>
+<span id="cb5-35"><a href="#cb5-35"></a><span class="co">## Retrieve the DataFrame with the information about the degree of</span></span>
+<span id="cb5-36"><a href="#cb5-36"></a><span class="co">## each vertex</span></span>
+<span id="cb5-37"><a href="#cb5-37"></a>vertexesDegreesDF <span class="op">=</span> g.degrees</span>
 <span id="cb5-38"><a href="#cb5-38"></a></span>
-<span id="cb5-39"><a href="#cb5-39"></a><span class="co">## Filter the motifs (the content of the motifs DataFrame)</span></span>
-<span id="cb5-40"><a href="#cb5-40"></a><span class="co">## Select only the ones matching the pattern</span></span>
-<span id="cb5-41"><a href="#cb5-41"></a><span class="co">## vertex -&gt; friend-&gt; vertex -&gt; follow -&gt;vertex</span></span>
-<span id="cb5-42"><a href="#cb5-42"></a>motifsFriendFollow <span class="op">=</span> motifs <span class="op">\</span></span>
-<span id="cb5-43"><a href="#cb5-43"></a>    <span class="co">#.filter("friend.relationship='friend' AND follow.relationship='follow' ") # &lt;1&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ol type="1">
-<li>Columns friend and follow are structs with three fields/attributes: “src”, “dst”, “relationship”. To access a field of a struct column use the syntax <code>columnName.field</code> (e.g., <code>friend.relationship</code>)</li>
-</ol>
+<span id="cb5-39"><a href="#cb5-39"></a><span class="co">## Retrieve the DataFrame with the information about the in-degree of</span></span>
+<span id="cb5-40"><a href="#cb5-40"></a><span class="co">## each vertex</span></span>
+<span id="cb5-41"><a href="#cb5-41"></a>vertexesInDegreesDF <span class="op">=</span> g.inDegrees</span>
+<span id="cb5-42"><a href="#cb5-42"></a></span>
+<span id="cb5-43"><a href="#cb5-43"></a><span class="co">## Retrieve the DataFrame with the information about the out-degree of</span></span>
+<span id="cb5-44"><a href="#cb5-44"></a><span class="co">## each vertex</span></span>
+<span id="cb5-45"><a href="#cb5-45"></a>vertexesOutDegreesDF <span class="op">=</span> g.outDegrees</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
-</section>
-</section>
-</section>
-<section id="basic-statistics" class="level3">
-<h3 class="anchored" data-anchor-id="basic-statistics">Basic statistics</h3>
-<p>Some specific properties are provided to compute basic statistics on the degrees of the vertexes</p>
-<ul>
-<li><code>degrees</code></li>
-<li><code>inDegrees</code></li>
-<li><code>outDegrees</code></li>
-</ul>
-<p>The returned result of each of this property is a DataFrame with id and (in/out)Degree value.</p>
-<section id="degrees" class="level4">
-<h4 class="anchored" data-anchor-id="degrees"><code>degrees</code></h4>
-<p><code>degrees</code> returns the degree of each vertex (i.e., the number of edges associated with each vertex). The result is stored in a DataFrame with Columns (vertex) “id” and “degree”, with one record per vertex. Only the vertexes with <span class="math inline">\(\text{degree} \geq 1\)</span> are stored in the returned DataFrame.</p>
-</section>
-<section id="indegrees" class="level4">
-<h4 class="anchored" data-anchor-id="indegrees"><code>inDegrees</code></h4>
-<p><code>inDegrees</code> returns the in-degree of each vertex (i.e., the number of in-edges associated with each vertex). The result is stored in a DataFrame with Columns (vertex) “id” and “inDegree”, with one record per vertex. Only the vertexes with <span class="math inline">\(\text{in-degree} \geq 1\)</span> are stored in the returned DataFrame.</p>
-</section>
-<section id="outdegrees" class="level4">
-<h4 class="anchored" data-anchor-id="outdegrees"><code>outDegrees</code></h4>
-<p><code>outDegrees</code> returns the out-degree of each vertex (i.e., the number of out-edges associated with each vertex). The result is stored in a DataFrame with Columns (vertex) “id” and “outDegree”, with one record per vertex. Only the vertexes with <span class="math inline">\(\text{out-degree} \geq 1\)</span> are stored in the returned DataFrame.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
-Example 1
+<div class="callout-title-container flex-fill">
+Note
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Given the input graph, compute</p>
-<ul>
-<li>Degree of each vertex</li>
-<li>inDegree of each vertex</li>
-<li>outDegree of each vertex</li>
-</ul>
+<p>Given the input graph, select only the ids of the vertexes with at least 2 in-edges.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<figcaption class="figure-caption">Example graph</figcaption>
+<p><img src="images/19_graph_analytics_1/motif_finding_example_1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<figcaption class="figure-caption">First selected vertex</figcaption>
+<p><img src="images/19_graph_analytics_1/motif_finding_example_5.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<figcaption class="figure-caption">Second selected vertex</figcaption>
+<p><img src="images/19_graph_analytics_1/motif_finding_example_6.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<figcaption class="figure-caption">Resulting vertexes</figcaption>
+<p><img src="images/19_graph_analytics_1/motif_finding_example_7.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>The selected IDs are <span class="math inline">\(u2\)</span> and <span class="math inline">\(u3\)</span></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
 <span id="cb6-2"><a href="#cb6-2"></a></span>
 <span id="cb6-3"><a href="#cb6-3"></a><span class="co">## Vertex DataFrame</span></span>
@@ -1143,105 +1239,21 @@ Example 1
 <span id="cb6-32"><a href="#cb6-32"></a><span class="co">## Create the graph</span></span>
 <span id="cb6-33"><a href="#cb6-33"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
 <span id="cb6-34"><a href="#cb6-34"></a></span>
-<span id="cb6-35"><a href="#cb6-35"></a><span class="co">## Retrieve the DataFrame with the information about the degree of</span></span>
+<span id="cb6-35"><a href="#cb6-35"></a><span class="co">## Retrieve the DataFrame with the information about the in-degree of</span></span>
 <span id="cb6-36"><a href="#cb6-36"></a><span class="co">## each vertex</span></span>
-<span id="cb6-37"><a href="#cb6-37"></a>vertexesDegreesDF <span class="op">=</span> g.degrees</span>
+<span id="cb6-37"><a href="#cb6-37"></a>vertexesInDegreesDF <span class="op">=</span> g.inDegrees</span>
 <span id="cb6-38"><a href="#cb6-38"></a></span>
-<span id="cb6-39"><a href="#cb6-39"></a><span class="co">## Retrieve the DataFrame with the information about the in-degree of</span></span>
-<span id="cb6-40"><a href="#cb6-40"></a><span class="co">## each vertex</span></span>
-<span id="cb6-41"><a href="#cb6-41"></a>vertexesInDegreesDF <span class="op">=</span> g.inDegrees</span>
-<span id="cb6-42"><a href="#cb6-42"></a></span>
-<span id="cb6-43"><a href="#cb6-43"></a><span class="co">## Retrieve the DataFrame with the information about the out-degree of</span></span>
-<span id="cb6-44"><a href="#cb6-44"></a><span class="co">## each vertex</span></span>
-<span id="cb6-45"><a href="#cb6-45"></a>vertexesOutDegreesDF <span class="op">=</span> g.outDegrees</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</div>
-<div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Note
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Given the input graph, select only the ids of the vertexes with at least 2 in-edges.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p></p><figcaption class="figure-caption">Example graph</figcaption><p></p>
-<p><img src="images/19_graph_analytics_1/motif_finding_example_1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p></p><figcaption class="figure-caption">First selected vertex</figcaption><p></p>
-<p><img src="images/19_graph_analytics_1/motif_finding_example_5.png" class="img-fluid figure-img" style="width:80.0%"></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p></p><figcaption class="figure-caption">Second selected vertex</figcaption><p></p>
-<p><img src="images/19_graph_analytics_1/motif_finding_example_6.png" class="img-fluid figure-img" style="width:80.0%"></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p></p><figcaption class="figure-caption">Resulting vertexes</figcaption><p></p>
-<p><img src="images/19_graph_analytics_1/motif_finding_example_7.png" class="img-fluid figure-img" style="width:80.0%"></p>
-</figure>
-</div>
-<p>The selected IDs are <span class="math inline">\(u2\)</span> and <span class="math inline">\(u3\)</span></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
-<span id="cb7-2"><a href="#cb7-2"></a></span>
-<span id="cb7-3"><a href="#cb7-3"></a><span class="co">## Vertex DataFrame</span></span>
-<span id="cb7-4"><a href="#cb7-4"></a>v <span class="op">=</span> spark.createDataFrame(</span>
-<span id="cb7-5"><a href="#cb7-5"></a>    [</span>
-<span id="cb7-6"><a href="#cb7-6"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
-<span id="cb7-7"><a href="#cb7-7"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
-<span id="cb7-8"><a href="#cb7-8"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
-<span id="cb7-9"><a href="#cb7-9"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
-<span id="cb7-10"><a href="#cb7-10"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
-<span id="cb7-11"><a href="#cb7-11"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
-<span id="cb7-12"><a href="#cb7-12"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
-<span id="cb7-13"><a href="#cb7-13"></a>    ],</span>
-<span id="cb7-14"><a href="#cb7-14"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
-<span id="cb7-15"><a href="#cb7-15"></a>)</span>
-<span id="cb7-16"><a href="#cb7-16"></a></span>
-<span id="cb7-17"><a href="#cb7-17"></a><span class="co">## Edge DataFrame</span></span>
-<span id="cb7-18"><a href="#cb7-18"></a>e <span class="op">=</span> spark.createDataFrame(</span>
-<span id="cb7-19"><a href="#cb7-19"></a>    [</span>
-<span id="cb7-20"><a href="#cb7-20"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
-<span id="cb7-21"><a href="#cb7-21"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
-<span id="cb7-22"><a href="#cb7-22"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
-<span id="cb7-23"><a href="#cb7-23"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
-<span id="cb7-24"><a href="#cb7-24"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
-<span id="cb7-25"><a href="#cb7-25"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
-<span id="cb7-26"><a href="#cb7-26"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
-<span id="cb7-27"><a href="#cb7-27"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
-<span id="cb7-28"><a href="#cb7-28"></a>    ],</span>
-<span id="cb7-29"><a href="#cb7-29"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
-<span id="cb7-30"><a href="#cb7-30"></a>)</span>
-<span id="cb7-31"><a href="#cb7-31"></a></span>
-<span id="cb7-32"><a href="#cb7-32"></a><span class="co">## Create the graph</span></span>
-<span id="cb7-33"><a href="#cb7-33"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
-<span id="cb7-34"><a href="#cb7-34"></a></span>
-<span id="cb7-35"><a href="#cb7-35"></a><span class="co">## Retrieve the DataFrame with the information about the in-degree of</span></span>
-<span id="cb7-36"><a href="#cb7-36"></a><span class="co">## each vertex</span></span>
-<span id="cb7-37"><a href="#cb7-37"></a>vertexesInDegreesDF <span class="op">=</span> g.inDegrees</span>
-<span id="cb7-38"><a href="#cb7-38"></a></span>
-<span id="cb7-39"><a href="#cb7-39"></a><span class="co">## Select only the vertexes with and in-degree value &gt;=2</span></span>
-<span id="cb7-40"><a href="#cb7-40"></a>selectedVertexesDF <span class="op">=</span> vertexesInDegreesDF.<span class="bu">filter</span>(<span class="st">"inDegree&gt;=2"</span>)</span>
-<span id="cb7-41"><a href="#cb7-41"></a></span>
-<span id="cb7-42"><a href="#cb7-42"></a><span class="co">## Select only the content of Column id</span></span>
-<span id="cb7-43"><a href="#cb7-43"></a>selectedVertexesIDsDF <span class="op">=</span> selectedVertexesDF.select(<span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-39"><a href="#cb6-39"></a><span class="co">## Select only the vertexes with and in-degree value &gt;=2</span></span>
+<span id="cb6-40"><a href="#cb6-40"></a>selectedVertexesDF <span class="op">=</span> vertexesInDegreesDF.<span class="bu">filter</span>(<span class="st">"inDegree&gt;=2"</span>)</span>
+<span id="cb6-41"><a href="#cb6-41"></a></span>
+<span id="cb6-42"><a href="#cb6-42"></a><span class="co">## Select only the content of Column id</span></span>
+<span id="cb6-43"><a href="#cb6-43"></a>selectedVertexesIDsDF <span class="op">=</span> selectedVertexesDF.select(<span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 
+
+<!-- -->
 
 </section>
 </section>
@@ -1274,9 +1286,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -1312,6 +1338,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
   function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
@@ -1341,6 +1418,157 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Handle positioning of the toggle
+      window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -1391,7 +1619,651 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         <span class="nav-page-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb7" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu"># Graph analytics in Spark</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="fu">## Introduction</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>Graphs are data structures composed of nodes and edges</span>
+<span id="cb7-4"><a href="#cb7-4"></a></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="ss">- </span>nodes/vertexes are denoted as $V=<span class="sc">\{</span>v_1,v_2,...,v_n<span class="sc">\}</span>$</span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="ss">- </span>edges are denoted as $E=<span class="sc">\{</span>e_1,e_2,...,e_n<span class="sc">\}</span>$</span>
+<span id="cb7-7"><a href="#cb7-7"></a></span>
+<span id="cb7-8"><a href="#cb7-8"></a>Graph analytics is the process of analyzing relationships between vertexes and edges.</span>
+<span id="cb7-9"><a href="#cb7-9"></a></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="al">![Example of graph](images/19_graph_analytics_1/graph_example.png)</span>{width=80%}</span>
+<span id="cb7-11"><a href="#cb7-11"></a></span>
+<span id="cb7-12"><a href="#cb7-12"></a>Graphs are called **undirected** if edges do not have a direction, otherwise they are called **directed** graphs. Vertexes and edges can have data associated with them</span>
+<span id="cb7-13"><a href="#cb7-13"></a></span>
+<span id="cb7-14"><a href="#cb7-14"></a><span class="ss">- </span>weights are associated to edges (e.g., they may represent the strength of the relationship);</span>
+<span id="cb7-15"><a href="#cb7-15"></a><span class="ss">- </span>labels are associated to vertexes (e.g., they may be the string associated with the name of the vertex).</span>
+<span id="cb7-16"><a href="#cb7-16"></a></span>
+<span id="cb7-17"><a href="#cb7-17"></a><span class="al">![Graph with labels and weights](images/19_graph_analytics_1/labels_weights_example.png)</span>{width=80%}</span>
+<span id="cb7-18"><a href="#cb7-18"></a></span>
+<span id="cb7-19"><a href="#cb7-19"></a>:::{.callout-tip}</span>
+<span id="cb7-20"><a href="#cb7-20"></a><span class="fu">### Why graph analytics?</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a>Graphs are natural way of describing relationships. Some practical example of analytics over graphs</span>
+<span id="cb7-22"><a href="#cb7-22"></a></span>
+<span id="cb7-23"><a href="#cb7-23"></a><span class="ss">- </span>Ranking web pages (Google PageRank)</span>
+<span id="cb7-24"><a href="#cb7-24"></a></span>
+<span id="cb7-25"><a href="#cb7-25"></a><span class="al">![Pages in the web](images/19_graph_analytics_1/rank_pages_example.png)</span>{width=80%}</span>
+<span id="cb7-26"><a href="#cb7-26"></a></span>
+<span id="cb7-27"><a href="#cb7-27"></a><span class="ss">- </span>Detecting group of friends</span>
+<span id="cb7-28"><a href="#cb7-28"></a></span>
+<span id="cb7-29"><a href="#cb7-29"></a><span class="al">![Social networks](images/19_graph_analytics_1/social_network_example.png)</span>{width=80%}</span>
+<span id="cb7-30"><a href="#cb7-30"></a></span>
+<span id="cb7-31"><a href="#cb7-31"></a><span class="al">![Movies watched by users](images/19_graph_analytics_1/movies_watched_example.png)</span>{width=80%}</span>
+<span id="cb7-32"><a href="#cb7-32"></a></span>
+<span id="cb7-33"><a href="#cb7-33"></a><span class="ss">- </span>Determine importance of infrastructure in electrical networks</span>
+<span id="cb7-34"><a href="#cb7-34"></a><span class="ss">- </span>...</span>
+<span id="cb7-35"><a href="#cb7-35"></a></span>
+<span id="cb7-36"><a href="#cb7-36"></a>:::</span>
+<span id="cb7-37"><a href="#cb7-37"></a></span>
+<span id="cb7-38"><a href="#cb7-38"></a><span class="fu">## Spark GraphX and GraphFrames</span></span>
+<span id="cb7-39"><a href="#cb7-39"></a>GraphX is the Spark RDD-based library for performing graph processing. It is a core part of Spark.</span>
+<span id="cb7-40"><a href="#cb7-40"></a></span>
+<span id="cb7-41"><a href="#cb7-41"></a><span class="al">![Spark core libraries](images/19_graph_analytics_1/spark_core.png)</span>{width=80%}</span>
+<span id="cb7-42"><a href="#cb7-42"></a></span>
+<span id="cb7-43"><a href="#cb7-43"></a>GraphX</span>
+<span id="cb7-44"><a href="#cb7-44"></a></span>
+<span id="cb7-45"><a href="#cb7-45"></a><span class="ss">- </span>is low level interface with RDD</span>
+<span id="cb7-46"><a href="#cb7-46"></a><span class="ss">- </span>is very powerful: many application and libraries built on top of it</span>
+<span id="cb7-47"><a href="#cb7-47"></a><span class="ss">- </span>is not easy to use or optimize</span>
+<span id="cb7-48"><a href="#cb7-48"></a><span class="ss">- </span>has no Python version of the APIs</span>
+<span id="cb7-49"><a href="#cb7-49"></a></span>
+<span id="cb7-50"><a href="#cb7-50"></a><span class="co">[</span><span class="ot">GraphFrames</span><span class="co">](https://graphframes.github.io/graphframes/docs/_site/index.html)</span> is a library DataFrame-based for performing graph processing. It is a Spark external package built on top of GraphX.</span>
+<span id="cb7-51"><a href="#cb7-51"></a></span>
+<span id="cb7-52"><a href="#cb7-52"></a><span class="al">![GraphFrame structure](images/19_graph_analytics_1/graphframes_structure.png)</span>{width=80%}</span>
+<span id="cb7-53"><a href="#cb7-53"></a></span>
+<span id="cb7-54"><a href="#cb7-54"></a><span class="fu">## Building and querying graphs with GraphFrames</span></span>
+<span id="cb7-55"><a href="#cb7-55"></a><span class="fu">### Building a Graph</span></span>
+<span id="cb7-56"><a href="#cb7-56"></a>Define vertexes and edges of the graph: vertexes and edges are represented by means of records inside DataFrames with specifically named columns</span>
+<span id="cb7-57"><a href="#cb7-57"></a></span>
+<span id="cb7-58"><a href="#cb7-58"></a><span class="ss">- </span>One DataFrame for the definition of the vertexes of the graph. The DataFrames that are used to represent nodes/vertexes</span>
+<span id="cb7-59"><a href="#cb7-59"></a><span class="ss">    - </span>Contain one record per vertex</span>
+<span id="cb7-60"><a href="#cb7-60"></a><span class="ss">    - </span>Must contain a column named "id" that stores unique vertex IDs</span>
+<span id="cb7-61"><a href="#cb7-61"></a><span class="ss">    - </span>Can contain other columns that are used to characterize vertexes</span>
+<span id="cb7-62"><a href="#cb7-62"></a><span class="ss">- </span>One DataFrame for the definition of the edges of the graph. The DataFrames that are used to represent edges</span>
+<span id="cb7-63"><a href="#cb7-63"></a><span class="ss">    - </span>Contain one record per edge</span>
+<span id="cb7-64"><a href="#cb7-64"></a><span class="ss">    - </span>Must contain two columns "src" and "dst" storing source vertex IDs and destination vertex IDs of edges</span>
+<span id="cb7-65"><a href="#cb7-65"></a><span class="ss">    - </span>Can contain other columns that are used to characterize edges</span>
+<span id="cb7-66"><a href="#cb7-66"></a></span>
+<span id="cb7-67"><a href="#cb7-67"></a>Create a graph of type <span class="in">`graphframes.graphframe.GraphFrame`</span> by invoking the constructor <span class="in">`GraphFrame(v,e)`</span></span>
+<span id="cb7-68"><a href="#cb7-68"></a></span>
+<span id="cb7-69"><a href="#cb7-69"></a><span class="ss">- </span><span class="in">`v`</span>: the DataFrame containing the definition of the vertexes</span>
+<span id="cb7-70"><a href="#cb7-70"></a><span class="ss">- </span><span class="in">`e`</span>: the DataFrame containing the definition of the edges</span>
+<span id="cb7-71"><a href="#cb7-71"></a></span>
+<span id="cb7-72"><a href="#cb7-72"></a>Graphs in graphframes are directed graphs.</span>
+<span id="cb7-73"><a href="#cb7-73"></a></span>
+<span id="cb7-74"><a href="#cb7-74"></a><span class="al">![Building a graph example](images/19_graph_analytics_1/building_graph_example.png)</span>{width=80%}</span>
+<span id="cb7-75"><a href="#cb7-75"></a></span>
+<span id="cb7-76"><a href="#cb7-76"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb7-77"><a href="#cb7-77"></a><span class="fu">### Example</span></span>
+<span id="cb7-78"><a href="#cb7-78"></a></span>
+<span id="cb7-79"><a href="#cb7-79"></a>Given this Vertex DataFrame</span>
+<span id="cb7-80"><a href="#cb7-80"></a></span>
+<span id="cb7-81"><a href="#cb7-81"></a>|id|name|age|</span>
+<span id="cb7-82"><a href="#cb7-82"></a>|-|-|-|</span>
+<span id="cb7-83"><a href="#cb7-83"></a>|u1|Alice|34|</span>
+<span id="cb7-84"><a href="#cb7-84"></a>|u2|Bob|36|</span>
+<span id="cb7-85"><a href="#cb7-85"></a>|u3|Charlie|30|</span>
+<span id="cb7-86"><a href="#cb7-86"></a>|u4|David|29|</span>
+<span id="cb7-87"><a href="#cb7-87"></a>|u5|Esther|32|</span>
+<span id="cb7-88"><a href="#cb7-88"></a>|u6|Fanny|36|</span>
+<span id="cb7-89"><a href="#cb7-89"></a>|u7|Gabby|60|</span>
+<span id="cb7-90"><a href="#cb7-90"></a></span>
+<span id="cb7-91"><a href="#cb7-91"></a>And this Edge DataFrame</span>
+<span id="cb7-92"><a href="#cb7-92"></a></span>
+<span id="cb7-93"><a href="#cb7-93"></a></span>
+<span id="cb7-94"><a href="#cb7-94"></a>|src|dst|relationship|</span>
+<span id="cb7-95"><a href="#cb7-95"></a>|-|-|-|</span>
+<span id="cb7-96"><a href="#cb7-96"></a>|u1|u2|friend|</span>
+<span id="cb7-97"><a href="#cb7-97"></a>|u2|u3|follow|</span>
+<span id="cb7-98"><a href="#cb7-98"></a>|u3|u2|follow|</span>
+<span id="cb7-99"><a href="#cb7-99"></a>|u6|u3|follow|</span>
+<span id="cb7-100"><a href="#cb7-100"></a>|u5|u6|follow|</span>
+<span id="cb7-101"><a href="#cb7-101"></a>|u5|u4|friend|</span>
+<span id="cb7-102"><a href="#cb7-102"></a>|u4|u1|friend|</span>
+<span id="cb7-103"><a href="#cb7-103"></a>|u1|u5|friend|</span>
+<span id="cb7-104"><a href="#cb7-104"></a></span>
+<span id="cb7-105"><a href="#cb7-105"></a><span class="in">```python</span></span>
+<span id="cb7-106"><a href="#cb7-106"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb7-107"><a href="#cb7-107"></a></span>
+<span id="cb7-108"><a href="#cb7-108"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb7-109"><a href="#cb7-109"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb7-110"><a href="#cb7-110"></a>    [</span>
+<span id="cb7-111"><a href="#cb7-111"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb7-112"><a href="#cb7-112"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb7-113"><a href="#cb7-113"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb7-114"><a href="#cb7-114"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb7-115"><a href="#cb7-115"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb7-116"><a href="#cb7-116"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb7-117"><a href="#cb7-117"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb7-118"><a href="#cb7-118"></a>    ],</span>
+<span id="cb7-119"><a href="#cb7-119"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb7-120"><a href="#cb7-120"></a>)</span>
+<span id="cb7-121"><a href="#cb7-121"></a></span>
+<span id="cb7-122"><a href="#cb7-122"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb7-123"><a href="#cb7-123"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb7-124"><a href="#cb7-124"></a>    [</span>
+<span id="cb7-125"><a href="#cb7-125"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-126"><a href="#cb7-126"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-127"><a href="#cb7-127"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-128"><a href="#cb7-128"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-129"><a href="#cb7-129"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-130"><a href="#cb7-130"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-131"><a href="#cb7-131"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-132"><a href="#cb7-132"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb7-133"><a href="#cb7-133"></a>    ],</span>
+<span id="cb7-134"><a href="#cb7-134"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb7-135"><a href="#cb7-135"></a>)</span>
+<span id="cb7-136"><a href="#cb7-136"></a></span>
+<span id="cb7-137"><a href="#cb7-137"></a><span class="co">## Create the graph</span></span>
+<span id="cb7-138"><a href="#cb7-138"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb7-139"><a href="#cb7-139"></a><span class="in">```</span></span>
+<span id="cb7-140"><a href="#cb7-140"></a></span>
+<span id="cb7-141"><a href="#cb7-141"></a>:::</span>
+<span id="cb7-142"><a href="#cb7-142"></a></span>
+<span id="cb7-143"><a href="#cb7-143"></a><span class="fu">### Directed vs undirected edges</span></span>
+<span id="cb7-144"><a href="#cb7-144"></a>In undirected graphs the edges indicate a two-way relationship (each edge can be traversed in both directions). In GraphX it is possible to use <span class="in">`to_undirected()`</span> to create an undirected copy of the Graph. Unfortunately GraphFrames does not support it, but it is possible to convert a graph by applying a flatMap function over the edges of the directed graph that creates symmetric edges and then create a new GraphFrame.</span>
+<span id="cb7-145"><a href="#cb7-145"></a></span>
+<span id="cb7-146"><a href="#cb7-146"></a><span class="fu">### Cache graphs</span></span>
+<span id="cb7-147"><a href="#cb7-147"></a>As with RDD and DataFrame, it is possible to cache graphs in GraphFrame: it is convenient if the same (complex) graph result of (multiple) transformations is used multiple times in the same application. To do it, simply invoke <span class="in">`cache()`</span> on the GraphFrame to cache, so that it persists the DataFrame-based representation of vertexes and edges of the graph.</span>
+<span id="cb7-148"><a href="#cb7-148"></a></span>
+<span id="cb7-149"><a href="#cb7-149"></a><span class="fu">### Querying the graph</span></span>
+<span id="cb7-150"><a href="#cb7-150"></a>Some specific methods are provided to execute queries on graphs</span>
+<span id="cb7-151"><a href="#cb7-151"></a></span>
+<span id="cb7-152"><a href="#cb7-152"></a><span class="ss">- </span><span class="in">`filterVertices(condition)`</span></span>
+<span id="cb7-153"><a href="#cb7-153"></a><span class="ss">- </span><span class="in">`filterEdges(condition)`</span></span>
+<span id="cb7-154"><a href="#cb7-154"></a><span class="ss">- </span><span class="in">`dropIsolatedVertices()`</span></span>
+<span id="cb7-155"><a href="#cb7-155"></a></span>
+<span id="cb7-156"><a href="#cb7-156"></a>The returned result is the filtered version of the input graph.</span>
+<span id="cb7-157"><a href="#cb7-157"></a></span>
+<span id="cb7-158"><a href="#cb7-158"></a><span class="fu">#### `filterVertices(condition)`</span></span>
+<span id="cb7-159"><a href="#cb7-159"></a><span class="in">`filterVertices(condition)`</span> selects only the vertexes for which the specified condition is satisfied and returns a new graph with only the subset of selected vertexes.</span>
+<span id="cb7-160"><a href="#cb7-160"></a></span>
+<span id="cb7-161"><a href="#cb7-161"></a><span class="in">`condition`</span> contains an SQL-like condition on the values of the attributes of the vertexes (e.g., "age&gt;35").</span>
+<span id="cb7-162"><a href="#cb7-162"></a></span>
+<span id="cb7-163"><a href="#cb7-163"></a><span class="fu">#### `filterEdges(condition)`</span></span>
+<span id="cb7-164"><a href="#cb7-164"></a><span class="in">`filterEdges(condition)`</span> selects only the edges for which the specified condition is satisfied and returns a new graph with only the subset of selected edges.</span>
+<span id="cb7-165"><a href="#cb7-165"></a></span>
+<span id="cb7-166"><a href="#cb7-166"></a><span class="in">`condition`</span> contains an SQL-like condition on the values of the attributes of the edges (e.g., "relationship='friend'").</span>
+<span id="cb7-167"><a href="#cb7-167"></a></span>
+<span id="cb7-168"><a href="#cb7-168"></a><span class="fu">#### `dropIsolatedVertices()`</span></span>
+<span id="cb7-169"><a href="#cb7-169"></a><span class="in">`dropIsolatedVertices()`</span> drops the vertexes that are not connected with any other node and returns a new graph without the dropped nodes.</span>
+<span id="cb7-170"><a href="#cb7-170"></a></span>
+<span id="cb7-171"><a href="#cb7-171"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb7-172"><a href="#cb7-172"></a><span class="fu">### Example</span></span>
+<span id="cb7-173"><a href="#cb7-173"></a>Given the input graph, create a new subgraph</span>
+<span id="cb7-174"><a href="#cb7-174"></a></span>
+<span id="cb7-175"><a href="#cb7-175"></a><span class="al">![Input graph](images/19_graph_analytics_1/vertex_filtering_example_1.png)</span>{width=80%}</span>
+<span id="cb7-176"><a href="#cb7-176"></a></span>
+<span id="cb7-177"><a href="#cb7-177"></a><span class="ss">1. </span>Include only the vertexes associated with users characterized by age between 29 and 50</span>
+<span id="cb7-178"><a href="#cb7-178"></a></span>
+<span id="cb7-179"><a href="#cb7-179"></a><span class="al">![Filter vertexes](images/19_graph_analytics_1/vertex_filtering_example_2.png)</span>{width=80%}</span>
+<span id="cb7-180"><a href="#cb7-180"></a></span>
+<span id="cb7-181"><a href="#cb7-181"></a><span class="ss">2. </span>Include only the edges representing the friend relationship</span>
+<span id="cb7-182"><a href="#cb7-182"></a></span>
+<span id="cb7-183"><a href="#cb7-183"></a><span class="al">![Filter edges](images/19_graph_analytics_1/vertex_filtering_example_3.png)</span>{width=80%}</span>
+<span id="cb7-184"><a href="#cb7-184"></a></span>
+<span id="cb7-185"><a href="#cb7-185"></a><span class="ss">3. </span>Drop isolated vertexes</span>
+<span id="cb7-186"><a href="#cb7-186"></a></span>
+<span id="cb7-187"><a href="#cb7-187"></a><span class="al">![Drop isolated vertices](images/19_graph_analytics_1/vertex_filtering_example_4.png)</span>{width=80%}</span>
+<span id="cb7-188"><a href="#cb7-188"></a></span>
+<span id="cb7-189"><a href="#cb7-189"></a></span>
+<span id="cb7-190"><a href="#cb7-190"></a><span class="al">![Output graph](images/19_graph_analytics_1/vertex_filtering_example_5.png)</span>{width=80%}</span>
+<span id="cb7-191"><a href="#cb7-191"></a></span>
+<span id="cb7-192"><a href="#cb7-192"></a><span class="in">```python</span></span>
+<span id="cb7-193"><a href="#cb7-193"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb7-194"><a href="#cb7-194"></a></span>
+<span id="cb7-195"><a href="#cb7-195"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb7-196"><a href="#cb7-196"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb7-197"><a href="#cb7-197"></a>    [</span>
+<span id="cb7-198"><a href="#cb7-198"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb7-199"><a href="#cb7-199"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb7-200"><a href="#cb7-200"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb7-201"><a href="#cb7-201"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb7-202"><a href="#cb7-202"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb7-203"><a href="#cb7-203"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb7-204"><a href="#cb7-204"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb7-205"><a href="#cb7-205"></a>    ],</span>
+<span id="cb7-206"><a href="#cb7-206"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb7-207"><a href="#cb7-207"></a>)</span>
+<span id="cb7-208"><a href="#cb7-208"></a></span>
+<span id="cb7-209"><a href="#cb7-209"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb7-210"><a href="#cb7-210"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb7-211"><a href="#cb7-211"></a>    [</span>
+<span id="cb7-212"><a href="#cb7-212"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-213"><a href="#cb7-213"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-214"><a href="#cb7-214"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-215"><a href="#cb7-215"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-216"><a href="#cb7-216"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-217"><a href="#cb7-217"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-218"><a href="#cb7-218"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-219"><a href="#cb7-219"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb7-220"><a href="#cb7-220"></a>    ],</span>
+<span id="cb7-221"><a href="#cb7-221"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb7-222"><a href="#cb7-222"></a>)</span>
+<span id="cb7-223"><a href="#cb7-223"></a></span>
+<span id="cb7-224"><a href="#cb7-224"></a><span class="co">## Create the graph</span></span>
+<span id="cb7-225"><a href="#cb7-225"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb7-226"><a href="#cb7-226"></a></span>
+<span id="cb7-227"><a href="#cb7-227"></a>selectedUsersandFriendRelGraph <span class="op">=</span> g <span class="op">\</span></span>
+<span id="cb7-228"><a href="#cb7-228"></a>    .filterVertices(<span class="st">"age&gt;=29 AND age&lt;=50"</span>) <span class="op">\</span></span>
+<span id="cb7-229"><a href="#cb7-229"></a>    .filterEdges(<span class="st">"relationship='friend'"</span>) <span class="op">\</span></span>
+<span id="cb7-230"><a href="#cb7-230"></a>    .dropIsolatedVertices()</span>
+<span id="cb7-231"><a href="#cb7-231"></a><span class="in">```</span></span>
+<span id="cb7-232"><a href="#cb7-232"></a></span>
+<span id="cb7-233"><a href="#cb7-233"></a>:::</span>
+<span id="cb7-234"><a href="#cb7-234"></a></span>
+<span id="cb7-235"><a href="#cb7-235"></a>Given a GraphFrame, it is possible to access its vertexes and edges</span>
+<span id="cb7-236"><a href="#cb7-236"></a></span>
+<span id="cb7-237"><a href="#cb7-237"></a><span class="ss">- </span><span class="in">`g.vertices`</span> returns the DataFrame associated with the vertexes of the input graph</span>
+<span id="cb7-238"><a href="#cb7-238"></a><span class="ss">- </span><span class="in">`g.edges`</span> returns the DataFrame associated with the edges of the input graph</span>
+<span id="cb7-239"><a href="#cb7-239"></a></span>
+<span id="cb7-240"><a href="#cb7-240"></a>All the standard DataFrame transformations/actions are available also for the DataFrames that are used to store vertexes and edges. For example, the number of vertexes and the number of edges can be computed by invoking the <span class="in">`count()`</span> action on the DataFrames vertices and edges, respectively.</span>
+<span id="cb7-241"><a href="#cb7-241"></a></span>
+<span id="cb7-242"><a href="#cb7-242"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb7-243"><a href="#cb7-243"></a><span class="fu">### Example</span></span>
+<span id="cb7-244"><a href="#cb7-244"></a>Given the input graph</span>
+<span id="cb7-245"><a href="#cb7-245"></a></span>
+<span id="cb7-246"><a href="#cb7-246"></a><span class="ss">1. </span>Count how many vertexes and edges has the graph</span>
+<span id="cb7-247"><a href="#cb7-247"></a><span class="ss">2. </span>Find the smallest value of age (i.e., the age of the youngest user in the graph)</span>
+<span id="cb7-248"><a href="#cb7-248"></a><span class="ss">3. </span>Count the number of edges of type "follow" in the graph</span>
+<span id="cb7-249"><a href="#cb7-249"></a></span>
+<span id="cb7-250"><a href="#cb7-250"></a><span class="in">```python</span></span>
+<span id="cb7-251"><a href="#cb7-251"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb7-252"><a href="#cb7-252"></a></span>
+<span id="cb7-253"><a href="#cb7-253"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb7-254"><a href="#cb7-254"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb7-255"><a href="#cb7-255"></a>    [</span>
+<span id="cb7-256"><a href="#cb7-256"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb7-257"><a href="#cb7-257"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb7-258"><a href="#cb7-258"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb7-259"><a href="#cb7-259"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb7-260"><a href="#cb7-260"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb7-261"><a href="#cb7-261"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb7-262"><a href="#cb7-262"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb7-263"><a href="#cb7-263"></a>    ],</span>
+<span id="cb7-264"><a href="#cb7-264"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb7-265"><a href="#cb7-265"></a>)</span>
+<span id="cb7-266"><a href="#cb7-266"></a></span>
+<span id="cb7-267"><a href="#cb7-267"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb7-268"><a href="#cb7-268"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb7-269"><a href="#cb7-269"></a>    [</span>
+<span id="cb7-270"><a href="#cb7-270"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-271"><a href="#cb7-271"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-272"><a href="#cb7-272"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-273"><a href="#cb7-273"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-274"><a href="#cb7-274"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-275"><a href="#cb7-275"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-276"><a href="#cb7-276"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-277"><a href="#cb7-277"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb7-278"><a href="#cb7-278"></a>    ],</span>
+<span id="cb7-279"><a href="#cb7-279"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb7-280"><a href="#cb7-280"></a>)</span>
+<span id="cb7-281"><a href="#cb7-281"></a></span>
+<span id="cb7-282"><a href="#cb7-282"></a><span class="co">## Create the graph</span></span>
+<span id="cb7-283"><a href="#cb7-283"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb7-284"><a href="#cb7-284"></a></span>
+<span id="cb7-285"><a href="#cb7-285"></a><span class="co">## Count how many vertexes and edges has the graph</span></span>
+<span id="cb7-286"><a href="#cb7-286"></a><span class="bu">print</span>(<span class="st">"Number of vertexes: "</span>,g.vertices.count())</span>
+<span id="cb7-287"><a href="#cb7-287"></a><span class="bu">print</span>(<span class="st">"Number of edges: "</span>,g.edges.count())</span>
+<span id="cb7-288"><a href="#cb7-288"></a></span>
+<span id="cb7-289"><a href="#cb7-289"></a><span class="co">## Print on the standard output the smallest value of age</span></span>
+<span id="cb7-290"><a href="#cb7-290"></a><span class="co">## (i.e., the age of the youngest user in the graph)</span></span>
+<span id="cb7-291"><a href="#cb7-291"></a>g.vertices.agg({<span class="st">"age"</span>:<span class="st">"min"</span>}).show()</span>
+<span id="cb7-292"><a href="#cb7-292"></a></span>
+<span id="cb7-293"><a href="#cb7-293"></a><span class="co">## Print on the standard output</span></span>
+<span id="cb7-294"><a href="#cb7-294"></a><span class="co">## the number of "follow" edges in the graph.</span></span>
+<span id="cb7-295"><a href="#cb7-295"></a>numFollows <span class="op">=</span> g.edges.<span class="bu">filter</span>(<span class="st">"relationship = 'follow' "</span>).count()</span>
+<span id="cb7-296"><a href="#cb7-296"></a></span>
+<span id="cb7-297"><a href="#cb7-297"></a><span class="bu">print</span>(numFollows)</span>
+<span id="cb7-298"><a href="#cb7-298"></a><span class="in">```</span></span>
+<span id="cb7-299"><a href="#cb7-299"></a></span>
+<span id="cb7-300"><a href="#cb7-300"></a>:::</span>
+<span id="cb7-301"><a href="#cb7-301"></a></span>
+<span id="cb7-302"><a href="#cb7-302"></a><span class="fu">### Motif finding</span></span>
+<span id="cb7-303"><a href="#cb7-303"></a>Motif finding refers to searching for structural patterns in graphs. A simple Domain-Specific Language (DSL) is used to specify the structure of the interesting patterns: the paths/subgraphs in the graph matching the specified structural pattern are selected.</span>
+<span id="cb7-304"><a href="#cb7-304"></a></span>
+<span id="cb7-305"><a href="#cb7-305"></a><span class="fu">#### DSL for Motif finding</span></span>
+<span id="cb7-306"><a href="#cb7-306"></a>The basic unit of a pattern is a connection between vertexes</span>
+<span id="cb7-307"><a href="#cb7-307"></a></span>
+<span id="cb7-308"><a href="#cb7-308"></a>$$</span>
+<span id="cb7-309"><a href="#cb7-309"></a>(v1) – <span class="co">[</span><span class="ot">e1</span><span class="co">]</span> \rightarrow (v2)</span>
+<span id="cb7-310"><a href="#cb7-310"></a>$$</span>
+<span id="cb7-311"><a href="#cb7-311"></a></span>
+<span id="cb7-312"><a href="#cb7-312"></a>means: an arbitrary edge <span class="co">[</span><span class="ot">e1</span><span class="co">]</span> from an arbitrary vertex (v1) to another arbitrary vertex (v2)</span>
+<span id="cb7-313"><a href="#cb7-313"></a></span>
+<span id="cb7-314"><a href="#cb7-314"></a><span class="ss">- </span>Edges are denoted by square brackets: $<span class="co">[</span><span class="ot">e1</span><span class="co">]</span>$</span>
+<span id="cb7-315"><a href="#cb7-315"></a><span class="ss">- </span>Vertexes are expressed by round brackets: $(v1)$, $(v2)$</span>
+<span id="cb7-316"><a href="#cb7-316"></a></span>
+<span id="cb7-317"><a href="#cb7-317"></a><span class="al">![Basic unit](images/19_graph_analytics_1/motif_basic_unit.png)</span>{width=80%}</span>
+<span id="cb7-318"><a href="#cb7-318"></a></span>
+<span id="cb7-319"><a href="#cb7-319"></a>Patterns are chains of basic units</span>
+<span id="cb7-320"><a href="#cb7-320"></a></span>
+<span id="cb7-321"><a href="#cb7-321"></a>$$</span>
+<span id="cb7-322"><a href="#cb7-322"></a>(v1) – <span class="co">[</span><span class="ot">e1</span><span class="co">]</span> \rightarrow (v2);\quad (v2) – <span class="co">[</span><span class="ot">e2</span><span class="co">]</span> \rightarrow (v3)</span>
+<span id="cb7-323"><a href="#cb7-323"></a>$$</span>
+<span id="cb7-324"><a href="#cb7-324"></a></span>
+<span id="cb7-325"><a href="#cb7-325"></a>means: an arbitrary edge from an arbitrary vertex $v1$ to another arbitrary vertex $v2$ and another arbitrary edge from $v2$ to another arbitrary vertex $v3$. Notice that $v3$ and $v1$ can be the same vertex.</span>
+<span id="cb7-326"><a href="#cb7-326"></a></span>
+<span id="cb7-327"><a href="#cb7-327"></a><span class="al">![Basic unit chaining](images/19_graph_analytics_1/motif_basic_unit_chaining.png)</span>{width=80%}</span>
+<span id="cb7-328"><a href="#cb7-328"></a></span>
+<span id="cb7-329"><a href="#cb7-329"></a>The same vertex name is used in a pattern to have a reference to the same vertex</span>
+<span id="cb7-330"><a href="#cb7-330"></a></span>
+<span id="cb7-331"><a href="#cb7-331"></a>$$</span>
+<span id="cb7-332"><a href="#cb7-332"></a>(v1) – <span class="co">[</span><span class="ot">e1</span><span class="co">]</span> \rightarrow (v2);\quad (v2) – <span class="co">[</span><span class="ot">e2</span><span class="co">]</span> \rightarrow (v1)</span>
+<span id="cb7-333"><a href="#cb7-333"></a>$$</span>
+<span id="cb7-334"><a href="#cb7-334"></a></span>
+<span id="cb7-335"><a href="#cb7-335"></a>means: an arbitrary edge from an arbitrary vertex $v1$ to another arbitrary vertex $v2$ and vice-versa.</span>
+<span id="cb7-336"><a href="#cb7-336"></a></span>
+<span id="cb7-337"><a href="#cb7-337"></a><span class="al">![Basic unit self-chaining](images/19_graph_analytics_1/motif_basic_unit_chaining.png)</span>{width=80%}</span>
+<span id="cb7-338"><a href="#cb7-338"></a></span>
+<span id="cb7-339"><a href="#cb7-339"></a>It is acceptable to omit names for vertices or edges in patterns when not needed</span>
+<span id="cb7-340"><a href="#cb7-340"></a></span>
+<span id="cb7-341"><a href="#cb7-341"></a>$$</span>
+<span id="cb7-342"><a href="#cb7-342"></a>(v1)-<span class="co">[</span><span class="ot">\quad</span><span class="co">]</span>\rightarrow(v2)</span>
+<span id="cb7-343"><a href="#cb7-343"></a>$$</span>
+<span id="cb7-344"><a href="#cb7-344"></a></span>
+<span id="cb7-345"><a href="#cb7-345"></a>means: an arbitrary edge between two arbitrary vertexes $v1$, $v2$, but does not assign a name to the edge. These are called **anonymous** vertexes and edges.</span>
+<span id="cb7-346"><a href="#cb7-346"></a></span>
+<span id="cb7-347"><a href="#cb7-347"></a><span class="al">![Anonymous vertexes and edges](images/19_graph_analytics_1/motif_anonyomous_vertexes.png)</span>{width=80%}</span>
+<span id="cb7-348"><a href="#cb7-348"></a></span>
+<span id="cb7-349"><a href="#cb7-349"></a>A basic unit (an edge between two vertexes) can be negated to indicate that the edge should not be present in the graph</span>
+<span id="cb7-350"><a href="#cb7-350"></a></span>
+<span id="cb7-351"><a href="#cb7-351"></a>$$</span>
+<span id="cb7-352"><a href="#cb7-352"></a>(v1)-<span class="co">[</span><span class="ot">\quad</span><span class="co">]</span>\rightarrow(v2);\quad !(v2)-<span class="co">[</span><span class="ot">\quad</span><span class="co">]</span>\rightarrow(v1)</span>
+<span id="cb7-353"><a href="#cb7-353"></a>$$</span>
+<span id="cb7-354"><a href="#cb7-354"></a></span>
+<span id="cb7-355"><a href="#cb7-355"></a>means: edges from $v1$ to $v2$ but no edges from $v2$ to $v1$.</span>
+<span id="cb7-356"><a href="#cb7-356"></a></span>
+<span id="cb7-357"><a href="#cb7-357"></a><span class="al">![Negating edges](images/19_graph_analytics_1/motif_negating_edges.png)</span>{width=80%}</span>
+<span id="cb7-358"><a href="#cb7-358"></a></span>
+<span id="cb7-359"><a href="#cb7-359"></a>The <span class="in">`find(motif)`</span> method of GraphFrame is used to select motifs</span>
+<span id="cb7-360"><a href="#cb7-360"></a></span>
+<span id="cb7-361"><a href="#cb7-361"></a><span class="ss">- </span><span class="in">`motif`</span> is a DSL representation of the structural pattern</span>
+<span id="cb7-362"><a href="#cb7-362"></a></span>
+<span id="cb7-363"><a href="#cb7-363"></a><span class="in">`find()`</span> returns a DataFrame of all the paths matching the structural motif/pattern, one path per record. The returned DataFrame will have a column for each of the named elements (vertexes and edges) in the structural pattern/motif: Each column is a struct, and the fields of each struct are the labels/features of the associated vertex or edge. It can return duplicate rows/records, if there are many paths connecting the same nodes.</span>
+<span id="cb7-364"><a href="#cb7-364"></a></span>
+<span id="cb7-365"><a href="#cb7-365"></a>More complex queries on the structure and content of the patterns can be expressed by applying filters to the result DataFrame (i.e., more complex queries can be applied by combing <span class="in">`find()`</span> and <span class="in">`filter()`</span>).</span>
+<span id="cb7-366"><a href="#cb7-366"></a></span>
+<span id="cb7-367"><a href="#cb7-367"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb7-368"><a href="#cb7-368"></a><span class="fu">### Example 1</span></span>
+<span id="cb7-369"><a href="#cb7-369"></a>Given the following graph</span>
+<span id="cb7-370"><a href="#cb7-370"></a></span>
+<span id="cb7-371"><a href="#cb7-371"></a><span class="al">![Example graph](images/19_graph_analytics_1/motif_finding_example_1.png)</span>{width=80%}</span>
+<span id="cb7-372"><a href="#cb7-372"></a></span>
+<span id="cb7-373"><a href="#cb7-373"></a>Find the paths/subgraphs matching the pattern</span>
+<span id="cb7-374"><a href="#cb7-374"></a></span>
+<span id="cb7-375"><a href="#cb7-375"></a>$$</span>
+<span id="cb7-376"><a href="#cb7-376"></a>(v1) – <span class="co">[</span><span class="ot">e1</span><span class="co">]</span> \rightarrow (v2);\quad (v2) – <span class="co">[</span><span class="ot">e2</span><span class="co">]</span> \rightarrow (v1)</span>
+<span id="cb7-377"><a href="#cb7-377"></a>$$</span>
+<span id="cb7-378"><a href="#cb7-378"></a></span>
+<span id="cb7-379"><a href="#cb7-379"></a>Store the result in a DataFrame</span>
+<span id="cb7-380"><a href="#cb7-380"></a></span>
+<span id="cb7-381"><a href="#cb7-381"></a><span class="al">![Result](images/19_graph_analytics_1/motif_finding_example_2.png)</span>{width=80%}</span>
+<span id="cb7-382"><a href="#cb7-382"></a></span>
+<span id="cb7-383"><a href="#cb7-383"></a>Pay attention that two paths are returned:</span>
+<span id="cb7-384"><a href="#cb7-384"></a></span>
+<span id="cb7-385"><a href="#cb7-385"></a><span class="ss">- </span>$u2 \rightarrow \text{follow} \rightarrow u3 \rightarrow \text{follow} \rightarrow u2$</span>
+<span id="cb7-386"><a href="#cb7-386"></a><span class="ss">- </span>$u3 \rightarrow \text{follow} \rightarrow u2 \rightarrow \text{follow} \rightarrow u3$</span>
+<span id="cb7-387"><a href="#cb7-387"></a></span>
+<span id="cb7-388"><a href="#cb7-388"></a>The content of the returned Dataframe is the following</span>
+<span id="cb7-389"><a href="#cb7-389"></a></span>
+<span id="cb7-390"><a href="#cb7-390"></a>| $v1$ | $e1$ | $v2$ | $e2$ |</span>
+<span id="cb7-391"><a href="#cb7-391"></a>|-|-|-|-|</span>
+<span id="cb7-392"><a href="#cb7-392"></a>| $<span class="co">[</span><span class="ot">u2, \text{Bob}, 36</span><span class="co">]</span>$ | $<span class="co">[</span><span class="ot">u2, u3, \text{follow}</span><span class="co">]</span>$ | $<span class="co">[</span><span class="ot">u3, \text[Charlie], 30</span><span class="co">]</span>$ | $<span class="co">[</span><span class="ot">u3, u2, \text{follow}</span><span class="co">]</span>$ |</span>
+<span id="cb7-393"><a href="#cb7-393"></a>| $<span class="co">[</span><span class="ot">u3, \text[Charlie], 30</span><span class="co">]</span>$ | $<span class="co">[</span><span class="ot">u3, u2, \text{follow}</span><span class="co">]</span>$ | $<span class="co">[</span><span class="ot">u2, \text{Bob}, 36</span><span class="co">]</span>$ | $<span class="co">[</span><span class="ot">u2, u3, \text{follow}</span><span class="co">]</span>$ |</span>
+<span id="cb7-394"><a href="#cb7-394"></a></span>
+<span id="cb7-395"><a href="#cb7-395"></a><span class="ss">- </span>There is one column for each (distinct) named vertex and edge of the structural pattern;</span>
+<span id="cb7-396"><a href="#cb7-396"></a><span class="ss">- </span>The records are associated with the vertexes and edges of the selected paths;</span>
+<span id="cb7-397"><a href="#cb7-397"></a><span class="ss">- </span>All columns are associated with the data type "struct". Each struct has the same "schema/features" of the associated vertex or edge.</span>
+<span id="cb7-398"><a href="#cb7-398"></a></span>
+<span id="cb7-399"><a href="#cb7-399"></a><span class="in">```python</span></span>
+<span id="cb7-400"><a href="#cb7-400"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb7-401"><a href="#cb7-401"></a></span>
+<span id="cb7-402"><a href="#cb7-402"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb7-403"><a href="#cb7-403"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb7-404"><a href="#cb7-404"></a>    [</span>
+<span id="cb7-405"><a href="#cb7-405"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb7-406"><a href="#cb7-406"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb7-407"><a href="#cb7-407"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb7-408"><a href="#cb7-408"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb7-409"><a href="#cb7-409"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb7-410"><a href="#cb7-410"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb7-411"><a href="#cb7-411"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb7-412"><a href="#cb7-412"></a>    ],</span>
+<span id="cb7-413"><a href="#cb7-413"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb7-414"><a href="#cb7-414"></a>)</span>
+<span id="cb7-415"><a href="#cb7-415"></a></span>
+<span id="cb7-416"><a href="#cb7-416"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb7-417"><a href="#cb7-417"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb7-418"><a href="#cb7-418"></a>    [</span>
+<span id="cb7-419"><a href="#cb7-419"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-420"><a href="#cb7-420"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-421"><a href="#cb7-421"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-422"><a href="#cb7-422"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-423"><a href="#cb7-423"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-424"><a href="#cb7-424"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-425"><a href="#cb7-425"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-426"><a href="#cb7-426"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb7-427"><a href="#cb7-427"></a>    ],</span>
+<span id="cb7-428"><a href="#cb7-428"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb7-429"><a href="#cb7-429"></a>)</span>
+<span id="cb7-430"><a href="#cb7-430"></a></span>
+<span id="cb7-431"><a href="#cb7-431"></a><span class="co">## Create the graph</span></span>
+<span id="cb7-432"><a href="#cb7-432"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb7-433"><a href="#cb7-433"></a></span>
+<span id="cb7-434"><a href="#cb7-434"></a><span class="co">## Retrieve the motifs associated with the pattern</span></span>
+<span id="cb7-435"><a href="#cb7-435"></a><span class="co">## vertex -&gt; edge -&gt; vertex -&gt; edge -&gt;vertex</span></span>
+<span id="cb7-436"><a href="#cb7-436"></a>motifs <span class="op">=</span> g.find(<span class="st">"(v1)-[e1]-&gt;(v2); (v2)-[e2]-&gt;(v1)"</span>)</span>
+<span id="cb7-437"><a href="#cb7-437"></a><span class="in">```</span></span>
+<span id="cb7-438"><a href="#cb7-438"></a></span>
+<span id="cb7-439"><a href="#cb7-439"></a>:::</span>
+<span id="cb7-440"><a href="#cb7-440"></a></span>
+<span id="cb7-441"><a href="#cb7-441"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb7-442"><a href="#cb7-442"></a><span class="fu">### Example 2</span></span>
+<span id="cb7-443"><a href="#cb7-443"></a>Given the following graph</span>
+<span id="cb7-444"><a href="#cb7-444"></a></span>
+<span id="cb7-445"><a href="#cb7-445"></a><span class="al">![Example graph](images/19_graph_analytics_1/motif_finding_example_1.png)</span>{width=80%}</span>
+<span id="cb7-446"><a href="#cb7-446"></a></span>
+<span id="cb7-447"><a href="#cb7-447"></a>Find the paths/subgraphs matching the pattern</span>
+<span id="cb7-448"><a href="#cb7-448"></a></span>
+<span id="cb7-449"><a href="#cb7-449"></a>$$</span>
+<span id="cb7-450"><a href="#cb7-450"></a>(v1) - <span class="co">[</span><span class="ot">\text{friend}</span><span class="co">]</span> \rightarrow (v2);\quad (v2) - <span class="co">[</span><span class="ot">\text{follow}</span><span class="co">]</span> \rightarrow (v3)</span>
+<span id="cb7-451"><a href="#cb7-451"></a>$$</span>
+<span id="cb7-452"><a href="#cb7-452"></a></span>
+<span id="cb7-453"><a href="#cb7-453"></a>Store the result in a DataFrame</span>
+<span id="cb7-454"><a href="#cb7-454"></a></span>
+<span id="cb7-455"><a href="#cb7-455"></a><span class="al">![First selected path](images/19_graph_analytics_1/motif_finding_example_3.png)</span>{width=80%}</span>
+<span id="cb7-456"><a href="#cb7-456"></a></span>
+<span id="cb7-457"><a href="#cb7-457"></a><span class="al">![Second selected path](images/19_graph_analytics_1/motif_finding_example_4.png)</span>{width=80%}</span>
+<span id="cb7-458"><a href="#cb7-458"></a></span>
+<span id="cb7-459"><a href="#cb7-459"></a><span class="in">```python</span></span>
+<span id="cb7-460"><a href="#cb7-460"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb7-461"><a href="#cb7-461"></a></span>
+<span id="cb7-462"><a href="#cb7-462"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb7-463"><a href="#cb7-463"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb7-464"><a href="#cb7-464"></a>    [</span>
+<span id="cb7-465"><a href="#cb7-465"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb7-466"><a href="#cb7-466"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb7-467"><a href="#cb7-467"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb7-468"><a href="#cb7-468"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb7-469"><a href="#cb7-469"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb7-470"><a href="#cb7-470"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb7-471"><a href="#cb7-471"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb7-472"><a href="#cb7-472"></a>    ],</span>
+<span id="cb7-473"><a href="#cb7-473"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb7-474"><a href="#cb7-474"></a>)</span>
+<span id="cb7-475"><a href="#cb7-475"></a></span>
+<span id="cb7-476"><a href="#cb7-476"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb7-477"><a href="#cb7-477"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb7-478"><a href="#cb7-478"></a>    [</span>
+<span id="cb7-479"><a href="#cb7-479"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-480"><a href="#cb7-480"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-481"><a href="#cb7-481"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-482"><a href="#cb7-482"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-483"><a href="#cb7-483"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-484"><a href="#cb7-484"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-485"><a href="#cb7-485"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-486"><a href="#cb7-486"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb7-487"><a href="#cb7-487"></a>    ],</span>
+<span id="cb7-488"><a href="#cb7-488"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb7-489"><a href="#cb7-489"></a>)</span>
+<span id="cb7-490"><a href="#cb7-490"></a></span>
+<span id="cb7-491"><a href="#cb7-491"></a><span class="co">## Create the graph</span></span>
+<span id="cb7-492"><a href="#cb7-492"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb7-493"><a href="#cb7-493"></a></span>
+<span id="cb7-494"><a href="#cb7-494"></a><span class="co">## Retrieve the motifs associated with the pattern</span></span>
+<span id="cb7-495"><a href="#cb7-495"></a><span class="co">## vertex -&gt; edge -&gt; vertex -&gt; edge -&gt;vertex</span></span>
+<span id="cb7-496"><a href="#cb7-496"></a>motifs <span class="op">=</span> g.find(<span class="st">"(v1)-[friend]-&gt;(v2); (v2)-[follow]-&gt;(v3)"</span>)</span>
+<span id="cb7-497"><a href="#cb7-497"></a></span>
+<span id="cb7-498"><a href="#cb7-498"></a><span class="co">## Filter the motifs (the content of the motifs DataFrame)</span></span>
+<span id="cb7-499"><a href="#cb7-499"></a><span class="co">## Select only the ones matching the pattern</span></span>
+<span id="cb7-500"><a href="#cb7-500"></a><span class="co">## vertex -&gt; friend-&gt; vertex -&gt; follow -&gt;vertex</span></span>
+<span id="cb7-501"><a href="#cb7-501"></a>motifsFriendFollow <span class="op">=</span> motifs <span class="op">\</span></span>
+<span id="cb7-502"><a href="#cb7-502"></a>    .<span class="bu">filter</span>(<span class="st">"friend.relationship='friend' AND follow.relationship='follow' "</span>) <span class="co"># &lt;1&gt;</span></span>
+<span id="cb7-503"><a href="#cb7-503"></a><span class="in">```</span></span>
+<span id="cb7-504"><a href="#cb7-504"></a><span class="ss">1. </span>Columns friend and follow are structs with three fields/attributes: "src", "dst", "relationship". To access a field of a struct column use the syntax <span class="in">`columnName.field`</span> (e.g., <span class="in">`friend.relationship`</span>)</span>
+<span id="cb7-505"><a href="#cb7-505"></a></span>
+<span id="cb7-506"><a href="#cb7-506"></a>:::</span>
+<span id="cb7-507"><a href="#cb7-507"></a></span>
+<span id="cb7-508"><a href="#cb7-508"></a><span class="fu">## Basic statistics</span></span>
+<span id="cb7-509"><a href="#cb7-509"></a>Some specific properties are provided to compute basic statistics on the degrees of the vertexes</span>
+<span id="cb7-510"><a href="#cb7-510"></a></span>
+<span id="cb7-511"><a href="#cb7-511"></a><span class="ss">- </span><span class="in">`degrees`</span></span>
+<span id="cb7-512"><a href="#cb7-512"></a><span class="ss">- </span><span class="in">`inDegrees`</span></span>
+<span id="cb7-513"><a href="#cb7-513"></a><span class="ss">- </span><span class="in">`outDegrees`</span></span>
+<span id="cb7-514"><a href="#cb7-514"></a></span>
+<span id="cb7-515"><a href="#cb7-515"></a>The returned result of each of this property is a DataFrame with id and (in/out)Degree value.</span>
+<span id="cb7-516"><a href="#cb7-516"></a></span>
+<span id="cb7-517"><a href="#cb7-517"></a><span class="fu">### `degrees`</span></span>
+<span id="cb7-518"><a href="#cb7-518"></a><span class="in">`degrees`</span> returns the degree of each vertex (i.e., the number of edges associated with each vertex). The result is stored in a DataFrame with Columns (vertex) "id" and "degree", with one record per vertex. Only the vertexes with $\text{degree} \geq 1$ are stored in the returned DataFrame.</span>
+<span id="cb7-519"><a href="#cb7-519"></a></span>
+<span id="cb7-520"><a href="#cb7-520"></a><span class="fu">### `inDegrees`</span></span>
+<span id="cb7-521"><a href="#cb7-521"></a><span class="in">`inDegrees`</span> returns the in-degree of each vertex (i.e., the number of in-edges associated with each vertex). The result is stored in a DataFrame with Columns (vertex) "id" and "inDegree", with one record per vertex. Only the vertexes with $\text{in-degree} \geq 1$ are stored in the returned DataFrame.</span>
+<span id="cb7-522"><a href="#cb7-522"></a></span>
+<span id="cb7-523"><a href="#cb7-523"></a><span class="fu">### `outDegrees`</span></span>
+<span id="cb7-524"><a href="#cb7-524"></a><span class="in">`outDegrees`</span> returns the out-degree of each vertex (i.e., the number of out-edges associated with each vertex). The result is stored in a DataFrame with Columns (vertex) "id" and "outDegree", with one record per vertex. Only the vertexes with $\text{out-degree} \geq 1$ are stored in the returned DataFrame.</span>
+<span id="cb7-525"><a href="#cb7-525"></a></span>
+<span id="cb7-526"><a href="#cb7-526"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb7-527"><a href="#cb7-527"></a><span class="fu">### Example 1</span></span>
+<span id="cb7-528"><a href="#cb7-528"></a>Given the input graph, compute</span>
+<span id="cb7-529"><a href="#cb7-529"></a></span>
+<span id="cb7-530"><a href="#cb7-530"></a><span class="ss">- </span>Degree of each vertex</span>
+<span id="cb7-531"><a href="#cb7-531"></a><span class="ss">- </span>inDegree of each vertex</span>
+<span id="cb7-532"><a href="#cb7-532"></a><span class="ss">- </span>outDegree of each vertex</span>
+<span id="cb7-533"><a href="#cb7-533"></a></span>
+<span id="cb7-534"><a href="#cb7-534"></a><span class="in">```python</span></span>
+<span id="cb7-535"><a href="#cb7-535"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb7-536"><a href="#cb7-536"></a></span>
+<span id="cb7-537"><a href="#cb7-537"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb7-538"><a href="#cb7-538"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb7-539"><a href="#cb7-539"></a>    [</span>
+<span id="cb7-540"><a href="#cb7-540"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb7-541"><a href="#cb7-541"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb7-542"><a href="#cb7-542"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb7-543"><a href="#cb7-543"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb7-544"><a href="#cb7-544"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb7-545"><a href="#cb7-545"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb7-546"><a href="#cb7-546"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb7-547"><a href="#cb7-547"></a>    ],</span>
+<span id="cb7-548"><a href="#cb7-548"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb7-549"><a href="#cb7-549"></a>)</span>
+<span id="cb7-550"><a href="#cb7-550"></a></span>
+<span id="cb7-551"><a href="#cb7-551"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb7-552"><a href="#cb7-552"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb7-553"><a href="#cb7-553"></a>    [</span>
+<span id="cb7-554"><a href="#cb7-554"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-555"><a href="#cb7-555"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-556"><a href="#cb7-556"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-557"><a href="#cb7-557"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-558"><a href="#cb7-558"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-559"><a href="#cb7-559"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-560"><a href="#cb7-560"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-561"><a href="#cb7-561"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb7-562"><a href="#cb7-562"></a>    ],</span>
+<span id="cb7-563"><a href="#cb7-563"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb7-564"><a href="#cb7-564"></a>)</span>
+<span id="cb7-565"><a href="#cb7-565"></a></span>
+<span id="cb7-566"><a href="#cb7-566"></a><span class="co">## Create the graph</span></span>
+<span id="cb7-567"><a href="#cb7-567"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb7-568"><a href="#cb7-568"></a></span>
+<span id="cb7-569"><a href="#cb7-569"></a><span class="co">## Retrieve the DataFrame with the information about the degree of</span></span>
+<span id="cb7-570"><a href="#cb7-570"></a><span class="co">## each vertex</span></span>
+<span id="cb7-571"><a href="#cb7-571"></a>vertexesDegreesDF <span class="op">=</span> g.degrees</span>
+<span id="cb7-572"><a href="#cb7-572"></a></span>
+<span id="cb7-573"><a href="#cb7-573"></a><span class="co">## Retrieve the DataFrame with the information about the in-degree of</span></span>
+<span id="cb7-574"><a href="#cb7-574"></a><span class="co">## each vertex</span></span>
+<span id="cb7-575"><a href="#cb7-575"></a>vertexesInDegreesDF <span class="op">=</span> g.inDegrees</span>
+<span id="cb7-576"><a href="#cb7-576"></a></span>
+<span id="cb7-577"><a href="#cb7-577"></a><span class="co">## Retrieve the DataFrame with the information about the out-degree of</span></span>
+<span id="cb7-578"><a href="#cb7-578"></a><span class="co">## each vertex</span></span>
+<span id="cb7-579"><a href="#cb7-579"></a>vertexesOutDegreesDF <span class="op">=</span> g.outDegrees</span>
+<span id="cb7-580"><a href="#cb7-580"></a><span class="in">```</span></span>
+<span id="cb7-581"><a href="#cb7-581"></a></span>
+<span id="cb7-582"><a href="#cb7-582"></a>:::</span>
+<span id="cb7-583"><a href="#cb7-583"></a></span>
+<span id="cb7-584"><a href="#cb7-584"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb7-585"><a href="#cb7-585"></a>Given the input graph, select only the ids of the vertexes with at least 2 in-edges.</span>
+<span id="cb7-586"><a href="#cb7-586"></a></span>
+<span id="cb7-587"><a href="#cb7-587"></a><span class="al">![Example graph](images/19_graph_analytics_1/motif_finding_example_1.png)</span>{width=80%}</span>
+<span id="cb7-588"><a href="#cb7-588"></a></span>
+<span id="cb7-589"><a href="#cb7-589"></a><span class="al">![First selected vertex](images/19_graph_analytics_1/motif_finding_example_5.png)</span>{width=80%}</span>
+<span id="cb7-590"><a href="#cb7-590"></a></span>
+<span id="cb7-591"><a href="#cb7-591"></a><span class="al">![Second selected vertex](images/19_graph_analytics_1/motif_finding_example_6.png)</span>{width=80%}</span>
+<span id="cb7-592"><a href="#cb7-592"></a></span>
+<span id="cb7-593"><a href="#cb7-593"></a><span class="al">![Resulting vertexes](images/19_graph_analytics_1/motif_finding_example_7.png)</span>{width=80%}</span>
+<span id="cb7-594"><a href="#cb7-594"></a></span>
+<span id="cb7-595"><a href="#cb7-595"></a>The selected IDs are $u2$ and $u3$</span>
+<span id="cb7-596"><a href="#cb7-596"></a></span>
+<span id="cb7-597"><a href="#cb7-597"></a><span class="in">```python</span></span>
+<span id="cb7-598"><a href="#cb7-598"></a><span class="im">from</span> graphframes <span class="im">import</span> GraphFrame</span>
+<span id="cb7-599"><a href="#cb7-599"></a></span>
+<span id="cb7-600"><a href="#cb7-600"></a><span class="co">## Vertex DataFrame</span></span>
+<span id="cb7-601"><a href="#cb7-601"></a>v <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb7-602"><a href="#cb7-602"></a>    [</span>
+<span id="cb7-603"><a href="#cb7-603"></a>        (<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="dv">34</span>),</span>
+<span id="cb7-604"><a href="#cb7-604"></a>        (<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="dv">36</span>),</span>
+<span id="cb7-605"><a href="#cb7-605"></a>        (<span class="st">"u3"</span>, <span class="st">"Charlie"</span>, <span class="dv">30</span>),</span>
+<span id="cb7-606"><a href="#cb7-606"></a>        (<span class="st">"u4"</span>, <span class="st">"David"</span>, <span class="dv">29</span>),</span>
+<span id="cb7-607"><a href="#cb7-607"></a>        (<span class="st">"u5"</span>, <span class="st">"Esther"</span>, <span class="dv">32</span>),</span>
+<span id="cb7-608"><a href="#cb7-608"></a>        (<span class="st">"u6"</span>, <span class="st">"Fanny"</span>, <span class="dv">36</span>),</span>
+<span id="cb7-609"><a href="#cb7-609"></a>        (<span class="st">"u7"</span>, <span class="st">"Gabby"</span>, <span class="dv">60</span>)</span>
+<span id="cb7-610"><a href="#cb7-610"></a>    ],</span>
+<span id="cb7-611"><a href="#cb7-611"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"age"</span>]</span>
+<span id="cb7-612"><a href="#cb7-612"></a>)</span>
+<span id="cb7-613"><a href="#cb7-613"></a></span>
+<span id="cb7-614"><a href="#cb7-614"></a><span class="co">## Edge DataFrame</span></span>
+<span id="cb7-615"><a href="#cb7-615"></a>e <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb7-616"><a href="#cb7-616"></a>    [</span>
+<span id="cb7-617"><a href="#cb7-617"></a>        (<span class="st">"u1"</span>, <span class="st">"u2"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-618"><a href="#cb7-618"></a>        (<span class="st">"u2"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-619"><a href="#cb7-619"></a>        (<span class="st">"u3"</span>, <span class="st">"u2"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-620"><a href="#cb7-620"></a>        (<span class="st">"u6"</span>, <span class="st">"u3"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-621"><a href="#cb7-621"></a>        (<span class="st">"u5"</span>, <span class="st">"u6"</span>, <span class="st">"follow"</span>),</span>
+<span id="cb7-622"><a href="#cb7-622"></a>        (<span class="st">"u5"</span>, <span class="st">"u4"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-623"><a href="#cb7-623"></a>        (<span class="st">"u4"</span>, <span class="st">"u1"</span>, <span class="st">"friend"</span>),</span>
+<span id="cb7-624"><a href="#cb7-624"></a>        (<span class="st">"u1"</span>, <span class="st">"u5"</span>, <span class="st">"friend"</span>)</span>
+<span id="cb7-625"><a href="#cb7-625"></a>    ],</span>
+<span id="cb7-626"><a href="#cb7-626"></a>    [<span class="st">"src"</span>, <span class="st">"dst"</span>, <span class="st">"relationship"</span>]</span>
+<span id="cb7-627"><a href="#cb7-627"></a>)</span>
+<span id="cb7-628"><a href="#cb7-628"></a></span>
+<span id="cb7-629"><a href="#cb7-629"></a><span class="co">## Create the graph</span></span>
+<span id="cb7-630"><a href="#cb7-630"></a>g <span class="op">=</span> GraphFrame(v, e)</span>
+<span id="cb7-631"><a href="#cb7-631"></a></span>
+<span id="cb7-632"><a href="#cb7-632"></a><span class="co">## Retrieve the DataFrame with the information about the in-degree of</span></span>
+<span id="cb7-633"><a href="#cb7-633"></a><span class="co">## each vertex</span></span>
+<span id="cb7-634"><a href="#cb7-634"></a>vertexesInDegreesDF <span class="op">=</span> g.inDegrees</span>
+<span id="cb7-635"><a href="#cb7-635"></a></span>
+<span id="cb7-636"><a href="#cb7-636"></a><span class="co">## Select only the vertexes with and in-degree value &gt;=2</span></span>
+<span id="cb7-637"><a href="#cb7-637"></a>selectedVertexesDF <span class="op">=</span> vertexesInDegreesDF.<span class="bu">filter</span>(<span class="st">"inDegree&gt;=2"</span>)</span>
+<span id="cb7-638"><a href="#cb7-638"></a></span>
+<span id="cb7-639"><a href="#cb7-639"></a><span class="co">## Select only the content of Column id</span></span>
+<span id="cb7-640"><a href="#cb7-640"></a>selectedVertexesIDsDF <span class="op">=</span> selectedVertexesDF.select(<span class="st">"id"</span>)</span>
+<span id="cb7-641"><a href="#cb7-641"></a><span class="in">```</span></span>
+<span id="cb7-642"><a href="#cb7-642"></a></span>
+<span id="cb7-643"><a href="#cb7-643"></a>:::</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 
 

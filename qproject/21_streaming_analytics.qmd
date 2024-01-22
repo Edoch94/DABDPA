@@ -262,7 +262,8 @@ from pyspark.streaming import StreamingContext
 ## Set prefix of the output folders
 outputPathPrefix="resSparkStreamingExamples"
 
-#Create a configuration object and#set the name of the applicationconf
+## Create a configuration object and
+## set the name of the applicationconf
 SparkConf().setAppName("Streaming word count")
 
 ## Create a Spark Context object
@@ -438,7 +439,8 @@ from pyspark.streaming import StreamingContext
 ## Set prefix of the output folders
 outputPathPrefix="resSparkStreamingExamples"
 
-#Create a configuration object and#set the name of the applicationconf
+## Create a configuration object and
+## set the name of the applicationconf
 SparkConf().setAppName("Streaming word count")
 
 ## Create a Spark Context object
@@ -463,7 +465,7 @@ wordsOnes = words.map(lambda word: (word, 1))
 wordsCounts = wordsOnes \
     .reduceByKeyAndWindow(
         lambda v1, v2: v1+v2, 
-        #lambda vnow, # <1>
+        lambda vnow, # <1>
         vold: vnow-vold, 15
     )
 
@@ -483,6 +485,7 @@ ssc.awaitTerminationOrTimeout(90)
 ssc.stop(stopSparkContext=False)
 ```
 1. In this solution the inverse function is also specified in order to compute the result incrementally
+
 :::
 
 ## Stateful computation
@@ -534,16 +537,16 @@ words = lines.flatMap(lambda line: line.split(" "))
 wordsOnes = words.map(lambda word: (word, 1))
 
 ## Define the function that is used to update the state of a key at a time
-#def updateFunction(newValues, currentCount): # <1>
+def updateFunction(newValues, currentCount): # <1>
     if currentCount is None:
         currentCount = 0
 
     ## Sum the new values to the previous state for the current key
-    #return sum(newValues, currentCount) # <2>
+    return sum(newValues, currentCount) # <2>
 
 ## DStream made of cumulative counts for each key that get updated 
 ## in every batch
-#totalWordsCounts = wordsOnes.updateStateByKey(updateFunction) # <3>
+totalWordsCounts = wordsOnes.updateStateByKey(updateFunction) # <3>
 
 ## Print the num. of occurrences of each word of the current window
 ## (only 10 of them)
@@ -553,15 +556,14 @@ totalWordsCounts.pprint()
 ## outputPathPrefix
 totalWordsCounts.saveAsTextFiles(outputPathPrefix, "")
 
-#Start the computation
+## Start the computation
 ssc.start()
 
 ## Run this application for 90 seconds
 ssc.awaitTerminationOrTimeout(90)
 ssc.stop(stopSparkContext=False)
 ```
-1. `currentCount`: current state/value for the current key
-1. `newValues`: list of new integer values for the current key
+1. `currentCount`: current state/value for the current key | `newValues`: list of new integer values for the current key
 2. `sum(newValues, currentCount)`: Combine current state and new values
 3. `updateFunction`: this function is invoked one time for each key
 
@@ -575,6 +577,7 @@ Some types of transformations are not available for DStreams (e.g., `sortBy()`, 
 |`transform(func)`|It is a specific transformation of DStreams that returns a new DStream by applying an RDD-to-RDD function to every RDD of the source Dstream. This can be used to apply arbitrary RDD operations on the DStream|
 
 :::{.callout-note collapse="true"}
+### Example
 Problem specification
 
 - Input: a stream of sentences retrieved from localhost:9999

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -17,9 +17,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -46,43 +47,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -120,10 +91,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
@@ -132,11 +105,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./21_streaming_analytics.html"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -144,162 +122,191 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Distributed architectures for big data processing and analytics</a> 
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Index</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">About this Book</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></a>
+  <a href="./00_01_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to Big data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></a>
+  <a href="./02_architectures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Big data architectures</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></a>
+  <a href="./03b_HDFS_clc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">HDFS and Hadoop: command line commands</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></a>
+  <a href="./03_intro_hadoop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Introduction to Hadoop and MapReduce</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></a>
+  <a href="./04_hadoop_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">How to write MapReduce programs in Hadoop</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></a>
+  <a href="./05_mapreduce_patterns_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MapReduce patterns - 1</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></a>
+  <a href="./06_mapreduce_advanced_topics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MapReduce and Hadoop Advanced Topics</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></a>
+  <a href="./07_mapreduce_patterns_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">MapReduce patterns - 2</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></a>
+  <a href="./08_sql_operators_mapreduce.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Relational Algebra Operations and MapReduce</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></a>
+  <a href="./10b_spark_submit_execute.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">How to submit/execute a Spark application</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></a>
+  <a href="./10_intro_spark.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></a>
+  <a href="./11_rdd_based_programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">RDD based programming</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></a>
+  <a href="./12_rdd_keyvalue_pairs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">RDDs and key-value pairs</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></a>
+  <a href="./13_rdd_numbers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">RDD of numbers</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></a>
+  <a href="./14_cache_accumulators_broadcast.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Cache, Accumulators, Broadcast Variables</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></a>
+  <a href="./15b_pagerank.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduction to PageRank</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></a>
+  <a href="./16_sparksql_dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spark SQL and DataFrames</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></a>
+  <a href="./18a_spark_mllib.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Spark MLlib</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></a>
+  <a href="./18b_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Classification algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></a>
+  <a href="./18c_clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Clustering algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></a>
+  <a href="./18d_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Regression algorithms</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></a>
+  <a href="./18e_mining.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Itemset and Association rule mining</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></a>
+  <a href="./19_graph_analytics_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Graph analytics in Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></a>
+  <a href="./20_graph_analytics_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Graph Analytics in Spark</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  <a href="./21_streaming_analytics.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></a>
+  <a href="./22_structured_streaming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></a>
+  <a href="./23_streaming_frameworks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -320,7 +327,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></h1>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Streaming data analytics frameworks</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -388,13 +395,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Continuous computation: one record at a time</figcaption><p></p>
+<figcaption class="figure-caption">Continuous computation: one record at a time</figcaption>
 <p><img src="images/21_streaming_analytics/continuous_computation.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Micro-batch computation: one micro-batch at a time</figcaption><p></p>
+<figcaption class="figure-caption">Micro-batch computation: one micro-batch at a time</figcaption>
 <p><img src="images/21_streaming_analytics/microbatch_computation.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -441,7 +448,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Spark Streaming components</figcaption><p></p>
+<figcaption class="figure-caption">Spark Streaming components</figcaption>
 <p><img src="images/21_streaming_analytics/spark_streaming_components.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -471,16 +478,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Discretization in batches</figcaption><p></p>
+<figcaption class="figure-caption">Discretization in batches</figcaption>
 <p><img src="images/21_streaming_analytics/discretization.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -494,19 +501,19 @@ Example
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Input and output</figcaption><p></p>
+<figcaption class="figure-caption">Input and output</figcaption>
 <p><img src="images/21_streaming_analytics/wordcount_input_output.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 </div>
 </div>
 </div>
-<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Key concepts
 </div>
 </div>
@@ -536,14 +543,14 @@ Key concepts
 <p>A DStream is represented by a continuous series of RDDs. Each RDD in a DStream contains data from a certain batch/interval.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">RDDs composing a DStreams</figcaption><p></p>
+<figcaption class="figure-caption">RDDs composing a DStreams</figcaption>
 <p><img src="images/21_streaming_analytics/wordcount_dstreams.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 <p>Any operation applied on a DStream translates to operations on the underlying RDDs. These underlying RDD transformations are computed by the Spark engine.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Operations in a DStreams</figcaption><p></p>
+<figcaption class="figure-caption">Operations in a DStreams</figcaption>
 <p><img src="images/21_streaming_analytics/wordcount_dstreams_operations.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -569,12 +576,12 @@ Key concepts
 <section id="spark-streaming-context" class="level4">
 <h4 class="anchored" data-anchor-id="spark-streaming-context">Spark streaming context</h4>
 <p>The Spark Streaming Context is defined by using the <code>StreamingContext(SparkConf sparkC, Duration batchDuration)</code> constructor of the class <code>pyspark.streaming.StreamingContext</code>. The <code>batchDuration</code> parameter specifies the size of the batches in seconds</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -603,12 +610,12 @@ Example
 <section id="input-tcp-socket" class="level5">
 <h5 class="anchored" data-anchor-id="input-tcp-socket">Input: TCP socket</h5>
 <p>A DStream can be associated with the content emitted by a TCP socket: <code>socketTextStream(String hostname, int port_number)</code> is used to create a DStream based on the textual content emitted by a TCP socket.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -624,12 +631,12 @@ Example
 <section id="input-hdfs-folder" class="level5">
 <h5 class="anchored" data-anchor-id="input-hdfs-folder">Input: (HDFS) folder</h5>
 <p>A DStream can be associated with the content of an input (HDFS) folder: every time a new file is inserted in the folder, the content of the file is stored in the associated DStream and processed. Pay attention that updating the content of a file does not trigger/change the content of the DStream. <code>textFileStream(String folder)</code> is used to create a DStream based on the content of the input folder.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -738,12 +745,12 @@ Example
 <li>Only one StreamingContext per application can be active at the same time</li>
 <li><code>stop()</code> on StreamingContext also stops the SparkContext. To stop only the <code>StreamingContext</code>, set the optional parameter of <code>stop()</code> called <code>stopSparkContext</code> to False</li>
 </ul>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example: Spark Streaming version of word count
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -764,36 +771,37 @@ Example: Spark Streaming version of word count
 <span id="cb4-3"><a href="#cb4-3"></a><span class="co">## Set prefix of the output folders</span></span>
 <span id="cb4-4"><a href="#cb4-4"></a>outputPathPrefix<span class="op">=</span><span class="st">"resSparkStreamingExamples"</span></span>
 <span id="cb4-5"><a href="#cb4-5"></a></span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="co">#Create a configuration object and#set the name of the applicationconf</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a>SparkConf().setAppName(<span class="st">"Streaming word count"</span>)</span>
-<span id="cb4-8"><a href="#cb4-8"></a></span>
-<span id="cb4-9"><a href="#cb4-9"></a><span class="co">## Create a Spark Context object</span></span>
-<span id="cb4-10"><a href="#cb4-10"></a>sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
-<span id="cb4-11"><a href="#cb4-11"></a></span>
-<span id="cb4-12"><a href="#cb4-12"></a><span class="co">## Create a Spark Streaming Context object</span></span>
-<span id="cb4-13"><a href="#cb4-13"></a>ssc <span class="op">=</span> StreamingContext(sc, <span class="dv">5</span>)</span>
-<span id="cb4-14"><a href="#cb4-14"></a></span>
-<span id="cb4-15"><a href="#cb4-15"></a><span class="co">## Create a (Receiver) DStream that will connect to localhost:9999</span></span>
-<span id="cb4-16"><a href="#cb4-16"></a>lines <span class="op">=</span> ssc.socketTextStream(<span class="st">"localhost"</span>, <span class="dv">9999</span>)</span>
-<span id="cb4-17"><a href="#cb4-17"></a></span>
-<span id="cb4-18"><a href="#cb4-18"></a><span class="co">## Apply a chain of transformations to perform the word count task</span></span>
-<span id="cb4-19"><a href="#cb4-19"></a><span class="co">## The returned RDDs are DStream RDDs</span></span>
-<span id="cb4-20"><a href="#cb4-20"></a>words <span class="op">=</span> lines.flatMap(<span class="kw">lambda</span> line: line.split(<span class="st">" "</span>))</span>
-<span id="cb4-21"><a href="#cb4-21"></a>wordsOnes <span class="op">=</span> words.<span class="bu">map</span>(<span class="kw">lambda</span> word: (word, <span class="dv">1</span>))</span>
-<span id="cb4-22"><a href="#cb4-22"></a>wordsCounts <span class="op">=</span> wordsOnes.reduceByKey(<span class="kw">lambda</span> v1, v2: v1<span class="op">+</span>v2)</span>
-<span id="cb4-23"><a href="#cb4-23"></a></span>
-<span id="cb4-24"><a href="#cb4-24"></a><span class="co">## Print the result on the standard output</span></span>
-<span id="cb4-25"><a href="#cb4-25"></a>wordsCounts.pprint()</span>
-<span id="cb4-26"><a href="#cb4-26"></a></span>
-<span id="cb4-27"><a href="#cb4-27"></a><span class="co">## Store the result in HDFS</span></span>
-<span id="cb4-28"><a href="#cb4-28"></a>wordsCounts.saveAsTextFiles(outputPathPrefix, <span class="st">""</span>)</span>
-<span id="cb4-29"><a href="#cb4-29"></a></span>
-<span id="cb4-30"><a href="#cb4-30"></a><span class="co">#Start the computation</span></span>
-<span id="cb4-31"><a href="#cb4-31"></a>ssc.start()</span>
-<span id="cb4-32"><a href="#cb4-32"></a></span>
-<span id="cb4-33"><a href="#cb4-33"></a><span class="co">## Run this application for 90 seconds</span></span>
-<span id="cb4-34"><a href="#cb4-34"></a>ssc.awaitTerminationOrTimeout(<span class="dv">90</span>)</span>
-<span id="cb4-35"><a href="#cb4-35"></a>ssc.stop(stopSparkContext<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="co">## Create a configuration object and</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="co">## set the name of the applicationconf</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a>SparkConf().setAppName(<span class="st">"Streaming word count"</span>)</span>
+<span id="cb4-9"><a href="#cb4-9"></a></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="co">## Create a Spark Context object</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a>sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
+<span id="cb4-12"><a href="#cb4-12"></a></span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="co">## Create a Spark Streaming Context object</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a>ssc <span class="op">=</span> StreamingContext(sc, <span class="dv">5</span>)</span>
+<span id="cb4-15"><a href="#cb4-15"></a></span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="co">## Create a (Receiver) DStream that will connect to localhost:9999</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a>lines <span class="op">=</span> ssc.socketTextStream(<span class="st">"localhost"</span>, <span class="dv">9999</span>)</span>
+<span id="cb4-18"><a href="#cb4-18"></a></span>
+<span id="cb4-19"><a href="#cb4-19"></a><span class="co">## Apply a chain of transformations to perform the word count task</span></span>
+<span id="cb4-20"><a href="#cb4-20"></a><span class="co">## The returned RDDs are DStream RDDs</span></span>
+<span id="cb4-21"><a href="#cb4-21"></a>words <span class="op">=</span> lines.flatMap(<span class="kw">lambda</span> line: line.split(<span class="st">" "</span>))</span>
+<span id="cb4-22"><a href="#cb4-22"></a>wordsOnes <span class="op">=</span> words.<span class="bu">map</span>(<span class="kw">lambda</span> word: (word, <span class="dv">1</span>))</span>
+<span id="cb4-23"><a href="#cb4-23"></a>wordsCounts <span class="op">=</span> wordsOnes.reduceByKey(<span class="kw">lambda</span> v1, v2: v1<span class="op">+</span>v2)</span>
+<span id="cb4-24"><a href="#cb4-24"></a></span>
+<span id="cb4-25"><a href="#cb4-25"></a><span class="co">## Print the result on the standard output</span></span>
+<span id="cb4-26"><a href="#cb4-26"></a>wordsCounts.pprint()</span>
+<span id="cb4-27"><a href="#cb4-27"></a></span>
+<span id="cb4-28"><a href="#cb4-28"></a><span class="co">## Store the result in HDFS</span></span>
+<span id="cb4-29"><a href="#cb4-29"></a>wordsCounts.saveAsTextFiles(outputPathPrefix, <span class="st">""</span>)</span>
+<span id="cb4-30"><a href="#cb4-30"></a></span>
+<span id="cb4-31"><a href="#cb4-31"></a><span class="co">#Start the computation</span></span>
+<span id="cb4-32"><a href="#cb4-32"></a>ssc.start()</span>
+<span id="cb4-33"><a href="#cb4-33"></a></span>
+<span id="cb4-34"><a href="#cb4-34"></a><span class="co">## Run this application for 90 seconds</span></span>
+<span id="cb4-35"><a href="#cb4-35"></a>ssc.awaitTerminationOrTimeout(<span class="dv">90</span>)</span>
+<span id="cb4-36"><a href="#cb4-36"></a>ssc.stop(stopSparkContext<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -806,7 +814,7 @@ Example: Spark Streaming version of word count
 <p>Every time the window slides over a source DStream, the source RDDs that fall within the window are combined and operated upon to produce the RDDs of the windowed DStream.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Graphical example</figcaption><p></p>
+<figcaption class="figure-caption">Graphical example</figcaption>
 <p><img src="images/21_streaming_analytics/windows_graphical_example.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
@@ -819,12 +827,12 @@ Example: Spark Streaming version of word count
 <li>Sliding interval: the interval at which the window operation is performed (2 in the example)</li>
 </ul>
 <p>These two parameters must be multiples of the batch interval of the source DStream.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example: word count and window
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -847,7 +855,7 @@ Example: word count and window
 <div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Step one</figcaption><p></p>
+<figcaption class="figure-caption">Step one</figcaption>
 <p><img src="images/21_streaming_analytics/wordcount_window_1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
@@ -857,7 +865,7 @@ Example: word count and window
 <div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p></p><figcaption class="figure-caption">Step two</figcaption><p></p>
+<figcaption class="figure-caption">Step two</figcaption>
 <p><img src="images/21_streaming_analytics/wordcount_window_2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
@@ -875,7 +883,6 @@ Example: word count and window
 </section>
 <section id="basic-window-transformations" class="level4 page-columns page-full">
 <h4 class="anchored" data-anchor-id="basic-window-transformations">Basic window transformations</h4>
-<div class="page-columns page-full">
 <div class="column-screen-inset">
 <table class="table">
 <colgroup>
@@ -912,18 +919,17 @@ Example: word count and window
 </tbody>
 </table>
 </div>
-</div>
 </section>
 <section id="checkpoint" class="level4">
 <h4 class="anchored" data-anchor-id="checkpoint">Checkpoint</h4>
 <p>A streaming application must operate 24/7 and hence must be resilient to failures unrelated to the application logic (e.g., system failures, JVM crashes, etc.). For this to be possible, Spark Streaming needs to checkpoint enough information to a fault- tolerant storage system such that it can recover from failures, and this result is achieved by means of checkpoints, which are operations that store the data and metadata needed to restart the computation if failures happen. Checkpointing is necessary even for some window transformations and stateful transformations.</p>
 <p>Checkpointing is enabled by using the <code>checkpoint(String folder)</code> method of <code>SparkStreamingContext</code>: the parameter is the folder that is used to store temporary data. This is similar as for processing graphs with GraphFrames library, however, with GraphFrames, the checkpoint was the one of SparkContext.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example: word count and windows
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -985,57 +991,61 @@ Example: word count and windows
 <span id="cb5-40"><a href="#cb5-40"></a>ssc.start()</span>
 <span id="cb5-41"><a href="#cb5-41"></a>ssc.awaitTermination ()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><strong>Second solution</strong></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">from</span> pyspark.streaming <span class="im">import</span> StreamingContext</span>
-<span id="cb6-2"><a href="#cb6-2"></a></span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="co">## Set prefix of the output folders</span></span>
-<span id="cb6-4"><a href="#cb6-4"></a>outputPathPrefix<span class="op">=</span><span class="st">"resSparkStreamingExamples"</span></span>
-<span id="cb6-5"><a href="#cb6-5"></a></span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="co">#Create a configuration object and#set the name of the applicationconf</span></span>
-<span id="cb6-7"><a href="#cb6-7"></a>SparkConf().setAppName(<span class="st">"Streaming word count"</span>)</span>
-<span id="cb6-8"><a href="#cb6-8"></a></span>
-<span id="cb6-9"><a href="#cb6-9"></a><span class="co">## Create a Spark Context object</span></span>
-<span id="cb6-10"><a href="#cb6-10"></a>sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
-<span id="cb6-11"><a href="#cb6-11"></a></span>
-<span id="cb6-12"><a href="#cb6-12"></a><span class="co">## Create a Spark Streaming Context object</span></span>
-<span id="cb6-13"><a href="#cb6-13"></a>ssc <span class="op">=</span> StreamingContext(sc, <span class="dv">5</span>)</span>
-<span id="cb6-14"><a href="#cb6-14"></a></span>
-<span id="cb6-15"><a href="#cb6-15"></a><span class="co">## Set the checkpoint folder (it is needed by some window transformations)</span></span>
-<span id="cb6-16"><a href="#cb6-16"></a>ssc.checkpoint(<span class="st">"checkpointfolder"</span>)</span>
-<span id="cb6-17"><a href="#cb6-17"></a></span>
-<span id="cb6-18"><a href="#cb6-18"></a><span class="co">## Create a (Receiver) DStream that will connect to localhost:9999</span></span>
-<span id="cb6-19"><a href="#cb6-19"></a>lines <span class="op">=</span> ssc.socketTextStream(<span class="st">"localhost"</span>, <span class="dv">9999</span>)</span>
-<span id="cb6-20"><a href="#cb6-20"></a></span>
-<span id="cb6-21"><a href="#cb6-21"></a><span class="co">## Apply a chain of transformations to perform the word count task</span></span>
-<span id="cb6-22"><a href="#cb6-22"></a><span class="co">## The returned RDDs are DStream RDDs</span></span>
-<span id="cb6-23"><a href="#cb6-23"></a>words <span class="op">=</span> lines.flatMap(<span class="kw">lambda</span> line: line.split(<span class="st">" "</span>))</span>
-<span id="cb6-24"><a href="#cb6-24"></a>wordsOnes <span class="op">=</span> words.<span class="bu">map</span>(<span class="kw">lambda</span> word: (word, <span class="dv">1</span>))</span>
-<span id="cb6-25"><a href="#cb6-25"></a></span>
-<span id="cb6-26"><a href="#cb6-26"></a><span class="co">## reduceByKeyAndWindow is used instead of reduceByKey</span></span>
-<span id="cb6-27"><a href="#cb6-27"></a><span class="co">## The durantion of the window is also specified</span></span>
-<span id="cb6-28"><a href="#cb6-28"></a>wordsCounts <span class="op">=</span> wordsOnes <span class="op">\</span></span>
-<span id="cb6-29"><a href="#cb6-29"></a>    .reduceByKeyAndWindow(</span>
-<span id="cb6-30"><a href="#cb6-30"></a>        <span class="kw">lambda</span> v1, v2: v1<span class="op">+</span>v2, </span>
-<span id="cb6-31"><a href="#cb6-31"></a>        <span class="co">#lambda vnow, # &lt;1&gt;</span></span>
-<span id="cb6-32"><a href="#cb6-32"></a>        vold: vnow<span class="op">-</span>vold, <span class="dv">15</span></span>
-<span id="cb6-33"><a href="#cb6-33"></a>    )</span>
-<span id="cb6-34"><a href="#cb6-34"></a></span>
-<span id="cb6-35"><a href="#cb6-35"></a><span class="co">## Print the num. of occurrences of each word of the current window</span></span>
-<span id="cb6-36"><a href="#cb6-36"></a><span class="co">## (only 10 of them)</span></span>
-<span id="cb6-37"><a href="#cb6-37"></a>wordsCounts.pprint()</span>
-<span id="cb6-38"><a href="#cb6-38"></a></span>
-<span id="cb6-39"><a href="#cb6-39"></a><span class="co">## Store the output of the computation in the folders with prefix</span></span>
-<span id="cb6-40"><a href="#cb6-40"></a><span class="co">## outputPathPrefix</span></span>
-<span id="cb6-41"><a href="#cb6-41"></a>wordsCounts.saveAsTextFiles(outputPathPrefix, <span class="st">""</span>)</span>
-<span id="cb6-42"><a href="#cb6-42"></a></span>
-<span id="cb6-43"><a href="#cb6-43"></a><span class="co">#Start the computation</span></span>
-<span id="cb6-44"><a href="#cb6-44"></a>ssc.start()</span>
-<span id="cb6-45"><a href="#cb6-45"></a></span>
-<span id="cb6-46"><a href="#cb6-46"></a><span class="co">## Run this application for 90 seconds</span></span>
-<span id="cb6-47"><a href="#cb6-47"></a>ssc.awaitTerminationOrTimeout(<span class="dv">90</span>)</span>
-<span id="cb6-48"><a href="#cb6-48"></a>ssc.stop(stopSparkContext<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ol type="1">
-<li>In this solution the inverse function is also specified in order to compute the result incrementally</li>
-</ol>
+<div class="sourceCode" id="annotated-cell-2"><pre class="sourceCode numberSource python code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode python"><span id="annotated-cell-2-1"><a href="#annotated-cell-2-1"></a><span class="im">from</span> pyspark.streaming <span class="im">import</span> StreamingContext</span>
+<span id="annotated-cell-2-2"><a href="#annotated-cell-2-2"></a></span>
+<span id="annotated-cell-2-3"><a href="#annotated-cell-2-3"></a><span class="co">## Set prefix of the output folders</span></span>
+<span id="annotated-cell-2-4"><a href="#annotated-cell-2-4"></a>outputPathPrefix<span class="op">=</span><span class="st">"resSparkStreamingExamples"</span></span>
+<span id="annotated-cell-2-5"><a href="#annotated-cell-2-5"></a></span>
+<span id="annotated-cell-2-6"><a href="#annotated-cell-2-6"></a><span class="co">## Create a configuration object and</span></span>
+<span id="annotated-cell-2-7"><a href="#annotated-cell-2-7"></a><span class="co">## set the name of the applicationconf</span></span>
+<span id="annotated-cell-2-8"><a href="#annotated-cell-2-8"></a>SparkConf().setAppName(<span class="st">"Streaming word count"</span>)</span>
+<span id="annotated-cell-2-9"><a href="#annotated-cell-2-9"></a></span>
+<span id="annotated-cell-2-10"><a href="#annotated-cell-2-10"></a><span class="co">## Create a Spark Context object</span></span>
+<span id="annotated-cell-2-11"><a href="#annotated-cell-2-11"></a>sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
+<span id="annotated-cell-2-12"><a href="#annotated-cell-2-12"></a></span>
+<span id="annotated-cell-2-13"><a href="#annotated-cell-2-13"></a><span class="co">## Create a Spark Streaming Context object</span></span>
+<span id="annotated-cell-2-14"><a href="#annotated-cell-2-14"></a>ssc <span class="op">=</span> StreamingContext(sc, <span class="dv">5</span>)</span>
+<span id="annotated-cell-2-15"><a href="#annotated-cell-2-15"></a></span>
+<span id="annotated-cell-2-16"><a href="#annotated-cell-2-16"></a><span class="co">## Set the checkpoint folder (it is needed by some window transformations)</span></span>
+<span id="annotated-cell-2-17"><a href="#annotated-cell-2-17"></a>ssc.checkpoint(<span class="st">"checkpointfolder"</span>)</span>
+<span id="annotated-cell-2-18"><a href="#annotated-cell-2-18"></a></span>
+<span id="annotated-cell-2-19"><a href="#annotated-cell-2-19"></a><span class="co">## Create a (Receiver) DStream that will connect to localhost:9999</span></span>
+<span id="annotated-cell-2-20"><a href="#annotated-cell-2-20"></a>lines <span class="op">=</span> ssc.socketTextStream(<span class="st">"localhost"</span>, <span class="dv">9999</span>)</span>
+<span id="annotated-cell-2-21"><a href="#annotated-cell-2-21"></a></span>
+<span id="annotated-cell-2-22"><a href="#annotated-cell-2-22"></a><span class="co">## Apply a chain of transformations to perform the word count task</span></span>
+<span id="annotated-cell-2-23"><a href="#annotated-cell-2-23"></a><span class="co">## The returned RDDs are DStream RDDs</span></span>
+<span id="annotated-cell-2-24"><a href="#annotated-cell-2-24"></a>words <span class="op">=</span> lines.flatMap(<span class="kw">lambda</span> line: line.split(<span class="st">" "</span>))</span>
+<span id="annotated-cell-2-25"><a href="#annotated-cell-2-25"></a>wordsOnes <span class="op">=</span> words.<span class="bu">map</span>(<span class="kw">lambda</span> word: (word, <span class="dv">1</span>))</span>
+<span id="annotated-cell-2-26"><a href="#annotated-cell-2-26"></a></span>
+<span id="annotated-cell-2-27"><a href="#annotated-cell-2-27"></a><span class="co">## reduceByKeyAndWindow is used instead of reduceByKey</span></span>
+<span id="annotated-cell-2-28"><a href="#annotated-cell-2-28"></a><span class="co">## The durantion of the window is also specified</span></span>
+<span id="annotated-cell-2-29"><a href="#annotated-cell-2-29"></a>wordsCounts <span class="op">=</span> wordsOnes <span class="op">\</span></span>
+<span id="annotated-cell-2-30"><a href="#annotated-cell-2-30"></a>    .reduceByKeyAndWindow(</span>
+<span id="annotated-cell-2-31"><a href="#annotated-cell-2-31"></a>        <span class="kw">lambda</span> v1, v2: v1<span class="op">+</span>v2, </span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1">1</button><span id="annotated-cell-2-32" class="code-annotation-target"><a href="#annotated-cell-2-32"></a>        <span class="kw">lambda</span> vnow,</span>
+<span id="annotated-cell-2-33"><a href="#annotated-cell-2-33"></a>        vold: vnow<span class="op">-</span>vold, <span class="dv">15</span></span>
+<span id="annotated-cell-2-34"><a href="#annotated-cell-2-34"></a>    )</span>
+<span id="annotated-cell-2-35"><a href="#annotated-cell-2-35"></a></span>
+<span id="annotated-cell-2-36"><a href="#annotated-cell-2-36"></a><span class="co">## Print the num. of occurrences of each word of the current window</span></span>
+<span id="annotated-cell-2-37"><a href="#annotated-cell-2-37"></a><span class="co">## (only 10 of them)</span></span>
+<span id="annotated-cell-2-38"><a href="#annotated-cell-2-38"></a>wordsCounts.pprint()</span>
+<span id="annotated-cell-2-39"><a href="#annotated-cell-2-39"></a></span>
+<span id="annotated-cell-2-40"><a href="#annotated-cell-2-40"></a><span class="co">## Store the output of the computation in the folders with prefix</span></span>
+<span id="annotated-cell-2-41"><a href="#annotated-cell-2-41"></a><span class="co">## outputPathPrefix</span></span>
+<span id="annotated-cell-2-42"><a href="#annotated-cell-2-42"></a>wordsCounts.saveAsTextFiles(outputPathPrefix, <span class="st">""</span>)</span>
+<span id="annotated-cell-2-43"><a href="#annotated-cell-2-43"></a></span>
+<span id="annotated-cell-2-44"><a href="#annotated-cell-2-44"></a><span class="co">#Start the computation</span></span>
+<span id="annotated-cell-2-45"><a href="#annotated-cell-2-45"></a>ssc.start()</span>
+<span id="annotated-cell-2-46"><a href="#annotated-cell-2-46"></a></span>
+<span id="annotated-cell-2-47"><a href="#annotated-cell-2-47"></a><span class="co">## Run this application for 90 seconds</span></span>
+<span id="annotated-cell-2-48"><a href="#annotated-cell-2-48"></a>ssc.awaitTerminationOrTimeout(<span class="dv">90</span>)</span>
+<span id="annotated-cell-2-49"><a href="#annotated-cell-2-49"></a>ssc.stop(stopSparkContext<span class="op">=</span><span class="va">False</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-lines="32" data-code-cell="annotated-cell-2" data-code-annotation="1">In this solution the inverse function is also specified in order to compute the result incrementally</span>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -1052,12 +1062,12 @@ Example: word count and windows
 <li>Define the state update function: specify with a function how to update the state of a key using the previous state and the new values from an input stream associated with that key</li>
 </ul>
 <p>In every batch, Spark will apply the state update function for all existing keys. For each key, the update function is used to update the value associated with a key by combining the former value and the new values associated with that key; in other words, for each key, the call method of the function is invoked on the list of new values and the former state value and returns the new aggregated value for the considered key.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Example: word count and <code>updateStateByKey</code> transformation
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -1072,63 +1082,71 @@ Example: word count and <code>updateStateByKey</code> transformation
 <li>Print on the standard output, every 5 seconds, the occurrences of each word appearing in the stream (from time 0 to the current time) (i.e., execute the word count problem from the beginning of the stream to current time)</li>
 <li>Store the results also in an HDFS folder</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="im">from</span> pyspark.streaming <span class="im">import</span> StreamingContext</span>
-<span id="cb7-2"><a href="#cb7-2"></a></span>
-<span id="cb7-3"><a href="#cb7-3"></a><span class="co">## Set prefix of the output folders</span></span>
-<span id="cb7-4"><a href="#cb7-4"></a>outputPathPrefix<span class="op">=</span><span class="st">"resSparkStreamingExamples"</span></span>
-<span id="cb7-5"><a href="#cb7-5"></a></span>
-<span id="cb7-6"><a href="#cb7-6"></a><span class="co">#Create a configuration object and#set the name of the applicationconf</span></span>
-<span id="cb7-7"><a href="#cb7-7"></a>SparkConf().setAppName(<span class="st">"Streaming word count"</span>)</span>
-<span id="cb7-8"><a href="#cb7-8"></a></span>
-<span id="cb7-9"><a href="#cb7-9"></a><span class="co">## Create a Spark Context object</span></span>
-<span id="cb7-10"><a href="#cb7-10"></a>sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
-<span id="cb7-11"><a href="#cb7-11"></a></span>
-<span id="cb7-12"><a href="#cb7-12"></a><span class="co">## Create a Spark Streaming Context object</span></span>
-<span id="cb7-13"><a href="#cb7-13"></a>ssc <span class="op">=</span> StreamingContext(sc, <span class="dv">5</span>)</span>
-<span id="cb7-14"><a href="#cb7-14"></a></span>
-<span id="cb7-15"><a href="#cb7-15"></a><span class="co">## Set the checkpoint folder (it is needed by some window transformations)</span></span>
-<span id="cb7-16"><a href="#cb7-16"></a>ssc.checkpoint(<span class="st">"checkpointfolder"</span>)</span>
-<span id="cb7-17"><a href="#cb7-17"></a></span>
-<span id="cb7-18"><a href="#cb7-18"></a><span class="co">## Create a (Receiver) DStream that will connect to localhost:9999</span></span>
-<span id="cb7-19"><a href="#cb7-19"></a>lines <span class="op">=</span> ssc.socketTextStream(<span class="st">"localhost"</span>, <span class="dv">9999</span>)</span>
-<span id="cb7-20"><a href="#cb7-20"></a></span>
-<span id="cb7-21"><a href="#cb7-21"></a><span class="co">## Apply a chain of transformations to perform the word count task</span></span>
-<span id="cb7-22"><a href="#cb7-22"></a><span class="co">## The returned RDDs are DStream RDDs</span></span>
-<span id="cb7-23"><a href="#cb7-23"></a>words <span class="op">=</span> lines.flatMap(<span class="kw">lambda</span> line: line.split(<span class="st">" "</span>))</span>
-<span id="cb7-24"><a href="#cb7-24"></a>wordsOnes <span class="op">=</span> words.<span class="bu">map</span>(<span class="kw">lambda</span> word: (word, <span class="dv">1</span>))</span>
-<span id="cb7-25"><a href="#cb7-25"></a></span>
-<span id="cb7-26"><a href="#cb7-26"></a><span class="co">## Define the function that is used to update the state of a key at a time</span></span>
-<span id="cb7-27"><a href="#cb7-27"></a><span class="co">#def updateFunction(newValues, currentCount): # &lt;1&gt;</span></span>
-<span id="cb7-28"><a href="#cb7-28"></a>    <span class="cf">if</span> currentCount <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb7-29"><a href="#cb7-29"></a>        currentCount <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb7-30"><a href="#cb7-30"></a></span>
-<span id="cb7-31"><a href="#cb7-31"></a>    <span class="co">## Sum the new values to the previous state for the current key</span></span>
-<span id="cb7-32"><a href="#cb7-32"></a>    <span class="co">#return sum(newValues, currentCount) # &lt;2&gt;</span></span>
-<span id="cb7-33"><a href="#cb7-33"></a></span>
-<span id="cb7-34"><a href="#cb7-34"></a><span class="co">## DStream made of cumulative counts for each key that get updated </span></span>
-<span id="cb7-35"><a href="#cb7-35"></a><span class="co">## in every batch</span></span>
-<span id="cb7-36"><a href="#cb7-36"></a><span class="co">#totalWordsCounts = wordsOnes.updateStateByKey(updateFunction) # &lt;3&gt;</span></span>
-<span id="cb7-37"><a href="#cb7-37"></a></span>
-<span id="cb7-38"><a href="#cb7-38"></a><span class="co">## Print the num. of occurrences of each word of the current window</span></span>
-<span id="cb7-39"><a href="#cb7-39"></a><span class="co">## (only 10 of them)</span></span>
-<span id="cb7-40"><a href="#cb7-40"></a>totalWordsCounts.pprint()</span>
-<span id="cb7-41"><a href="#cb7-41"></a></span>
-<span id="cb7-42"><a href="#cb7-42"></a><span class="co">## Store the output of the computation in the folders with prefix</span></span>
-<span id="cb7-43"><a href="#cb7-43"></a><span class="co">## outputPathPrefix</span></span>
-<span id="cb7-44"><a href="#cb7-44"></a>totalWordsCounts.saveAsTextFiles(outputPathPrefix, <span class="st">""</span>)</span>
-<span id="cb7-45"><a href="#cb7-45"></a></span>
-<span id="cb7-46"><a href="#cb7-46"></a><span class="co">#Start the computation</span></span>
-<span id="cb7-47"><a href="#cb7-47"></a>ssc.start()</span>
-<span id="cb7-48"><a href="#cb7-48"></a></span>
-<span id="cb7-49"><a href="#cb7-49"></a><span class="co">## Run this application for 90 seconds</span></span>
-<span id="cb7-50"><a href="#cb7-50"></a>ssc.awaitTerminationOrTimeout(<span class="dv">90</span>)</span>
-<span id="cb7-51"><a href="#cb7-51"></a>ssc.stop(stopSparkContext<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ol type="1">
-<li><code>currentCount</code>: current state/value for the current key</li>
-<li><code>newValues</code>: list of new integer values for the current key</li>
-<li><code>sum(newValues, currentCount)</code>: Combine current state and new values</li>
-<li><code>updateFunction</code>: this function is invoked one time for each key</li>
-</ol>
+<div class="sourceCode" id="annotated-cell-1"><pre class="sourceCode numberSource python code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode python"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1"></a><span class="im">from</span> pyspark.streaming <span class="im">import</span> StreamingContext</span>
+<span id="annotated-cell-1-2"><a href="#annotated-cell-1-2"></a></span>
+<span id="annotated-cell-1-3"><a href="#annotated-cell-1-3"></a><span class="co">## Set prefix of the output folders</span></span>
+<span id="annotated-cell-1-4"><a href="#annotated-cell-1-4"></a>outputPathPrefix<span class="op">=</span><span class="st">"resSparkStreamingExamples"</span></span>
+<span id="annotated-cell-1-5"><a href="#annotated-cell-1-5"></a></span>
+<span id="annotated-cell-1-6"><a href="#annotated-cell-1-6"></a><span class="co">#Create a configuration object and#set the name of the applicationconf</span></span>
+<span id="annotated-cell-1-7"><a href="#annotated-cell-1-7"></a>SparkConf().setAppName(<span class="st">"Streaming word count"</span>)</span>
+<span id="annotated-cell-1-8"><a href="#annotated-cell-1-8"></a></span>
+<span id="annotated-cell-1-9"><a href="#annotated-cell-1-9"></a><span class="co">## Create a Spark Context object</span></span>
+<span id="annotated-cell-1-10"><a href="#annotated-cell-1-10"></a>sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
+<span id="annotated-cell-1-11"><a href="#annotated-cell-1-11"></a></span>
+<span id="annotated-cell-1-12"><a href="#annotated-cell-1-12"></a><span class="co">## Create a Spark Streaming Context object</span></span>
+<span id="annotated-cell-1-13"><a href="#annotated-cell-1-13"></a>ssc <span class="op">=</span> StreamingContext(sc, <span class="dv">5</span>)</span>
+<span id="annotated-cell-1-14"><a href="#annotated-cell-1-14"></a></span>
+<span id="annotated-cell-1-15"><a href="#annotated-cell-1-15"></a><span class="co">## Set the checkpoint folder (it is needed by some window transformations)</span></span>
+<span id="annotated-cell-1-16"><a href="#annotated-cell-1-16"></a>ssc.checkpoint(<span class="st">"checkpointfolder"</span>)</span>
+<span id="annotated-cell-1-17"><a href="#annotated-cell-1-17"></a></span>
+<span id="annotated-cell-1-18"><a href="#annotated-cell-1-18"></a><span class="co">## Create a (Receiver) DStream that will connect to localhost:9999</span></span>
+<span id="annotated-cell-1-19"><a href="#annotated-cell-1-19"></a>lines <span class="op">=</span> ssc.socketTextStream(<span class="st">"localhost"</span>, <span class="dv">9999</span>)</span>
+<span id="annotated-cell-1-20"><a href="#annotated-cell-1-20"></a></span>
+<span id="annotated-cell-1-21"><a href="#annotated-cell-1-21"></a><span class="co">## Apply a chain of transformations to perform the word count task</span></span>
+<span id="annotated-cell-1-22"><a href="#annotated-cell-1-22"></a><span class="co">## The returned RDDs are DStream RDDs</span></span>
+<span id="annotated-cell-1-23"><a href="#annotated-cell-1-23"></a>words <span class="op">=</span> lines.flatMap(<span class="kw">lambda</span> line: line.split(<span class="st">" "</span>))</span>
+<span id="annotated-cell-1-24"><a href="#annotated-cell-1-24"></a>wordsOnes <span class="op">=</span> words.<span class="bu">map</span>(<span class="kw">lambda</span> word: (word, <span class="dv">1</span>))</span>
+<span id="annotated-cell-1-25"><a href="#annotated-cell-1-25"></a></span>
+<span id="annotated-cell-1-26"><a href="#annotated-cell-1-26"></a><span class="co">## Define the function that is used to update the state of a key at a time</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1">1</button><span id="annotated-cell-1-27" class="code-annotation-target"><a href="#annotated-cell-1-27"></a><span class="kw">def</span> updateFunction(newValues, currentCount):</span>
+<span id="annotated-cell-1-28"><a href="#annotated-cell-1-28"></a>    <span class="cf">if</span> currentCount <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="annotated-cell-1-29"><a href="#annotated-cell-1-29"></a>        currentCount <span class="op">=</span> <span class="dv">0</span></span>
+<span id="annotated-cell-1-30"><a href="#annotated-cell-1-30"></a></span>
+<span id="annotated-cell-1-31"><a href="#annotated-cell-1-31"></a>    <span class="co">## Sum the new values to the previous state for the current key</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2">2</button><span id="annotated-cell-1-32" class="code-annotation-target"><a href="#annotated-cell-1-32"></a>    <span class="cf">return</span> <span class="bu">sum</span>(newValues, currentCount)</span>
+<span id="annotated-cell-1-33"><a href="#annotated-cell-1-33"></a></span>
+<span id="annotated-cell-1-34"><a href="#annotated-cell-1-34"></a><span class="co">## DStream made of cumulative counts for each key that get updated </span></span>
+<span id="annotated-cell-1-35"><a href="#annotated-cell-1-35"></a><span class="co">## in every batch</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="3">3</button><span id="annotated-cell-1-36" class="code-annotation-target"><a href="#annotated-cell-1-36"></a>totalWordsCounts <span class="op">=</span> wordsOnes.updateStateByKey(updateFunction)</span>
+<span id="annotated-cell-1-37"><a href="#annotated-cell-1-37"></a></span>
+<span id="annotated-cell-1-38"><a href="#annotated-cell-1-38"></a><span class="co">## Print the num. of occurrences of each word of the current window</span></span>
+<span id="annotated-cell-1-39"><a href="#annotated-cell-1-39"></a><span class="co">## (only 10 of them)</span></span>
+<span id="annotated-cell-1-40"><a href="#annotated-cell-1-40"></a>totalWordsCounts.pprint()</span>
+<span id="annotated-cell-1-41"><a href="#annotated-cell-1-41"></a></span>
+<span id="annotated-cell-1-42"><a href="#annotated-cell-1-42"></a><span class="co">## Store the output of the computation in the folders with prefix</span></span>
+<span id="annotated-cell-1-43"><a href="#annotated-cell-1-43"></a><span class="co">## outputPathPrefix</span></span>
+<span id="annotated-cell-1-44"><a href="#annotated-cell-1-44"></a>totalWordsCounts.saveAsTextFiles(outputPathPrefix, <span class="st">""</span>)</span>
+<span id="annotated-cell-1-45"><a href="#annotated-cell-1-45"></a></span>
+<span id="annotated-cell-1-46"><a href="#annotated-cell-1-46"></a><span class="co">## Start the computation</span></span>
+<span id="annotated-cell-1-47"><a href="#annotated-cell-1-47"></a>ssc.start()</span>
+<span id="annotated-cell-1-48"><a href="#annotated-cell-1-48"></a></span>
+<span id="annotated-cell-1-49"><a href="#annotated-cell-1-49"></a><span class="co">## Run this application for 90 seconds</span></span>
+<span id="annotated-cell-1-50"><a href="#annotated-cell-1-50"></a>ssc.awaitTerminationOrTimeout(<span class="dv">90</span>)</span>
+<span id="annotated-cell-1-51"><a href="#annotated-cell-1-51"></a>ssc.stop(stopSparkContext<span class="op">=</span><span class="va">False</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-lines="27" data-code-cell="annotated-cell-1" data-code-annotation="1"><code>currentCount</code>: current state/value for the current key | <code>newValues</code>: list of new integer values for the current key</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-lines="32" data-code-cell="annotated-cell-1" data-code-annotation="2"><code>sum(newValues, currentCount)</code>: Combine current state and new values</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-lines="36" data-code-cell="annotated-cell-1" data-code-annotation="3"><code>updateFunction</code>: this function is invoked one time for each key</span>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -1155,13 +1173,13 @@ Example: word count and <code>updateStateByKey</code> transformation
 </tr>
 </tbody>
 </table>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
-Note
+<div class="callout-title-container flex-fill">
+Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -1173,49 +1191,51 @@ Note
 <li>Split the input stream in batches of 5 seconds each and print on the standard output, for each batch, the occurrences of each word appearing in the batch. The pairs must be returned/displayed sorted by decreasing number of occurrences (per batch)</li>
 <li>Store the results also in an HDFS folder</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="im">from</span> pyspark.streaming <span class="im">import</span> StreamingContext</span>
-<span id="cb8-2"><a href="#cb8-2"></a></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="co">## Set prefix of the output folders</span></span>
-<span id="cb8-4"><a href="#cb8-4"></a>outputPathPrefix<span class="op">=</span><span class="st">"resSparkStreamingExamples"</span></span>
-<span id="cb8-5"><a href="#cb8-5"></a></span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="co">#Create a configuration object and#set the name of the applicationconf</span></span>
-<span id="cb8-7"><a href="#cb8-7"></a>SparkConf().setAppName(<span class="st">"Streaming word count"</span>)</span>
-<span id="cb8-8"><a href="#cb8-8"></a></span>
-<span id="cb8-9"><a href="#cb8-9"></a><span class="co">## Create a Spark Context object</span></span>
-<span id="cb8-10"><a href="#cb8-10"></a>sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
-<span id="cb8-11"><a href="#cb8-11"></a></span>
-<span id="cb8-12"><a href="#cb8-12"></a><span class="co">## Create a Spark Streaming Context object</span></span>
-<span id="cb8-13"><a href="#cb8-13"></a>ssc <span class="op">=</span> StreamingContext(sc, <span class="dv">5</span>)</span>
-<span id="cb8-14"><a href="#cb8-14"></a></span>
-<span id="cb8-15"><a href="#cb8-15"></a><span class="co">## Create a (Receiver) DStream that will connect to localhost:9999</span></span>
-<span id="cb8-16"><a href="#cb8-16"></a>lines <span class="op">=</span> ssc.socketTextStream(<span class="st">"localhost"</span>, <span class="dv">9999</span>)</span>
-<span id="cb8-17"><a href="#cb8-17"></a></span>
-<span id="cb8-18"><a href="#cb8-18"></a><span class="co">## Apply a chain of transformations to perform the word count task</span></span>
-<span id="cb8-19"><a href="#cb8-19"></a><span class="co">## The returned RDDs are DStream RDDs</span></span>
-<span id="cb8-20"><a href="#cb8-20"></a>words <span class="op">=</span> lines.flatMap(<span class="kw">lambda</span> line: line.split(<span class="st">" "</span>))</span>
-<span id="cb8-21"><a href="#cb8-21"></a>wordsOnes <span class="op">=</span> words.<span class="bu">map</span>(<span class="kw">lambda</span> word: (word, <span class="dv">1</span>))</span>
-<span id="cb8-22"><a href="#cb8-22"></a>wordsCounts <span class="op">=</span> wordsOnes.reduceByKey(<span class="kw">lambda</span> v1, v2: v1<span class="op">+</span>v2)</span>
-<span id="cb8-23"><a href="#cb8-23"></a></span>
-<span id="cb8-24"><a href="#cb8-24"></a><span class="co">## Sort the content/the pairs by decreasing value (# of occurrences)</span></span>
-<span id="cb8-25"><a href="#cb8-25"></a>wordsCountsSortByKey <span class="op">=</span> wordsCounts <span class="op">\</span></span>
-<span id="cb8-26"><a href="#cb8-26"></a>    .transform(<span class="kw">lambda</span> batchRDD: batchRDD.sortBy(<span class="kw">lambda</span> pair: <span class="op">-</span><span class="dv">1</span><span class="op">*</span>pair[<span class="dv">1</span>]))</span>
-<span id="cb8-27"><a href="#cb8-27"></a></span>
-<span id="cb8-28"><a href="#cb8-28"></a><span class="co">## Print the result on the standard output</span></span>
-<span id="cb8-29"><a href="#cb8-29"></a>wordsCountsSortByKey.pprint()</span>
-<span id="cb8-30"><a href="#cb8-30"></a></span>
-<span id="cb8-31"><a href="#cb8-31"></a><span class="co">## Store the result in HDFS</span></span>
-<span id="cb8-32"><a href="#cb8-32"></a>wordsCountsSortByKey.saveAsTextFiles(outputPathPrefix, <span class="st">""</span>)</span>
-<span id="cb8-33"><a href="#cb8-33"></a></span>
-<span id="cb8-34"><a href="#cb8-34"></a><span class="co">#Start the computation</span></span>
-<span id="cb8-35"><a href="#cb8-35"></a>ssc.start()</span>
-<span id="cb8-36"><a href="#cb8-36"></a></span>
-<span id="cb8-37"><a href="#cb8-37"></a><span class="co">## Run this application for 90 seconds</span></span>
-<span id="cb8-38"><a href="#cb8-38"></a>ssc.awaitTerminationOrTimeout(<span class="dv">90</span>)</span>
-<span id="cb8-39"><a href="#cb8-39"></a>ssc.stop(stopSparkContext<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">from</span> pyspark.streaming <span class="im">import</span> StreamingContext</span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co">## Set prefix of the output folders</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a>outputPathPrefix<span class="op">=</span><span class="st">"resSparkStreamingExamples"</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="co">#Create a configuration object and#set the name of the applicationconf</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a>SparkConf().setAppName(<span class="st">"Streaming word count"</span>)</span>
+<span id="cb6-8"><a href="#cb6-8"></a></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="co">## Create a Spark Context object</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a>sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
+<span id="cb6-11"><a href="#cb6-11"></a></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="co">## Create a Spark Streaming Context object</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a>ssc <span class="op">=</span> StreamingContext(sc, <span class="dv">5</span>)</span>
+<span id="cb6-14"><a href="#cb6-14"></a></span>
+<span id="cb6-15"><a href="#cb6-15"></a><span class="co">## Create a (Receiver) DStream that will connect to localhost:9999</span></span>
+<span id="cb6-16"><a href="#cb6-16"></a>lines <span class="op">=</span> ssc.socketTextStream(<span class="st">"localhost"</span>, <span class="dv">9999</span>)</span>
+<span id="cb6-17"><a href="#cb6-17"></a></span>
+<span id="cb6-18"><a href="#cb6-18"></a><span class="co">## Apply a chain of transformations to perform the word count task</span></span>
+<span id="cb6-19"><a href="#cb6-19"></a><span class="co">## The returned RDDs are DStream RDDs</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a>words <span class="op">=</span> lines.flatMap(<span class="kw">lambda</span> line: line.split(<span class="st">" "</span>))</span>
+<span id="cb6-21"><a href="#cb6-21"></a>wordsOnes <span class="op">=</span> words.<span class="bu">map</span>(<span class="kw">lambda</span> word: (word, <span class="dv">1</span>))</span>
+<span id="cb6-22"><a href="#cb6-22"></a>wordsCounts <span class="op">=</span> wordsOnes.reduceByKey(<span class="kw">lambda</span> v1, v2: v1<span class="op">+</span>v2)</span>
+<span id="cb6-23"><a href="#cb6-23"></a></span>
+<span id="cb6-24"><a href="#cb6-24"></a><span class="co">## Sort the content/the pairs by decreasing value (# of occurrences)</span></span>
+<span id="cb6-25"><a href="#cb6-25"></a>wordsCountsSortByKey <span class="op">=</span> wordsCounts <span class="op">\</span></span>
+<span id="cb6-26"><a href="#cb6-26"></a>    .transform(<span class="kw">lambda</span> batchRDD: batchRDD.sortBy(<span class="kw">lambda</span> pair: <span class="op">-</span><span class="dv">1</span><span class="op">*</span>pair[<span class="dv">1</span>]))</span>
+<span id="cb6-27"><a href="#cb6-27"></a></span>
+<span id="cb6-28"><a href="#cb6-28"></a><span class="co">## Print the result on the standard output</span></span>
+<span id="cb6-29"><a href="#cb6-29"></a>wordsCountsSortByKey.pprint()</span>
+<span id="cb6-30"><a href="#cb6-30"></a></span>
+<span id="cb6-31"><a href="#cb6-31"></a><span class="co">## Store the result in HDFS</span></span>
+<span id="cb6-32"><a href="#cb6-32"></a>wordsCountsSortByKey.saveAsTextFiles(outputPathPrefix, <span class="st">""</span>)</span>
+<span id="cb6-33"><a href="#cb6-33"></a></span>
+<span id="cb6-34"><a href="#cb6-34"></a><span class="co">#Start the computation</span></span>
+<span id="cb6-35"><a href="#cb6-35"></a>ssc.start()</span>
+<span id="cb6-36"><a href="#cb6-36"></a></span>
+<span id="cb6-37"><a href="#cb6-37"></a><span class="co">## Run this application for 90 seconds</span></span>
+<span id="cb6-38"><a href="#cb6-38"></a>ssc.awaitTerminationOrTimeout(<span class="dv">90</span>)</span>
+<span id="cb6-39"><a href="#cb6-39"></a>ssc.stop(stopSparkContext<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 
+
+<!-- -->
 
 </section>
 
@@ -1247,9 +1267,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -1285,6 +1319,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
   function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
@@ -1314,6 +1399,157 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Handle positioning of the toggle
+      window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -1364,7 +1600,637 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         <span class="nav-page-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Spark structured streaming</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb7" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu"># Streaming data analytics frameworks</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="fu">## Introduction</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="fu">### What is streaming processing?</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>Streaming processing is the act of continuously incorporating new data to compute a result. Input data is unbounded (i.e., it has no beginning and no end). Series of events that arrive at the stream processing system, and the application will output multiple versions of the results as it runs or put them in a storage.</span>
+<span id="cb7-5"><a href="#cb7-5"></a></span>
+<span id="cb7-6"><a href="#cb7-6"></a>Many important applications must process large streams of live data and provide results in near-real-time</span>
+<span id="cb7-7"><a href="#cb7-7"></a></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="ss">- </span>Social network trends</span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="ss">- </span>Website statistics</span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="ss">- </span>Intrusion detection systems</span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="ss">- </span>...</span>
+<span id="cb7-12"><a href="#cb7-12"></a></span>
+<span id="cb7-13"><a href="#cb7-13"></a>The main advantages of stream processing are:</span>
+<span id="cb7-14"><a href="#cb7-14"></a></span>
+<span id="cb7-15"><a href="#cb7-15"></a><span class="ss">- </span>Vastly higher throughput in data processing</span>
+<span id="cb7-16"><a href="#cb7-16"></a><span class="ss">- </span>Low latency: application respond quickly (e.g., in seconds). It can keep states in memory</span>
+<span id="cb7-17"><a href="#cb7-17"></a><span class="ss">- </span>More efficient in updating a result than repeated batch jobs, because it automatically incrementalizes the computation</span>
+<span id="cb7-18"><a href="#cb7-18"></a></span>
+<span id="cb7-19"><a href="#cb7-19"></a>Some requirements and challenges are:</span>
+<span id="cb7-20"><a href="#cb7-20"></a></span>
+<span id="cb7-21"><a href="#cb7-21"></a><span class="ss">- </span>Scalable to large clusters</span>
+<span id="cb7-22"><a href="#cb7-22"></a><span class="ss">- </span>Responding to events at low latency</span>
+<span id="cb7-23"><a href="#cb7-23"></a><span class="ss">- </span>Simple programming model</span>
+<span id="cb7-24"><a href="#cb7-24"></a><span class="ss">- </span>Processing each event exactly once despite machine failures - Efficient fault-tolerance in stateful computations</span>
+<span id="cb7-25"><a href="#cb7-25"></a><span class="ss">- </span>Processing out-of-order data based on application timestamps (also called event time)</span>
+<span id="cb7-26"><a href="#cb7-26"></a><span class="ss">- </span>Maintaining large amounts of state</span>
+<span id="cb7-27"><a href="#cb7-27"></a><span class="ss">- </span>Handling load imbalance and stragglers</span>
+<span id="cb7-28"><a href="#cb7-28"></a><span class="ss">- </span>Updating your application’s business logic at runtime</span>
+<span id="cb7-29"><a href="#cb7-29"></a></span>
+<span id="cb7-30"><a href="#cb7-30"></a><span class="fu">### Stream processing frameworks for big streaming data analytics</span></span>
+<span id="cb7-31"><a href="#cb7-31"></a>Several frameworks have been proposed to process in real-time or in near real-time data streams</span>
+<span id="cb7-32"><a href="#cb7-32"></a></span>
+<span id="cb7-33"><a href="#cb7-33"></a><span class="ss">- </span>Apache Spark (Streaming component)</span>
+<span id="cb7-34"><a href="#cb7-34"></a><span class="ss">- </span>Apache Storm</span>
+<span id="cb7-35"><a href="#cb7-35"></a><span class="ss">- </span>Apache Flink</span>
+<span id="cb7-36"><a href="#cb7-36"></a><span class="ss">- </span>Apache Samza</span>
+<span id="cb7-37"><a href="#cb7-37"></a><span class="ss">- </span>Apache Apex</span>
+<span id="cb7-38"><a href="#cb7-38"></a><span class="ss">- </span>Apache Flume</span>
+<span id="cb7-39"><a href="#cb7-39"></a><span class="ss">- </span>Amazon Kinesis Streams</span>
+<span id="cb7-40"><a href="#cb7-40"></a><span class="ss">- </span>...</span>
+<span id="cb7-41"><a href="#cb7-41"></a></span>
+<span id="cb7-42"><a href="#cb7-42"></a>All these frameworks use a cluster of servers to scale horizontally with respect to the (big) amount of data to be analyzed.</span>
+<span id="cb7-43"><a href="#cb7-43"></a></span>
+<span id="cb7-44"><a href="#cb7-44"></a><span class="fu">#### Main solutions</span></span>
+<span id="cb7-45"><a href="#cb7-45"></a>There are two main solutions</span>
+<span id="cb7-46"><a href="#cb7-46"></a></span>
+<span id="cb7-47"><a href="#cb7-47"></a><span class="ss">- </span>**Continuous computation of data streams**. In this case, data are processed as soon as they arrive: every time a new record arrives from the input stream, it is immediately processed and a result is emitted as soon as possible. This is real-time processing.</span>
+<span id="cb7-48"><a href="#cb7-48"></a><span class="ss">- </span>**Micro-batch stream processing**. Input data are collected in micro-batches, where each micro-batch contains all the data received in a time window (typically less than a few seconds of data). One micro-batch a time is processed: every time a micro-batch of data is ready, its entire content is processed and a result is emitted. This is near real-time processing.</span>
+<span id="cb7-49"><a href="#cb7-49"></a></span>
+<span id="cb7-50"><a href="#cb7-50"></a><span class="al">![Continuous computation: one record at a time](images/21_streaming_analytics/continuous_computation.png)</span>{width=80%}</span>
+<span id="cb7-51"><a href="#cb7-51"></a></span>
+<span id="cb7-52"><a href="#cb7-52"></a><span class="al">![Micro-batch computation: one micro-batch at a time](images/21_streaming_analytics/microbatch_computation.png)</span>{width=80%}</span>
+<span id="cb7-53"><a href="#cb7-53"></a></span>
+<span id="cb7-54"><a href="#cb7-54"></a><span class="fu">### Input data processing and result guarantees</span></span>
+<span id="cb7-55"><a href="#cb7-55"></a><span class="ss">- </span>At-most-once</span>
+<span id="cb7-56"><a href="#cb7-56"></a><span class="ss">    - </span>Every input element of a stream is processed once or less</span>
+<span id="cb7-57"><a href="#cb7-57"></a><span class="ss">    - </span>It is also called no guarantee</span>
+<span id="cb7-58"><a href="#cb7-58"></a><span class="ss">    - </span>The result can be wrong/approximated</span>
+<span id="cb7-59"><a href="#cb7-59"></a><span class="ss">- </span>At-least-once</span>
+<span id="cb7-60"><a href="#cb7-60"></a><span class="ss">    - </span>Every input element of a stream is processed once or more</span>
+<span id="cb7-61"><a href="#cb7-61"></a><span class="ss">    - </span>Input elements are replayed when there are failures</span>
+<span id="cb7-62"><a href="#cb7-62"></a><span class="ss">    - </span>The result can be wrong/approximated</span>
+<span id="cb7-63"><a href="#cb7-63"></a><span class="ss">- </span>Exactly-once</span>
+<span id="cb7-64"><a href="#cb7-64"></a><span class="ss">    - </span>Every input element of a stream is processed exactly once</span>
+<span id="cb7-65"><a href="#cb7-65"></a><span class="ss">    - </span>Input elements are replayed when there are failures</span>
+<span id="cb7-66"><a href="#cb7-66"></a><span class="ss">    - </span>If elements have been already processed they are not reprocessed</span>
+<span id="cb7-67"><a href="#cb7-67"></a><span class="ss">    - </span>The result is always correct</span>
+<span id="cb7-68"><a href="#cb7-68"></a><span class="ss">    - </span>Slower than the other processing approaches</span>
+<span id="cb7-69"><a href="#cb7-69"></a></span>
+<span id="cb7-70"><a href="#cb7-70"></a><span class="fu">## Spark Streaming</span></span>
+<span id="cb7-71"><a href="#cb7-71"></a><span class="fu">### What is Spark Streaming</span></span>
+<span id="cb7-72"><a href="#cb7-72"></a>Spark Streaming is a framework for large scale stream processing</span>
+<span id="cb7-73"><a href="#cb7-73"></a></span>
+<span id="cb7-74"><a href="#cb7-74"></a><span class="ss">- </span>Scales to 100s of nodes</span>
+<span id="cb7-75"><a href="#cb7-75"></a><span class="ss">- </span>Can achieve second scale latencies</span>
+<span id="cb7-76"><a href="#cb7-76"></a><span class="ss">- </span>Provides a simple batch-like API for implementing complex algorithm</span>
+<span id="cb7-77"><a href="#cb7-77"></a><span class="ss">- </span>Micro-batch streaming processing</span>
+<span id="cb7-78"><a href="#cb7-78"></a><span class="ss">- </span>Exactly-once guarantees</span>
+<span id="cb7-79"><a href="#cb7-79"></a><span class="ss">- </span>Can absorb live data streams from Kafka, Flume, ZeroMQ, Twitter, ...</span>
+<span id="cb7-80"><a href="#cb7-80"></a></span>
+<span id="cb7-81"><a href="#cb7-81"></a><span class="al">![Spark Streaming components](images/21_streaming_analytics/spark_streaming_components.png)</span>{width=80%}</span>
+<span id="cb7-82"><a href="#cb7-82"></a></span>
+<span id="cb7-83"><a href="#cb7-83"></a>Many important applications must process large streams of live data and provide results in near-real-time</span>
+<span id="cb7-84"><a href="#cb7-84"></a></span>
+<span id="cb7-85"><a href="#cb7-85"></a><span class="ss">- </span>Social network trends</span>
+<span id="cb7-86"><a href="#cb7-86"></a><span class="ss">- </span>Website statistics</span>
+<span id="cb7-87"><a href="#cb7-87"></a><span class="ss">- </span>Intrusion detection systems</span>
+<span id="cb7-88"><a href="#cb7-88"></a><span class="ss">- </span>...</span>
+<span id="cb7-89"><a href="#cb7-89"></a></span>
+<span id="cb7-90"><a href="#cb7-90"></a>The requirements are </span>
+<span id="cb7-91"><a href="#cb7-91"></a></span>
+<span id="cb7-92"><a href="#cb7-92"></a><span class="ss">- </span>Scalable to large clusters</span>
+<span id="cb7-93"><a href="#cb7-93"></a><span class="ss">- </span>Second-scale latencies</span>
+<span id="cb7-94"><a href="#cb7-94"></a><span class="ss">- </span>Simple programming model</span>
+<span id="cb7-95"><a href="#cb7-95"></a><span class="ss">- </span>Efficient fault-tolerance in stateful computations</span>
+<span id="cb7-96"><a href="#cb7-96"></a></span>
+<span id="cb7-97"><a href="#cb7-97"></a><span class="fu">### Spark discretized stream processing</span></span>
+<span id="cb7-98"><a href="#cb7-98"></a>Spark streaming runs a streaming computation as a series of very small, deterministic batch jobs. It splits each input stream in portions and processes one portion at a time (in the incoming order): the same computation is applied on each portion (called **batch**) of the stream.</span>
+<span id="cb7-99"><a href="#cb7-99"></a></span>
+<span id="cb7-100"><a href="#cb7-100"></a>So, Spark streaming </span>
+<span id="cb7-101"><a href="#cb7-101"></a></span>
+<span id="cb7-102"><a href="#cb7-102"></a><span class="ss">- </span>Splits the live stream into batches of X seconds</span>
+<span id="cb7-103"><a href="#cb7-103"></a><span class="ss">- </span>Treats each batch of data as RDDs and processes them using RDD operations</span>
+<span id="cb7-104"><a href="#cb7-104"></a><span class="ss">- </span>Finally, the processed results of the RDD operations are returned in batches</span>
+<span id="cb7-105"><a href="#cb7-105"></a></span>
+<span id="cb7-106"><a href="#cb7-106"></a><span class="al">![Discretization in batches](images/21_streaming_analytics/discretization.png)</span>{width=80%}</span>
+<span id="cb7-107"><a href="#cb7-107"></a></span>
+<span id="cb7-108"><a href="#cb7-108"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb7-109"><a href="#cb7-109"></a><span class="fu">### Example</span></span>
+<span id="cb7-110"><a href="#cb7-110"></a>Word count implementation using Spark streaming. Problem specification:</span>
+<span id="cb7-111"><a href="#cb7-111"></a></span>
+<span id="cb7-112"><a href="#cb7-112"></a><span class="ss">- </span>The input is a stream of sentences</span>
+<span id="cb7-113"><a href="#cb7-113"></a><span class="ss">- </span>Split the input stream in batches of 10 seconds each and print on the standard output, for each batch, the occurrences of each word appearing in the batch (i.e., execute the word count application one time for each batch of 10 seconds)</span>
+<span id="cb7-114"><a href="#cb7-114"></a></span>
+<span id="cb7-115"><a href="#cb7-115"></a><span class="al">![Input and output](images/21_streaming_analytics/wordcount_input_output.png)</span>{width=80%}</span>
+<span id="cb7-116"><a href="#cb7-116"></a></span>
+<span id="cb7-117"><a href="#cb7-117"></a>:::</span>
+<span id="cb7-118"><a href="#cb7-118"></a></span>
+<span id="cb7-119"><a href="#cb7-119"></a>:::{.callout-tip}</span>
+<span id="cb7-120"><a href="#cb7-120"></a><span class="fu">### Key concepts</span></span>
+<span id="cb7-121"><a href="#cb7-121"></a></span>
+<span id="cb7-122"><a href="#cb7-122"></a><span class="ss">- </span>DSream</span>
+<span id="cb7-123"><a href="#cb7-123"></a><span class="ss">    - </span>Sequence of RDDs representing a discretized version of the input stream of data (Twitter, HDFS, Kafka, Flume, ZeroMQ, Akka Actor, TCP sockets, ...)</span>
+<span id="cb7-124"><a href="#cb7-124"></a><span class="ss">    - </span>One RDD for each batch of the input stream</span>
+<span id="cb7-125"><a href="#cb7-125"></a><span class="ss">- </span>Transformations</span>
+<span id="cb7-126"><a href="#cb7-126"></a><span class="ss">    - </span>Modify data from one DStream to another</span>
+<span id="cb7-127"><a href="#cb7-127"></a><span class="ss">    - </span>Standard RDD operations (map, countByValue, reduce, join, ...)</span>
+<span id="cb7-128"><a href="#cb7-128"></a><span class="ss">    - </span>Window and Stateful operations (window, countByValueAndWindow, ...)</span>
+<span id="cb7-129"><a href="#cb7-129"></a><span class="ss">- </span>Output Operations/Actions</span>
+<span id="cb7-130"><a href="#cb7-130"></a><span class="ss">    - </span>Send data to external entity (saveAsHadoopFiles, saveAsTextFile, ...)</span>
+<span id="cb7-131"><a href="#cb7-131"></a></span>
+<span id="cb7-132"><a href="#cb7-132"></a>:::</span>
+<span id="cb7-133"><a href="#cb7-133"></a></span>
+<span id="cb7-134"><a href="#cb7-134"></a><span class="fu">### Word count using DStreams</span></span>
+<span id="cb7-135"><a href="#cb7-135"></a>A DStream is represented by a continuous series of RDDs. Each RDD in a DStream contains data from a certain batch/interval.</span>
+<span id="cb7-136"><a href="#cb7-136"></a></span>
+<span id="cb7-137"><a href="#cb7-137"></a><span class="al">![RDDs composing a DStreams](images/21_streaming_analytics/wordcount_dstreams.png)</span>{width=80%}</span>
+<span id="cb7-138"><a href="#cb7-138"></a></span>
+<span id="cb7-139"><a href="#cb7-139"></a>Any operation applied on a DStream translates to operations on the underlying RDDs. These underlying RDD transformations are computed by the Spark engine. </span>
+<span id="cb7-140"><a href="#cb7-140"></a></span>
+<span id="cb7-141"><a href="#cb7-141"></a><span class="al">![Operations in a DStreams](images/21_streaming_analytics/wordcount_dstreams_operations.png)</span>{width=80%}</span>
+<span id="cb7-142"><a href="#cb7-142"></a></span>
+<span id="cb7-143"><a href="#cb7-143"></a><span class="fu">### Fault-tolerance</span></span>
+<span id="cb7-144"><a href="#cb7-144"></a>DStreams remember the sequence of operations that created them from the original fault-tolerant input data. Batches of input data are replicated in memory of multiple worker nodes, therefore fault-tolerant: data lost due to worker failure, can be recomputed from input data.</span>
+<span id="cb7-145"><a href="#cb7-145"></a></span>
+<span id="cb7-146"><a href="#cb7-146"></a><span class="fu">## Spark streaming programs</span></span>
+<span id="cb7-147"><a href="#cb7-147"></a><span class="fu">### Basic structure of a Spark streaming program</span></span>
+<span id="cb7-148"><a href="#cb7-148"></a><span class="ss">1. </span>Define a Spark Streaming Context object. Define the size of the batches (in seconds) associated with the Streaming context.</span>
+<span id="cb7-149"><a href="#cb7-149"></a><span class="ss">2. </span>Specify the input stream and define a DStream based on it</span>
+<span id="cb7-150"><a href="#cb7-150"></a><span class="ss">3. </span>Specify the operations to execute for each batch of data</span>
+<span id="cb7-151"><a href="#cb7-151"></a><span class="ss">4. </span>Use transformations and actions similar to the ones available for standard RDDs</span>
+<span id="cb7-152"><a href="#cb7-152"></a><span class="ss">5. </span>Invoke the start method, to start processing the input stream</span>
+<span id="cb7-153"><a href="#cb7-153"></a><span class="ss">6. </span>Wait until the application is killed or the timeout specified in the application expires: if the timeout is not set and the application is not killed the application will run forever</span>
+<span id="cb7-154"><a href="#cb7-154"></a></span>
+<span id="cb7-155"><a href="#cb7-155"></a><span class="fu">### Spark streaming context</span></span>
+<span id="cb7-156"><a href="#cb7-156"></a>The Spark Streaming Context is defined by using the <span class="in">`StreamingContext(SparkConf sparkC, Duration batchDuration)`</span> constructor of the class <span class="in">`pyspark.streaming.StreamingContext`</span>.</span>
+<span id="cb7-157"><a href="#cb7-157"></a>The <span class="in">`batchDuration`</span> parameter specifies the size of the batches in seconds</span>
+<span id="cb7-158"><a href="#cb7-158"></a></span>
+<span id="cb7-159"><a href="#cb7-159"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb7-160"><a href="#cb7-160"></a><span class="fu">### Example</span></span>
+<span id="cb7-161"><a href="#cb7-161"></a></span>
+<span id="cb7-162"><a href="#cb7-162"></a><span class="in">```python</span></span>
+<span id="cb7-163"><a href="#cb7-163"></a><span class="im">from</span> pyspark.streaming <span class="im">import</span> StreamingContext</span>
+<span id="cb7-164"><a href="#cb7-164"></a>ssc <span class="op">=</span> StreamingContext(sc, <span class="dv">10</span>)</span>
+<span id="cb7-165"><a href="#cb7-165"></a><span class="in">```</span></span>
+<span id="cb7-166"><a href="#cb7-166"></a></span>
+<span id="cb7-167"><a href="#cb7-167"></a>The input streams associated with this context will be split in batches of 10 seconds.</span>
+<span id="cb7-168"><a href="#cb7-168"></a>:::</span>
+<span id="cb7-169"><a href="#cb7-169"></a></span>
+<span id="cb7-170"><a href="#cb7-170"></a>After a context is defined, the next steps are</span>
+<span id="cb7-171"><a href="#cb7-171"></a></span>
+<span id="cb7-172"><a href="#cb7-172"></a><span class="ss">- </span>Define the input sources by creating input Dstreams</span>
+<span id="cb7-173"><a href="#cb7-173"></a><span class="ss">- </span>Define the streaming computations by applying transformation and output operations to DStreams</span>
+<span id="cb7-174"><a href="#cb7-174"></a></span>
+<span id="cb7-175"><a href="#cb7-175"></a><span class="fu">### Input streams</span></span>
+<span id="cb7-176"><a href="#cb7-176"></a>The input Streams can be generated from different sources</span>
+<span id="cb7-177"><a href="#cb7-177"></a></span>
+<span id="cb7-178"><a href="#cb7-178"></a><span class="ss">- </span>TCP socket, Kafka, Flume, Kinesis, Twitter.</span>
+<span id="cb7-179"><a href="#cb7-179"></a><span class="ss">- </span>Also a HDFS folder can be used as input stream. This option is usually used during the application development to perform a set of initial tests.</span>
+<span id="cb7-180"><a href="#cb7-180"></a></span>
+<span id="cb7-181"><a href="#cb7-181"></a><span class="fu">#### Input: TCP socket</span></span>
+<span id="cb7-182"><a href="#cb7-182"></a>A DStream can be associated with the content emitted by a TCP socket: <span class="in">`socketTextStream(String hostname, int port_number)`</span> is used to create a DStream based on the textual content emitted by a TCP socket. </span>
+<span id="cb7-183"><a href="#cb7-183"></a></span>
+<span id="cb7-184"><a href="#cb7-184"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb7-185"><a href="#cb7-185"></a><span class="fu">### Example</span></span>
+<span id="cb7-186"><a href="#cb7-186"></a></span>
+<span id="cb7-187"><a href="#cb7-187"></a><span class="in">```python</span></span>
+<span id="cb7-188"><a href="#cb7-188"></a>lines <span class="op">=</span> ssc.socketTextStream(<span class="st">"localhost"</span>, <span class="dv">9999</span>)</span>
+<span id="cb7-189"><a href="#cb7-189"></a><span class="in">```</span></span>
+<span id="cb7-190"><a href="#cb7-190"></a></span>
+<span id="cb7-191"><a href="#cb7-191"></a>It stores the content emitted by localhost:9999 in the lines DStream.</span>
+<span id="cb7-192"><a href="#cb7-192"></a>:::</span>
+<span id="cb7-193"><a href="#cb7-193"></a></span>
+<span id="cb7-194"><a href="#cb7-194"></a><span class="fu">#### Input: (HDFS) folder</span></span>
+<span id="cb7-195"><a href="#cb7-195"></a>A DStream can be associated with the content of an input (HDFS) folder: every time a new file is inserted in the folder, the content of the file is stored in the associated DStream and processed. Pay attention that updating the content of a file does not trigger/change the content of the DStream. <span class="in">`textFileStream(String folder)`</span> is used to create a DStream based on the content of the input folder.</span>
+<span id="cb7-196"><a href="#cb7-196"></a></span>
+<span id="cb7-197"><a href="#cb7-197"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb7-198"><a href="#cb7-198"></a><span class="fu">### Example</span></span>
+<span id="cb7-199"><a href="#cb7-199"></a></span>
+<span id="cb7-200"><a href="#cb7-200"></a><span class="in">```python</span></span>
+<span id="cb7-201"><a href="#cb7-201"></a>lines <span class="op">=</span> textFileStream(inputFolder)</span>
+<span id="cb7-202"><a href="#cb7-202"></a><span class="in">```</span></span>
+<span id="cb7-203"><a href="#cb7-203"></a></span>
+<span id="cb7-204"><a href="#cb7-204"></a>Store the content of the files inserted in the input folder in the lines Dstream: every time new files are inserted in the folder their content is stored in the current batch of the stream.</span>
+<span id="cb7-205"><a href="#cb7-205"></a>:::</span>
+<span id="cb7-206"><a href="#cb7-206"></a></span>
+<span id="cb7-207"><a href="#cb7-207"></a><span class="fu">#### Input: other sources</span></span>
+<span id="cb7-208"><a href="#cb7-208"></a>Usually DStream objects are defined on top of streams emitted by specific applications that emit real-time streaming data (e.g., Apache Kafka, Apache Flume, Kinesis, Twitter). It is also possible to write custom applications for generating streams of data, however Kafka, Flume and similar tools are usually a more reliable and effective solutions for generating streaming data. </span>
+<span id="cb7-209"><a href="#cb7-209"></a></span>
+<span id="cb7-210"><a href="#cb7-210"></a><span class="fu">### Transformations</span></span>
+<span id="cb7-211"><a href="#cb7-211"></a>Analogously to standard RDDs, also DStreams are characterized by a set of transformations that, when applied to DStream objects, return a new DStream Object. The transformation is applied on one batch (RDD) of the input DStream at a time and returns a batch (RDD) of the new DStream (i.e., each batch (RDD) of the input DStream is associated with exactly one batch (RDD) of the returned DStream). Many of the available transformations are the same transformations available for standard RDDs.</span>
+<span id="cb7-212"><a href="#cb7-212"></a></span>
+<span id="cb7-213"><a href="#cb7-213"></a><span class="fu">#### Basic transformations</span></span>
+<span id="cb7-214"><a href="#cb7-214"></a></span>
+<span id="cb7-215"><a href="#cb7-215"></a>| Transformation | Effect |</span>
+<span id="cb7-216"><a href="#cb7-216"></a>|-|---|</span>
+<span id="cb7-217"><a href="#cb7-217"></a>| <span class="in">`map(func)`</span> | It returns a new DStream by passing each element of the source DStream through a function func. |</span>
+<span id="cb7-218"><a href="#cb7-218"></a>| <span class="in">`flatMap(func)`</span> | each input item can be mapped to 0 or more output items. Returns a new DStream. |</span>
+<span id="cb7-219"><a href="#cb7-219"></a>| <span class="in">`filter(func)`</span> | It returns a new DStream by selecting only the records of the source DStream on which func returns true. |</span>
+<span id="cb7-220"><a href="#cb7-220"></a>| <span class="in">`reduce(func)`</span> | It returns a new DStream of single-element RDDs by aggregating the elements in each RDD of the source DStream using a function func. The function must be associative and commutative so that it can be computed in parallel. Note that the <span class="in">`reduce`</span> method of DStreams is a transformation. |</span>
+<span id="cb7-221"><a href="#cb7-221"></a>| <span class="in">`reduceByKey(func)`</span> | When called on a DStream of $(K, V)$ pairs, returns a new DStream of $(K, V)$ pairs where the values for each key are aggregated using the given reduce function. |</span>
+<span id="cb7-222"><a href="#cb7-222"></a>| <span class="in">`combineByKey(...)`</span> | when called on a DStream of $(K, V)$ pairs, returns a new DStream of $(K, W)$ pairs where the values for each key are aggregated using the given combine functions. The parameters are: <span class="in">`createCombiner`</span>, <span class="in">`mergeValue`</span>, and <span class="in">`mergeCombiners`</span>|</span>
+<span id="cb7-223"><a href="#cb7-223"></a>| <span class="in">`groupByKey()`</span> | when called on a DStream of $(K, V)$ pairs, returns a new DStream of $(K, \text{Iterable<span class="kw">&lt;V&gt;</span>})$ pairs where the values for each key is the concatenation of all the values associated with key $K$ (i.e., It returns a new DStream by applying groupByKey on one batch (one RDD) of the input stream at a time). |</span>
+<span id="cb7-224"><a href="#cb7-224"></a>| <span class="in">`countByValue()`</span> | when called on a DStream of elements of type $K$, returns a new DStream of $(K, \text{Long})$ pairs where the value of each key is its frequency in each batch of the source Dstream. Note that the <span class="in">`countByValue`</span> method of DStreams is a transformation. |</span>
+<span id="cb7-225"><a href="#cb7-225"></a>| <span class="in">`count()`</span> | It returns a new DStream of single-element RDDs by counting the number of elements in each batch (RDD) of the source Dstream (i.e., it counts the number of elements in each input batch (RDD)). Note that the <span class="in">`count`</span> method of DStreams is a transformation. |</span>
+<span id="cb7-226"><a href="#cb7-226"></a>| <span class="in">`union(otherStream)`</span> | It returns a new DStream that contains the union of the elements in the source DStream and otherDStream. |</span>
+<span id="cb7-227"><a href="#cb7-227"></a>| <span class="in">`join(otherStream)`</span> | when called on two DStreams of $(K, V)$ and $(K, W)$ pairs, return a new DStream of $(K, (V, W))$ pairs with all pairs of elements for each key. |</span>
+<span id="cb7-228"><a href="#cb7-228"></a>| <span class="in">`cogroup(otherStream)`</span> | when called on a DStream of $(K, V)$ and $(K, W)$ pairs, return a new DStream of $(K, \text{Seq}<span class="co">[</span><span class="ot">V</span><span class="co">]</span>, \text{Seq}<span class="co">[</span><span class="ot">W</span><span class="co">]</span>)$ tuples. |</span>
+<span id="cb7-229"><a href="#cb7-229"></a></span>
+<span id="cb7-230"><a href="#cb7-230"></a><span class="fu">#### Basic actions</span></span>
+<span id="cb7-231"><a href="#cb7-231"></a></span>
+<span id="cb7-232"><a href="#cb7-232"></a>| Action | Effect |</span>
+<span id="cb7-233"><a href="#cb7-233"></a>| <span class="in">`pprint()`</span> | It prints the first 10 elements of every batch of data in a DStream on the standard output of the driver node running the streaming application. It is useful for development and debugging |</span>
+<span id="cb7-234"><a href="#cb7-234"></a>| <span class="in">`saveAsTextFiles(prefix, [suffix])`</span> | It saves the content of the DStream on which it is invoked as text files: one folder for each batch, and the folder name at each batch interval is generated based on prefix, time of the batch (and suffix): "prefix-TIME_IN_MS<span class="co">[</span><span class="ot">.suffix</span><span class="co">]</span>" (e.g., <span class="in">`Counts.saveAsTextFiles(outputPathPrefix, "")`</span>). |</span>
+<span id="cb7-235"><a href="#cb7-235"></a></span>
+<span id="cb7-236"><a href="#cb7-236"></a><span class="fu">### Start and run the computations</span></span>
+<span id="cb7-237"><a href="#cb7-237"></a>The <span class="in">`streamingContext.start()`</span> method is used to start the application on the input stream(s). The <span class="in">`awaitTerminationOrTimeout(long millisecons)`</span> method is used to specify how long the application will run.</span>
+<span id="cb7-238"><a href="#cb7-238"></a></span>
+<span id="cb7-239"><a href="#cb7-239"></a>The <span class="in">`awaitTermination()`</span> method is used to run the application forever</span>
+<span id="cb7-240"><a href="#cb7-240"></a></span>
+<span id="cb7-241"><a href="#cb7-241"></a><span class="ss">- </span>Until the application is explicitly killed</span>
+<span id="cb7-242"><a href="#cb7-242"></a><span class="ss">- </span>The processing can be manually stopped using <span class="in">`streamingContext.stop()`</span></span>
+<span id="cb7-243"><a href="#cb7-243"></a></span>
+<span id="cb7-244"><a href="#cb7-244"></a><span class="fu">#### Points to remember</span></span>
+<span id="cb7-245"><a href="#cb7-245"></a><span class="ss">- </span>Once a context has been started, no new streaming computations can be set up or added to it</span>
+<span id="cb7-246"><a href="#cb7-246"></a><span class="ss">- </span>Once a context has been stopped, it cannot be restarted</span>
+<span id="cb7-247"><a href="#cb7-247"></a><span class="ss">- </span>Only one StreamingContext per application can be active at the same time</span>
+<span id="cb7-248"><a href="#cb7-248"></a><span class="ss">- </span><span class="in">`stop()`</span> on StreamingContext also stops the SparkContext. To stop only the <span class="in">`StreamingContext`</span>, set the optional parameter of <span class="in">`stop()`</span> called <span class="in">`stopSparkContext`</span> to False</span>
+<span id="cb7-249"><a href="#cb7-249"></a></span>
+<span id="cb7-250"><a href="#cb7-250"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb7-251"><a href="#cb7-251"></a><span class="fu">### Example: Spark Streaming version of word count</span></span>
+<span id="cb7-252"><a href="#cb7-252"></a>Problem specification</span>
+<span id="cb7-253"><a href="#cb7-253"></a></span>
+<span id="cb7-254"><a href="#cb7-254"></a><span class="ss">- </span>Input: a stream of sentences retrieved from localhost:9999</span>
+<span id="cb7-255"><a href="#cb7-255"></a><span class="ss">- </span>Task: </span>
+<span id="cb7-256"><a href="#cb7-256"></a><span class="ss">    - </span>Split the input stream in batches of 5 seconds each and print on the standard output, for each batch, the occurrences of each word appearing in the batch (i.e., execute the word count problem for each batch of 5 seconds)</span>
+<span id="cb7-257"><a href="#cb7-257"></a><span class="ss">    - </span>Store the results also in an HDFS folder</span>
+<span id="cb7-258"><a href="#cb7-258"></a></span>
+<span id="cb7-259"><a href="#cb7-259"></a><span class="in">```python</span></span>
+<span id="cb7-260"><a href="#cb7-260"></a><span class="im">from</span> pyspark.streaming <span class="im">import</span> StreamingContext</span>
+<span id="cb7-261"><a href="#cb7-261"></a></span>
+<span id="cb7-262"><a href="#cb7-262"></a><span class="co">## Set prefix of the output folders</span></span>
+<span id="cb7-263"><a href="#cb7-263"></a>outputPathPrefix<span class="op">=</span><span class="st">"resSparkStreamingExamples"</span></span>
+<span id="cb7-264"><a href="#cb7-264"></a></span>
+<span id="cb7-265"><a href="#cb7-265"></a><span class="co">## Create a configuration object and</span></span>
+<span id="cb7-266"><a href="#cb7-266"></a><span class="co">## set the name of the applicationconf</span></span>
+<span id="cb7-267"><a href="#cb7-267"></a>SparkConf().setAppName(<span class="st">"Streaming word count"</span>)</span>
+<span id="cb7-268"><a href="#cb7-268"></a></span>
+<span id="cb7-269"><a href="#cb7-269"></a><span class="co">## Create a Spark Context object</span></span>
+<span id="cb7-270"><a href="#cb7-270"></a>sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
+<span id="cb7-271"><a href="#cb7-271"></a></span>
+<span id="cb7-272"><a href="#cb7-272"></a><span class="co">## Create a Spark Streaming Context object</span></span>
+<span id="cb7-273"><a href="#cb7-273"></a>ssc <span class="op">=</span> StreamingContext(sc, <span class="dv">5</span>)</span>
+<span id="cb7-274"><a href="#cb7-274"></a></span>
+<span id="cb7-275"><a href="#cb7-275"></a><span class="co">## Create a (Receiver) DStream that will connect to localhost:9999</span></span>
+<span id="cb7-276"><a href="#cb7-276"></a>lines <span class="op">=</span> ssc.socketTextStream(<span class="st">"localhost"</span>, <span class="dv">9999</span>)</span>
+<span id="cb7-277"><a href="#cb7-277"></a></span>
+<span id="cb7-278"><a href="#cb7-278"></a><span class="co">## Apply a chain of transformations to perform the word count task</span></span>
+<span id="cb7-279"><a href="#cb7-279"></a><span class="co">## The returned RDDs are DStream RDDs</span></span>
+<span id="cb7-280"><a href="#cb7-280"></a>words <span class="op">=</span> lines.flatMap(<span class="kw">lambda</span> line: line.split(<span class="st">" "</span>))</span>
+<span id="cb7-281"><a href="#cb7-281"></a>wordsOnes <span class="op">=</span> words.<span class="bu">map</span>(<span class="kw">lambda</span> word: (word, <span class="dv">1</span>))</span>
+<span id="cb7-282"><a href="#cb7-282"></a>wordsCounts <span class="op">=</span> wordsOnes.reduceByKey(<span class="kw">lambda</span> v1, v2: v1<span class="op">+</span>v2)</span>
+<span id="cb7-283"><a href="#cb7-283"></a></span>
+<span id="cb7-284"><a href="#cb7-284"></a><span class="co">## Print the result on the standard output</span></span>
+<span id="cb7-285"><a href="#cb7-285"></a>wordsCounts.pprint()</span>
+<span id="cb7-286"><a href="#cb7-286"></a></span>
+<span id="cb7-287"><a href="#cb7-287"></a><span class="co">## Store the result in HDFS</span></span>
+<span id="cb7-288"><a href="#cb7-288"></a>wordsCounts.saveAsTextFiles(outputPathPrefix, <span class="st">""</span>)</span>
+<span id="cb7-289"><a href="#cb7-289"></a></span>
+<span id="cb7-290"><a href="#cb7-290"></a><span class="co">#Start the computation</span></span>
+<span id="cb7-291"><a href="#cb7-291"></a>ssc.start()</span>
+<span id="cb7-292"><a href="#cb7-292"></a></span>
+<span id="cb7-293"><a href="#cb7-293"></a><span class="co">## Run this application for 90 seconds</span></span>
+<span id="cb7-294"><a href="#cb7-294"></a>ssc.awaitTerminationOrTimeout(<span class="dv">90</span>)</span>
+<span id="cb7-295"><a href="#cb7-295"></a>ssc.stop(stopSparkContext<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb7-296"><a href="#cb7-296"></a><span class="in">```</span></span>
+<span id="cb7-297"><a href="#cb7-297"></a></span>
+<span id="cb7-298"><a href="#cb7-298"></a>:::</span>
+<span id="cb7-299"><a href="#cb7-299"></a></span>
+<span id="cb7-300"><a href="#cb7-300"></a><span class="fu">## Windowed computation</span></span>
+<span id="cb7-301"><a href="#cb7-301"></a>Spark Streaming also provides windowed computations, allowing to apply transformations over a sliding window of data: each window contains a set of batches of the inputstream, and windows can be overlapped (i.e., the same batch can be included in many consecutive windows).</span>
+<span id="cb7-302"><a href="#cb7-302"></a></span>
+<span id="cb7-303"><a href="#cb7-303"></a>Every time the window slides over a source DStream, the source RDDs that fall within the window are combined and operated upon to produce the RDDs of the windowed DStream.</span>
+<span id="cb7-304"><a href="#cb7-304"></a></span>
+<span id="cb7-305"><a href="#cb7-305"></a><span class="al">![Graphical example](images/21_streaming_analytics/windows_graphical_example.png)</span>{width=80%}</span>
+<span id="cb7-306"><a href="#cb7-306"></a></span>
+<span id="cb7-307"><a href="#cb7-307"></a>In the example, the operationis applied over the last 3 time units of data (i.e., the last 3 batches of the input DStream), and each window contains the data of 3 batches. It slides by 2 time units.</span>
+<span id="cb7-308"><a href="#cb7-308"></a></span>
+<span id="cb7-309"><a href="#cb7-309"></a><span class="fu">### Parameters</span></span>
+<span id="cb7-310"><a href="#cb7-310"></a>Any window operation needs to specify two parameters</span>
+<span id="cb7-311"><a href="#cb7-311"></a></span>
+<span id="cb7-312"><a href="#cb7-312"></a><span class="ss">- </span>Window length: the duration of the window (3 in the example)</span>
+<span id="cb7-313"><a href="#cb7-313"></a><span class="ss">- </span>Sliding interval: the interval at which the window operation is performed (2 in the example)</span>
+<span id="cb7-314"><a href="#cb7-314"></a></span>
+<span id="cb7-315"><a href="#cb7-315"></a>These two parameters must be multiples of the batch interval of the source DStream.</span>
+<span id="cb7-316"><a href="#cb7-316"></a></span>
+<span id="cb7-317"><a href="#cb7-317"></a>::::{.callout-note collapse="true" }</span>
+<span id="cb7-318"><a href="#cb7-318"></a><span class="fu">### Example: word count and window</span></span>
+<span id="cb7-319"><a href="#cb7-319"></a>Problem specification</span>
+<span id="cb7-320"><a href="#cb7-320"></a></span>
+<span id="cb7-321"><a href="#cb7-321"></a><span class="ss">- </span>Input: a stream of sentences</span>
+<span id="cb7-322"><a href="#cb7-322"></a><span class="ss">- </span>Split the input stream in batches of 10 seconds</span>
+<span id="cb7-323"><a href="#cb7-323"></a><span class="ss">- </span>Define widows with the following characteristics</span>
+<span id="cb7-324"><a href="#cb7-324"></a><span class="ss">    - </span>Window length: 20 seconds (i.e., 2 batches)</span>
+<span id="cb7-325"><a href="#cb7-325"></a><span class="ss">    - </span>Sliding interval: 10 seconds (i.e., 1 batch)</span>
+<span id="cb7-326"><a href="#cb7-326"></a><span class="ss">- </span>Print on the standard output, for each window, the occurrences of each word appearing in the window (i.e., execute the word count problem for each window)</span>
+<span id="cb7-327"><a href="#cb7-327"></a></span>
+<span id="cb7-328"><a href="#cb7-328"></a>::: {layout-ncol=1}</span>
+<span id="cb7-329"><a href="#cb7-329"></a><span class="al">![Step one](images/21_streaming_analytics/wordcount_window_1.png)</span>{width=80%}</span>
+<span id="cb7-330"><a href="#cb7-330"></a></span>
+<span id="cb7-331"><a href="#cb7-331"></a><span class="al">![Step two](images/21_streaming_analytics/wordcount_window_2.png)</span>{width=80%}</span>
+<span id="cb7-332"><a href="#cb7-332"></a></span>
+<span id="cb7-333"><a href="#cb7-333"></a>Word count and windows</span>
+<span id="cb7-334"><a href="#cb7-334"></a>:::</span>
+<span id="cb7-335"><a href="#cb7-335"></a>::::</span>
+<span id="cb7-336"><a href="#cb7-336"></a></span>
+<span id="cb7-337"><a href="#cb7-337"></a><span class="fu">### Basic window transformations</span></span>
+<span id="cb7-338"><a href="#cb7-338"></a></span>
+<span id="cb7-339"><a href="#cb7-339"></a>::::{.content-visible when-format="html"}</span>
+<span id="cb7-340"><a href="#cb7-340"></a>:::{.column-screen-inset}</span>
+<span id="cb7-341"><a href="#cb7-341"></a></span>
+<span id="cb7-342"><a href="#cb7-342"></a>|Window transformation|Effect|</span>
+<span id="cb7-343"><a href="#cb7-343"></a>|-|---|</span>
+<span id="cb7-344"><a href="#cb7-344"></a>|<span class="in">`window(windowLength, slideInterval)`</span>|It returns a new DStream which is computed based on windowed batches of the source DStream.|</span>
+<span id="cb7-345"><a href="#cb7-345"></a><span class="in">`countByWindow(windowLength, slideInterval)`</span>|It returns a new single-element stream containing the number of elements of each window. The returned object is a Dstream of Long objects. However, it contains only one value for each window (the number of elements of the last analyzed window).|</span>
+<span id="cb7-346"><a href="#cb7-346"></a>|<span class="in">`reduceByWindow(reduceFunc, invReduceFunc, windowDuration, slideDuration)`</span>|It returns a new single-element stream, created by aggregating elements in the stream over a sliding interval using <span class="in">`func`</span>. The function must be associative and commutative so that it can be computed correctly in parallel. If <span class="in">`invReduceFunc`</span> is not None, the reduction is done incrementally using the old window's reduced value.|</span>
+<span id="cb7-347"><a href="#cb7-347"></a>|<span class="in">`countByValueAndWindow(windowDuration , slideDuration)`</span>|When called on a DStream of elements of type $K$, it returns a new DStream of $(K, \text{Long})$ pairs where the value of each key $K$ is its frequency in each window of the source DStream.|</span>
+<span id="cb7-348"><a href="#cb7-348"></a>|<span class="in">`reduceByKeyAndWindow(func, invFunc, windowDuration, slideDuration=None, numPartitions=None)`</span>|When called on a DStream of $(K, V)$ pairs, it returns a new DStream of $(K, V)$ pairs where the values for each key are aggregated using the given reduce function func over batches in a sliding window. The window duration (length) is specified as a parameter of this invocation (<span class="in">`windowDuration`</span>). Notice that, if <span class="in">`slideDuration`</span> is None, the <span class="in">`batchDuration`</span> of the StreamingContext object is used (i.e., 1 batch sliding window); if <span class="in">`invFunc`</span> is provideved (is not None), the reduction is done incrementally using the old window's reduced values (i.e., <span class="in">`invFunc`</span> is used to apply an inverse reduce operation by considering the old values that left the window, e.g., subtracting old counts).|</span>
+<span id="cb7-349"><a href="#cb7-349"></a></span>
+<span id="cb7-350"><a href="#cb7-350"></a>:::</span>
+<span id="cb7-351"><a href="#cb7-351"></a>::::</span>
+<span id="cb7-352"><a href="#cb7-352"></a></span>
+<span id="cb7-353"><a href="#cb7-353"></a>:::{.content-visible when-format="pdf"}</span>
+<span id="cb7-354"><a href="#cb7-354"></a></span>
+<span id="cb7-355"><a href="#cb7-355"></a>\newpage</span>
+<span id="cb7-356"><a href="#cb7-356"></a></span>
+<span id="cb7-357"><a href="#cb7-357"></a>\blandscape</span>
+<span id="cb7-358"><a href="#cb7-358"></a></span>
+<span id="cb7-359"><a href="#cb7-359"></a>|Window transformation|Effect|</span>
+<span id="cb7-360"><a href="#cb7-360"></a>|-|---|</span>
+<span id="cb7-361"><a href="#cb7-361"></a>|<span class="in">`window(windowLength, slideInterval)`</span>|It returns a new DStream which is computed based on windowed batches of the source DStream.|</span>
+<span id="cb7-362"><a href="#cb7-362"></a><span class="in">`countByWindow(windowLength, slideInterval)`</span>|It returns a new single-element stream containing the number of elements of each window. The returned object is a Dstream of Long objects. However, it contains only one value for each window (the number of elements of the last analyzed window).|</span>
+<span id="cb7-363"><a href="#cb7-363"></a>|<span class="in">`reduceByWindow(reduceFunc, invReduceFunc, windowDuration, slideDuration)`</span>|It returns a new single-element stream, created by aggregating elements in the stream over a sliding interval using <span class="in">`func`</span>. The function must be associative and commutative so that it can be computed correctly in parallel. If <span class="in">`invReduceFunc`</span> is not None, the reduction is done incrementally using the old window's reduced value.|</span>
+<span id="cb7-364"><a href="#cb7-364"></a>|<span class="in">`countByValueAndWindow(windowDuration , slideDuration)`</span>|When called on a DStream of elements of type $K$, it returns a new DStream of $(K, \text{Long})$ pairs where the value of each key $K$ is its frequency in each window of the source DStream.|</span>
+<span id="cb7-365"><a href="#cb7-365"></a>|<span class="in">`reduceByKeyAndWindow(func, invFunc, windowDuration, slideDuration=None, numPartitions=None)`</span>|When called on a DStream of $(K, V)$ pairs, it returns a new DStream of $(K, V)$ pairs where the values for each key are aggregated using the given reduce function func over batches in a sliding window. The window duration (length) is specified as a parameter of this invocation (<span class="in">`windowDuration`</span>). Notice that, if <span class="in">`slideDuration`</span> is None, the <span class="in">`batchDuration`</span> of the StreamingContext object is used (i.e., 1 batch sliding window); if <span class="in">`invFunc`</span> is provideved (is not None), the reduction is done incrementally using the old window's reduced values (i.e., <span class="in">`invFunc`</span> is used to apply an inverse reduce operation by considering the old values that left the window, e.g., subtracting old counts).|</span>
+<span id="cb7-366"><a href="#cb7-366"></a></span>
+<span id="cb7-367"><a href="#cb7-367"></a>\elandscape</span>
+<span id="cb7-368"><a href="#cb7-368"></a></span>
+<span id="cb7-369"><a href="#cb7-369"></a>:::</span>
+<span id="cb7-370"><a href="#cb7-370"></a></span>
+<span id="cb7-371"><a href="#cb7-371"></a><span class="fu">### Checkpoint</span></span>
+<span id="cb7-372"><a href="#cb7-372"></a>A streaming application must operate 24/7 and hence must be resilient to failures unrelated to the application logic (e.g., system failures, JVM crashes, etc.). For this to be possible, Spark Streaming needs to checkpoint enough information to a fault- tolerant storage system such that it can recover from failures, and this result is achieved by means of checkpoints, which are operations that store the data and metadata needed to restart the computation if failures happen. Checkpointing is necessary even for some window transformations and stateful transformations.</span>
+<span id="cb7-373"><a href="#cb7-373"></a></span>
+<span id="cb7-374"><a href="#cb7-374"></a>Checkpointing is enabled by using the <span class="in">`checkpoint(String folder)`</span> method of <span class="in">`SparkStreamingContext`</span>: the parameter is the folder that is used to store temporary data. This is similar as for processing graphs with GraphFrames library, however, with GraphFrames, the checkpoint was the one of SparkContext.</span>
+<span id="cb7-375"><a href="#cb7-375"></a></span>
+<span id="cb7-376"><a href="#cb7-376"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb7-377"><a href="#cb7-377"></a><span class="fu">### Example: word count and windows</span></span>
+<span id="cb7-378"><a href="#cb7-378"></a>Problem specification</span>
+<span id="cb7-379"><a href="#cb7-379"></a></span>
+<span id="cb7-380"><a href="#cb7-380"></a><span class="ss">- </span>Input: a stream of sentences retrieved from localhost:9999</span>
+<span id="cb7-381"><a href="#cb7-381"></a><span class="ss">- </span>Split the input stream in batches of 5 seconds</span>
+<span id="cb7-382"><a href="#cb7-382"></a><span class="ss">- </span>Define widows with the following characteristics</span>
+<span id="cb7-383"><a href="#cb7-383"></a><span class="ss">    - </span>Window length: 15 seconds (i.e., 3 batches)</span>
+<span id="cb7-384"><a href="#cb7-384"></a><span class="ss">    - </span>Sliding interval: 5 seconds (i.e., 1 batch)</span>
+<span id="cb7-385"><a href="#cb7-385"></a><span class="ss">- </span>Print on the standard output, for each window, the occurrences of each word appearing in the window (i.e., execute the word count problem for each window)</span>
+<span id="cb7-386"><a href="#cb7-386"></a><span class="ss">- </span>Store the results also in an HDFS folder</span>
+<span id="cb7-387"><a href="#cb7-387"></a></span>
+<span id="cb7-388"><a href="#cb7-388"></a>**First solution**</span>
+<span id="cb7-389"><a href="#cb7-389"></a></span>
+<span id="cb7-390"><a href="#cb7-390"></a><span class="in">```python</span></span>
+<span id="cb7-391"><a href="#cb7-391"></a><span class="im">from</span> pyspark.streaming <span class="im">import</span> StreamingContext</span>
+<span id="cb7-392"><a href="#cb7-392"></a></span>
+<span id="cb7-393"><a href="#cb7-393"></a><span class="co">## Set prefix of the output folders</span></span>
+<span id="cb7-394"><a href="#cb7-394"></a>outputPathPrefix<span class="op">=</span><span class="st">"resSparkStreamingExamples"</span></span>
+<span id="cb7-395"><a href="#cb7-395"></a></span>
+<span id="cb7-396"><a href="#cb7-396"></a><span class="co">#Create a configuration object and#set the name of the applicationconf</span></span>
+<span id="cb7-397"><a href="#cb7-397"></a>SparkConf().setAppName(<span class="st">"Streaming word count"</span>)</span>
+<span id="cb7-398"><a href="#cb7-398"></a></span>
+<span id="cb7-399"><a href="#cb7-399"></a><span class="co">## Create a Spark Context object</span></span>
+<span id="cb7-400"><a href="#cb7-400"></a>sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
+<span id="cb7-401"><a href="#cb7-401"></a></span>
+<span id="cb7-402"><a href="#cb7-402"></a><span class="co">## Create a Spark Streaming Context object</span></span>
+<span id="cb7-403"><a href="#cb7-403"></a>ssc <span class="op">=</span> StreamingContext(sc, <span class="dv">5</span>)</span>
+<span id="cb7-404"><a href="#cb7-404"></a></span>
+<span id="cb7-405"><a href="#cb7-405"></a><span class="co">## Set the checkpoint folder (it is needed by some window transformations)</span></span>
+<span id="cb7-406"><a href="#cb7-406"></a>ssc.checkpoint(<span class="st">"checkpointfolder"</span>)</span>
+<span id="cb7-407"><a href="#cb7-407"></a></span>
+<span id="cb7-408"><a href="#cb7-408"></a><span class="co">## Create a (Receiver) DStream that will connect to localhost:9999</span></span>
+<span id="cb7-409"><a href="#cb7-409"></a>lines <span class="op">=</span> ssc.socketTextStream(<span class="st">"localhost"</span>, <span class="dv">9999</span>)</span>
+<span id="cb7-410"><a href="#cb7-410"></a></span>
+<span id="cb7-411"><a href="#cb7-411"></a><span class="co">## Apply a chain of transformations to perform the word count task</span></span>
+<span id="cb7-412"><a href="#cb7-412"></a><span class="co">## The returned RDDs are DStream RDDs</span></span>
+<span id="cb7-413"><a href="#cb7-413"></a>words <span class="op">=</span> lines.flatMap(<span class="kw">lambda</span> line: line.split(<span class="st">" "</span>))</span>
+<span id="cb7-414"><a href="#cb7-414"></a>wordsOnes <span class="op">=</span> words.<span class="bu">map</span>(<span class="kw">lambda</span> word: (word, <span class="dv">1</span>))</span>
+<span id="cb7-415"><a href="#cb7-415"></a></span>
+<span id="cb7-416"><a href="#cb7-416"></a><span class="co">## reduceByKeyAndWindow is used instead of reduceByKey</span></span>
+<span id="cb7-417"><a href="#cb7-417"></a><span class="co">## The durantion of the window is also specified</span></span>
+<span id="cb7-418"><a href="#cb7-418"></a>wordsCounts <span class="op">=</span> wordsOnes <span class="op">\</span></span>
+<span id="cb7-419"><a href="#cb7-419"></a>    .reduceByKeyAndWindow(<span class="kw">lambda</span> v1, v2: v1<span class="op">+</span>v2, <span class="va">None</span>, <span class="dv">15</span>)</span>
+<span id="cb7-420"><a href="#cb7-420"></a></span>
+<span id="cb7-421"><a href="#cb7-421"></a><span class="co">## Print the num. of occurrences of each word of the current window</span></span>
+<span id="cb7-422"><a href="#cb7-422"></a><span class="co">## (only 10 of them)</span></span>
+<span id="cb7-423"><a href="#cb7-423"></a>wordsCounts.pprint()</span>
+<span id="cb7-424"><a href="#cb7-424"></a></span>
+<span id="cb7-425"><a href="#cb7-425"></a><span class="co">## Store the output of the computation in the folders with prefix</span></span>
+<span id="cb7-426"><a href="#cb7-426"></a><span class="co">## outputPathPrefix</span></span>
+<span id="cb7-427"><a href="#cb7-427"></a>wordsCounts.saveAsTextFiles(outputPathPrefix, <span class="st">""</span>)</span>
+<span id="cb7-428"><a href="#cb7-428"></a></span>
+<span id="cb7-429"><a href="#cb7-429"></a><span class="co">#Start the computation</span></span>
+<span id="cb7-430"><a href="#cb7-430"></a>ssc.start()</span>
+<span id="cb7-431"><a href="#cb7-431"></a>ssc.awaitTermination ()</span>
+<span id="cb7-432"><a href="#cb7-432"></a><span class="in">```</span></span>
+<span id="cb7-433"><a href="#cb7-433"></a></span>
+<span id="cb7-434"><a href="#cb7-434"></a>**Second solution**</span>
+<span id="cb7-435"><a href="#cb7-435"></a></span>
+<span id="cb7-436"><a href="#cb7-436"></a><span class="in">```python</span></span>
+<span id="cb7-437"><a href="#cb7-437"></a><span class="im">from</span> pyspark.streaming <span class="im">import</span> StreamingContext</span>
+<span id="cb7-438"><a href="#cb7-438"></a></span>
+<span id="cb7-439"><a href="#cb7-439"></a><span class="co">## Set prefix of the output folders</span></span>
+<span id="cb7-440"><a href="#cb7-440"></a>outputPathPrefix<span class="op">=</span><span class="st">"resSparkStreamingExamples"</span></span>
+<span id="cb7-441"><a href="#cb7-441"></a></span>
+<span id="cb7-442"><a href="#cb7-442"></a><span class="co">## Create a configuration object and</span></span>
+<span id="cb7-443"><a href="#cb7-443"></a><span class="co">## set the name of the applicationconf</span></span>
+<span id="cb7-444"><a href="#cb7-444"></a>SparkConf().setAppName(<span class="st">"Streaming word count"</span>)</span>
+<span id="cb7-445"><a href="#cb7-445"></a></span>
+<span id="cb7-446"><a href="#cb7-446"></a><span class="co">## Create a Spark Context object</span></span>
+<span id="cb7-447"><a href="#cb7-447"></a>sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
+<span id="cb7-448"><a href="#cb7-448"></a></span>
+<span id="cb7-449"><a href="#cb7-449"></a><span class="co">## Create a Spark Streaming Context object</span></span>
+<span id="cb7-450"><a href="#cb7-450"></a>ssc <span class="op">=</span> StreamingContext(sc, <span class="dv">5</span>)</span>
+<span id="cb7-451"><a href="#cb7-451"></a></span>
+<span id="cb7-452"><a href="#cb7-452"></a><span class="co">## Set the checkpoint folder (it is needed by some window transformations)</span></span>
+<span id="cb7-453"><a href="#cb7-453"></a>ssc.checkpoint(<span class="st">"checkpointfolder"</span>)</span>
+<span id="cb7-454"><a href="#cb7-454"></a></span>
+<span id="cb7-455"><a href="#cb7-455"></a><span class="co">## Create a (Receiver) DStream that will connect to localhost:9999</span></span>
+<span id="cb7-456"><a href="#cb7-456"></a>lines <span class="op">=</span> ssc.socketTextStream(<span class="st">"localhost"</span>, <span class="dv">9999</span>)</span>
+<span id="cb7-457"><a href="#cb7-457"></a></span>
+<span id="cb7-458"><a href="#cb7-458"></a><span class="co">## Apply a chain of transformations to perform the word count task</span></span>
+<span id="cb7-459"><a href="#cb7-459"></a><span class="co">## The returned RDDs are DStream RDDs</span></span>
+<span id="cb7-460"><a href="#cb7-460"></a>words <span class="op">=</span> lines.flatMap(<span class="kw">lambda</span> line: line.split(<span class="st">" "</span>))</span>
+<span id="cb7-461"><a href="#cb7-461"></a>wordsOnes <span class="op">=</span> words.<span class="bu">map</span>(<span class="kw">lambda</span> word: (word, <span class="dv">1</span>))</span>
+<span id="cb7-462"><a href="#cb7-462"></a></span>
+<span id="cb7-463"><a href="#cb7-463"></a><span class="co">## reduceByKeyAndWindow is used instead of reduceByKey</span></span>
+<span id="cb7-464"><a href="#cb7-464"></a><span class="co">## The durantion of the window is also specified</span></span>
+<span id="cb7-465"><a href="#cb7-465"></a>wordsCounts <span class="op">=</span> wordsOnes <span class="op">\</span></span>
+<span id="cb7-466"><a href="#cb7-466"></a>    .reduceByKeyAndWindow(</span>
+<span id="cb7-467"><a href="#cb7-467"></a>        <span class="kw">lambda</span> v1, v2: v1<span class="op">+</span>v2, </span>
+<span id="cb7-468"><a href="#cb7-468"></a>        <span class="kw">lambda</span> vnow, <span class="co"># &lt;1&gt;</span></span>
+<span id="cb7-469"><a href="#cb7-469"></a>        vold: vnow<span class="op">-</span>vold, <span class="dv">15</span></span>
+<span id="cb7-470"><a href="#cb7-470"></a>    )</span>
+<span id="cb7-471"><a href="#cb7-471"></a></span>
+<span id="cb7-472"><a href="#cb7-472"></a><span class="co">## Print the num. of occurrences of each word of the current window</span></span>
+<span id="cb7-473"><a href="#cb7-473"></a><span class="co">## (only 10 of them)</span></span>
+<span id="cb7-474"><a href="#cb7-474"></a>wordsCounts.pprint()</span>
+<span id="cb7-475"><a href="#cb7-475"></a></span>
+<span id="cb7-476"><a href="#cb7-476"></a><span class="co">## Store the output of the computation in the folders with prefix</span></span>
+<span id="cb7-477"><a href="#cb7-477"></a><span class="co">## outputPathPrefix</span></span>
+<span id="cb7-478"><a href="#cb7-478"></a>wordsCounts.saveAsTextFiles(outputPathPrefix, <span class="st">""</span>)</span>
+<span id="cb7-479"><a href="#cb7-479"></a></span>
+<span id="cb7-480"><a href="#cb7-480"></a><span class="co">#Start the computation</span></span>
+<span id="cb7-481"><a href="#cb7-481"></a>ssc.start()</span>
+<span id="cb7-482"><a href="#cb7-482"></a></span>
+<span id="cb7-483"><a href="#cb7-483"></a><span class="co">## Run this application for 90 seconds</span></span>
+<span id="cb7-484"><a href="#cb7-484"></a>ssc.awaitTerminationOrTimeout(<span class="dv">90</span>)</span>
+<span id="cb7-485"><a href="#cb7-485"></a>ssc.stop(stopSparkContext<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb7-486"><a href="#cb7-486"></a><span class="in">```</span></span>
+<span id="cb7-487"><a href="#cb7-487"></a><span class="ss">1. </span>In this solution the inverse function is also specified in order to compute the result incrementally</span>
+<span id="cb7-488"><a href="#cb7-488"></a></span>
+<span id="cb7-489"><a href="#cb7-489"></a>:::</span>
+<span id="cb7-490"><a href="#cb7-490"></a></span>
+<span id="cb7-491"><a href="#cb7-491"></a><span class="fu">## Stateful computation</span></span>
+<span id="cb7-492"><a href="#cb7-492"></a><span class="fu">### `updateStateByKey` transformation</span></span>
+<span id="cb7-493"><a href="#cb7-493"></a>The <span class="in">`updateStateByKey`</span> transformation allows maintaining a state for each key. The value of the state of each key is continuously updated every time a new batch is analyzed.</span>
+<span id="cb7-494"><a href="#cb7-494"></a></span>
+<span id="cb7-495"><a href="#cb7-495"></a>The use of <span class="in">`updateStateByKey`</span> is based on two steps</span>
+<span id="cb7-496"><a href="#cb7-496"></a></span>
+<span id="cb7-497"><a href="#cb7-497"></a><span class="ss">- </span>Define the state: the data type of the state associated with the keys can be an arbitrary data type</span>
+<span id="cb7-498"><a href="#cb7-498"></a><span class="ss">- </span>Define the state update function: specify with a function how to update the state of a key using the previous state and the new values from an input stream associated with that key</span>
+<span id="cb7-499"><a href="#cb7-499"></a></span>
+<span id="cb7-500"><a href="#cb7-500"></a>In every batch, Spark will apply the state update function for all existing keys. For each key, the update function is used to update the value associated with a key by combining the former value and the new values associated with that key; in other words, for each key, the call method of the function is invoked on the list of new values and the former state value and returns the new aggregated value for the considered key.</span>
+<span id="cb7-501"><a href="#cb7-501"></a></span>
+<span id="cb7-502"><a href="#cb7-502"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb7-503"><a href="#cb7-503"></a><span class="fu">### Example: word count and `updateStateByKey` transformation</span></span>
+<span id="cb7-504"><a href="#cb7-504"></a>By using the <span class="in">`updateStateByKey`</span>, the application can continuously update the number of occurrences of each word. The number of occurrences stored in the DStream returned by this transformation is computed over the union of all the batches (from the first one to the current one). For efficiency reasons, the new value for each key is computed by combining the last value for that key with the values of the current batch for the same key.</span>
+<span id="cb7-505"><a href="#cb7-505"></a></span>
+<span id="cb7-506"><a href="#cb7-506"></a>Problem specification:</span>
+<span id="cb7-507"><a href="#cb7-507"></a></span>
+<span id="cb7-508"><a href="#cb7-508"></a><span class="ss">- </span>Input: a stream of sentences retrieved from localhost:9999</span>
+<span id="cb7-509"><a href="#cb7-509"></a><span class="ss">- </span>Split the input stream in batches of 5 seconds</span>
+<span id="cb7-510"><a href="#cb7-510"></a><span class="ss">- </span>Print on the standard output, every 5 seconds, the occurrences of each word appearing in the stream (from time 0 to the current time) (i.e., execute the word count problem from the beginning of the stream to current time)</span>
+<span id="cb7-511"><a href="#cb7-511"></a><span class="ss">- </span>Store the results also in an HDFS folder</span>
+<span id="cb7-512"><a href="#cb7-512"></a></span>
+<span id="cb7-513"><a href="#cb7-513"></a><span class="in">```python</span></span>
+<span id="cb7-514"><a href="#cb7-514"></a><span class="im">from</span> pyspark.streaming <span class="im">import</span> StreamingContext</span>
+<span id="cb7-515"><a href="#cb7-515"></a></span>
+<span id="cb7-516"><a href="#cb7-516"></a><span class="co">## Set prefix of the output folders</span></span>
+<span id="cb7-517"><a href="#cb7-517"></a>outputPathPrefix<span class="op">=</span><span class="st">"resSparkStreamingExamples"</span></span>
+<span id="cb7-518"><a href="#cb7-518"></a></span>
+<span id="cb7-519"><a href="#cb7-519"></a><span class="co">#Create a configuration object and#set the name of the applicationconf</span></span>
+<span id="cb7-520"><a href="#cb7-520"></a>SparkConf().setAppName(<span class="st">"Streaming word count"</span>)</span>
+<span id="cb7-521"><a href="#cb7-521"></a></span>
+<span id="cb7-522"><a href="#cb7-522"></a><span class="co">## Create a Spark Context object</span></span>
+<span id="cb7-523"><a href="#cb7-523"></a>sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
+<span id="cb7-524"><a href="#cb7-524"></a></span>
+<span id="cb7-525"><a href="#cb7-525"></a><span class="co">## Create a Spark Streaming Context object</span></span>
+<span id="cb7-526"><a href="#cb7-526"></a>ssc <span class="op">=</span> StreamingContext(sc, <span class="dv">5</span>)</span>
+<span id="cb7-527"><a href="#cb7-527"></a></span>
+<span id="cb7-528"><a href="#cb7-528"></a><span class="co">## Set the checkpoint folder (it is needed by some window transformations)</span></span>
+<span id="cb7-529"><a href="#cb7-529"></a>ssc.checkpoint(<span class="st">"checkpointfolder"</span>)</span>
+<span id="cb7-530"><a href="#cb7-530"></a></span>
+<span id="cb7-531"><a href="#cb7-531"></a><span class="co">## Create a (Receiver) DStream that will connect to localhost:9999</span></span>
+<span id="cb7-532"><a href="#cb7-532"></a>lines <span class="op">=</span> ssc.socketTextStream(<span class="st">"localhost"</span>, <span class="dv">9999</span>)</span>
+<span id="cb7-533"><a href="#cb7-533"></a></span>
+<span id="cb7-534"><a href="#cb7-534"></a><span class="co">## Apply a chain of transformations to perform the word count task</span></span>
+<span id="cb7-535"><a href="#cb7-535"></a><span class="co">## The returned RDDs are DStream RDDs</span></span>
+<span id="cb7-536"><a href="#cb7-536"></a>words <span class="op">=</span> lines.flatMap(<span class="kw">lambda</span> line: line.split(<span class="st">" "</span>))</span>
+<span id="cb7-537"><a href="#cb7-537"></a>wordsOnes <span class="op">=</span> words.<span class="bu">map</span>(<span class="kw">lambda</span> word: (word, <span class="dv">1</span>))</span>
+<span id="cb7-538"><a href="#cb7-538"></a></span>
+<span id="cb7-539"><a href="#cb7-539"></a><span class="co">## Define the function that is used to update the state of a key at a time</span></span>
+<span id="cb7-540"><a href="#cb7-540"></a><span class="kw">def</span> updateFunction(newValues, currentCount): <span class="co"># &lt;1&gt;</span></span>
+<span id="cb7-541"><a href="#cb7-541"></a>    <span class="cf">if</span> currentCount <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb7-542"><a href="#cb7-542"></a>        currentCount <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb7-543"><a href="#cb7-543"></a></span>
+<span id="cb7-544"><a href="#cb7-544"></a>    <span class="co">## Sum the new values to the previous state for the current key</span></span>
+<span id="cb7-545"><a href="#cb7-545"></a>    <span class="cf">return</span> <span class="bu">sum</span>(newValues, currentCount) <span class="co"># &lt;2&gt;</span></span>
+<span id="cb7-546"><a href="#cb7-546"></a></span>
+<span id="cb7-547"><a href="#cb7-547"></a><span class="co">## DStream made of cumulative counts for each key that get updated </span></span>
+<span id="cb7-548"><a href="#cb7-548"></a><span class="co">## in every batch</span></span>
+<span id="cb7-549"><a href="#cb7-549"></a>totalWordsCounts <span class="op">=</span> wordsOnes.updateStateByKey(updateFunction) <span class="co"># &lt;3&gt;</span></span>
+<span id="cb7-550"><a href="#cb7-550"></a></span>
+<span id="cb7-551"><a href="#cb7-551"></a><span class="co">## Print the num. of occurrences of each word of the current window</span></span>
+<span id="cb7-552"><a href="#cb7-552"></a><span class="co">## (only 10 of them)</span></span>
+<span id="cb7-553"><a href="#cb7-553"></a>totalWordsCounts.pprint()</span>
+<span id="cb7-554"><a href="#cb7-554"></a></span>
+<span id="cb7-555"><a href="#cb7-555"></a><span class="co">## Store the output of the computation in the folders with prefix</span></span>
+<span id="cb7-556"><a href="#cb7-556"></a><span class="co">## outputPathPrefix</span></span>
+<span id="cb7-557"><a href="#cb7-557"></a>totalWordsCounts.saveAsTextFiles(outputPathPrefix, <span class="st">""</span>)</span>
+<span id="cb7-558"><a href="#cb7-558"></a></span>
+<span id="cb7-559"><a href="#cb7-559"></a><span class="co">## Start the computation</span></span>
+<span id="cb7-560"><a href="#cb7-560"></a>ssc.start()</span>
+<span id="cb7-561"><a href="#cb7-561"></a></span>
+<span id="cb7-562"><a href="#cb7-562"></a><span class="co">## Run this application for 90 seconds</span></span>
+<span id="cb7-563"><a href="#cb7-563"></a>ssc.awaitTerminationOrTimeout(<span class="dv">90</span>)</span>
+<span id="cb7-564"><a href="#cb7-564"></a>ssc.stop(stopSparkContext<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb7-565"><a href="#cb7-565"></a><span class="in">```</span></span>
+<span id="cb7-566"><a href="#cb7-566"></a><span class="ss">1. </span><span class="in">`currentCount`</span>: current state/value for the current key | <span class="in">`newValues`</span>: list of new integer values for the current key</span>
+<span id="cb7-567"><a href="#cb7-567"></a><span class="ss">2. </span><span class="in">`sum(newValues, currentCount)`</span>: Combine current state and new values</span>
+<span id="cb7-568"><a href="#cb7-568"></a><span class="ss">3. </span><span class="in">`updateFunction`</span>: this function is invoked one time for each key</span>
+<span id="cb7-569"><a href="#cb7-569"></a></span>
+<span id="cb7-570"><a href="#cb7-570"></a>:::</span>
+<span id="cb7-571"><a href="#cb7-571"></a></span>
+<span id="cb7-572"><a href="#cb7-572"></a><span class="fu">## Transform transformation</span></span>
+<span id="cb7-573"><a href="#cb7-573"></a>Some types of transformations are not available for DStreams (e.g., <span class="in">`sortBy()`</span>, <span class="in">`sortByKey()`</span>, <span class="in">`distinct()`</span>), moreover, sometimes it is needed to combine DStreams and RDDs. For example, the functionality of joining every batch in a data stream with another dataset (a standard RDD) is not directly exposed in the DStream API. The <span class="in">`transform()`</span> transformation can be used in these situations.</span>
+<span id="cb7-574"><a href="#cb7-574"></a></span>
+<span id="cb7-575"><a href="#cb7-575"></a>|Transformation|Effect|</span>
+<span id="cb7-576"><a href="#cb7-576"></a>|-|---|</span>
+<span id="cb7-577"><a href="#cb7-577"></a>|<span class="in">`transform(func)`</span>|It is a specific transformation of DStreams that returns a new DStream by applying an RDD-to-RDD function to every RDD of the source Dstream. This can be used to apply arbitrary RDD operations on the DStream|</span>
+<span id="cb7-578"><a href="#cb7-578"></a></span>
+<span id="cb7-579"><a href="#cb7-579"></a>:::{.callout-note collapse="true"}</span>
+<span id="cb7-580"><a href="#cb7-580"></a><span class="fu">### Example</span></span>
+<span id="cb7-581"><a href="#cb7-581"></a>Problem specification</span>
+<span id="cb7-582"><a href="#cb7-582"></a></span>
+<span id="cb7-583"><a href="#cb7-583"></a><span class="ss">- </span>Input: a stream of sentences retrieved from localhost:9999</span>
+<span id="cb7-584"><a href="#cb7-584"></a><span class="ss">- </span>Split the input stream in batches of 5 seconds each and print on the standard output, for each batch, the occurrences of each word appearing in the batch. The pairs must be returned/displayed sorted by decreasing number of occurrences (per batch)</span>
+<span id="cb7-585"><a href="#cb7-585"></a><span class="ss">- </span>Store the results also in an HDFS folder</span>
+<span id="cb7-586"><a href="#cb7-586"></a></span>
+<span id="cb7-587"><a href="#cb7-587"></a><span class="in">```python</span></span>
+<span id="cb7-588"><a href="#cb7-588"></a><span class="im">from</span> pyspark.streaming <span class="im">import</span> StreamingContext</span>
+<span id="cb7-589"><a href="#cb7-589"></a></span>
+<span id="cb7-590"><a href="#cb7-590"></a><span class="co">## Set prefix of the output folders</span></span>
+<span id="cb7-591"><a href="#cb7-591"></a>outputPathPrefix<span class="op">=</span><span class="st">"resSparkStreamingExamples"</span></span>
+<span id="cb7-592"><a href="#cb7-592"></a></span>
+<span id="cb7-593"><a href="#cb7-593"></a><span class="co">#Create a configuration object and#set the name of the applicationconf</span></span>
+<span id="cb7-594"><a href="#cb7-594"></a>SparkConf().setAppName(<span class="st">"Streaming word count"</span>)</span>
+<span id="cb7-595"><a href="#cb7-595"></a></span>
+<span id="cb7-596"><a href="#cb7-596"></a><span class="co">## Create a Spark Context object</span></span>
+<span id="cb7-597"><a href="#cb7-597"></a>sc <span class="op">=</span> SparkContext(conf<span class="op">=</span>conf)</span>
+<span id="cb7-598"><a href="#cb7-598"></a></span>
+<span id="cb7-599"><a href="#cb7-599"></a><span class="co">## Create a Spark Streaming Context object</span></span>
+<span id="cb7-600"><a href="#cb7-600"></a>ssc <span class="op">=</span> StreamingContext(sc, <span class="dv">5</span>)</span>
+<span id="cb7-601"><a href="#cb7-601"></a></span>
+<span id="cb7-602"><a href="#cb7-602"></a><span class="co">## Create a (Receiver) DStream that will connect to localhost:9999</span></span>
+<span id="cb7-603"><a href="#cb7-603"></a>lines <span class="op">=</span> ssc.socketTextStream(<span class="st">"localhost"</span>, <span class="dv">9999</span>)</span>
+<span id="cb7-604"><a href="#cb7-604"></a></span>
+<span id="cb7-605"><a href="#cb7-605"></a><span class="co">## Apply a chain of transformations to perform the word count task</span></span>
+<span id="cb7-606"><a href="#cb7-606"></a><span class="co">## The returned RDDs are DStream RDDs</span></span>
+<span id="cb7-607"><a href="#cb7-607"></a>words <span class="op">=</span> lines.flatMap(<span class="kw">lambda</span> line: line.split(<span class="st">" "</span>))</span>
+<span id="cb7-608"><a href="#cb7-608"></a>wordsOnes <span class="op">=</span> words.<span class="bu">map</span>(<span class="kw">lambda</span> word: (word, <span class="dv">1</span>))</span>
+<span id="cb7-609"><a href="#cb7-609"></a>wordsCounts <span class="op">=</span> wordsOnes.reduceByKey(<span class="kw">lambda</span> v1, v2: v1<span class="op">+</span>v2)</span>
+<span id="cb7-610"><a href="#cb7-610"></a></span>
+<span id="cb7-611"><a href="#cb7-611"></a><span class="co">## Sort the content/the pairs by decreasing value (# of occurrences)</span></span>
+<span id="cb7-612"><a href="#cb7-612"></a>wordsCountsSortByKey <span class="op">=</span> wordsCounts <span class="op">\</span></span>
+<span id="cb7-613"><a href="#cb7-613"></a>    .transform(<span class="kw">lambda</span> batchRDD: batchRDD.sortBy(<span class="kw">lambda</span> pair: <span class="op">-</span><span class="dv">1</span><span class="op">*</span>pair[<span class="dv">1</span>]))</span>
+<span id="cb7-614"><a href="#cb7-614"></a></span>
+<span id="cb7-615"><a href="#cb7-615"></a><span class="co">## Print the result on the standard output</span></span>
+<span id="cb7-616"><a href="#cb7-616"></a>wordsCountsSortByKey.pprint()</span>
+<span id="cb7-617"><a href="#cb7-617"></a></span>
+<span id="cb7-618"><a href="#cb7-618"></a><span class="co">## Store the result in HDFS</span></span>
+<span id="cb7-619"><a href="#cb7-619"></a>wordsCountsSortByKey.saveAsTextFiles(outputPathPrefix, <span class="st">""</span>)</span>
+<span id="cb7-620"><a href="#cb7-620"></a></span>
+<span id="cb7-621"><a href="#cb7-621"></a><span class="co">#Start the computation</span></span>
+<span id="cb7-622"><a href="#cb7-622"></a>ssc.start()</span>
+<span id="cb7-623"><a href="#cb7-623"></a></span>
+<span id="cb7-624"><a href="#cb7-624"></a><span class="co">## Run this application for 90 seconds</span></span>
+<span id="cb7-625"><a href="#cb7-625"></a>ssc.awaitTerminationOrTimeout(<span class="dv">90</span>)</span>
+<span id="cb7-626"><a href="#cb7-626"></a>ssc.stop(stopSparkContext<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb7-627"><a href="#cb7-627"></a><span class="in">```</span></span>
+<span id="cb7-628"><a href="#cb7-628"></a></span>
+<span id="cb7-629"><a href="#cb7-629"></a>:::</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 
 
